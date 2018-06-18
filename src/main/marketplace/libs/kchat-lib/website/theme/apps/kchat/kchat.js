@@ -266,6 +266,9 @@
                             var result = (a['timestamp'] < b['timestamp']) ? -1 : (a['timestamp'] > b['timestamp']) ? 1 : 0;
                             return result * 1;
                         });
+                        
+                        // Clear existing chat list as we have a new one
+                        self.$elem.find('.kchat-msg-list').empty();
 
                         for (var i = 0; i < c.data.length; i++) {
                             var cm = c.data[i];
