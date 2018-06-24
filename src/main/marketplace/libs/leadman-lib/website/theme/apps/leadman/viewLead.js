@@ -242,7 +242,7 @@
         orgTitleSearch.typeahead({
             highlight: true,
             cache: false
-            
+
         }, {
             display: 'title',
             limit: 10,
@@ -777,7 +777,10 @@
     }
 
     function initSelectPicker() {
-        $('.selectpicker').selectpicker();
+        var sp = $('.selectpicker');
+        if( sp.length > 0){
+            $('.selectpicker').selectpicker();
+        }
     }
 
     // Run init functions
