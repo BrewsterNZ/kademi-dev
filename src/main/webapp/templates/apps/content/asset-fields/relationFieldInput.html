@@ -17,6 +17,14 @@
 
 #macro (renderFieldInput $asset $fieldDef)
     <div class="relation-field-wrapper">
+        #if( $fieldDef.select )
+        <select name="$fieldDef.name" class="form-control">
+            $formatter.option("", "[Not selected]", $asset.uniqueId)
+            #foreach( $availableAsset in $services.assetManager.listAvailableAssets($fieldDef, $asset) )
+            $formatter.option($availableAsset.uniqueId, $availableAsset.name, $asset.uniqueId)
+            #end
+        </select>
+        #else
         #if ($fieldDef.contentType == "image" || $fieldDef.contentType == "video" || $fieldDef.contentType == "binary")
             <p class="input-group input-group-sm">
                 <input type="text" name="$fieldDef.name" class="form-control select-asset select-asset-$fieldDef.contentType" data-asset-type="$fieldDef.contentType" placeholder="Type to search" value="$!asset.uniqueId" data-asset-name="$!asset.name" />
@@ -64,6 +72,7 @@
                     </a>
                 </span>
             </p>
+        #end
         #end
     </div>
 #end
