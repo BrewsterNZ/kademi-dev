@@ -4,7 +4,7 @@
 
             #foreach($field in $page.fields )
             <div class="form-group">
-                <label for="$field.name" class="col-sm-2 control-label">$field.name</label>
+                <label for="$field.name" class="col-sm-2 control-label">$field.title</label>
                 <div class="col-sm-10">
                     $!page.renderFieldInput($field)
                 </div>

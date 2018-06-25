@@ -38,6 +38,8 @@
 
         <hr/>
 
+        $!bodyContent
+        
         <br/>
 
         <div class="panel panel-default panel-no-icon">
@@ -73,6 +75,40 @@
                         </td>
                         <td>
                             <input type="checkbox" class="chk-view-id" value="$view.id" />
+                        </td>
+                    </tr>
+                    #end
+                </table>
+            </div>
+        </div>
+        
+        <div class="panel panel-default panel-no-icon">
+            <div class="panel-heading">
+                <h3 class="panel-title">Path mappings</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped" id="tableViews">
+                    <colgroup>
+                        <col />
+                        <col />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Path</th>
+                            <th>New instance?</th>
+                            <th>Default view</th>
+                        </tr>
+                    </thead>
+                    #foreach( $pathMapping in $page.assetType.pathMappings )
+                    <tr>
+                        <td>
+                            $pathMapping.pathPattern
+                        </td>
+                        <td>
+                            $pathMapping.newInstance
+                        </td>
+                        <td>
+                            $!pathMapping.defaultView.text
                         </td>
                     </tr>
                     #end

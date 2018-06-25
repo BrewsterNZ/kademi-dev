@@ -4,5 +4,5 @@
    <name>Kademi</name>
    <tag></tag>
    <UUID>4fc6ee0e-7005-41d3-a045-5d7412285cb0</UUID>
-   <pageLoadTimeout>30</pageLoadTimeout>
+   <pageLoadTimeout>0</pageLoadTimeout>
 </Project>

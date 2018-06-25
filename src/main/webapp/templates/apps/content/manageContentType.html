@@ -6,9 +6,7 @@
 
         #parse("/theme/apps/content/assetTypesCommon.html")
 
-        #assetTypeHeader()
-
-
+        #@assetTypeHeader()
         <div class="panel panel-default panel-no-icon">
             <div class="panel-heading">
                 <h3 class="panel-title">Fields</h3>
@@ -20,12 +18,12 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right new-view">
-                            <li><a href="typedField" data-target="#modal-field-typed" data-toggle="modal">Typed field</a></li>
-                            <li><a href="relation" data-target="#modal-field-relation" data-toggle="modal">Relation field</a></li>
-                            <li><a href="derived" data-target="#modal-field-derived" data-toggle="modal">Derived field</a></li>
+                            <li><a href="typedField" data-target="#modal-field-typed" data-toggle="modal">Text or typed field</a></li>
+                            <li><a href="relation" data-target="#modal-field-relation" data-toggle="modal">Relation to another asset</a></li>
+                            <li><a href="derived" data-target="#modal-field-derived" data-toggle="modal">Derived, ie calculated from expression or template</a></li>
                             <li><a href="stored" data-target="#modal-field-stored" data-toggle="modal">Simple stored field</a></li>
-                            <li><a href="group" data-target="#modal-field-group" data-toggle="modal">Group selection field</a></li>
-                            <li><a href="org" data-target="#modal-field-org" data-toggle="modal">Organisation selection field</a></li>
+                            <li><a href="group" data-target="#modal-field-group" data-toggle="modal">User Group</a></li>
+                            <li><a href="org" data-target="#modal-field-org" data-toggle="modal">Organisation</a></li>
 
                         </ul>
                     </div>
@@ -75,7 +73,11 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div>        
+        #end
+
+
+        
 
 
         <div class="new-field-modals">

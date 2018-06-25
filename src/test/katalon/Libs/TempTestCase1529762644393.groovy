@@ -1,4 +1,25 @@
-import static com.kms.katalon.core.checkpoint.CheckpointFactory.findCheckpoint
+import com.kms.katalon.core.main.TestCaseMain
+import com.kms.katalon.core.logging.KeywordLogger
+import groovy.lang.MissingPropertyException
+import com.kms.katalon.core.testcase.TestCaseBinding
+import com.kms.katalon.core.driver.internal.DriverCleanerCollector
+import com.kms.katalon.core.model.FailureHandling
+import com.kms.katalon.core.configuration.RunConfiguration
+import com.kms.katalon.core.webui.contribution.WebUiDriverCleaner
+import com.kms.katalon.core.mobile.contribution.MobileDriverCleaner
+
+
+DriverCleanerCollector.getInstance().addDriverCleaner(new com.kms.katalon.core.webui.contribution.WebUiDriverCleaner())
+DriverCleanerCollector.getInstance().addDriverCleaner(new com.kms.katalon.core.mobile.contribution.MobileDriverCleaner())
+
+
+RunConfiguration.setExecutionSettingFile('C:\\Users\\spiblin\\AppData\\Local\\Temp\\Katalon\\Test Cases\\Auto3-new-acc-creation-apps-install\\20180623_170359\\execution.properties')
+
+TestCaseMain.beforeStart()
+try {
+    
+        TestCaseMain.runTestCaseRawScript(
+'''import static com.kms.katalon.core.checkpoint.CheckpointFactory.findCheckpoint
 import static com.kms.katalon.core.testcase.TestCaseFactory.findTestCase
 import static com.kms.katalon.core.testdata.TestDataFactory.findTestData
 import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
@@ -20,153 +41,153 @@ import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUiBuiltInKe
 import internal.GlobalVariable as GlobalVariable
 import org.openqa.selenium.Keys as Keys
 
-Random rnd = new Random()
+not_run: Random rnd = new Random()
 
-def randomdigit = rnd.nextInt(99999)
+not_run: def randomdigit = rnd.nextInt(99999)
 
-def acctestname = WebUI.concatenate(((['tstacc', randomdigit]) as String[]))
+not_run: def acctestname = WebUI.concatenate(((['tstacc', randomdigit]) as String[]))
 
-def regousername = WebUI.concatenate(((['regoqa', randomdigit]) as String[]))
+not_run: def regousername = WebUI.concatenate(((['regoqa', randomdigit]) as String[]))
 
-def contactusername = WebUI.concatenate(((['contact', randomdigit]) as String[]))
+not_run: def contactusername = WebUI.concatenate(((['contact', randomdigit]) as String[]))
 
-WebUI.openBrowser('http://katalontestacc2.admin.kademi-ci.co')
+not_run: WebUI.openBrowser('http://katalontestacc2.admin.kademi-ci.co')
 
-WebUI.maximizeWindow()
+not_run: WebUI.maximizeWindow()
 
-WebUI.setText(findTestObject('kademi-vladtest/input_email'), GlobalVariable.admin)
+not_run: WebUI.setText(findTestObject('kademi-vladtest/input_email'), GlobalVariable.admin)
 
-WebUI.setText(findTestObject('kademi-vladtest/input_password'), GlobalVariable.admin_password)
+not_run: WebUI.setText(findTestObject('kademi-vladtest/input_password'), GlobalVariable.admin_password)
 
-WebUI.sendKeys(findTestObject('kademi-vladtest/input_password'), Keys.chord(Keys.ENTER))
+not_run: WebUI.sendKeys(findTestObject('kademi-vladtest/input_password'), Keys.chord(Keys.ENTER))
 
-WebUI.delay(20)
+not_run: WebUI.delay(20)
 
-WebUI.click(findTestObject('Kademi-vladtest22/span_Groups  users'))
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/span_Groups  users'))
 
-WebUI.delay(1)
+not_run: WebUI.delay(1)
 
-WebUI.click(findTestObject('Kademi-vladtest22/span_Organisations'))
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/span_Organisations'))
 
-WebUI.click(findTestObject('Kademi-vladtest22/button_Tools'))
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/button_Tools'))
 
-WebUI.click(findTestObject('Kademi-vladtest22/a_Create account'))
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/a_Create account'))
 
-WebUI.delay(1, FailureHandling.STOP_ON_FAILURE)
+not_run: WebUI.delay(1, FailureHandling.STOP_ON_FAILURE)
 
-WebUI.focus(findTestObject('Kademi-vladtest22/div_modal-create-account'))
+not_run: WebUI.focus(findTestObject('Kademi-vladtest22/div_modal-create-account'))
 
-WebUI.click(findTestObject('Kademi-vladtest22/input_title'))
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/input_title'))
 
-WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_title'), acctestname)
+not_run: WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_title'), acctestname)
 
-WebUI.click(findTestObject('Kademi-vladtest22/input_orgId'))
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/input_orgId'))
 
-WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_orgId'), acctestname)
+not_run: WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_orgId'), acctestname)
 
-WebUI.click(findTestObject('Kademi-vladtest22/button_Create'))
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/button_Create'))
 
-WebUI.delay(15, FailureHandling.STOP_ON_FAILURE)
+not_run: WebUI.delay(15, FailureHandling.STOP_ON_FAILURE)
 
-WebUI.click(findTestObject('Kademi-vladtest22/span_Groups  users (1)'))
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/span_Groups  users (1)'))
 
-WebUI.click(findTestObject('Kademi-vladtest22/span_Users'))
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/span_Users'))
 
-WebUI.click(findTestObject('Kademi-vladtest22/a_Add new user'))
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/a_Add new user'))
 
-WebUI.delay(1, FailureHandling.STOP_ON_FAILURE)
+not_run: WebUI.delay(1, FailureHandling.STOP_ON_FAILURE)
 
-WebUI.focus(findTestObject('kademi-vladtest/div_modal-new-user'))
+not_run: WebUI.focus(findTestObject('kademi-vladtest/div_modal-new-user'))
 
-WebUI.click(findTestObject('Kademi-vladtest22/input_nickName'), FailureHandling.STOP_ON_FAILURE)
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/input_nickName'), FailureHandling.STOP_ON_FAILURE)
 
-WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_nickName'), GlobalVariable.admin.split('@')[0])
+not_run: WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_nickName'), GlobalVariable.admin.split('@')[0])
 
-WebUI.click(findTestObject('Kademi-vladtest22/input_firstName'), FailureHandling.STOP_ON_FAILURE)
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/input_firstName'), FailureHandling.STOP_ON_FAILURE)
 
-WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_firstName'), GlobalVariable.admin.split('@')[0])
+not_run: WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_firstName'), GlobalVariable.admin.split('@')[0])
 
-WebUI.click(findTestObject('Kademi-vladtest22/input_surName'), FailureHandling.STOP_ON_FAILURE)
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/input_surName'), FailureHandling.STOP_ON_FAILURE)
 
-WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_surName'), GlobalVariable.admin.split('@')[0])
+not_run: WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_surName'), GlobalVariable.admin.split('@')[0])
 
-WebUI.click(findTestObject('Kademi-vladtest22/input_email (1)'), FailureHandling.STOP_ON_FAILURE)
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/input_email (1)'), FailureHandling.STOP_ON_FAILURE)
 
-WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_email (1)'), GlobalVariable.admin)
+not_run: WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_email (1)'), GlobalVariable.admin)
 
-WebUI.click(findTestObject('Kademi-vladtest22/select_group'))
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/select_group'))
 
-WebUI.selectOptionByValue(findTestObject('Kademi-vladtest22/select_group'), 'administrator', true)
+not_run: WebUI.selectOptionByValue(findTestObject('Kademi-vladtest22/select_group'), 'administrator', true)
 
-WebUI.click(findTestObject('Kademi-vladtest22/button_Create and view'))
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/button_Create and view'))
 
-WebUI.delay(5, FailureHandling.STOP_ON_FAILURE)
+not_run: WebUI.delay(5, FailureHandling.STOP_ON_FAILURE)
 
-WebUI.click(findTestObject('Kademi-vladtest22/a_Profile'))
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/a_Profile'))
 
-WebUI.delay(1, FailureHandling.STOP_ON_FAILURE)
+not_run: WebUI.delay(1, FailureHandling.STOP_ON_FAILURE)
 
-WebUI.click(findTestObject('Kademi-vladtest22/input_password (1)'), FailureHandling.STOP_ON_FAILURE)
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/input_password (1)'), FailureHandling.STOP_ON_FAILURE)
 
-WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_password (1)'), GlobalVariable.admin_password)
+not_run: WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_password (1)'), GlobalVariable.admin_password)
 
-WebUI.click(findTestObject('Kademi-vladtest22/input_confirmPassword'), FailureHandling.STOP_ON_FAILURE)
+not_run: WebUI.click(findTestObject('Kademi-vladtest22/input_confirmPassword'), FailureHandling.STOP_ON_FAILURE)
 
-WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_confirmPassword'), GlobalVariable.admin_password)
+not_run: WebUI.sendKeys(findTestObject('Kademi-vladtest22/input_confirmPassword'), GlobalVariable.admin_password)
 
-WebUI.click(findTestObject('Email-job-case/Page_Manage users/button_Save-user_edit_page'))
+not_run: WebUI.click(findTestObject('Email-job-case/Page_Manage users/button_Save-user_edit_page'))
 
-WebUI.delay(5)
+not_run: WebUI.delay(5)
 
-WebUI.click(findTestObject('kademi-vladtest/span_Dashboard'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/span_Dashboard'))
 
-WebUI.click(findTestObject('kademi-vladtest/span_Website Manager'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/span_Website Manager'))
 
-WebUI.click(findTestObject('kademi-vladtest/span_Websites'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/span_Websites'))
 
-WebUI.click(findTestObject('kademi-vladtest/i_fa fa-plus (3)'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/i_fa fa-plus (3)'))
 
-WebUI.focus(findTestObject('kademi-vladtest/div_                        Ad'))
+not_run: WebUI.focus(findTestObject('kademi-vladtest/div_                        Ad'))
 
-WebUI.delay(1)
+not_run: WebUI.delay(1)
 
-WebUI.click(findTestObject('kademi-vladtest/input_newName'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/input_newName'))
 
-WebUI.sendKeys(findTestObject('kademi-vladtest/input_newName'), WebUI.concatenate((([acctestname, 'web']) as String[])))
+not_run: WebUI.sendKeys(findTestObject('kademi-vladtest/input_newName'), WebUI.concatenate((([acctestname, 'web']) as String[])))
 
-WebUI.click(findTestObject('kademi-vladtest/button_Create website'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/button_Create website'))
 
-WebUI.delay(10)
+not_run: WebUI.delay(10)
 
-WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cogs'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cogs'))
 
-WebUI.click(findTestObject('kademi-vladtest/div_KSignup'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/div_KSignup'))
 
-WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cloud-download'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cloud-download'))
 
-WebUI.delay(1)
+not_run: WebUI.delay(1)
 
-WebUI.click(findTestObject('kademi-vladtest/button_Install (1)'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/button_Install (1)'))
 
-WebUI.delay(15)
+not_run: WebUI.delay(15)
 
-WebUI.click(findTestObject('kademi-vladtest/span_Dashboard'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/span_Dashboard'))
 
-WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cog'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cog'))
 
-WebUI.delay(4)
+not_run: WebUI.delay(4)
 
-WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cogs'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cogs'))
 
-WebUI.click(findTestObject('kademi-vladtest/div_KContactus'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/div_KContactus'))
 
-WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cloud-download'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/span_fa fa-cloud-download'))
 
-WebUI.delay(1)
+not_run: WebUI.delay(1)
 
-WebUI.click(findTestObject('kademi-vladtest/button_Install (1)'))
+not_run: WebUI.click(findTestObject('kademi-vladtest/button_Install (1)'))
 
-WebUI.delay(15)
+not_run: WebUI.delay(15)
 
 WebUI.click(findTestObject('kademi-vladtest/span_Dashboard'))
 
@@ -258,8 +279,6 @@ WebUI.switchToWindowIndex(0)
 
 WebUI.click(findTestObject('Email-job-case/Page_Manage users/span_Talk  Connect'), FailureHandling.STOP_ON_FAILURE)
 
-WebUI.delay(1)
-
 WebUI.click(findTestObject('kademi-vladtest/span_Contact requests'), FailureHandling.STOP_ON_FAILURE)
 
 WebUI.delay(2)
@@ -335,3 +354,8 @@ WebUI.delay(5)
 
 not_run: WebUI.closeBrowser()
 
+''', 'Test Cases/Auto3-new-acc-creation-apps-install', new TestCaseBinding('Test Cases/Auto3-new-acc-creation-apps-install', [:]), FailureHandling.STOP_ON_FAILURE )
+    
+} catch (Exception e) {
+    TestCaseMain.logError(e, 'Test Cases/Auto3-new-acc-creation-apps-install')
+}

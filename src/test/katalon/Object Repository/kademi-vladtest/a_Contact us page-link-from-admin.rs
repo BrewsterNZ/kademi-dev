@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebElementEntity>
+   <description></description>
+   <name>a_Contact us page-link-from-admin</name>
+   <tag></tag>
+   <elementGuidId>22f60545-7e6b-49b6-92a7-a9c2c7969eac</elementGuidId>
+   <selectorMethod>BASIC</selectorMethod>
+   <useRalativeImagePath>false</useRalativeImagePath>
+   <webElementProperties>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>tag</name>
+      <type>Main</type>
+      <value>a</value>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>href</name>
+      <type>Main</type>
+      <value>http://vladtest52vweb-vladtest52v.kademi-ci.co/contactus</value>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>target</name>
+      <type>Main</type>
+      <value>_blank</value>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>true</isSelected>
+      <matchCondition>contains</matchCondition>
+      <name>text</name>
+      <type>Main</type>
+      <value>Contact us page for</value>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath</name>
+      <type>Main</type>
+      <value>id(&quot;kademi-container&quot;)/div[@class=&quot;main-container&quot;]/div[@class=&quot;main-content&quot;]/div[@class=&quot;container&quot;]/div[@class=&quot;main-content-inner&quot;]/div[@class=&quot;well&quot;]/ul[1]/li[@class=&quot;even&quot;]/a[1]</value>
+   </webElementProperties>
+</WebElementEntity>

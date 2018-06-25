@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>Auto5-Multiple-Users-login-test</name>
+   <tag></tag>
+   <comment></comment>
+   <testCaseGuid>9699ec60-05ef-4537-a0ae-6e0c94b8c4bf</testCaseGuid>
+   <variable>
+      <defaultValue>'admin'</defaultValue>
+      <description></description>
+      <id>d3153ab8-6fa9-4a40-82ab-5783c846898c</id>
+      <masked>false</masked>
+      <name>varUsername</name>
+   </variable>
+   <variable>
+      <defaultValue>'123456'</defaultValue>
+      <description></description>
+      <id>7770d3a2-a035-4d6e-8e62-54e1183ef6d1</id>
+      <masked>false</masked>
+      <name>varPassword</name>
+   </variable>
+</TestCaseEntity>
