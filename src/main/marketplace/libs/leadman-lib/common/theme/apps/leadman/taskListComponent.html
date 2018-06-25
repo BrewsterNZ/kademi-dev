@@ -11,10 +11,6 @@
 
 #if($page)
 
-	#set($leadsPage = $page.find('/leads'))
-	#set( $tasks = $leadsPage.myDueTasks )
-
-	#if($tasks && $tasks.size() > 0)
     <div class="panel panel-default panel-tasks-list">
         <div class="panel-body" #if ($height) style="height: ${height}px; overflow-y: auto;" #end>
 			#if( !$leadsPage )
@@ -23,7 +19,6 @@
             #parse( "/theme/apps/leadman/tasksDash.html" )
         </div>
     </div>
-	#end
 #else
 	#fakeUI()
 #end
