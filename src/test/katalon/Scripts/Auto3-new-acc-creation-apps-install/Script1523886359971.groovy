@@ -32,7 +32,9 @@ def contactusername = WebUI.concatenate(((['contact', randomdigit]) as String[])
 
 WebUI.openBrowser('http://katalontestacc2.admin.kademi-ci.co')
 
-WebUI.maximizeWindow()
+not_run: WebUI.maximizeWindow()
+
+WebUI.setViewPortSize(1920, 1080)
 
 WebUI.setText(findTestObject('kademi-vladtest/input_email'), GlobalVariable.admin)
 
