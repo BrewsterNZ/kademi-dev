@@ -92,6 +92,221 @@
                 </div>
             </div>
         </div>
+
         #end
     </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="btn-group" role="group" aria-label="...">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-plus-circle"></i> Add Activity
+                    <i class="fa fa-angle-down"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Dropdown link</a></li>
+                    <li><a href="#">Dropdown link</a></li>
+                </ul>
+            </div>
+            <button data-toggle="modal" data-target="#newTaskModal" type="button" class="btn btn-default"><i class="fa fa-clock-o"></i> Create Task</button>
+            <button type="button" class="btn btn-default"><i class="fa fa-envelope"></i> Send Email</button>
+            <button type="button" class="btn btn-default upload-files"><i class="fa fa-cloud-upload"></i> Upload File</button>
+
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-dollar"></i>
+                    Proposal/Quote
+                    <i class="fa fa-angle-down"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#">New Proposal</a></li>
+                    <li><a href="#">New Quote</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="panel panel-default panel-leadProfileTabContent">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <textarea id="leadNotes" class="form-control immediateUpdate" placeholder="Start typing your notes here" name="leadNotes" style="height: 100px"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="activity" >
+    #parse("/theme/apps/leadman/leadManTimeline.html")
+</div>
+
+
+
+<div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="">Create a task</h4>
+            </div>
+            <form method="post" action="$page.href" class="form-horizontal">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newTaskTitle">Title</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="title" placeholder="Next follow-up task" />
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="fa fa-pencil"></span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-right autoFillText">
+                                        <li><a href="#">Call customer</a></li>
+                                        <li><a href="#">Email customer</a></li>
+                                        <li><a href="#">Send documents</a></li>
+                                        <li><a href="#">Arrange a meeting</a></li>
+                                    </ul>
+                                </div><!-- /btn-group -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="dueDate">Task Due</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDateTime($formatter.addDays($formatter.now, 7))">
+                                <span class="input-group-addon">
+                                    <span class="fa fa-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="taskDescription">Description</label>
+                        <div class="col-md-9">
+                            <textarea name="taskDescription" id="taskDescription" class="form-control" placeholder="Enter task details here"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                    <button class="btn btn-primary" type="submit">Create</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+<div class="modal fade" id="uploadFileModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Upload Files</h4>
+            </div>
+            <div class="modal-body">
+                <form action="$page.href" class="dropzone dropzone-fullwidth" id="uploadFileDropzone">
+                    <input type="hidden" name="uploadFiles" value="uploadFiles" />
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modal-change-profile" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Assign new profile</h4>
+            </div>
+            <form method="post" action="$page.href" class="form-horizontal" enctype="multipart/form-data">
+                <input type="hidden" name="assignNewProfile" value="assignNewProfile" />
+                <input type="hidden" name="userId" />
+                <div class="modal-body">
+                    <div class="form-group hide">
+                        <label class="control-label col-md-2" for="nickName">Nick Name</label>
+                        <div class="col-md-8">
+                            <input type="text" name="nickName" id="nickName" class="form-control" placeholder="Nick name" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="updateUserFirstName">Name</label>
+                                <div class="col-md-8" id="searchbox-wrap">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" name="firstName" id="updateUserFirstName" class="form-control" placeholder="First name" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="newUserEmail">Contact</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="email" id="newUserEmail" class="form-control required" placeholder="Email" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="editFileNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Edit Note</h4>
+            </div>
+            <form method="post" action="$page.href" class="form-horizontal">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="updateNotes">Note</label>
+                        <div class="col-md-9">
+                            <textarea name="updateNotes" class="form-control" id="updateNotes"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
 </div>
