@@ -39,7 +39,7 @@
         <hr/>
 
         $!bodyContent
-        
+
         <br/>
 
         <div class="panel panel-default panel-no-icon">
@@ -81,7 +81,7 @@
                 </table>
             </div>
         </div>
-        
+
         <div class="panel panel-default panel-no-icon">
             <div class="panel-heading">
                 <h3 class="panel-title">Path mappings</h3>
@@ -216,6 +216,42 @@
                             </td>
                         </tr>
                         #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="panel panel-default panel-no-icon">
+            <div class="panel-heading">
+                <h3 class="panel-title">Event handlers</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped" id="tablePermissions">
+                    <colgroup>
+                        <col />
+                        <col />
+                        <col style="width: 20px;" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Handler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>onCreated</td>
+                            <td>$!page.assetType.onCreated.text</td>
+                        </tr>
+                        <tr>
+                            <td>onDeleted</td>
+                            <td>$!page.assetType.onDeleted.text</td>
+                        </tr>
+                        <tr>
+                            <td>onUpdated</td>
+                            <td>$!page.assetType.onUpdated.text</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
