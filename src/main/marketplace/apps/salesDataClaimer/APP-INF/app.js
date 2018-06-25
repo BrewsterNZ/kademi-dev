@@ -13,6 +13,7 @@ controllerMappings.addComponent("salesDataClaimer/components", "claimRegisterPro
 controllerMappings.addComponent("salesDataClaimer/components", "claimTracking", "html", "Enables check claim status", "Sales Data Claimer");
 
 controllerMappings.addComponent("salesDataClaimer/components", "claimsTag", "html", "Display untagged claims for tagging", "Sales Data Claimer");
+controllerMappings.addComponent("salesDataClaimer/components", "claimsTagTraining", "html", "Display untagged claims for Training tagging", "Sales Data Claimer");
 
 controllerMappings.addGoalNodeType("claimSubmittedGoal", "salesDataClaimer/claimSubmittedGoalNode.js", "checkSubmittedGoal");
 

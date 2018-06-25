@@ -768,16 +768,7 @@ function getUnclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
                                     "term": {
                                         "assignedToOrg": securityManager.currentUser.primaryMembership.org.id
                                     }
-                                }/*,
-                                {
-                                    "range": {
-                                        "periodFrom": {
-                                            "gte": formatter.formatDate(queryManager.commonStartDate),
-                                            "lte": formatter.formatDate(queryManager.commonFinishDate),
-                                            "format":"dd/MM/yyyy"
-                                        }
-                                    }
-                                }*/
+                                }
                             ],
                             "must_not": [
                                 {
