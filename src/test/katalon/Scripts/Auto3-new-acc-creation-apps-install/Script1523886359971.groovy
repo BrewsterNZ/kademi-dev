@@ -232,7 +232,7 @@ WebUI.delay(5)
 
 WebUI.switchToWindowTitle('Registration')
 
-WebUI.delay(1)
+WebUI.delay(2)
 
 WebUI.click(findTestObject('frontend/Page_Registration/input_email_rego_page'), FailureHandling.STOP_ON_FAILURE)
 
@@ -266,11 +266,11 @@ WebUI.delay(2)
 
 WebUI.click(findTestObject('kademi-vladtest/a_Contact us page-link-from-admin'), FailureHandling.STOP_ON_FAILURE)
 
-WebUI.delay(2)
+WebUI.delay(5)
 
 WebUI.switchToWindowTitle('Contact Us')
 
-WebUI.delay(1)
+WebUI.delay(2)
 
 WebUI.click(findTestObject('frontend/Page_Contact Us/input_firstName_contactus_page'), FailureHandling.STOP_ON_FAILURE)
 
@@ -305,6 +305,12 @@ WebUI.click(findTestObject('frontend/Page_Contact Us/button_Send message_contact
 
 WebUI.delay(5)
 
+WebUI.closeWindowTitle('Contact Us')
+
+WebUI.delay(2)
+
+WebUI.switchToWindowIndex(0)
+
 WebUI.click(findTestObject('kademi-vladtest/span_Dashboard'))
 
 WebUI.click(findTestObject('Kademi-vladtest22/span_Groups  users (1)'))
@@ -333,5 +339,5 @@ WebUI.click(findTestObject('kademi-vladtest/a_edit_single_user(after-search)'))
 
 WebUI.delay(5)
 
-not_run: WebUI.closeBrowser()
+WebUI.closeBrowser()
 
