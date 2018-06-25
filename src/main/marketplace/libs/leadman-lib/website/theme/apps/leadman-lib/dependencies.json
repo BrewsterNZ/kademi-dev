@@ -232,9 +232,9 @@
             }
         },
         {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/timeline/timeline.css"
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/leadman/timeline.less"
             }
         },
         {
