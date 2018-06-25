@@ -18,10 +18,12 @@
 #macro (renderFieldInput $asset $fieldDef)
     <div class="relation-field-wrapper">
         #if( $fieldDef.select )
+        #set( $selectedAssetId = $params[$fieldDef.name] )
+        #set( $selectedAssetId = $asset.uniqueId )
         <select name="$fieldDef.name" class="form-control">
             $formatter.option("", "[Not selected]", $asset.uniqueId)
             #foreach( $availableAsset in $services.assetManager.listAvailableAssets($fieldDef, $asset) )
-            $formatter.option($availableAsset.uniqueId, $availableAsset.name, $asset.uniqueId)
+            $formatter.option($availableAsset.uniqueId, $availableAsset.name, $selectedAssetId)
             #end
         </select>
         #else
