@@ -5,12 +5,8 @@
 </style>
 #set($leadsPage = $page.find('/leads'))
 <div class="" id="tasksList">
-    takelead - $userResource.hasRole('TakeLead')
 	#if($userResource.hasRole('TakeLead'))
 		#set( $incoming = $leadsPage.unassignedTasks )
-
-        $incoming
-        
 
 		#if( $incoming.size() > 0 )
             <h3 class="no-mgt">
