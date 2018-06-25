@@ -1,0 +1,110 @@
+
+#set( $dataSeries = 'training-records' )
+
+#if ($page)
+    
+    #set( $currentTab = "pending-claims" )
+    #if( $request.params.tab )
+        #set( $currentTab = $request.params.tab )
+    #end
+    
+    #set( $currentFilter = "SHOW ALL")
+    #if( $request.params.filter )
+        #set( $currentFilter = $request.params.filter )
+    #end
+    
+    #set($app = $applications.salesDataClaimer )
+    #set($filteredSalesRecords = [])
+    
+    #if( $currentTab == "pending-claims")
+        #set($salesRecords = $app.call('getUnclaimedSales', $page, $dataSeries, ['partnerFullname', 'partnerEmail', 'certificateName', 'type'], []))
+        
+        #set( $filteredSalesRecords = $salesRecords )
+        
+    #else
+        #set($filteredSalesRecords = $app.call('getclaimedSales', $page, $dataSeries, ['partnerFullname', 'partnerEmail', 'certificateName', 'type'], []))
+    #end
+    
+    #if($currentFilter != "SHOW ALL")
+        #set( $tempRecords = [] )
+        #foreach($record in $filteredSalesRecords)
+            #if( $currentFilter == $record.type )
+                #if( $tempRecords.add($record) )#end
+            #end
+        #end
+        
+        #set( $filteredSalesRecords = $tempRecords)
+    #end
+    
+    <div class="">
+        <ul class="nav nav-tabs">
+          <li #if($currentTab=="pending-claims")class="active"#end><a href="?tab=pending-claims">Pending Claims</a></li>
+          <li #if($currentTab=="post-claims")class="active"#end><a href="?tab=post-claims">Past Claims</a></li>
+        </ul>
+    
+        <div class="dropdown" style="position: absolute; top: 0; right: 15px;">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Filter Claims
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li ><a class="filter-claims-option" style="cursor: pointer;">SHOW ALL</a></li>
+                <li value="VMSP"><a class="filter-claims-option" style="cursor: pointer;">VMSP</a></li>
+                <li value="VMTSP"><a class="filter-claims-option" style="cursor: pointer;">VMTSP</a></li>
+                <li value="VMCE"><a class="filter-claims-option" style="cursor: pointer;">VMCE</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div id="claims-table">
+        #if($currentTab == "pending-claims")
+            <div id="pending-claims">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Certificate name</th>
+                            <th>Certificate type</th>
+                            <th>Certificate date</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($record in $filteredSalesRecords)
+                            #set($dealDate = $formatter.toDate($record.periodFrom))
+                            <tr>
+                                <td>$record.certificateName</td>
+                                <td>$record.type</td>
+                                <td>$formatter.formatDate($dealDate)</td>
+                                <td><button class="btn btn-primary tagClaim" data-salesdataid="$formatter.toString($record.recordId)">Claim</button></td>
+                            </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
+        #elseif($currentTab == "post-claims")
+            
+            <div id="post-claims">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Certificate name</th>
+                            <th>Certificate type</th>
+                            <th>Certificate date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($record in $filteredSalesRecords)
+                            #set($dealDate = $formatter.toDate($record.periodFrom))
+                            <tr>
+                                <td>$record.certificateName</td>
+                                <td>$record.type</td>
+                                <td>$formatter.formatDate($dealDate)</td>
+                                <td><button class="btn btn-primary tagClaim" data-salesdataid="$formatter.toString($record.recordId)">Claim</button></td>
+                            </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
+        #end
+    </div>
+#else
+    Preview shall go here
+#end
