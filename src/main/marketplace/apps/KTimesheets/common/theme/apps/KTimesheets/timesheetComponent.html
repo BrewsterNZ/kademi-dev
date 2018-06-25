@@ -1,11 +1,8 @@
 
 #set( $standardItems = $formatter.toList($formatter.split($applications.KTimesheets.appSettings.standardItems)) )
 
-$standardItems
-
 #set( $timesheet = $services.timesheetManager.timesheet($standardItems) )
 
-$timesheet
 <div class="timesheet">
     <div class="table-responsive">
     <table class="table table-striped timesheet-table" id="the-timesheet">

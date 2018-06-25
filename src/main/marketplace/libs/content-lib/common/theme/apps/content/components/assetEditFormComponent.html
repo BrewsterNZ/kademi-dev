@@ -1,14 +1,14 @@
-<form class="form-horizontal" method="POST" action="$request.absolutePath">
+<form class="form-horizontal asset-edit-form" method="POST" action="$request.absolutePath">
     <div class="content-page">
         <div class="page-body htmleditor" style="">
 
             #foreach($field in $page.fields )
             <div class="form-group">
-                <label for="$field.name" class="col-sm-2 control-label">$field.name</label>
+                <label for="$field.name" class="col-sm-2 control-label">$field.title</label>
                 <div class="col-sm-10">
                     $!page.renderFieldInput($field)
                 </div>
-            </div>            
+            </div>
             #end
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
@@ -28,5 +28,5 @@
             </p>
             #end
         </div>
-    </div>    
+    </div>
 </form>
