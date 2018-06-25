@@ -74,26 +74,26 @@
         </div>
 
         #macro( showRuleTemplate $rule $count )
-        <div class="rule-container">
-            <button class="btn btn-warning btn-remove-rule">
+        <div class="rule-container well">
+            <button class="btn btn-warning btn-remove-rule pull-right">
                 <span class="fa fa-remove"></span>
                 Remove
             </button>
             <div class="rule-switcher-container">
                 <div class="form-group">
-                    <label class="control-label col-md-3" for="target.$count"><input type="radio" name="rule.$count" class="rule-switcher" id="target.$count" checked="checked" /></label>
+                    <label class="control-label col-md-1" for="target.$count"><input type="radio" name="rule.$count" class="rule-switcher" id="target.$count"  /></label>
 
                     <div class="col-md-6">
                         #set($selectAsset = $formatter.ifEqual("", "select-asset", $count, "new"))
                         <div class="input-group">
                             <span class="input-group-addon"><span style="display: block; width: 120px; text-align: left;">Target asset </span></span>
-                            <input type="text" name="target.$count" data-asset-name="$!rule.asset.name" value="$!rule.asset.uniqueId" placeholder="" class="form-control $!selectAsset" required="true" />
+                            <input type="text" name="target.$count" data-asset-name="$!rule.asset.name" value="$!rule.asset.uniqueId" placeholder="" class="form-control $!selectAsset" />
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label col-md-3" for="targettype.$count"><input type="radio" name="rule.$count" class="rule-switcher" id="targettype.$count" /></label>
+                    <label class="control-label col-md-1" for="targettype.$count"><input type="radio" name="rule.$count" class="rule-switcher" id="targettype.$count" /></label>
 
                     <div class="col-md-6">
                         <!-- TODO: allow selection of multiple types -->
@@ -105,6 +105,17 @@
                                 $formatter.option($assetType.name, $assetType.name, $rule.assetTypes)
                                 #end
                             </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-1" for="targetexp.$count"><input type="radio" name="exp.$count" class="rule-switcher" id="exp.$count" /></label>
+
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span style="display: block; width: 120px; text-align: left;">Expression </span></span>
+                            <input type="text" name="expr.$count" value="$!rule.expression" placeholder="" class="form-control" />
                         </div>
                     </div>
                 </div>
