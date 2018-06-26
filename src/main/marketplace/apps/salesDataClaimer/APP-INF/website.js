@@ -602,9 +602,13 @@ function getClaimSalesById(salesDataId){
         var hit = salesDataResp.hits.hits[0];
         record = {
             "periodFrom": hit.fields.periodFrom.value,
-            "type": hit.fields.type.value,
             "recordId": hit.fields.recordId.value
         };
+        
+        if(hit.fields.type){
+            record['type'] = hit.fields.type.value
+        }
+        
     }
     return record;
 }
@@ -646,9 +650,12 @@ function createClaimTagging(page, params, files) {
                 soldBy: soldBy,
                 soldById: soldById,
                 soldDate: soldDate,
-                taggedFromSalesRecordId: salesDataId,
-                claimType: salesDataRecord.type
+                taggedFromSalesRecordId: salesDataId
             };
+            
+            if(salesDataRecord.type){
+                claimObj['claimType'] = salesDataRecord.type
+            }
             
             securityManager.runAsUser(enteredUser, function () {
                 db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
@@ -732,7 +739,10 @@ function getClaimedSales(rf, userId){
             }
         )        
     }
-    
+    log.info("*********")
+    log.info(JSON.stringify(query))
+    log.info("user id {}", userId)
+    log.info("*********")
     var db = getDB(rf);
     var queryResults = db.search(JSON.stringify(query));
     
@@ -748,9 +758,33 @@ function getClaimedSales(rf, userId){
     return claimedSalesIds
 }
 
-function getUnclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
-    var claimedSalesIds = getClaimedSales(rf, null);
+function getUnclaimedSales(rf, dataSeriesName, extraFields, filteringParams, allowMultipleClaims) {
+    var claimedSalesIds = []
+    if(allowMultipleClaims){
+        var cr = services.contactFormService.processContactRequest(rf, {}, {});
+        var enteredUser = applications.userApp.findUserResource(cr.profile);
+        var userId = enteredUser.userId
+        claimedSalesIds = getClaimedSales(rf, userId);
+        log.info("$$$$$$$$$$")
+        log.info("userId {}", userId)
+        log.info("cr.profile {}", cr.profile)
+        log.info("enteredUser {}", enteredUser)
+        log.info("userId {}", userId)
+        log.info("userId {}", userId)
+        log.info("cr {}", cr)
+        log.info("$$$$$$$$$$")
+    }else{
+        claimedSalesIds = getClaimedSales(rf, null);
+        log.info("^^^^^^")
         
+        log.info("^^^^^^")
+    }
+    
+    log.info("===========")
+    log.info("allowMultipleClaims {}", allowMultipleClaims)
+    log.info(claimedSalesIds)
+    log.info("===========")
+    
     var salesQuery = {
             "stored_fields": [
                 "periodFrom",

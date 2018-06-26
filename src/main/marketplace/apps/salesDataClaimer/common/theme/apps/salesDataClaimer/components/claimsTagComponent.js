@@ -34,6 +34,14 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
+                    form.find('.multiple-claims').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        
+                        component.attr('data-multiple-claims', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+                    
                 }
             });
         },
@@ -44,6 +52,8 @@
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.txt-expire-in').val(dataAttributes['data-expire-in']);
             form.find('.select-data-series').val(dataAttributes['data-data-series']);
+            form.find('.multiple-claims').val(dataAttributes['data-multiple-claims']);
+            
         }
     };
 

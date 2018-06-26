@@ -3,6 +3,11 @@
 #end
 #set( $expireIn = $formatter.toInteger($expireIn) )
 
+#set( $allowMultipleClaims = false)
+#if($multipleClaims == 'Yes')
+    #set( $allowMultipleClaims = true)
+#end
+
 #if ($bgTransparent == "true")
     #set ($formBgColor = "transparent")
 #end
@@ -23,7 +28,7 @@
     #set($filteredSalesRecords = [])
     
     #if( $currentTab == "pending-claims")
-        #set($salesRecords = $app.call('getUnclaimedSales', $page, $dataSeries, ['type', 'accountName', 'distributor', 'dealRegBonus'], [{key: 'type', value: 'NET NEW REWARD'}]))
+        #set($salesRecords = $app.call('getUnclaimedSales', $page, $dataSeries, ['type', 'accountName', 'distributor', 'dealRegBonus'], [{key: 'type', value: 'NET NEW REWARD'}], $allowMultipleClaims))
         #if($expireIn > 0)
             #foreach($record in $salesRecords)
                 #set($dealDate = $formatter.toDate($record.periodFrom))
