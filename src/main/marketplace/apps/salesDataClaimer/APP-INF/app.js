@@ -15,6 +15,17 @@ controllerMappings.addComponent("salesDataClaimer/components", "claimTracking", 
 controllerMappings.addComponent("salesDataClaimer/components", "claimsTag", "html", "Display untagged claims for tagging", "Sales Data Claimer");
 controllerMappings.addComponent("salesDataClaimer/components", "claimsTagTraining", "html", "Display untagged claims for Training tagging", "Sales Data Claimer");
 
+controllerMappings.addComponent("salesDataClaimer/components", "salesDataImageClaimerForm", "html", "Upload new file for scan and import it's records", "Sales Data Image Claimer App component");
+
+controllerMappings.addEventListener('ScanJobEvent', true, 'handleScanJobEvent');
+        
+controllerMappings.addTableDef("tableOCRManagerRows", "OCR Manager Rows", "getRows")
+    .addHeader("Sales by")
+    .addHeader("Date")
+    .addHeader("Confidence")
+    .addHeader("Row")
+    .addHeader("Text");
+
 controllerMappings.addGoalNodeType("claimSubmittedGoal", "salesDataClaimer/claimSubmittedGoalNode.js", "checkSubmittedGoal");
 
 function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
@@ -291,4 +302,42 @@ function loadTableClaimsOverTime(start, maxRows, rowsResult, rootFolder) {
         rowsResult.addCell(formatter.formatDateISO8601(buckets1[i].key));
         rowsResult.addCell(buckets1[i].aggregations.get('totalAmount').value);
     }
+}
+
+function handleScanJobEvent(rf, event) {
+    var salesDataApp = applications.get("salesData");
+    var ocrDataSeries = salesDataApp.getSalesDataSeries('ocr-series');
+    
+    var rows = {
+        index: 0,
+        iterator: event.generatedOCRTable.getRows().iterator()
+    }
+    
+    while (rows.iterator.hasNext()) {
+        var row = rows.iterator.next();
+        log.info('handleScanJobEvent(): row: {}', row);
+        
+        var cells = {
+            iterator: row.getCells().iterator()
+        };
+        
+        while (cells.iterator.hasNext()) {
+            var cell = cells.iterator.next();
+            
+            // log.info('handleScanJobEvent(): cell(): {}', cell);
+            // log.info('handleScanJobEvent(): cell.text: {}', cell.text);
+            // log.info('handleScanJobEvent(): cell.confidence: {}', cell.confidence);
+            
+            var fieldsMap = formatter.newMap();
+            fieldsMap.put('text', formatter.toString(cell.text).trim());
+            fieldsMap.put('confidence', formatter.toString(cell.confidence).trim());
+            fieldsMap.put('rowIndex', formatter.toString(rows.index));
+            
+            salesDataApp.insertOrUpdateDataPoint(ocrDataSeries, formatter.toBigDecimal(1), formatter.now, formatter.now, securityManager.currentUser.thisProfile, formatter.now, fieldsMap);
+        }
+        
+        rows.index++;
+    }
+    
+    log.info('handleScanJobEvent(): DATA SERIES ADDED SUCCESSFULLY.');
 }

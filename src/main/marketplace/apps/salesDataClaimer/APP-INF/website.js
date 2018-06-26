@@ -11,6 +11,7 @@ controllerMappings
         .defaultView(views.templateView('/theme/apps/salesDataClaimer/viewClaims.html'))
         .addMethod('POST', 'createClaim', 'createClaim')
         .addMethod('POST', 'deleteClaims', 'deleteClaims')
+        .addMethod("POST", 'imageClaim')
         .postPriviledge('READ_CONTENT')
         .enabled(true)
         .build();
@@ -615,7 +616,13 @@ function getClaimSalesById(salesDataId){
 
 function createClaimTagging(page, params, files) {
     log.info('createClaimTagging > page={}, params={}', page, params);
+    
+    var result = createClaimTaggingInner(page, params, files);
+    
+    return views.jsonObjectView(JSON.stringify(result));
+}
 
+function createClaimTaggingInner(page, params, files){
     var result = {
         status: true
     };
@@ -628,9 +635,9 @@ function createClaimTagging(page, params, files) {
         var salesDataRecord = getClaimSalesById(salesDataId)
         
         transactionManager.runInTransaction(function () {                                            
-            
-            var cr = contactFormService.processContactRequest(page, params, files);
-            var enteredUser = applications.userApp.findUserResource(cr.profile);
+//            var cr = contactFormService.processContactRequest(page, params, files);
+//            var enteredUser = applications.userApp.findUserResource(cr.profile);
+            var enteredUser = securityManager.currentUser;
             var now = formatter.formatDateISO8601(formatter.now, org.timezone);
             
             var tempDateTime = salesDataRecord.periodFrom;
@@ -672,8 +679,8 @@ function createClaimTagging(page, params, files) {
         result.status = false;
         result.messages = ['Error when updating claim: ' + e];
     }
-
-    return views.jsonObjectView(JSON.stringify(result));
+    
+    return result;
 }
 
 function getClaimGroupContactRequest(rf, claimGroupId) {
@@ -934,4 +941,20 @@ function getclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
     }
     
     return data;
+}
+
+function imageClaim(page, params, files) {
+    log.info('imageClaim > page={}, params={}', page, params);
+
+    var result = {
+        status: false
+    };
+    
+    var uploadedFiles = uploadFile(page, params, files);
+    if (uploadedFiles.length > 0) {
+        services.ocrManager.scanToTable(uploadedFiles[0].hash);
+        result.status = true;
+    } 
+
+    return views.jsonObjectView(JSON.stringify(result));
 }
