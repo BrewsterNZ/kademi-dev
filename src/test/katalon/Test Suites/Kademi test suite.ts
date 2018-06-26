@@ -26,7 +26,7 @@
    <testCaseLink>
       <guid>e5209d4c-9a85-46d0-8ab0-c1727d0395cb</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>false</isRun>
+      <isRun>true</isRun>
       <testCaseId>Test Cases/Auto3-new-acc-creation-apps-install</testCaseId>
    </testCaseLink>
    <testCaseLink>
