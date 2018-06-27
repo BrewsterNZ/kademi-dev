@@ -16,7 +16,8 @@
     "aggs": {
         "byProfileIds": {
             "terms": {
-                "field": "issuedToProfileId"
+                "field": "issuedToProfileId",
+                "size": 10000
             },
             "aggs": {
                 "totalPoints": {
@@ -27,5 +28,5 @@
             }
         }
     },
-    "size": 10000
+    "size": 0
 }
