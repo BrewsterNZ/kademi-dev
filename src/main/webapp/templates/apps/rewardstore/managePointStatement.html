@@ -147,7 +147,9 @@
                                                     $!r.issuedTo.asProfile().formattedName
                                                 </td>
                                             #end
-                                            <td>$r.balance</td>
+                                            <td>
+                                                $formatter.formatCurrency($r.balance)
+                                            </td>
                                         </tr>
                                     #end
                                 #end
