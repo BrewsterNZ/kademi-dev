@@ -953,6 +953,7 @@ function imageClaim(page, params, files) {
     if (uploadedFiles.length > 0) {
         // log.info("uploadedFiles[0].hash > {}", uploadedFiles[0].hash);
         // log.info("services.ocrManager.scanToTable(uploadedFiles[0].hash) > {}", services.ocrManager.scanToTable(uploadedFiles[0].hash));
+        services.ocrManager.scanToTable(uploadedFiles[0].hash);
         result.status = true;
     } 
 
