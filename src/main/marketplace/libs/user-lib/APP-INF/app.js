@@ -1,5 +1,6 @@
 controllerMappings.addQuery("/APP-INF/queries/registrationsOverTime.query.json", ["signuplog"], ["ReportsViewer"]);
 controllerMappings.addQuery("/APP-INF/queries/membersSpentPoint.query.json", ["rewardpointsdebit"], ["ReportsViewer"]);
+controllerMappings.addQuery("/APP-INF/queries/membersEarnedPoint.query.json", ["rewardPoints"], ["ReportsViewer"]);
 
 controllerMappings.addQuery("/APP-INF/queries/orgsSpentPoint.query.json", ["rewardpointsdebit"], ["ReportsViewer"]);
 controllerMappings.addQuery("/APP-INF/queries/orgsEarnedPoint.query.json", ["rewardPoints"], ["ReportsViewer"]);

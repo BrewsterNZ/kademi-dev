@@ -1,0 +1,31 @@
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "range": {
+                        "issuedDate": {
+                            "gte": "$startDate",
+                            "lte": "$endDate"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "aggs": {
+        "byProfileIds": {
+            "terms": {
+                "field": "issuedToProfileId"
+            },
+            "aggs": {
+                "totalPoints": {
+                    "sum": {
+                        "field": "numPoints"
+                    }
+                }
+            }
+        }
+    },
+    "size": 10000
+}
