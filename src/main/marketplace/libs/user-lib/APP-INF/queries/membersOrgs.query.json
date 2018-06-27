@@ -11,6 +11,11 @@
                     "terms": {
                         "parentOrgs": "$selectedOrgs"
                     }
+                },
+                {
+                    "term": {
+                        "enabled": true
+                    }
                 }
             ]
         }
