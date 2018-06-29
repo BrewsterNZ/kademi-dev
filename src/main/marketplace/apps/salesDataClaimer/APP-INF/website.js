@@ -419,7 +419,6 @@ function updateClaim(page, params, files) {
     return views.jsonObjectView(JSON.stringify(result));
 }
 
-
 function saveProductClaim(page, params, files) {
     log.info('saveProductClaim > page={}, params={}', page, params);
 
@@ -944,7 +943,7 @@ function getclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
 }
 
 function imageClaim(page, params, files) {
-    log.info('imageClaim > page={}, params={}', page, params);
+    log.info('imageClaim(): {}, {}', page, params);
 
     var result = {
         status: false
@@ -952,6 +951,8 @@ function imageClaim(page, params, files) {
     
     var uploadedFiles = uploadFile(page, params, files);
     if (uploadedFiles.length > 0) {
+        // log.info("uploadedFiles[0].hash > {}", uploadedFiles[0].hash);
+        // log.info("services.ocrManager.scanToTable(uploadedFiles[0].hash) > {}", services.ocrManager.scanToTable(uploadedFiles[0].hash));
         services.ocrManager.scanToTable(uploadedFiles[0].hash);
         result.status = true;
     } 

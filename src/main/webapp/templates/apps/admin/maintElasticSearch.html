@@ -3,34 +3,73 @@
         <title>ES Maintenance</title>
     </head>
     <body class="manageApplications appsContainer">
+        <div class="panel panel-default">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Orgs</th>
+                    <td class="text-right">$page.indexes.size()</td>
+                </tr>
+                <tr>
+                    <th>Total indexes</th>
+                    <td class="text-right">$page.countIndexes($page.indexes)</td>
+                </tr>
+                <tr>
+                    <th>Total size</th>
+                    <td class="text-right">$formatter.formatBytes( $page.totalSize($page.indexes) )</td>
+                </tr>
+            </table>
+        </div>
         <form method="POST" action="$page.href" class="maintForm" >
         <table class="table table-striped">
             #foreach( $orgIndexMap in $page.indexes.entrySet() )
             <tr>
-                <th colspan="4">$orgIndexMap.key</th>                
+                <th >$orgIndexMap.key</th>
+                <th class="text-right">
+                    #set( $totalOrgSize =  $page.totalOrgSize($orgIndexMap.value) )
+                    #if( $totalOrgSize > 1000000000 )
+                    <span class="label label-danger">$formatter.formatBytes( $totalOrgSize)</span>
+                    #elseif( $totalOrgSize > 10000000 )
+                    <span class="label label-warning">$formatter.formatBytes( $totalOrgSize)</span>
+                    #elseif( $totalOrgSize > 10000000 )
+                    <span  class="label label-info">$formatter.formatBytes( $totalOrgSize)</span>
+                    #else
+                        $formatter.formatBytes( $totalOrgSize )
+                    #end
+                </th>
+                <th class="text-right">Docs</th>
+                <th class="text-right">Shards</th>
                 <td>
                     <button class="btn btn-danger" type="submit">Delete</button>
                 </td>
             </tr>
-            #foreach( $indexMap in $orgIndexMap.value.entrySet() )
+            #set( $indexes = $page.sortIndexes($orgIndexMap.value.entrySet()) )
+            #foreach( $indexMap in $indexes )
             <tr>
-                <td>$indexMap.key</td>     
+                <td>$page.formatIndexName($indexMap.key)</td>
                 <td class="text-right">$indexMap.value.docs</td>
                 <td class="text-right">$indexMap.value.shards</td>
                 <td class="text-right">
-                    $formatter.formatBytes( $indexMap.value.storeSize )
+                    #if( $indexMap.value.storeSize > 1000000000 )
+                    <span class="label label-danger">$formatter.formatBytes( $indexMap.value.storeSize )</span>
+                    #elseif( $indexMap.value.storeSize > 10000000 )
+                    <span class="label label-warning">$formatter.formatBytes( $indexMap.value.storeSize )</span>
+                    #elseif( $indexMap.value.storeSize > 10000000 )
+                    <span  class="label label-info">$formatter.formatBytes( $indexMap.value.storeSize )</span>
+                    #else
+                        $formatter.formatBytes( $indexMap.value.storeSize )
+                    #end
                 </td>
                 <td>
                     <input type="checkbox" name="deleteIndexes" value="$indexMap.key" />
                 </td>
-            </tr>            
+            </tr>
             #end
             #end
         </table>
         </form>
 
         <script type="text/javascript">
-            $(function () {                
+            $(function () {
                 $("form.maintForm").forms({
                     onSuccess: function (resp) {
                         flog("resp", resp);

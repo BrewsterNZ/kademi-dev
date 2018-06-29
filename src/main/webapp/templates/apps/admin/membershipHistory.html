@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <title>Manage Translation</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="manageTranslations.js">//</script>
+
+    </head>
+    <body>
+
+        <div>
+            <h1>Membership properties history - $page.thisProfile.formattedName</h1>
+
+            <p class="lead">
+                #set( $mem = $page.attributes.membership )
+                <a href="/groups/$mem.groupEntity.name/">
+                    #if( $mem.groupEntity.title)
+                    $mem.groupEntity.title
+                    #else
+                    $mem.groupEntity.name
+                    #end
+                </a> in
+                <a href="/organisations/$mem.withinOrg.id/viewDetails">$mem.withinOrg.formattedName</a>
+
+            </p>
+
+            <hr/>
+
+            #showFields($page.attributes.membership.fields)
+        </div>
+
+
+        #macro( showFields $fields )
+        <h3>Created: $formatter.formatDateTime( $fields.createdDate )</h3>
+        <table class="table table-striped" style="max-width: 800px" >
+            <colgroup>
+                <col style="width: 40%" />
+                <col style="width: 60%" />
+            </colgroup>
+            <tbody>
+                #foreach( $nvp in $fields.pairsOrdered  )
+                <tr>
+                    <th>$nvp.name</th>
+                    <td>$nvp.propValue</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+
+        #if( $fields.previousSetId )
+        #showFields( $page.findPreviousNvSet($fields) )
+        #end
+        #end
+    </body>
+</html>
