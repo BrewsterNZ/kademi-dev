@@ -309,6 +309,8 @@ function loadTableClaimsOverTime(start, maxRows, rowsResult, rootFolder) {
 }
 
 function handleScanJobEvent(rf, event) {
+    log.info('handleScanJobEvent(): {} {}', rf, event);
+    
     var salesDataApp = applications.get("salesData");
     var ocrDataSeries = salesDataApp.getSalesDataSeries('ocr-series');
     
@@ -319,7 +321,6 @@ function handleScanJobEvent(rf, event) {
     
     while (rows.iterator.hasNext()) {
         var row = rows.iterator.next();
-        log.info('handleScanJobEvent(): row: {}', row);
         
         var cells = {
             iterator: row.getCells().iterator()
@@ -337,11 +338,11 @@ function handleScanJobEvent(rf, event) {
             fieldsMap.put('confidence', formatter.toString(cell.confidence).trim());
             fieldsMap.put('rowIndex', formatter.toString(rows.index));
             
-            salesDataApp.insertOrUpdateDataPoint(ocrDataSeries, formatter.toBigDecimal(1), formatter.now, formatter.now, securityManager.currentUser.thisProfile, formatter.now, fieldsMap);
+            securityManager.runAsUser("mohamed-owda", function () {
+                salesDataApp.insertOrUpdateDataPoint(ocrDataSeries, formatter.toBigDecimal(1), formatter.now, formatter.now, securityManager.currentUser.thisProfile, formatter.now, fieldsMap);
+            });
         }
         
         rows.index++;
     }
-    
-    log.info('handleScanJobEvent(): DATA SERIES ADDED SUCCESSFULLY.');
 }

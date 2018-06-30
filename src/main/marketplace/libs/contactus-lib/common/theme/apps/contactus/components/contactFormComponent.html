@@ -82,7 +82,7 @@
 
                 <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-9">
-                        <button type="submit" class="btn $submitSize $submitColor $!submitClass">$!submitText</button>
+                        <button type="submit" data-transcode="contact-form-send-btn" class="trans-lookup btn $submitSize $submitColor $!submitClass">$!submitText</button>
                     </div>
                 </div>
             </form>
@@ -99,7 +99,7 @@
             #if ($formatter.isNull($thankYouMessage))
             #set($thankYouMessage = "Thank you for your message, we will reply shortly.")
             #end
-            <div class="alert alert-success">$thankYouMessage</div>
+            <div class="trans-lookup alert alert-success" data-transcode="contact-form-thankyou-msg">$thankYouMessage</div>
         </div>
     </div>
 </div>

@@ -44,9 +44,9 @@
                             <td class="text-wrapper" style="$!baseStyles" #if ($photoAlign) align="$photoAlign" #end>
                                 #if ($photoLinkable == "true")
                                 <a href="$!photoLink" target="$!photoLinkTarget" style="$!linkStyles">
-                                #end                                    
-                                    <img src="$!rootFolder.externalUrl($photoSrc)" style="display: block; border: 0;" width="$!imageWidth" height="" alt="$!photoAlt" />
-                                    
+                                #end
+                                    <img src="$!rootFolder.externalUrl($photoSrc)" style="display: block; border: 0;" width="$!imageWidth" height="" alt="$!photoAlt" class="trans-lookup" />
+
                                 #if ($photoLinkable == "true")
                                 </a>
                                 #end

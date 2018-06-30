@@ -275,18 +275,42 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            #set($fields = $page.extraFields)
+
+                                            #foreach($mem in $page.memberships)
+                                            #if( $mem.groupEntity.fieldMetaData.size() > 0 )
+                                            <h3>
+                                                <a href="$page.href?membershipHistory=$mem.id" class="pull-right text-muted">
+                                                    <i class="fa fa-clock-o"></i>
+                                                </a>
+                                                <a href="/groups/$mem.groupEntity.name/">
+                                                    #if( $mem.groupEntity.title)
+                                                    $mem.groupEntity.title
+                                                    #else
+                                                    $mem.groupEntity.name
+                                                    #end
+                                                </a> in
+                                                <a href="/organisations/$mem.withinOrg.id/viewDetails">$mem.withinOrg.formattedName</a>
+                                            </h3>
+                                            #set( $fields = $page.getExtraFields($mem) )
+                                            #set( $memPrefix = "${mem.id}." )
                                             #foreach($field in $fields.keySet())
                                             <div class="form-group">
                                                 <label title="From group $!field.group.name" class="control-label col-md-3">$!field.text</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"> <i class="fa fa-star-o"></i> </span>
-                                                        $field.html( $fields[$field] )
+                                                        $field.html( $fields[$field], "", $memPrefix )
                                                     </div>
                                                 </div>
                                             </div>
                                             #end
+                                            #end
+                                            <br/>
+                                            #end
+
+                                            <hr/>
+
+
                                             <div class="form-group">
                                                 <div class="col-md-12">
                                                     <button class="btn btn-sm btn-success pull-right" type="submit">

@@ -250,6 +250,8 @@ function getSalesDataImageClaimerRows(page, params) {
 }
 
 function createImageClaimTagging(page, params, files) {
+    log.info('createImageClaimTagging(): {} {} {}', page, params, files);
+    
     var response = [];
     
     var salesDataIds = params.salesDataIds.split(',');
