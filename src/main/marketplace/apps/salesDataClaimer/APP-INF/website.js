@@ -578,8 +578,9 @@ function getClaimSalesById(salesDataId){
     var salesQuery = {
             "stored_fields": [
                 "periodFrom",
-                "type",
-                "recordId"
+                "type",                
+                "recordId",
+                "points"
             ],
             "query": { 
                         "bool": {
@@ -608,6 +609,9 @@ function getClaimSalesById(salesDataId){
         
         if(hit.fields.type){
             record['type'] = hit.fields.type.value
+        }
+        if(hit.fields.points){
+            record['points'] = hit.fields.points.value
         }
         
     }
@@ -666,7 +670,11 @@ function createClaimTaggingInner(page, params, files){
             
             securityManager.runAsUser(enteredUser, function () {
                 db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
-                eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId, "claimType": salesDataRecord.type});
+                var nodeParams = {"claim": claimId, "claimType": salesDataRecord.type}
+                if(salesDataRecord.points){
+                    nodeParams["points"] = salesDataRecord.points;
+                }
+                eventManager.goalAchieved("claimSubmittedGoal", nodeParams);
                 eventManager.goalAchieved("claimProcessedGoal", custProfileBean, {"claim": claimId, "claimType": salesDataRecord.type, 'status': RECORD_STATUS.APPROVED});
             });
             
@@ -746,10 +754,7 @@ function getClaimedSales(rf, userId){
             }
         )        
     }
-    log.info("*********")
-    log.info(JSON.stringify(query))
-    log.info("user id {}", userId)
-    log.info("*********")
+
     var db = getDB(rf);
     var queryResults = db.search(JSON.stringify(query));
     
@@ -757,7 +762,7 @@ function getClaimedSales(rf, userId){
     var claimedSalesIds = [];
     for (var index in queryResults.hits.hits) {  
         var hit = queryResults.hits.hits[index];
-        var ClaimSalesId = hit.source.taggedFromSalesRecordId
+        var ClaimSalesId = hit.source.taggedFromSalesRecordId;
         
         claimedSalesIds.push(ClaimSalesId );
     }
@@ -770,27 +775,18 @@ function getUnclaimedSales(rf, dataSeriesName, extraFields, filteringParams, all
     if(allowMultipleClaims){
         var cr = services.contactFormService.processContactRequest(rf, {}, {});
         var enteredUser = applications.userApp.findUserResource(cr.profile);
-        var userId = enteredUser.userId
+        var userId = enteredUser.userId;
         claimedSalesIds = getClaimedSales(rf, userId);
-        log.info("$$$$$$$$$$")
-        log.info("userId {}", userId)
-        log.info("cr.profile {}", cr.profile)
-        log.info("enteredUser {}", enteredUser)
-        log.info("userId {}", userId)
-        log.info("userId {}", userId)
-        log.info("cr {}", cr)
-        log.info("$$$$$$$$$$")
-    }else{
-        claimedSalesIds = getClaimedSales(rf, null);
-        log.info("^^^^^^")
         
-        log.info("^^^^^^")
-    }
+    }else{
+        claimedSalesIds = getClaimedSales(rf, null);        
+    }        
     
-    log.info("===========")
-    log.info("allowMultipleClaims {}", allowMultipleClaims)
-    log.info(claimedSalesIds)
-    log.info("===========")
+    var primaryMemberShipsIds = []
+    var primaryMemberShips = securityManager.currentUser.primaryMemberships
+    for(var i=0; i < primaryMemberShips.length; i++){
+        primaryMemberShipsIds.push(primaryMemberShips[i].org.id)
+    }
     
     var salesQuery = {
             "stored_fields": [
@@ -806,8 +802,8 @@ function getUnclaimedSales(rf, dataSeriesName, extraFields, filteringParams, all
                                     }
                                 },
                                 {
-                                    "term": {
-                                        "assignedToOrg": securityManager.currentUser.primaryMembership.org.id
+                                    "terms": {
+                                        "assignedToOrg": primaryMemberShipsIds
                                     }
                                 }
                             ],
@@ -867,6 +863,12 @@ function getclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
     var userId = securityManager.currentUser.userId
     var claimedSalesIds = getClaimedSales(rf, userId);
         
+    var primaryMemberShipsIds = []
+    var primaryMemberShips = securityManager.currentUser.primaryMemberships
+    for(var i=0; i < primaryMemberShips.length; i++){
+        primaryMemberShipsIds.push(primaryMemberShips[i].org.id)
+    }
+    
     var salesQuery = {
             "stored_fields": [
                 "periodFrom",
@@ -886,8 +888,8 @@ function getclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
                                     }
                                 },
                                 {
-                                    "term": {
-                                        "assignedToOrg": securityManager.currentUser.primaryMembership.org.id
+                                    "terms": {
+                                        "assignedToOrg": primaryMemberShipsIds
                                     }
                                 }/*,
                                 {

@@ -39,12 +39,16 @@ function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNod
         attributes.put(CLAIM_TYPE, eventParams.claimType);
     }
     
+    if(eventParams.points){
+        attributes.put("points", eventParams.points);
+    }
+    
     if (!lead) {
         attributes.put(LEAD_CLAIM_ID, eventParams.claim);
         
         return true;
     }
-
+    
     var claimId = attributes.get(LEAD_CLAIM_ID);        
    
     if (isNotBlank(claimId)) {       
