@@ -77,6 +77,13 @@
                                         - used
                                         $p.related</i>
                                 #end
+                                
+                                #if( $p.source )
+                                <p class="pull-right">
+                                    <br/>
+                                    <i>Calculated from <b>$p.source.numPoints pts</b> at <b>$formatter.formatDate($p.source.date)</b> because <b>$!p.source.description</b></i>
+                                </p>                                
+                                #end
                             </td>
                             <td>
                                 #if( $p.txType == "C" )
