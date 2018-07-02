@@ -45,6 +45,21 @@ controllerMappings
         .addMethod('GET', 'getClaim')
         .enabled(true)
         .build();
+        
+controllerMappings
+        .adminController()
+        .pathSegmentName('manageSalesDataImageClaimer')
+        .enabled(true)
+        .defaultView(views.templateView('salesDataImageClaimer/manageSalesDataImageClaimer.html'))
+        .addMethod('GET', 'getSalesDataImageClaimerRows') 
+        .build();  
+        
+controllerMappings
+        .adminController()
+        .path('/salesDataClaimsProducts/tagClaim')
+        .addMethod('POST', 'createImageClaimTagging')
+        .enabled(true)
+        .build();
 
 function getAllClaims(page, params) {
     log.info('getAllClaims > page={}, params={}', page, params);
@@ -189,4 +204,70 @@ function deleteClaims(page, params) {
     }
 
     return views.jsonObjectView(JSON.stringify(result));
+}
+
+function getSalesDataImageClaimerRows(page, params) {
+    var claimedSalesIds = getClaimedSales(page);
+    
+    page.attributes.salesQuery = JSON.stringify({
+            "stored_fields": [
+                "profileId",
+                "periodFrom",
+                "confidence",
+                "rowIndex",
+                "text",
+                "recordId"
+            ],
+            "query": { 
+                        "bool": {
+                            "must": [
+                                {
+                                    "term": {
+                                        "dataSeriesName": "ocr-series"
+                                    }
+                                },
+                                {
+                                    "range": {
+                                        "periodFrom": {
+                                            "gte": formatter.formatDate(queryManager.commonStartDate),
+                                            "lte": formatter.formatDate(queryManager.commonFinishDate),
+                                            "format":"dd/MM/yyyy"
+                                        }
+                                    }
+                                }
+                            ],
+                            "must_not": [
+                                {
+                                    "terms": {
+                                        "recordId": claimedSalesIds
+                                    }
+                                }
+                            ]
+                        }
+                    },
+            "size": 10000
+        });
+}
+
+function createImageClaimTagging(page, params, files) {
+    log.info('createImageClaimTagging(): {} {} {}', page, params, files);
+    
+    var response = [];
+    
+    var salesDataIds = params.salesDataIds.split(',');
+    
+    log.info("params.salesDataIds: {}", params.salesDataIds);
+    
+    for(counter = 0; counter < salesDataIds.length; counter++){
+        var params_temp = {
+            salesDataId: salesDataIds[counter]
+        };
+
+        response.push({
+            "salesDataId": salesDataIds[counter],
+            "response": createClaimTaggingInner(page, params_temp, files)
+        });
+    }
+    
+    return views.jsonObjectView(response);
 }

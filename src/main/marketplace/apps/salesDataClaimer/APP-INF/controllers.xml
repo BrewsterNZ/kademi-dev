@@ -13,6 +13,7 @@
     </settings>
 
     <menu parentId="menuRoot" id="menuManageSaleDataClaimer" text="Sale Data Claimer" css="fa fa-id-card-o" path="/manageSaleDataClaimer/" ordering="50"/>
+    <menu parentId="menuRoot" id="menuManageSalesDataImageClaimer " text="Sales Data Image Claimer" css="fa fa-question-circle" path="/manageSalesDataImageClaimer" ordering="50"/>
 
     <role class="role">
         <name>SalesClaimEditor</name>

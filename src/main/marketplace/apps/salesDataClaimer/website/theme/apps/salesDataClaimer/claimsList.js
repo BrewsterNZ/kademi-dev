@@ -20,6 +20,13 @@
                 initFormNewClaim($(this));
             });
         }
+        
+        var formNewImageClaim = $('.form-new-image-claim');
+        if (formNewImageClaim.length > 0) {
+            formNewImageClaim.each(function () {
+                initFormNewImageClaim($(this));
+            });
+        }
     });
     
     function initClaimsTable() {
@@ -309,6 +316,73 @@
             }
         }
     }
+    
+    function initFormNewImageClaim(form, modal) {
+        flog('initFormNewImageClaim', form, modal);
+        
+        if (!form.hasClass('initialized')) {
+            form.addClass('initialized');
+            
+            var successDiv = form.siblings('.sale-claim-success');
+            var name = form.find('[name=name]');
+            
+            
+            var inputImage = form.find('[name=claimImage]');
+            var thumbImg = form.find('.thumbnail img');
+            var btnUpload = form.find('.btn-upload-image-claim');
+            
+            inputImage.on('change', function () {
+                var file = this.files[0];
+                var isImage = $.inArray(file['type'], ['image/gif', 'image/jpeg', 'image/png']) !== -1;
+                
+                form.find('.img-error').css('display', isImage ? 'none' : 'block');
+                
+                if (isImage) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        thumbImg.attr('src', e.target.result);
+                        btnUpload.find('i').attr('class', 'fa fa-check');
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            btnUpload.on('click', function (e) {
+                e.preventDefault();
+                
+                inputImage.trigger('click');
+            });
+            
+            form.forms({
+                onSuccess: function () {
+                    if (modal) {
+                        reloadClaimsList(function () {
+                            Msg.success('Your claim image has been submitted.');
+                            modal.modal('hide');
+                        });
+                    } else {
+                        $(document).trigger('submitted.salesDataClaimer');
+                        form.fhide();
+                        successDiv.fshow();
+                    }
+                }
+            });
+            
+            if (!modal) {
+                successDiv.find('.btn-submit-other-claim').on('click', function (e) {
+                    e.preventDefault();
+                    
+                    form.find('input').not('[name=name]').val('');
+                    thumbImg.attr('src', '/static/images/photo_holder.png');
+                    btnUpload.find('span').html('Upload claim image');
+                    btnUpload.find('i').attr('class', 'fa fa-file-picture-o');
+                    
+                    form.fshow();
+                    successDiv.fhide();
+                });
+            }
+        }
+    } 
     
     function reloadClaimsList(callback) {
         $('#table-claims-body').reloadFragment({
