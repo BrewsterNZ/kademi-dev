@@ -490,15 +490,35 @@
                                     <button class="btn btn-danger">Unsubscribe - $!page.profile.email</button>
                                 </form>
                             </div>
+
+                            #portlets("adminProfile")
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-8">
-                            #portlets("adminProfile")
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-12">
+                            <hr/>
+                            <h2>Notes</h2>
+                            <form action="$page.href" method="POST" class="form-inline form-addnote">
+                                <textarea name="newNote" class="form-control" style="width: 100%"></textarea>
+                                <button class="btn btn-success pull-right">
+                                    <i class="fa fa-plus"></i>
+                                    Add note
+                                </button>
+                            </form>
+                            <div class="clearfix"></div>
 
+                            #set( $notes = $services.criteriaBuilders.leadNote.eq("relatedProfile", $page.profile).sortDesc("createDate").execute(1000) )
+                            <div id="profile-notes">
+                            #foreach( $note in $notes )
+                            <div>
+                                $note.notes
+                                <br/>
+                                <small>By $note.createdBy.formattedName at $formatter.formatDateTime($note.createDate)</small>
+                                <hr/>
+                            </div>
+                            #end
+                            </div>
                         </div>
                     </div>
                 </div>
