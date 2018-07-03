@@ -334,7 +334,7 @@
                                 row += '        <span>';
                                 row +=              confidence;
                                 row += '        </span>';
-                                row += '        <input type="text" value="' + $cell.children().text() + '" />';
+                                row += '        <input type="text" value="' + $cell.find(':first-child').text()  + '" />';
                                 row += '    </td>';
                             } 
 
