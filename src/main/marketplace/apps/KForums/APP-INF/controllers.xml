@@ -1,0 +1,9 @@
+<controllers onAppEnabled="">
+    <source>/APP-INF/app.js</source>
+
+    <!-- Common files -->
+    <source>/APP-INF/common/utils.js</source>
+
+    <!-- Website Controllers -->
+    <source>/APP-INF/website/website.js</source>
+</controllers>
