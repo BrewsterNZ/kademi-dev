@@ -21,6 +21,14 @@
                         component.attr('data-position', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
+                    
+                    form.find('.select-what-to-show').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        
+                        component.attr('data-what-to-show', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -29,6 +37,7 @@
             
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-position').val(dataAttributes['data-position'] || 'top');
+            form.find('.select-what-to-show').val(dataAttributes['data-what-to-show'] || 'unacknowledged');
         }
     };
     
