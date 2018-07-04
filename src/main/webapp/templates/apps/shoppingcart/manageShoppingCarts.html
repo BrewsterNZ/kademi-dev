@@ -111,6 +111,7 @@
                             <col width="" />
                             <col width="" />
                             <col width="10px" />
+                            <col width="10px" />
                         </colgroup>
                         <thead>
                             <tr>
@@ -120,6 +121,7 @@
                                 <th>Description</th>
                                 <th class="text-center">Items</th>
                                 <th class="text-center">Amount</th>
+                                <th></th>
                                 <th><input type="checkbox" class="check-all"/></th>
                             </tr>
                         </thead>
@@ -135,6 +137,11 @@
                                 <td class="clickable" data-href="$v.href">$v.description</td>
                                 <td class="text-center">$formatter.toDecimal($v.totalItems, 0)</td>
                                 <td class="text-center">$formatter.formatCurrency($v.totalCost)</td>
+                                <td>
+                                    <a class="btn btn-info" href="$v.cart.id/">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </td>
                                 <th><input type="checkbox" data-carthref="$v.href" data-cartid="$v.cart.id" class="cart-check"/></th>
                             </tr>
                             #end
