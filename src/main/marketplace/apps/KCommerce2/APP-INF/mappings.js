@@ -157,10 +157,27 @@ function checkout(page, params, files, form) {
     if (!checkoutItems.totalCost.equals(totalAmountFromForm)) {
         return views.jsonView(false, "The item prices have changed, please refresh your page. " + totalAmountFromForm + " was submitted, current price is " + checkoutItems.totalCost);
     }
+
+
     var paymentResult;
     transactionManager.runInTransaction(function () {
         var customerGroup = services.cartManager.getOrCreateCustomerGroup("customers"); // todo move to setting
         var purchaser = services.cartManager.getOrCreatePurchaser(form, customerGroup);
+
+        var cart = checkoutItems.cart;
+        form.databind(cart);
+
+        var useBillingAddress = form.booleanParam("useBillingAddress");
+        var addressBuilder = services.criteriaBuilders.getBuilder("address");
+        var billingAddress = addressBuilder.instantiate();
+        if( useBillingAddress ) {
+            form.databind(billingAddress, "billing");
+        } else {
+            billingAddress.copyFrom( cart.shippingAddress );
+        }
+        addressBuilder.save(billingAddress);
+        cart.billingAddress = billingAddress;
+
         paymentResult = services.cartManager.doProcessCart(form, checkoutItems, purchaser, paymentProviderId);
     });
     if (paymentResult.paymentCompleted) {

@@ -177,6 +177,7 @@
         var modalAdd = $('#modal-add-claim');
         var formAdd = modalAdd.find('form');
         var modalReview = $('#modal-review-claim');
+        var modalProcess = $('#modal-process-claim');
         
         table.find('.chk-all').on('click', function () {
             tbody.find(':checkbox').prop('checked', this.checked);
@@ -258,6 +259,117 @@
             })
         });
         
+        table.on('click', '.btn-process-claim', function (e) {
+            e.preventDefault();
+
+            $('#table-ocr-manager-body').html("");
+            modalProcess.find('thead tr').html("");
+
+            modalProcess.modal('show');
+
+            var btn = $(this);
+            var id = btn.attr('data-id');
+            var url = MAIN_URL + 'ocrFile/' + id + '/?hash=' + btn.data('ocrfilehash');
+
+            $('.btn-approve-image-claims').attr('data-ocrfilehash', btn.data('ocrfilehash'));
+            $('.btn-approve-image-claims').attr('data-id', btn.data('id'));
+            $('.btn-reject-image-claims').attr('data-id', btn.data('id'));
+
+            $.ajax({
+                url: url,
+                type: 'get',
+                dataType: 'json',
+                success: function (resp) {
+                    if (resp && resp.status) {
+                        // modalProcess.find('[name=ids]').val(id);
+                        // modalProcess.find('img[name="ocrFileHash"]').attr('src', '/_hashes/files/');
+
+                        var xmlDocument = $.parseXML(resp.OCRFileXML);
+                        var $xml = $(xmlDocument);
+                        var $rows = $xml.find("row");
+
+                        modalProcess.find('thead tr').append('<th width="30"><input type="checkbox" name="select-all" /></th>');
+
+                        var columns_amount = $($($rows[0]).find("cell")).length;
+
+                        for(counter = 0; counter < $rows.length; counter++){ 
+                            var row_columns_amount = $($($rows[counter]).find("cell")).length;
+
+                            if(row_columns_amount > columns_amount){
+                                columns_amount = row_columns_amount;
+                            }
+                        }
+
+                        for(counter = 0; counter < columns_amount; counter++){
+                            var column_select = '';
+
+                            column_select += '<th>';
+                            column_select += '    <select></select>';
+                            column_select += '</th>';
+
+                            modalProcess.find('thead tr').append(column_select);
+                        }
+
+                        for(counter = 0; counter < $rows.length; counter++){   
+                            var row = '';
+                            row += '<tr data-index="' + $($rows[counter]).attr('index') + '">';
+                            row += '    <td><input type="checkbox" data-checkbox/></td>';
+
+                            var $cells = $($rows[counter]).find("cell");
+                            for(cells_counter = 0; cells_counter < $cells.length; cells_counter++){
+                                var $cell = $($cells[cells_counter]);
+
+                                var confidence = (Math.round(Number($cell.find('confidence').text()) * 100) / 100);
+                                var cell_background;
+
+                                if(confidence >= lowConfidenceFrom && confidence <= lowConfidenceTo){ //low
+                                    cell_background = '#d2a0a0';
+                                }else if(confidence >= mediumConfidenceFrom && confidence <= mediumConfidenceTo){ //mid
+                                    cell_background = '#d2c8a0';
+                                }else if(confidence >= highConfidenceFrom && confidence <= highConfidenceTo) {
+                                    cell_background = '#a0d2a2';
+                                }
+
+                                row += '    <td style="background: ' + cell_background + ';">';
+                                row += '        <span>';
+                                row +=              confidence;
+                                row += '        </span>';
+                                row += '        <input type="text" value="' + $cell.find(':first-child').text()  + '" />';
+                                row += '    </td>';
+                            } 
+
+                            for(empty_cells_counter = 0; empty_cells_counter < (columns_amount - $cells.length); empty_cells_counter++){
+                                row += '    <td>';
+                                row += '        <input type="text" value="" />';
+                                row += '    </td>';
+                            }
+
+                            row += '</tr>';
+
+                            // console.log($($rows[counter]).find('text').text());
+
+                            $('#table-ocr-manager-body').append(row);
+                        }
+
+                        $.each(options, function(){
+                            $('#modal-process-claim select').append('<option value="' + this.value + '">' + this.title + '</option>');
+                        });
+
+                        $('#modal-process-claim select').each(function(){
+                            var index = $('#modal-process-claim').find('select').index(this);
+                            $(this).val(defaultColumns[index]);
+                        });
+                    } else {
+                        alert('Error in getting claim data. Please contact your administrators to resolve this issue.');
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Error in getting claim data: ' + errorThrown + '. Please contact your administrators to resolve this issue.');
+                    flog('Error in getting claim data', jqXHR, textStatus, errorThrown);
+                }
+            })
+        });
+
         tbody.find('.timeago').timeago();
         
         $('.btn-approve-claims').on('click', function (e) {
@@ -312,6 +424,149 @@
             } else {
                 alert('Please select claims which you want to delete');
             }
+        });
+        
+        modalProcess.on('click', '[name="select-all"]', function(){            
+            $this = $(this);
+
+            if($this.prop('checked')){
+                $('#modal-process-claim tbody [data-checkbox]').prop('checked', true);
+            }else{
+                $('#modal-process-claim tbody [data-checkbox]').prop('checked', false);
+            }
+        }); 
+
+        $('span#ocrFile').zoom({magnify: 3, on: 'grab'});
+
+        modalProcess.on('focus', 'input[type="text"]', function () {
+           $(this).select();
+        });
+
+        $('.btn-approve-image-claims').on('click', function (e) {
+            e.preventDefault();
+
+            if(!confirm("Are you sure you want to approve these claim records?")){
+                return;
+            }
+
+            var continue_process = true;
+            var columns = [];
+            var $columns_select = modalProcess.find('th select');
+            $columns_select.each(function () {
+                if(!continue_process){
+                    return;
+                }
+
+                if(this.value === ""){
+                    if(!confirm("You have un selected columns which will be deleted, continue?")){
+                        continue_process = false;
+                    }
+                }
+
+                columns.push(this.value);
+            });
+
+            if(!continue_process){
+                return;
+            }
+
+            $btn = $(this);
+
+            modalProcess.find('select').attr('disabled', 'disabled');
+            modalProcess.find('input').attr('disabled', 'disabled');
+
+            var rows = [];
+            var checked = modalProcess.find('tbody [data-checkbox]:checkbox:checked');   
+            checked.each(function () {
+                var $checkbox = $(this);
+                var $tr = $checkbox.closest('tr');
+                var $inputs = $tr.find('input[type="text"]');
+                var column = 0;
+                var row = {  
+                    'cells': [],
+                    'index': $tr.attr('data-index')
+                };
+
+                $inputs.each(function () {
+                    if(columns[column] == ""){
+                        return true;
+
+                    }
+
+                    $input = $(this);
+
+                    row.cells.push({column: columns[column++], value: this.value, confidence: $.trim($input.closest('td').find('span').html())});
+                });
+
+                rows.push(row);
+            }); 
+
+            // console.log(rows);
+            // console.log(columns);
+            // return;
+
+            setTimeout(function(){
+                $.ajax({
+                    url: MAIN_URL,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        approveImageClaims: true,
+                        rows: JSON.stringify(rows),
+                        old_hash: $btn.data('ocrfilehash'),
+                        id: $btn.data('id')
+                    },
+                    async: false,
+                    success: function (resp) {
+                        reloadClaimsList();
+
+                        flog('RESP ', resp);
+                        Msg.success("Claims approved successfully");
+                        modalProcess.modal('hide');
+
+                        modalProcess.find('[name="select-all"]').prop('checked', false);
+                        modalProcess.find('select').removeAttr('disabled');
+                        modalProcess.find('input').removeAttr('disabled');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {                                                            
+                        flog('Error in checking address: ', jqXHR, textStatus, errorThrown);
+                        Msg.error("Something went wrong !");
+
+                        modalProcess.find('select').removeAttr('disabled');
+                        modalProcess.find('input').removeAttr('disabled');
+                    }
+                });
+            }, 200);
+        });
+
+        $('.btn-reject-image-claims').on('click', function(e){            
+            if(!confirm('Are you that you want to reject the claim?')) {
+                return;
+            }
+
+            $.ajax({
+                url: MAIN_URL,
+                type: 'POST',
+                dataType: 'JSON',
+                data: {
+                    rejectClaims: true,
+                    ids: $('.btn-reject-image-claims').data('id')
+                },
+                success: function (resp) {
+                    if (resp && resp.status) {
+                        reloadClaimsList(function () {
+                            Msg.success('Rejection succeed');
+                        })
+                        modalProcess.modal('hide');
+                    } else {
+                        alert('Error in rejecting claims. Please contact your administrators to resolve this issue.');
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Error in rejecting claims: ' + errorThrown + '. Please contact your administrators to resolve this issue.');
+                    flog('Error in rejecting claims', jqXHR, textStatus, errorThrown);
+                }
+            });
         });
     }
     

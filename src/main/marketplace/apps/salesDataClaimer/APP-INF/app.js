@@ -218,6 +218,34 @@ function saveSettings(page, params) {
             var allowAnonymous = params.allowAnonymous || '';
             page.setAppSetting(APP_NAME, 'allowAnonymous', allowAnonymous);
         }
+         
+        if (params.highConfidenceFrom) {
+            page.setAppSetting(APP_NAME, 'highConfidenceFrom', params.highConfidenceFrom);
+        }
+        
+        if (params.highConfidenceTo) {
+            page.setAppSetting(APP_NAME, 'highConfidenceTo', params.highConfidenceTo);
+        }
+        
+        if (params.mediumConfidenceFrom) {
+            page.setAppSetting(APP_NAME, 'mediumConfidenceFrom', params.mediumConfidenceFrom);
+        }
+        
+        if (params.mediumConfidenceTo) {
+            page.setAppSetting(APP_NAME, 'mediumConfidenceTo', params.mediumConfidenceTo);
+        }
+        
+        if (params.lowConfidenceFrom) {
+            page.setAppSetting(APP_NAME, 'lowConfidenceFrom', params.lowConfidenceFrom);
+        }
+        
+        if (params.lowConfidenceTo) {
+            page.setAppSetting(APP_NAME, 'lowConfidenceTo', params.lowConfidenceTo);
+        }
+        
+        if (params.defaultColumns) {
+            page.setAppSetting(APP_NAME, 'defaultColumns', params.defaultColumns);
+        }
     });
 
     return views.jsonResult(true);
@@ -309,10 +337,11 @@ function loadTableClaimsOverTime(start, maxRows, rowsResult, rootFolder) {
 }
 
 function handleScanJobEvent(rf, event) {
-    log.info('handleScanJobEvent(): {} {}', rf, event);
+    log.info('handleScanJobEvent(): {}', event);
     
-    var salesDataApp = applications.get("salesData");
-    var ocrDataSeries = salesDataApp.getSalesDataSeries('ocr-series');
+    var XMLDocumentString = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    
+    XMLDocumentString += '<rows>';
     
     var rows = {
         index: 0,
@@ -320,6 +349,8 @@ function handleScanJobEvent(rf, event) {
     }
     
     while (rows.iterator.hasNext()) {
+        XMLDocumentString += '<row index="' + formatter.toString(rows.index) + '">\n';
+        
         var row = rows.iterator.next();
         
         var cells = {
@@ -328,21 +359,81 @@ function handleScanJobEvent(rf, event) {
         
         while (cells.iterator.hasNext()) {
             var cell = cells.iterator.next();
+            XMLDocumentString += '<cell>\n'; 
             
             // log.info('handleScanJobEvent(): cell(): {}', cell);
             // log.info('handleScanJobEvent(): cell.text: {}', cell.text);
             // log.info('handleScanJobEvent(): cell.confidence: {}', cell.confidence);
             
-            var fieldsMap = formatter.newMap();
-            fieldsMap.put('text', formatter.toString(cell.text).trim());
-            fieldsMap.put('confidence', formatter.toString(cell.confidence).trim());
-            fieldsMap.put('rowIndex', formatter.toString(rows.index));
+            XMLDocumentString += '<text>' + formatter.toString(cell.text).trim() + '</text>\n';
+            XMLDocumentString += '<confidence>' + formatter.toString(cell.confidence).trim() + '</confidence>\n';
             
-            securityManager.runAsUser("mohamed-owda", function () {
-                salesDataApp.insertOrUpdateDataPoint(ocrDataSeries, formatter.toBigDecimal(1), formatter.now, formatter.now, securityManager.currentUser.thisProfile, formatter.now, fieldsMap);
-            });
+            XMLDocumentString += '</cell>\n';
         }
         
         rows.index++;
+        XMLDocumentString += '</row>\n';
+    }
+    
+    XMLDocumentString += '</rows>';
+    
+    log.info("XMLDocumentString: {}", XMLDocumentString);
+    
+    /***
+     * Dummy XML with multi-columns
+     */
+    // var XMLSample = '<?xml version="1.0" encoding="UTF-8"?>';
+    // XMLSample += '<rows>';
+    // for(counter = 0; counter < 30; counter++){
+    //     XMLSample += '  <row index="' + counter + '">';
+    //     for(cells_counter = 0; cells_counter < 5; cells_counter++){
+    //         XMLSample += '      <cell>';
+    //         XMLSample += '          <text>' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '</text>';
+    //         XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
+    //         XMLSample += '      </cell>';
+    //     }
+    //     XMLSample += '  </row>';
+    // }
+    // XMLSample += '</rows>';
+    
+    // XMLDocumentString = XMLSample;
+    
+    var XMLDocumentHash = fileManager.upload(XMLDocumentString.getBytes());
+    
+    log.info("XMLDocumentHash: {}", XMLDocumentHash);
+     
+    try {
+        var org = rf.organisation;
+        var db = getDB(rf);
+        var contactFormService = services.contactFormService;
+            
+        transactionManager.runInTransaction(function () { 
+            securityManager.runAsUser('mohamed-owda', function () {                                           
+                var enteredUser = securityManager.currentUser;
+                var now = formatter.formatDateISO8601(formatter.now, org.timezone);
+                
+                var soldBy = enteredUser.name;
+                var soldById = enteredUser.userId;
+                var custProfileBean = enteredUser.extProfileBean;
+                
+                var claimId = 'claim-' + generateRandomText(32);
+                var claimObj = {
+                    recordId: claimId,
+                    enteredDate: now,
+                    modifiedDate: now,
+                    amount: 1,
+                    status: RECORD_STATUS.APPROVED,
+                    soldBy: soldBy,
+                    soldById: soldById,
+                    ocrFileHash: XMLDocumentHash
+                };
+                
+                db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
+                eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});
+                eventManager.goalAchieved("claimProcessedGoal", custProfileBean, {"claim": claimId, 'status': RECORD_STATUS.APPROVED});
+            });
+        });
+    } catch (e) {
+        log.error('Error when saving claim: ' + e, e);
     }
 }

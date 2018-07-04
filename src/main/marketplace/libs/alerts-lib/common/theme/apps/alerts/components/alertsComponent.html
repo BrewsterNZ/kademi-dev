@@ -3,12 +3,16 @@
 #end
 
 #if ($page)
-    #set ($alerts = $applications.alerts.getMessages($rootFolder, $user, $position))
+    #if ($whatToShow && $whatToShow == 'acknowledged')
+        #set ($alerts = $applications.alerts.getAcknowledgedMessages($rootFolder, $user, $position))
+    #else
+        #set ($alerts = $applications.alerts.getMessages($rootFolder, $user, $position))
+    #end
 
     #foreach($msg in $alerts)
     <div class="dashboard-alert alert #if($msg.type == "primary") bg-primary #else alert-${msg.type} #end">
         #if( $msg.id )
-            #if( $msg.allowDismiss )
+            #if( $msg.allowDismiss && (!$whatToShow || $whatToShow == 'unacknowledged') )
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <a class="hide msg" href="javascript:void(0);" data-id="$msg.id">Ack</a>
             #end

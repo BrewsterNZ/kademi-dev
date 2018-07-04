@@ -1,0 +1,70 @@
+#modal-process-claim table{
+    display: block; 
+    width: 100%; 
+    height: 668px; 
+    overflow: auto; 
+    margin:0 auto;
+}
+
+#table-ocr-manager-body tr td{
+    position: relative;
+}
+
+#table-ocr-manager-body tr td:hover span{
+    display: block;
+}
+
+#table-ocr-manager-body tr td span{
+    position: absolute; 
+    right: 0; 
+    top: 0; 
+    padding-right: 3px; 
+    padding-left: 3px;
+    border-bottom-left-radius: 5px; 
+    width: 40px; 
+    /*color: #fff;*/
+    
+    border: solid 1px;
+    color: #000;
+    border-top: none;
+    border-right: none;
+    
+    background: #eee;
+    
+    display: none;
+}
+
+#modal-process-claim table select,
+#table-ocr-manager-body tr td input[type="text"]{
+    width: 250px;
+}
+
+#scanned-image-section img{
+    width: 100%;
+}
+
+#modal-process-claim .modal-dialog{
+    width: 1200px;
+}
+
+.zoom {
+    display:inline-block;
+    position: relative;
+}
+
+.zoom img {
+    display: block;
+}
+
+.zoom img::selection { background-color: transparent; }
+
+.zoom span{
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: rgba(0,0,0,.5);
+    border-bottom-right-radius: 4px;
+    color: #fff;
+}

@@ -21,6 +21,15 @@ var recordMapping = {
             "store": true,
             "type": "date"
         },
+        "ocrFileHash": {
+          "type": "keyword",
+          "store": true,
+          "fields": {
+            "text": {
+              "type": "text"
+            }
+          }
+        },
         "amount": {
             "type": "long",
             "store": true

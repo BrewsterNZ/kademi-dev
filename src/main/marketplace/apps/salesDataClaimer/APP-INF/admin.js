@@ -28,6 +28,7 @@ controllerMappings
         .addMethod('POST', 'approveClaims', 'approveClaims')
         .addMethod('POST', 'rejectClaims', 'rejectClaims')
         .addMethod('POST', 'deleteClaims', 'deleteClaims')
+        .addMethod('POST', 'approveImageClaims')
         .postPriviledge('READ_CONTENT')
         .enabled(true)
         .build();
@@ -48,11 +49,25 @@ controllerMappings
         
 controllerMappings
         .adminController()
+        .path('/manageSaleDataClaimer/ocrFile/(?<claimId>[^/]*)')
+        .addMethod('GET', 'checkRedirect')
+        .enabled(true)
+        .build();
+ 	        
+ controllerMappings
+        .adminController()
+        .path('/manageSaleDataClaimer/ocrFile/(?<claimId>[^/]*)/')
+        .addMethod('GET', 'getClaimOCRFile')
+        .enabled(true)
+        .build();
+	        
+controllerMappings
+        .adminController()
         .pathSegmentName('manageSalesDataImageClaimer')
         .enabled(true)
-        .defaultView(views.templateView('salesDataImageClaimer/manageSalesDataImageClaimer.html'))
+//        .defaultView(views.templateView('salesDataImageClaimer/manageSalesDataImageClaimer.html'))
         .addMethod('GET', 'getSalesDataImageClaimerRows') 
-        .build();  
+        .build();
         
 controllerMappings
         .adminController()
@@ -250,13 +265,13 @@ function getSalesDataImageClaimerRows(page, params) {
 }
 
 function createImageClaimTagging(page, params, files) {
-    log.info('createImageClaimTagging(): {} {} {}', page, params, files);
+    log.info('createImageClaimTagging(): {} {}', page, files);
     
     var response = [];
     
     var salesDataIds = params.salesDataIds.split(',');
     
-    log.info("params.salesDataIds: {}", params.salesDataIds);
+//    log.info("params.salesDataIds: {}", params.salesDataIds);
     
     for(counter = 0; counter < salesDataIds.length; counter++){
         var params_temp = {
@@ -270,4 +285,103 @@ function createImageClaimTagging(page, params, files) {
     }
     
     return views.jsonObjectView(response);
+}
+	
+function approveImageClaims(page, params, files){
+    log.info('approveImageClaims(): {} {}', page, files);
+
+    var result = {
+        status: true
+    } 
+
+    var rows = JSON.parse(params.rows);
+
+    /**
+     * Save data in new XML
+     */
+    var XMLDocumentString = '<?xml version="1.0" encoding="UTF-8"?>\n';
+
+    XMLDocumentString += '<rows oldHash="' + params.old_hash + '">';
+
+    for(rows_counter = 0; rows_counter < rows.length; rows_counter++){
+        var row = rows[rows_counter];
+
+        XMLDocumentString += '<row index="' + row['index'] + '">\n';
+        for(cells_counter = 0; cells_counter < row['cells'].length; cells_counter++){
+            var cell = row['cells'][cells_counter];
+
+            XMLDocumentString += '<cell>\n';
+            XMLDocumentString += '<' + cell['column'] + '>' + formatter.toString(cell['value']).trim() + '</' + cell['column'] + '>\n';
+            XMLDocumentString += '<confidence>' + formatter.toString(cell['confidence']).trim() + '</confidence>\n';
+            XMLDocumentString += '</cell>\n';
+        } 
+        XMLDocumentString += '</row>\n';
+    }
+
+    XMLDocumentString += '</rows>';
+
+    result.XMLDocumentHash = fileManager.upload(XMLDocumentString.getBytes());
+
+    /**
+     * Save data-series
+     */
+    var salesDataApp = applications.get("salesData");
+    var ocrDataSeries = salesDataApp.getSalesDataSeries('sales-data-image-claim');
+
+    for(rows_counter = 0; rows_counter < rows.length; rows_counter++){
+        var fieldsMap = formatter.newMap();
+        for(cells_counter = 0; cells_counter < rows[rows_counter]['cells'].length; cells_counter++){
+            fieldsMap.put(rows[rows_counter]['cells'][cells_counter]['column'], formatter.toString(rows[rows_counter]['cells'][cells_counter]['value']).trim());
+        }
+
+        securityManager.runAsUser("mohamed-owda", function () {
+            salesDataApp.insertOrUpdateDataPoint(ocrDataSeries, formatter.toBigDecimal(1), formatter.now, formatter.now, securityManager.currentUser.thisProfile, formatter.now, fieldsMap);
+        });
+    }
+
+    /**
+     * Update Claim Status & New XML hash
+     */
+    try {
+        var db = getDB(page);
+        var id = params.id;
+        var claim = db.child(id);
+
+        if (claim !== null) {
+            var obj = {
+                recordId: id,
+                soldBy: claim.jsonObject.soldBy,
+                soldById: claim.jsonObject.soldById,
+                amount: claim.jsonObject.amount,
+                soldDate: claim.jsonObject.soldDate,
+                enteredDate: claim.jsonObject.enteredDate,
+                modifiedDate: formatter.formatDateISO8601(formatter.now),
+                productSku: claim.jsonObject.productSku,
+                status: claim.jsonObject.status,
+                receipt: claim.jsonObject.receipt,
+                status: RECORD_STATUS.APPROVED,
+                ocrFileHash: result.XMLDocumentHash
+            }; 
+
+            // Parse extra fields
+            var extraFields = getSalesDataExtreFields(page);
+            for (var i = 0; i < extraFields.length; i++) {
+                var ex = extraFields[i];
+                var fieldName = 'field_' + ex.name;
+
+                obj[fieldName] = params.get(fieldName) || '';
+            }
+
+            claim.update(JSON.stringify(obj), TYPE_RECORD);
+        } else {
+            result.status = false;
+            result.messages = ['This claim does not exist'];
+        }
+    } catch (e) {
+        log.error('Error when updating claim: ' + e, e);
+        result.status = false;
+        result.messages = ['Error when updating claim: ' + e];
+    }
+	    
+    return views.jsonObjectView(JSON.stringify(result));
 }

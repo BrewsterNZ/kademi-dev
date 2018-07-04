@@ -2,13 +2,13 @@
 #set($firstPo = false)
 #set($paymentAps = $services.cartManager.paymentProviders)
 #foreach($pApp in $paymentAps)
-    #set($f1 = $foreach)
-    #foreach($po in $pApp.paymentOptions)
-        #if($f1.first && $foreach.first)
-            #set($firstApp = $pApp)
-            #set($firstPo = $po)
-        #end
-    #end
+#set($f1 = $foreach)
+#foreach($po in $pApp.paymentOptions)
+#if($f1.first && $foreach.first)
+#set($firstApp = $pApp)
+#set($firstPo = $po)
+#end
+#end
 #end
 
 #set( $checkoutItems = $services.cartManager.checkoutItems )
@@ -34,12 +34,12 @@
                 </div>
                 <div class="form-group">
                     <!--<div class="col-md-6">-->
-                        <!--<button type="button" class="btn btn-info text-uppercase btn-prev hide" ><i class="fa fa-angle-left"></i> Previous</button>-->
+                    <!--<button type="button" class="btn btn-info text-uppercase btn-prev hide" ><i class="fa fa-angle-left"></i> Previous</button>-->
                     <!--</div>-->
                     <div class="col-md-12 text-right">
                         <div class="btn-group" role="group">
                             <button type="submit" class="btn btn-info text-uppercase btn-next">Next
-                            <i class="fa fa-angle-right"></i></button>
+                                <i class="fa fa-angle-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -150,6 +150,7 @@
             </div>
             <div class="panel-body">
                 <div class="form-horizontal">
+
                     <div class="form-group">
                         <div class="col-md-12">
                             <input name="addressLine1" placeholder="Address line 1" type="text" class="form-control required" value="$!cart.addressLine1" />
@@ -235,36 +236,37 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">
-                <small>Billing & Shipping</small>
+                <small>Billing</small>
             </div>
         </div>
         <div class="panel-body">
+
             <div class="payment-select">
                 #set($firstApp = false)
                 #set($firstPo = false)
                 #set($paymentAps = $services.cartManager.paymentProviders)
                 #foreach($pApp in $paymentAps)
-                    #set($f1 = $foreach)
-                    #foreach($po in $pApp.paymentOptions)
-                        #if($f1.first && $foreach.first)
-                            #set($firstApp = $pApp)
-                            #set($firstPo = $po)
-                        #end
-                        <a href="#" data-pid="$pApp.instanceId" data-option="$po.id" class="payment-option">
-                            <i class="fa fa-check fa-3x #if($f1.first && $foreach.first)active#end"></i>
-                            <img src="$po.logo" alt="$po.title" />
-                        </a>
-                    #end
+                #set($f1 = $foreach)
+                #foreach($po in $pApp.paymentOptions)
+                #if($f1.first && $foreach.first)
+                #set($firstApp = $pApp)
+                #set($firstPo = $po)
+                #end
+                <a href="#" data-pid="$pApp.instanceId" data-option="$po.id" class="payment-option">
+                    <i class="fa fa-check fa-3x #if($f1.first && $foreach.first)active#end"></i>
+                    <img src="$po.logo" alt="$po.title" />
+                </a>
+                #end
                 #end
             </div>
 
             <div class="form-horizontal">
                 #foreach($pApp in $paymentAps)
-                    #if($foreach.first)
-                    #end
-                    <div id="pf-${pApp.instanceId}" class="payment-form" #if(!$foreach.first) style="display:none;" #end>
-                        $pApp.paymentForm
-                    </div>
+                #if($foreach.first)
+                #end
+                <div id="pf-${pApp.instanceId}" class="payment-form" #if(!$foreach.first) style="display:none;" #end>
+                    $pApp.paymentForm
+                </div>
                 #end
                 <div id="cart-checkout-data">
                     <!-- TODO: Currency should be configurable -->
@@ -276,21 +278,59 @@
                     <input type="hidden" name="paymentOption" value="$firstPo.id" />
                     <input type="hidden" name="processCart" value="processCart" />
                 </div>
+
+                <!--
                 <div class="form-group">
                     <div class="col-md-12">
-                        <!--<div class="checkbox">
-                            <label>
-                                <input type="checkbox" value="true" checked="checked"/> Use above information for shipping
-                            </label>
-                        </div>
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" value="true" checked="checked" /> Subcribe for latest offers
                             </label>
                         </div>
-                        -->
                     </div>
                 </div>
+                -->
+                
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label data-toggle="collapse" data-target="#billingAddress">
+                                <input type="checkbox" name="useBillingAddress" value="true" /> Enter different billing address
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-horizontal collapse" id="billingAddress">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input name="billing.addressLine1" placeholder="Address line 1" type="text" class="form-control required-if-shown" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input name="billing.addressLine2" placeholder="Address line 2" type="text" class="form-control" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input name="billing.state" placeholder="State" type="text" class="form-control required-if-shown"  value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input name="billing.postcode" placeholder="Postcode" type="text" class="form-control required-if-shown"  value="" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="hidden" name="billing.country" value="" />
+                        <div class="col-md-12">
+                            <input autocomplete="off" placeholder="Country" type="text" class="form-control country-typeahead required-if-shown" />
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="form-group">
                     <div class="col-md-6">
