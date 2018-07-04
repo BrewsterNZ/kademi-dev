@@ -1,8 +1,16 @@
 {
-  "appDependencies": [
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/KForums/wall.js"
+            }
+        }
+    ],
+    "appDependencies": [
         {
             "appId": "forums",
-            "branch" : ""
+            "branch": ""
         },
         {
             "appId": "forums-lib",
@@ -12,5 +20,7 @@
             "appId": "user-lib",
             "branch": "1.1.3"
         }
-  ]
+    ]
 }
+
+

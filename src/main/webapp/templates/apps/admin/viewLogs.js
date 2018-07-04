@@ -52,8 +52,9 @@
                 ajaxTimer = window.setTimeout(loadNewLogs, 1000);
             },
             error: function (resp) {
-                flog(arguments);
-                Msg.error('An error occured. Please check your internet connection');
+                flog("exception parsing server response", resp);
+                ajaxTimer = window.setTimeout(loadNewLogs, 1000);
+                //Msg.error('An error occured. Please check your internet connection');
             }
         });
 

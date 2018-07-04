@@ -12,20 +12,20 @@ function initProfile() {
             $('#pwdState').reloadFragment();
         }
     });
-    
+
     $(".secondFactorForm").forms({
         onSuccess: function (resp, form) {
             Msg.info("Done");
             $('#secondFactorQR').reloadFragment();
         }
     });
-    
+
     flog("init delete membersip");
     $(document).on("click", ".btn-delete-membership", function (e) {
         var a = $(this);
         e.preventDefault();
         e.stopPropagation();
-        
+
         Kalert.confirm("Are you sure you want to delete this group membership?", function () {
             var href = a.attr("href");
             deleteFile(href, function () {
@@ -34,7 +34,7 @@ function initProfile() {
             });
         });
     });
-    
+
     $(".memberships-wrapper").on("click", ".addGroup a", function (e) {
         flog("click", this);
         e.preventDefault();
@@ -42,15 +42,15 @@ function initProfile() {
         var groupName = $(e.target).closest("a").attr("href");
         doAddToGroup(groupName);
     });
-    
-    
+
+
     $(".form-unsubscribe button").on('click', function (e) {
         e.preventDefault();
         Kalert.confirm("Are you sure you want to unsubscribe this user? They will no longer be able to access this site", function () {
             $(".form-unsubscribe").trigger('submit');
         });
     });
-    
+
     $(".form-unsubscribe").forms({
         onSuccess: function (resp, form) {
             Msg.info("Unsubscribed. Now going to manage users page");
@@ -58,7 +58,19 @@ function initProfile() {
         },
         confirmMessage: "The user has been unsubscribed"
     });
-    
+
+    $(".form-addnote").forms({
+        onSuccess: function (resp, form) {
+            if( resp.status ) {
+                form.find("textarea").val("");
+                Msg.info("Added note");
+                $("#profile-notes").reloadFragment();
+            } else {
+                Msg.error("Error: " + resp.messages);
+            }
+        }
+    });
+
     $('#btn-change-ava').upcropImage({
         buttonContinueText: 'Save',
         isCameraEnabled: true,
@@ -91,10 +103,10 @@ function initProfile() {
             });
         }
     });
-    
+
     $('body').on('click', '#btn-remove-ava', function (e) {
         e.preventDefault();
-        
+
         Kalert.confirm('Are you sure you want to clear the avatar?', function () {
             $.ajax({
                 url: window.location.pathname,
@@ -129,26 +141,26 @@ function initTabLazyLoading() {
             loadTab(tabId);
         }
     });
-    
+
     $(document).on('pageDateChanged', function (e, startDate, endDate) {
         flog("page date changed", startDate, endDate);
         reloadActiveTab();
     });
-    
-    
+
+
     // Better load the current tab if one is selected
     var uri = URI(window.location);
     var tabId = uri.fragment();
     // Need to strip off the -tab suffix
     tabId = tabId.substring(0, tabId.length - 4);
-    
+
     loadTab(tabId);
 }
 
 function loadTab(tabId) {
     var tab = $("#" + tabId + ".lazy-load");
     flog("Selected tab", tab, tabId);
-    
+
     if (tab.length > 0) {
         tab.reloadFragment({
             url: window.location.pathname + "?showTab=" + tabId,
@@ -187,7 +199,7 @@ function initEnableDisable() {
             setProfileEnabled(window.location.href, true);
         });
     });
-    
+
 }
 
 function setProfileEnabled(profileHref, enabled) {
@@ -307,18 +319,18 @@ function doAddToGroup(groupName) {
             hideLoadingIcon();
         }
     })
-    
+
 }
 
 function initEditMemberships() {
     var modal = $("#modal-edit-membership");
-    
+
     modal.on('hide.bs.modal', function () {
         modal.find('.newOrgId').val('');
     });
     $(document).on('click', '.btn-edit-membership', function (e) {
         e.preventDefault();
-        
+
         var groupHref = $(this).attr('data-group-href');
         modal.find('.modal-body').html('<p>Please wait...</p>');
         modal.modal('show');
@@ -328,21 +340,21 @@ function initEditMemberships() {
             }
         })
     });
-    
+
     modal.on('click', '.btn-change-org', function (e) {
         e.preventDefault();
-        
+
         modal.find('#changeOrgFinder').entityFinder({
             type: 'organisation',
             onSelectSuggestion: function (el, suggestion, id, actualId, type) {
                 modal.find('.newOrgId').val(id);
             }
         });
-        
+
         modal.find('.btn-update-membership, .btn-change-org-cancel').removeClass('hide');
         modal.find('.btn-change-org, .btn-delete-membership').addClass('hide');
     });
-    
+
     modal.on('click', '.btn-change-org-cancel', function (e) {
         e.preventDefault();
         modal.find('.modal-body').html('<p>Please wait...</p>');
@@ -353,7 +365,7 @@ function initEditMemberships() {
             }
         })
     });
-    
+
     modal.on('click', '.btn-update-membership', function (e) {
         e.preventDefault();
         var a = $(this);

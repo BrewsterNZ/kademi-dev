@@ -48,9 +48,9 @@
                                                             </td>
                                                         #end
                                                         <td valign="top" style="$baseStyles; ${cellStyles}">$productOrder.product.title</td>
-                                                        <td valign="top" style="$baseStyles; ${cellStyles}">$formatter.formatCurrency($productOrder.unitCost, false) Points</td>
+                                                        <td valign="top" style="$baseStyles; ${cellStyles}">$formatter.formatCurrency($productOrder.effectiveUnitCost, false) Points</td>
                                                         <td valign="top" style="$baseStyles; ${cellStyles}">$productOrder.quantity</td>
-                                                        <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">#set( $subtotal = $productOrder.unitCost * $productOrder.quantity) $formatter.formatCurrency($subtotal, false) Points</td>
+                                                        <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">$formatter.formatCurrency($productOrder.totalCost, false) Points</td>
                                                     </tr>
                                                 #end
                                             #end

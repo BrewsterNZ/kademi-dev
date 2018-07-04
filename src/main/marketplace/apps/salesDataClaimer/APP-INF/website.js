@@ -11,6 +11,7 @@ controllerMappings
         .defaultView(views.templateView('/theme/apps/salesDataClaimer/viewClaims.html'))
         .addMethod('POST', 'createClaim', 'createClaim')
         .addMethod('POST', 'deleteClaims', 'deleteClaims')
+        .addMethod("POST", 'imageClaim')
         .postPriviledge('READ_CONTENT')
         .enabled(true)
         .build();
@@ -418,7 +419,6 @@ function updateClaim(page, params, files) {
     return views.jsonObjectView(JSON.stringify(result));
 }
 
-
 function saveProductClaim(page, params, files) {
     log.info('saveProductClaim > page={}, params={}', page, params);
 
@@ -577,8 +577,9 @@ function getClaimSalesById(salesDataId){
     var salesQuery = {
             "stored_fields": [
                 "periodFrom",
-                "type",
-                "recordId"
+                "type",                
+                "recordId",
+                "points"
             ],
             "query": { 
                         "bool": {
@@ -602,16 +603,29 @@ function getClaimSalesById(salesDataId){
         var hit = salesDataResp.hits.hits[0];
         record = {
             "periodFrom": hit.fields.periodFrom.value,
-            "type": hit.fields.type.value,
             "recordId": hit.fields.recordId.value
         };
+        
+        if(hit.fields.type){
+            record['type'] = hit.fields.type.value
+        }
+        if(hit.fields.points){
+            record['points'] = hit.fields.points.value
+        }
+        
     }
     return record;
 }
 
 function createClaimTagging(page, params, files) {
     log.info('createClaimTagging > page={}, params={}', page, params);
+    
+    var result = createClaimTaggingInner(page, params, files);
+    
+    return views.jsonObjectView(JSON.stringify(result));
+}
 
+function createClaimTaggingInner(page, params, files){
     var result = {
         status: true
     };
@@ -624,9 +638,9 @@ function createClaimTagging(page, params, files) {
         var salesDataRecord = getClaimSalesById(salesDataId)
         
         transactionManager.runInTransaction(function () {                                            
-            
-            var cr = contactFormService.processContactRequest(page, params, files);
-            var enteredUser = applications.userApp.findUserResource(cr.profile);
+//            var cr = contactFormService.processContactRequest(page, params, files);
+//            var enteredUser = applications.userApp.findUserResource(cr.profile);
+            var enteredUser = securityManager.currentUser;
             var now = formatter.formatDateISO8601(formatter.now, org.timezone);
             
             var tempDateTime = salesDataRecord.periodFrom;
@@ -646,13 +660,20 @@ function createClaimTagging(page, params, files) {
                 soldBy: soldBy,
                 soldById: soldById,
                 soldDate: soldDate,
-                taggedFromSalesRecordId: salesDataId,
-                claimType: salesDataRecord.type
+                taggedFromSalesRecordId: salesDataId
             };
+            
+            if(salesDataRecord.type){
+                claimObj['claimType'] = salesDataRecord.type
+            }
             
             securityManager.runAsUser(enteredUser, function () {
                 db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
-                eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId, "claimType": salesDataRecord.type});
+                var nodeParams = {"claim": claimId, "claimType": salesDataRecord.type}
+                if(salesDataRecord.points){
+                    nodeParams["points"] = salesDataRecord.points;
+                }
+                eventManager.goalAchieved("claimSubmittedGoal", nodeParams);
                 eventManager.goalAchieved("claimProcessedGoal", custProfileBean, {"claim": claimId, "claimType": salesDataRecord.type, 'status': RECORD_STATUS.APPROVED});
             });
             
@@ -665,8 +686,8 @@ function createClaimTagging(page, params, files) {
         result.status = false;
         result.messages = ['Error when updating claim: ' + e];
     }
-
-    return views.jsonObjectView(JSON.stringify(result));
+    
+    return result;
 }
 
 function getClaimGroupContactRequest(rf, claimGroupId) {
@@ -732,7 +753,7 @@ function getClaimedSales(rf, userId){
             }
         )        
     }
-    
+
     var db = getDB(rf);
     var queryResults = db.search(JSON.stringify(query));
     
@@ -740,7 +761,7 @@ function getClaimedSales(rf, userId){
     var claimedSalesIds = [];
     for (var index in queryResults.hits.hits) {  
         var hit = queryResults.hits.hits[index];
-        var ClaimSalesId = hit.source.taggedFromSalesRecordId
+        var ClaimSalesId = hit.source.taggedFromSalesRecordId;
         
         claimedSalesIds.push(ClaimSalesId );
     }
@@ -748,9 +769,24 @@ function getClaimedSales(rf, userId){
     return claimedSalesIds
 }
 
-function getUnclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
-    var claimedSalesIds = getClaimedSales(rf, null);
+function getUnclaimedSales(rf, dataSeriesName, extraFields, filteringParams, allowMultipleClaims) {
+    var claimedSalesIds = []
+    if(allowMultipleClaims){
+        var cr = services.contactFormService.processContactRequest(rf, {}, {});
+        var enteredUser = applications.userApp.findUserResource(cr.profile);
+        var userId = enteredUser.userId;
+        claimedSalesIds = getClaimedSales(rf, userId);
         
+    }else{
+        claimedSalesIds = getClaimedSales(rf, null);        
+    }        
+    
+    var primaryMemberShipsIds = []
+    var primaryMemberShips = securityManager.currentUser.primaryMemberships
+    for(var i=0; i < primaryMemberShips.length; i++){
+        primaryMemberShipsIds.push(primaryMemberShips[i].org.id)
+    }
+    
     var salesQuery = {
             "stored_fields": [
                 "periodFrom",
@@ -765,8 +801,8 @@ function getUnclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
                                     }
                                 },
                                 {
-                                    "term": {
-                                        "assignedToOrg": securityManager.currentUser.primaryMembership.org.id
+                                    "terms": {
+                                        "assignedToOrg": primaryMemberShipsIds
                                     }
                                 }
                             ],
@@ -826,6 +862,12 @@ function getclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
     var userId = securityManager.currentUser.userId
     var claimedSalesIds = getClaimedSales(rf, userId);
         
+    var primaryMemberShipsIds = []
+    var primaryMemberShips = securityManager.currentUser.primaryMemberships
+    for(var i=0; i < primaryMemberShips.length; i++){
+        primaryMemberShipsIds.push(primaryMemberShips[i].org.id)
+    }
+    
     var salesQuery = {
             "stored_fields": [
                 "periodFrom",
@@ -845,8 +887,8 @@ function getclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
                                     }
                                 },
                                 {
-                                    "term": {
-                                        "assignedToOrg": securityManager.currentUser.primaryMembership.org.id
+                                    "terms": {
+                                        "assignedToOrg": primaryMemberShipsIds
                                     }
                                 }/*,
                                 {
@@ -900,4 +942,22 @@ function getclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
     }
     
     return data;
+}
+
+function imageClaim(page, params, files) {
+    log.info('imageClaim(): {}, {}', page, params);
+
+    var result = {
+        status: false
+    };
+    
+    var uploadedFiles = uploadFile(page, params, files);
+    if (uploadedFiles.length > 0) {
+        // log.info("uploadedFiles[0].hash > {}", uploadedFiles[0].hash);
+        // log.info("services.ocrManager.scanToTable(uploadedFiles[0].hash) > {}", services.ocrManager.scanToTable(uploadedFiles[0].hash));
+        services.ocrManager.scanToTable(uploadedFiles[0].hash);
+        result.status = true;
+    } 
+
+    return views.jsonObjectView(JSON.stringify(result));
 }

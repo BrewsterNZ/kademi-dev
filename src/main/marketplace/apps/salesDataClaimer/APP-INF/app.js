@@ -15,6 +15,17 @@ controllerMappings.addComponent("salesDataClaimer/components", "claimTracking", 
 controllerMappings.addComponent("salesDataClaimer/components", "claimsTag", "html", "Display untagged claims for tagging", "Sales Data Claimer");
 controllerMappings.addComponent("salesDataClaimer/components", "claimsTagTraining", "html", "Display untagged claims for Training tagging", "Sales Data Claimer");
 
+controllerMappings.addComponent("salesDataClaimer/components", "salesDataImageClaimerForm", "html", "Upload new file for scan and import it's records", "Sales Data Image Claimer App component");
+
+controllerMappings.addEventListener('ScanJobEvent', true, 'handleScanJobEvent');
+        
+controllerMappings.addTableDef("tableOCRManagerRows", "OCR Manager Rows", "getRows")
+    .addHeader("Sales by")
+    .addHeader("Date")
+    .addHeader("Confidence")
+    .addHeader("Row")
+    .addHeader("Text");
+
 controllerMappings.addGoalNodeType("claimSubmittedGoal", "salesDataClaimer/claimSubmittedGoalNode.js", "checkSubmittedGoal");
 
 function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
@@ -28,12 +39,16 @@ function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNod
         attributes.put(CLAIM_TYPE, eventParams.claimType);
     }
     
+    if(eventParams.points){
+        attributes.put("points", eventParams.points);
+    }
+    
     if (!lead) {
         attributes.put(LEAD_CLAIM_ID, eventParams.claim);
         
         return true;
     }
-
+    
     var claimId = attributes.get(LEAD_CLAIM_ID);        
    
     if (isNotBlank(claimId)) {       
@@ -203,6 +218,34 @@ function saveSettings(page, params) {
             var allowAnonymous = params.allowAnonymous || '';
             page.setAppSetting(APP_NAME, 'allowAnonymous', allowAnonymous);
         }
+         
+        if (params.highConfidenceFrom) {
+            page.setAppSetting(APP_NAME, 'highConfidenceFrom', params.highConfidenceFrom);
+        }
+        
+        if (params.highConfidenceTo) {
+            page.setAppSetting(APP_NAME, 'highConfidenceTo', params.highConfidenceTo);
+        }
+        
+        if (params.mediumConfidenceFrom) {
+            page.setAppSetting(APP_NAME, 'mediumConfidenceFrom', params.mediumConfidenceFrom);
+        }
+        
+        if (params.mediumConfidenceTo) {
+            page.setAppSetting(APP_NAME, 'mediumConfidenceTo', params.mediumConfidenceTo);
+        }
+        
+        if (params.lowConfidenceFrom) {
+            page.setAppSetting(APP_NAME, 'lowConfidenceFrom', params.lowConfidenceFrom);
+        }
+        
+        if (params.lowConfidenceTo) {
+            page.setAppSetting(APP_NAME, 'lowConfidenceTo', params.lowConfidenceTo);
+        }
+        
+        if (params.defaultColumns) {
+            page.setAppSetting(APP_NAME, 'defaultColumns', params.defaultColumns);
+        }
     });
 
     return views.jsonResult(true);
@@ -290,5 +333,107 @@ function loadTableClaimsOverTime(start, maxRows, rowsResult, rootFolder) {
         rowsResult.addRow();
         rowsResult.addCell(formatter.formatDateISO8601(buckets1[i].key));
         rowsResult.addCell(buckets1[i].aggregations.get('totalAmount').value);
+    }
+}
+
+function handleScanJobEvent(rf, event) {
+    log.info('handleScanJobEvent(): {}', event);
+    
+    var XMLDocumentString = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    
+    XMLDocumentString += '<rows totalConfidence="' + event.generatedOCRTable.getTotalConfidence() + '">';
+    
+    var rows = {
+        index: 0,
+        iterator: event.generatedOCRTable.getRows().iterator()
+    }
+    
+    while (rows.iterator.hasNext()) {
+        XMLDocumentString += '<row index="' + formatter.toString(rows.index) + '">\n';
+        
+        var row = rows.iterator.next();
+        
+        var cells = {
+            iterator: row.getCells().iterator()
+        };
+        
+        while (cells.iterator.hasNext()) {
+            var cell = cells.iterator.next();
+            XMLDocumentString += '<cell>\n'; 
+            
+            // log.info('handleScanJobEvent(): cell(): {}', cell);
+            // log.info('handleScanJobEvent(): cell.text: {}', cell.text);
+            // log.info('handleScanJobEvent(): cell.confidence: {}', cell.confidence);
+            
+            XMLDocumentString += '<text>' + formatter.htmlEncode(formatter.toString(cell.text).trim()) + '</text>\n';
+            XMLDocumentString += '<confidence>' + formatter.toString(cell.confidence).trim() + '</confidence>\n';
+            
+            XMLDocumentString += '</cell>\n';
+        }
+        
+        rows.index++;
+        XMLDocumentString += '</row>\n';
+    }
+    
+    XMLDocumentString += '</rows>';
+    
+    log.info("XMLDocumentString: {}", XMLDocumentString);
+    
+    /***
+     * Dummy XML with multi-columns
+     */
+    // var XMLSample = '<?xml version="1.0" encoding="UTF-8"?>';
+    // XMLSample += '<rows>';
+    // for(counter = 0; counter < 30; counter++){
+    //     XMLSample += '  <row index="' + counter + '">';
+    //     for(cells_counter = 0; cells_counter < 5; cells_counter++){
+    //         XMLSample += '      <cell>';
+    //         XMLSample += '          <text>' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '</text>';
+    //         XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
+    //         XMLSample += '      </cell>';
+    //     }
+    //     XMLSample += '  </row>';
+    // }
+    // XMLSample += '</rows>';
+    
+    // XMLDocumentString = XMLSample;
+    
+    var XMLDocumentHash = fileManager.upload(XMLDocumentString.getBytes());
+    
+    log.info("XMLDocumentHash: {}", XMLDocumentHash);
+     
+    try {
+        var org = rf.organisation;
+        var db = getDB(rf);
+        var contactFormService = services.contactFormService;
+            
+        transactionManager.runInTransaction(function () { 
+            securityManager.runAsUser('mohamed-owda', function () {                                           
+                var enteredUser = securityManager.currentUser;
+                var now = formatter.formatDateISO8601(formatter.now, org.timezone);
+                
+                var soldBy = enteredUser.name;
+                var soldById = enteredUser.userId;
+                var custProfileBean = enteredUser.extProfileBean;
+                
+                var claimId = 'claim-' + generateRandomText(32);
+                var claimObj = {
+                    recordId: claimId,
+                    enteredDate: now,
+                    modifiedDate: now,
+                    amount: 1,
+                    status: RECORD_STATUS.APPROVED,
+                    soldBy: soldBy,
+                    soldById: soldById,
+                    ocrFileHash: XMLDocumentHash
+                };
+                
+                db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
+                eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});
+                eventManager.goalAchieved("claimProcessedGoal", custProfileBean, {"claim": claimId, 'status': RECORD_STATUS.APPROVED});
+            });
+        });
+    } catch (e) {
+        log.error('Error when saving claim: ' + e, e);
     }
 }

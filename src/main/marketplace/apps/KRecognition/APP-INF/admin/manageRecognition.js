@@ -31,9 +31,6 @@
     controllerMappings.addComponent("KRecognition/components",
         "badgesPanel", "html", "Displays the achieved badges for a topic", "Recognition");
 
-    controllerMappings.addComponent("KRecognition/components",
-        "recognitionWall", "html", "Displays a facebook style wall of actitivy", "Recognition");
-
     g._onRecognitionAwarded = function (rf, event) {
         var award = event.award;
         var badge = award.recognition;

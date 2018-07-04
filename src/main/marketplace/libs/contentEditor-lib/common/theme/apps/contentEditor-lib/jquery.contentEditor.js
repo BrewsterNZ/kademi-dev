@@ -1,6 +1,6 @@
 (function ($) {
     var EDITOR_PATH = '/theme/apps/contentEditor-lib/';
-    
+
     $.fn.contentEditor = function (method) {
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -10,13 +10,13 @@
             $.error('[jquery.contentEditor] Method ' + method + ' does not exist on jquery.contentEditor');
         }
     };
-    
+
     var contentEditor = {
         isDependenciesChecked: false,
         settingsHtml: '',
         defaultStyles: ''
     };
-    
+
     contentEditor.DEFAULTS = {
         snippetsUrl: '',
         snippetsHandlersUrl: '',
@@ -29,14 +29,14 @@
         basePath: null,
         isCustomApp: false,
         onReady: function () {
-            
+
         }
     };
-    
+
     contentEditor.dependScripts = [
         '/static/bootstrap-colorpicker/2.5.1/js/bootstrap-colorpicker.min.js'
     ];
-    
+
     contentEditor.dependStyles = [
         '/static/font-awesome/4.7.0/css/font-awesome.min.css',
         EDITOR_PATH + 'jquery.contentEditor.css',
@@ -47,21 +47,21 @@
         '/theme/apps/keditor-lib/dist/css/keditor-0.0.0.min.css',
         '/theme/apps/keditor-lib/dist/css/keditor-components-0.0.0.min.css'
     ];
-    
+
     contentEditor.checkDependencies = function (options, callback) {
         flog('[jquery.contentEditor] checkDependencies');
-        
+
         if (contentEditor.isDependenciesChecked) {
             flog('[jquery.contentEditor] Dependencies are already loaded');
             callback();
         }
-        
+
         if (options.iframeMode) {
             $.getStyleOnce(contentEditor.dependStyles[0]);
             if (!$.isArray(options.contentStyles)) {
                 options.contentStyles = [];
             }
-            
+
             $.each(contentEditor.dependStyles, function (i, style) {
                 options.contentStyles.push({
                     href: style
@@ -78,11 +78,11 @@
                 $.getStyleOnce(style);
             });
         }
-        
+
         if (options.snippetsHandlersUrl) {
             contentEditor.dependScripts.push(options.snippetsHandlersUrl);
         }
-        
+
         function loadScript(index) {
             $.getScriptOnce(contentEditor.dependScripts[index], function () {
                 if (index === contentEditor.dependScripts.length - 1) {
@@ -94,14 +94,14 @@
                 }
             });
         }
-        
+
         loadCKEditor(function () {
             loadKEditor(function () {
                 loadScript(0);
             });
         });
     };
-    
+
     contentEditor.getContainerElement = function (container, selector) {
         return container.find(selector).filter(function () {
             if (container.hasClass('keditor-sub-container')) {
@@ -111,23 +111,23 @@
             }
         });
     };
-    
+
     contentEditor.getContainerBgElement = function (container, form) {
         return contentEditor.getContainerElement(container, '.' + form.find('.select-bg-for').val());
     };
-    
+
     contentEditor.initContainerSetting = function (form, keditor) {
         flog('[jquery.contentEditor] initContainerSetting', form, keditor);
-        
+
         var options = keditor.options;
         var allGroups = options.allGroups;
-        
+
         return $.ajax({
             url: EDITOR_PATH + 'jquery.contentEditorContainerSettings.html',
             type: 'get',
             success: function (resp) {
                 form.html(resp);
-                
+
                 var groupsOptions = '';
                 groupsOptions += '<div class="checkbox">';
                 groupsOptions += '    <label><input type="checkbox" value="Anonymous" />Anonymous</label>';
@@ -137,11 +137,11 @@
                     groupsOptions += '    <label><input type="checkbox" value="' + name + '" />' + allGroups[name] + '</label>';
                     groupsOptions += '</div>';
                 }
-                
+
                 var selectGroups = form.find('.select-groups');
                 selectGroups.html(groupsOptions);
                 var selectGroupsItems = selectGroups.find('input[type=checkbox]');
-                
+
                 selectGroupsItems.on('click', function () {
                     var selectedGroups = [];
                     selectGroupsItems.each(function () {
@@ -149,18 +149,18 @@
                             selectedGroups.push(this.value);
                         }
                     });
-                    
+
                     selectedGroups = selectedGroups ? selectedGroups.join(',') : '';
                     var isAnonymous = selectedGroups === 'Anonymous';
-                    
+
                     if (selectedGroups) {
                         selectGroupsItems.filter('[value=Anonymous]')
                             .prop('disabled', !isAnonymous)
                             .parent()[!isAnonymous ? 'addClass' : 'removeClass']('text-muted');
-                        
+
                         selectGroupsItems.not('[value=Anonymous]').each(function () {
                             var target = $(this);
-                            
+
                             target
                                 .prop('disabled', isAnonymous)
                                 .parent()[isAnonymous ? 'addClass' : 'removeClass']('text-muted');
@@ -168,11 +168,11 @@
                     } else {
                         selectGroupsItems.prop('disabled', false).parent().removeClass('text-muted');
                     }
-                    
+
                     var container = keditor.getSettingContainer();
                     contentEditor.getContainerElement(container, '.container-bg').attr('data-groups', selectedGroups);
                 });
-                
+
                 var cbbExperiment = form.find('.select-experiment');
                 flog("cbbExperiment");
                 $.ajax({
@@ -184,44 +184,44 @@
                     },
                     success: function (resp) {
                         var experimentOptionsStr = '';
-                        
+
                         $.each(resp.data, function (i, experiment) {
                             experimentOptionsStr += '<option value="' + experiment.name + '">' + experiment.name + '</option>';
-                            
+
                             $.each(experiment.variants, function (k, variant) {
                                 experimentOptionsStr += '<option value="' + experiment.name + '/' + variant.name + '">' + experiment.name + '/' + variant.name + '</option>';
                             });
                         });
-                        
+
                         cbbExperiment.append(experimentOptionsStr);
                     }
                 });
-                
+
                 cbbExperiment.on('change', function () {
                     var container = keditor.getSettingContainer();
                     contentEditor.getContainerElement(container, '.container-bg').attr('data-experiment', this.value);
                 });
-                
+
                 var visRules = form.find(".visible-rules");
                 visRules.on('change', function () {
                     var container = keditor.getSettingContainer();
                     contentEditor.getContainerElement(container, '.container-bg').attr('data-expr', this.value);
                 });
-                
+
                 var availability = form.find(".select-availability");
                 availability.on('change', function () {
                     var container = keditor.getSettingContainer();
                     contentEditor.getContainerElement(container, '.container-bg').attr('data-availability', this.value);
                 });
-                
-                
+
+
                 form.find('.bgImagesPreview .btn-edit-image').on('click', function (e) {
                     e.preventDefault();
-                    
+
                     form.find('.currentMselect').val('.bgImagesPreview .btn-edit-image');
                     form.find('#btnAddImagesBGs').trigger('click');
                 });
-                
+
                 form.find('.bgImagesPreview .btn-delete-image').on('click', function (e) {
                     e.preventDefault();
                     var container = keditor.getSettingContainer();
@@ -243,7 +243,7 @@
                         containerBg.attr('data-images', imagesArr.join(','));
                     }
                 });
-                
+
                 initMSelectImage(form.find('#btnAddImagesBGs'), keditor, function (url, relativeUrl, fileType, hash, isAsset) {
                     var container = keditor.getSettingContainer();
                     var containerBg = contentEditor.getContainerElement(container, '.container-bg');
@@ -253,7 +253,7 @@
                     }
                     var currentMselect = form.find('.currentMselect').val();
                     var target = contentEditor.getContainerBgElement(container, form);
-                    
+
                     if (currentMselect === '.bgImagesPreview .btn-edit-image') {
                         var oldImageUrl = form.find('.bgImagesPreview img').attr('src');
                         form.find('.bgImagesPreview img').attr('src', imageUrl);
@@ -279,13 +279,13 @@
                             containerBg.attr('data-images', imagesArr.join(','));
                         }
                     }
-                    
+
                     form.find('.currentMselect').val('');
                 });
-                
+
                 form.find('.bgImagesPreview .btn-nav').on('click', function (e) {
                     e.preventDefault();
-                    
+
                     var currentImage = $(this).siblings('p').find('img').attr('src');
                     var images = $(this).siblings('p').attr('data-images');
                     if (images) {
@@ -300,33 +300,33 @@
                         if (currIndex > imagesArr.length - 1) {
                             currIndex = 0;
                         }
-                        
+
                         if (currIndex < 0) {
                             currIndex = imagesArr.length - 1;
                         }
-                        
+
                         $(this).siblings('p').find('img').attr('src', imagesArr[currIndex]);
                     }
                 });
-                
+
                 var txtTransition = form.find('.txt-transition');
                 txtTransition.on('change', function () {
                     var transition = this.value || '';
                     if (isNaN(transition)) {
                         height = 2;
                     }
-                    
+
                     var container = keditor.getSettingContainer();
                     var containerBg = contentEditor.getContainerElement(container, '.container-bg');
-                    
+
                     containerBg.attr('data-bg-transition', transition);
                 });
-                
+
                 form.find('.multiple-background').on('click', function (e) {
                     var container = keditor.getSettingContainer();
                     var containerBg = contentEditor.getContainerElement(container, '.container-bg');
                     var target = contentEditor.getContainerBgElement(container, form);
-                    
+
                     if (this.checked) {
                         form.find('.single-background-settings').addClass('hide');
                         form.find('.multiple-background-settings').removeClass('hide');
@@ -336,31 +336,31 @@
                         form.find('.multiple-background-settings').addClass('hide');
                         target.css('background-image', 'url("' + form.find('#background-image-previewer').attr('src') + '")');
                     }
-                    
+
                     containerBg.attr('data-multiple-bg', this.checked);
                 });
-                
+
                 form.find('#background-image-edit').on('click', function (e) {
                     e.preventDefault();
-                    
+
                     form.find('.currentMselect').val('#background-image-edit');
                     form.find('#btnAddImagesBGs').trigger('click');
                 });
-                
+
                 form.find('#background-image-delete').on('click', function (e) {
                     e.preventDefault();
-                    
+
                     var container = keditor.getSettingContainer();
                     var target = contentEditor.getContainerBgElement(container, form);
                     target.css('background-image', '');
                     form.find('#background-image-previewer').attr('src', '/static/images/photo_holder.png');
                 });
-                
+
                 form.find('.select-bg-for').on('change', function () {
                     var container = keditor.getSettingContainer();
                     var containerBg = contentEditor.getContainerElement(container, '.container-bg');
                     var containerContent = contentEditor.getContainerElement(container, '.container-content-wrapper');
-                    
+
                     if (this.value === 'container-bg') {
                         var style = containerContent.prop('style');
                         containerBg.get(0).style.backgroundColor = style.backgroundColor;
@@ -381,49 +381,49 @@
                         containerBg.removeClass('background-for');
                     }
                 });
-                
+
                 var txtBgColor = form.find('.txt-bg-color');
                 contentEditor.initColorPicker(txtBgColor, function (color) {
                     var container = keditor.getSettingContainer();
                     var target = contentEditor.getContainerBgElement(container, form);
                     target.css('background-color', color);
                 });
-                
+
                 form.find('.select-bg-repeat').on('change', function () {
                     var container = keditor.getSettingContainer();
                     var target = contentEditor.getContainerBgElement(container, form);
-                    
+
                     target.css('background-repeat', this.value);
                 });
-                
+
                 form.find('.select-bg-size').on('change', function () {
                     var container = keditor.getSettingContainer();
                     var target = contentEditor.getContainerBgElement(container, form);
-                    
+
                     target.css('background-size', this.value);
                 });
-                
+
                 form.find('.select-bg-position').on('change', function () {
                     var container = keditor.getSettingContainer();
                     var target = contentEditor.getContainerBgElement(container, form);
-                    
+
                     target.css('background-position', this.value);
                 });
-                
+
                 form.find('.txt-extra-class').on('change', function () {
                     var container = keditor.getSettingContainer();
                     var containerBg = contentEditor.getContainerElement(container, '.container-bg');
-                    
-                    containerBg.attr('class', 'container-bg ' + (containerBg.hasClass('background-for') ? 'background-for' : '') + this.value.trim());
+
+                    containerBg.attr('class', 'container-bg ' + (containerBg.hasClass('background-for') ? 'background-for' : '') + " " + this.value.trim());
                 });
-                
+
                 form.find('.chk-inverse').on('click', function () {
                     var container = keditor.getSettingContainer();
                     var containerBg = contentEditor.getContainerElement(container, '.container-bg');
-                    
+
                     containerBg[this.checked ? 'addClass' : 'removeClass']('container-inverse');
                 });
-                
+
                 var win = $(keditor.window);
                 var winTimer;
                 win.on('resize', function () {
@@ -432,23 +432,23 @@
                         keditor.body.find('.container-full-height').css('min-height', win.height());
                     }, 250);
                 }).trigger('resize');
-                
+
                 var txtHeight = form.find('.txt-height');
                 txtHeight.on('change', function () {
                     var height = this.value || '';
                     if (isNaN(height)) {
                         height = '';
                     }
-                    
+
                     var container = keditor.getSettingContainer();
                     var containerBg = contentEditor.getContainerElement(container, '.container-bg');
-                    
+
                     containerBg.css('height', height);
                 });
                 form.find('.chk-full-height').on('click', function () {
                     var container = keditor.getSettingContainer();
                     var containerBg = contentEditor.getContainerElement(container, '.container-bg');
-                    
+
                     txtHeight.prop('disabled', this.checked).val('');
                     containerBg[this.checked ? 'addClass' : 'removeClass']('container-full-height').css('min-height', this.checked ? win.height() : '');
                 });
@@ -509,12 +509,12 @@
                 form.find('.txt-padding').each(function () {
                     var txt = $(this);
                     var styleName = txt.attr('data-style-name');
-                    
+
                     txt.on('change', function () {
                         var value = this.value || '';
                         var container = keditor.getSettingContainer();
                         var containerContent = contentEditor.getContainerElement(container, '.container-content-wrapper').get(0);
-                        
+
                         if (value.trim() === '') {
                             containerContent.style[styleName] = '';
                         } else {
@@ -526,16 +526,16 @@
                         }
                     });
                 });
-                
+
                 form.find('.txt-margin').each(function () {
                     var txt = $(this);
                     var styleName = txt.attr('data-style-name');
-                    
+
                     txt.on('change', function () {
                         var value = this.value || '';
                         var container = keditor.getSettingContainer();
                         var containerContent = contentEditor.getContainerElement(container, '.container-bg').get(0);
-                        
+
                         if (value.trim() === '') {
                             containerContent.style[styleName] = '';
                         } else {
@@ -547,23 +547,23 @@
                         }
                     });
                 });
-                
+
                 form.find('.select-layout').on('change', function () {
                     var container = keditor.getSettingContainer();
                     var containerLayout = contentEditor.getContainerElement(container, '.container-layout');
                     var containerContent = contentEditor.getContainerElement(container, '.container-content-wrapper');
-                    
+
                     containerLayout.removeClass('container container-fluid');
                     containerContent.removeClass('container container-fluid');
                     containerLayout.addClass(this.value);
                 });
-                
+
                 form.find('.parallax-enabled').on('click', function () {
                     var container = keditor.getSettingContainer();
                     var containerBg = contentEditor.getContainerElement(container, '.container-bg');
                     var parallaxOptionsWrapper = form.find('.parallax-options-wrapper');
                     var parallaxBtn = form.find('.btn-add-data');
-                    
+
                     if (this.checked) {
                         parallaxOptionsWrapper.css('display', 'block');
                         parallaxBtn.css('display', 'block');
@@ -580,13 +580,13 @@
                         });
                     }
                 });
-                
+
                 form.find('.btn-add-data').on('click', function (e) {
                     e.preventDefault();
-                    
+
                     contentEditor.addDataTransition(form);
                 });
-                
+
                 form.find('.parallax-options-wrapper').on('change', '.txt-data-name, .txt-data-value', function () {
                     var container = keditor.getSettingContainer();
                     var containerBg = contentEditor.getContainerElement(container, '.container-bg');
@@ -595,24 +595,24 @@
                     name = name.trim();
                     var value = inputGroup.find('.txt-data-value').val() || '';
                     value = value.trim();
-                    
+
                     if (name !== '' && value !== '') {
                         containerBg.attr('data-' + name, value);
                     } else {
                         containerBg.removeAttr('data-' + name);
                     }
                 });
-                
+
                 form.find('.select-dock-type').on('change', function () {
                     var container = keditor.getSettingContainer();
                     var containerBg = contentEditor.getContainerElement(container, '.container-bg');
-                    
+
                     containerBg.removeClass('navbar-fixed-top navbar-fixed-bottom navbar-fixed-middle');
                     if (this.value !== '') {
                         containerBg.addClass('navbar-fixed-' + this.value);
                     }
                 });
-                
+
                 // ===============================================================================
                 // Settings for grid
                 // ===============================================================================
@@ -629,29 +629,29 @@
                     var container = keditor.getSettingContainer();
                     var targetContainerContent = contentEditor.getContainerElement(container, '[data-type=container-content]').eq(+index);
                     var originClasses = contentEditor.getContainerContentClasses(targetContainerContent)[0];
-                    
+
                     targetContainerContent.attr('class', originClasses + ' ' + this.value);
                 });
-                
+
                 form.on('click', '.chk-inverse-column', function () {
                     var chk = $(this);
                     var index = chk.attr('data-index');
                     var container = keditor.getSettingContainer();
                     var targetContainerContent = contentEditor.getContainerElement(container, '[data-type=container-content]').eq(+index);
-                    
+
                     targetContainerContent[this.checked ? 'addClass' : 'removeClass']('col-inverse');
                 });
-                
+
                 // ===============================================================================
                 // Settings for tab
                 // ===============================================================================
                 var tabsList = form.find('.tabs-list');
                 form.find('.btn-add-tab').on('click', function (e) {
                     e.preventDefault();
-                    
+
                     var container = keditor.getSettingContainer();
                     var tabbable = container.find('.tabbable');
-                    
+
                     tabsList.append(
                         '<p class="input-group input-group-sm tab-item">' +
                         '    <input type="text" class="form-control txt-tab-name" value="New tab" placeholder="Tab name" />' +
@@ -660,7 +660,7 @@
                         '    </span>' +
                         '</p>'
                     );
-                    
+
                     var newTabId = keditor.generateId('tab');
                     tabbable.find('.nav-tabs').append('<li><a href="#' + newTabId + '" data-toggle="tab">New tab</a></li>');
                     tabbable.find('.tab-content').append(
@@ -668,42 +668,42 @@
                         '    <div data-type="container-content" class="clearfix"></div>' +
                         '</div>'
                     );
-                    
+
                     var newContainerContent = $('#' + newTabId).find('[data-type="container-content"]');
                     var contentArea = container.closest('.keditor-content-area');
                     var isNested = container.closest('[data-type="container-content"]').length > 0;
-                    
+
                     keditor.initContainerContent(contentArea, container, newContainerContent, isNested);
                 });
-                
+
                 form.on('change', '.txt-tab-name', function () {
                     var txt = $(this);
                     var tabItem = txt.closest('.tab-item');
                     var tabIndex = tabItem.index();
-                    
+
                     var container = keditor.getSettingContainer();
                     var tabbable = container.find('.tabbable');
-                    
+
                     tabbable.find('.nav-tabs').children().eq(tabIndex).find('a').html(txt.val());
                 });
-                
+
                 form.on('click', '.btn-delete-tab', function (e) {
                     e.preventDefault();
-                    
+
                     var totalTab = tabsList.find('.tab-item').length;
-                    
+
                     if (totalTab === 1) {
                         alert('You can not delete last tab');
-                        
+
                         return;
                     }
-                    
+
                     if (confirm('Are you sure you want to delete this tab? This action can not be undo!')) {
                         var tabItem = $(this).closest('.tab-item');
                         var tabIndex = tabItem.index();
                         var container = keditor.getSettingContainer();
                         var tabbable = container.find('.tabbable');
-                        
+
                         tabbable.find('.nav-tabs').children().eq(tabIndex).remove();
                         tabbable.find('.tab-pane').eq(tabIndex).remove();
                         tabItem.remove();
@@ -712,13 +712,13 @@
             }
         });
     };
-    
+
     contentEditor.addDataTransition = function (form, name, value) {
         flog('[jquery.contentEditor] addDataTransition', form, name, value);
-        
+
         name = name || '';
         value = value || '';
-        
+
         form.find('.parallax-options').append(
             '<div class="checkbox">' +
             '    <div class="input-group input-group-sm">' +
@@ -732,15 +732,15 @@
             '</div>'
         );
     };
-    
+
     contentEditor.showContainerSettings = function (form, container, keditor) {
         flog('[jquery.contentEditor] showContainerSettings', form, container, keditor);
-        
+
         var containerBg = contentEditor.getContainerElement(container, '.container-bg');
         var containerLayout = contentEditor.getContainerElement(container, '.container-layout');
         var containerContent = contentEditor.getContainerElement(container, '.container-content-wrapper');
         form.find('.parallax-options').html('');
-        
+
         if (containerLayout.length === 0) {
             var layoutClass = '';
             if (containerContent.hasClass('container')) {
@@ -752,12 +752,12 @@
             containerContent.removeClass('container container-fluid');
             containerLayout = contentEditor.getContainerElement(container, '.container-layout');
         }
-        
+
         if (containerBg.hasClass('parallax-skrollr')) {
             form.find('.parallax-enabled').prop('checked', true);
             form.find('.parallax-options-wrapper').css('display', 'block');
             form.find('.btn-add-data').css('display', 'block');
-            
+
             var dataAttributes = keditor.getDataAttributes(containerBg, null, false);
             for (var name in dataAttributes) {
                 contentEditor.addDataTransition(form, name.replace('data-', ''), dataAttributes[name]);
@@ -767,7 +767,7 @@
             form.find('.parallax-options-wrapper').css('display', 'none');
             form.find('.btn-add-data').css('display', 'none');
         }
-        
+
         var imageUrl;
         var bgTarget;
         var bgImageBg = containerBg.get(0).style.backgroundImage;
@@ -781,15 +781,15 @@
             bgTarget = containerContent;
             form.find('.select-bg-for').val('container-content-wrapper');
         }
-        
+
         imageUrl = imageUrl ? imageUrl.replace(/^url\(['"]+(.+)['"]+\)$/, '$1') : '';
         form.find('#background-image-previewer').attr('src', imageUrl || '/static/images/photo_holder.png');
-        
+
         form.find('.select-bg-repeat').val(bgTarget.get(0).style.backgroundRepeat || 'repeat');
         form.find('.select-bg-position').val(bgTarget.get(0).style.backgroundPosition || '0% 0%');
         form.find('.select-bg-size').val(bgTarget.get(0).style.backgroundSize || 'auto');
         form.find('.txt-bg-color').val(bgTarget.get(0).style.backgroundColor || '').trigger('change');
-        
+
         var layout = '';
         if (containerLayout.hasClass('container')) {
             layout = 'container';
@@ -819,17 +819,17 @@
         form.find('.txt-padding').each(function () {
             var txt = $(this);
             var styleName = txt.attr('data-style-name');
-            
+
             txt.val((containerContent.get(0).style[styleName] || '').replace('px', ''));
         });
-        
+
         form.find('.txt-margin').each(function () {
             var txt = $(this);
             var styleName = txt.attr('data-style-name');
-            
+
             txt.val((containerBg.get(0).style[styleName] || '').replace('px', ''));
         });
-        
+
         var txtHeight = form.find('.txt-height');
         var chkFullHeight = form.find('.chk-full-height');
         if (containerBg.hasClass('container-full-height')) {
@@ -839,22 +839,22 @@
             txtHeight.prop('disabled', false).val(containerBg.css('height').replace('px', '') || '');
             chkFullHeight.prop('checked', false);
         }
-        
+
         var selectGroups = form.find('.select-groups');
         var selectGroupsItems = selectGroups.find('input[type=checkbox]');
         var selectedGroups = containerBg.attr('data-groups') || '';
         var avaiability = containerBg.attr('data-available') || 'available';
         var isAnonymous = selectedGroups === 'Anonymous';
         selectedGroups = selectedGroups ? selectedGroups.split(',') : [];
-        
+
         if (selectedGroups.length > 0) {
             selectGroupsItems.filter('[value=Anonymous]')
                 .prop('disabled', !isAnonymous)
                 .parent()[!isAnonymous ? 'addClass' : 'removeClass']('text-muted');
-            
+
             selectGroupsItems.not('[value=Anonymous]').each(function () {
                 var target = $(this);
-                
+
                 target
                     .prop('disabled', isAnonymous)
                     .parent()[isAnonymous ? 'addClass' : 'removeClass']('text-muted');
@@ -866,21 +866,21 @@
         $.each(selectedGroups, function (i, group) {
             selectGroupsItems.filter('[value="' + group + '"]').prop('checked', true);
         });
-        
+
         var expPath = containerBg.data("experiment");
         var txtExperiment = form.find('.select-experiment');
         txtExperiment.val(expPath);
-        
+
         var availabilitySelect = form.find(".select-availability");
         availabilitySelect.val(avaiability);
-        
+
         var visRulesExpr = containerBg.data("expr");
         var visRules = form.find(".visible-rules");
         visRules.val(visRulesExpr);
-        
+
         form.find('.txt-extra-class').val(containerBg.attr('class').replace('container-bg', '').replace('background-for', '').trim());
         form.find('.chk-inverse').prop('checked', containerBg.hasClass('container-inverse'));
-        
+
         var dockType = '';
         if (containerBg.hasClass('navbar-fixed-top')) {
             dockType = 'top';
@@ -890,7 +890,7 @@
             dockType = 'bottom';
         }
         form.find('.select-dock-type').val(dockType);
-        
+
         var isMultiBg = containerBg.attr('data-multiple-bg') == 'true';
         if (isMultiBg) {
             form.find('.multiple-background-settings').removeClass('hide');
@@ -899,14 +899,14 @@
             form.find('.multiple-background-settings').addClass('hide');
             form.find('.single-background-settings').removeClass('hide');
         }
-        
+
         var imagesStr = containerBg.attr('data-images');
         if (imagesStr) {
             var imagesArr = imagesStr.split(',');
             form.find('.bgImagesPreview img').attr('src', imagesArr[0]);
             form.find('.bgImagesPreview p').attr('data-images', imagesArr.join(','));
         }
-        
+
         form.find('.multiple-background').prop('checked', isMultiBg);
         var transition = containerBg.attr('data-bg-transition');
         form.find('.txt-transition').val(transition || 2);
@@ -922,7 +922,7 @@
             }
         });
         form.find('.select-row-size').val(rowSize);
-        
+
         var tabbable = container.find('.tabbable');
         if (tabbable.length > 0) {
             form.find('.container-tab-settings').css('display', 'block');
@@ -934,13 +934,13 @@
             contentEditor.buildExtraClassForColumns(form, container, keditor);
         }
     };
-    
+
     contentEditor.initTabListForContainer = function (form, container, keditor) {
         flog('[jquery.contentEditor] initTabListForContainer', form, container, keditor);
-        
+
         var tabsList = form.find('.tabs-list');
         tabsList.html('');
-        
+
         var tabsStr = '';
         var tabbble = container.find('.tabbable');
         tabbble.find('.nav-tabs li a').each(function () {
@@ -953,17 +953,17 @@
         });
         tabsList.html(tabsStr);
     };
-    
+
     contentEditor.getContainerContentClasses = function (containerContent) {
         flog('[jquery.contentEditor] getContainerContentClasses', containerContent);
-        
+
         var classes = containerContent.attr('class').split(' ');
         var customClasses = [];
         var originClasses = [];
-        
+
         for (var i = 0; i < classes.length; i++) {
             var _class = classes[i];
-            
+
             if (_class) {
                 if (_class.indexOf('col-') !== 0 && (' keditor-container-content ui-droppable ui-sortable ').indexOf(' ' + _class + ' ') === -1) {
                     customClasses.push(_class);
@@ -972,19 +972,19 @@
                 }
             }
         }
-        
+
         return [originClasses.join(' '), customClasses.join(' ')];
     };
-    
+
     contentEditor.buildExtraClassForColumns = function (form, container, keditor) {
         flog('[jquery.contentEditor] buildExtraClassForColumns', form, container, keditor);
         var htmlStr = '';
-        
+
         contentEditor.getContainerElement(container, '[data-type=container-content]').each(function (index) {
             var containerContent = $(this);
             var customClasses = contentEditor.getContainerContentClasses(containerContent)[1];
             var isInverse = containerContent.hasClass('col-inverse');
-            
+
             htmlStr += '<div class="clearfix">';
             if (index !== 0) {
                 htmlStr += '    <br />';
@@ -996,20 +996,20 @@
             htmlStr += '    </label>';
             htmlStr += '</div>';
         });
-        
+
         form.find('.columns-setting').html(htmlStr);
     };
-    
+
     contentEditor.toMenuData = function (ol, list) {
         flog('[jquery.contentEditor] toMenuData', ol, list);
-        
+
         var parentId = ol.attr('data-id');
-        
+
         ol.find('> li').each(function (i) {
             var li = $(this);
-            
+
             flog('[jquery.contentEditor] toMenuData - item', li);
-            
+
             var menuItem = li.children('.menuItem');
             var itemId = menuItem.attr('data-id');
             var itemHref = menuItem.attr('data-href');
@@ -1017,9 +1017,9 @@
             var cssClass = menuItem.children('.menuItemIcon').find('i').attr('class');
             var isCustom = itemId.startsWith('menu-custom-'); // different format to native menu items
             var hidden = menuItem.attr('data-hidden');
-            
+
             flog();
-            
+
             list.push({
                 id: itemId,
                 text: itemText,
@@ -1030,11 +1030,11 @@
                 hidden: hidden,
                 cssClass: cssClass
             });
-            
+
             contentEditor.toMenuData(li.children('.menuList'), list);
         });
     };
-    
+
     contentEditor.generateMenuItemHtml = function (menuItem, items, isRootChild) {
         var itemHtml = '';
         itemHtml += '<li>';
@@ -1054,7 +1054,7 @@
         itemHtml += '        <span class="menuItemText">' + (menuItem.text || '') + '</span>';
         itemHtml += '    </div>';
         itemHtml += '    <ol class="menuList" data-id="' + menuItem.id + '">';
-        
+
         if (isRootChild) {
             for (var i = 0; i < items.length; i++) {
                 if (items[i].parentId === menuItem.id) {
@@ -1062,26 +1062,26 @@
                 }
             }
         }
-        
+
         itemHtml += '    </ol>';
         itemHtml += '</li>';
-        
+
         return itemHtml;
     };
-    
+
     contentEditor.initMenuEditor = function (form, keditor) {
         flog('[jquery.contentEditor] initMenuEditor', form, keditor);
-        
+
         var menuItemEditor = form.find('.editMenuItem');
         var menuEditor = form.find('.menuEditor');
         var editItem = null;
-        
+
         var groupsStr = '';
         $.each(keditor.options.allGroups, function (name, title) {
             groupsStr += '<option value="' + name + '">Visible only for "' + title + '"</option>';
         });
         menuItemEditor.find('[name=hidden]').append(groupsStr);
-        
+
         $.getStyleOnce('/static/bootstrap-iconpicker/1.7.0/css/bootstrap-iconpicker.min.css');
         $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
             $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/bootstrap-iconpicker.min.js', function () {
@@ -1093,7 +1093,7 @@
                 });
             });
         });
-        
+
         var tree = form.find('.menuTree ol').not('.rootMenuList');
         tree.sortable({
             handle: '.btnSortMenuItem',
@@ -1101,21 +1101,21 @@
             axis: 'y',
             tolerance: 'pointer'
         });
-        
+
         form.on('click', '.btnAddMenuItem', function (e) {
             e.preventDefault();
-            
+
             var li = $(this).closest('li');
             var ol = li.children('ol');
             var isRootChild = li.hasClass('rootMenuItem');
             var btnAddHtml = '';
-            
+
             if (isRootChild) {
                 btnAddHtml += '<a class="btn btn-success btnAddMenuItem" href="#">';
                 btnAddHtml += '     <span class="fa fa-plus small"></span>';
                 btnAddHtml += '</a>';
             }
-            
+
             var newId = 'menu-custom-' + Math.floor((Math.random() * 10000));
             ol.append(
                 '<li>' +
@@ -1134,7 +1134,7 @@
                 '   <ol class="menuList" data-id="' + newId + '"></ol>' +
                 '</li>'
             );
-            
+
             try {
                 tree.sortable('destroy');
             } catch (e) {
@@ -1146,21 +1146,21 @@
                 tolerance: 'pointer'
             });
         });
-        
+
         form.on('click', '.btnEditMenuItem', function (e) {
             e.preventDefault();
-            
+
             var btn = $(this);
             var menuItem = btn.closest('.menuItem');
             editItem = menuItem;
-            
+
             var id = menuItem.attr('data-id');
             var text = menuItem.find('.menuItemText').text().trim();
             var cssClass = menuItem.find('.menuItemIcon i').attr('class') || '';
             cssClass = cssClass.replace('fa', '').trim();
             var href = menuItem.attr('data-href');
             var hidden = menuItem.attr('data-hidden') || 'false';
-            
+
             menuItemEditor.find('input[name=href]').val(href);
             menuItemEditor.find('input[name=text]').val(text);
             var btnIcon = menuItemEditor.find('.btn-menu-icon');
@@ -1170,64 +1170,64 @@
                 btnIcon.find('input').val('');
             }
             menuItemEditor.find('[name=hidden]').val(hidden)
-            
+
             var deleteBtn = menuItemEditor.find('.editMenuItemDelete');
             if (id.startsWith('menu-custom-')) {
                 deleteBtn.show();
             } else {
                 deleteBtn.hide();
             }
-            
+
             menuItemEditor.fshow();
             menuEditor.fhide();
         });
-        
+
         form.on('click', '.editMenuItemOk', function (e) {
             e.preventDefault();
-            
+
             var href = menuItemEditor.find('input[name=href]').val();
             var text = menuItemEditor.find('input[name=text]').val();
             text = text.trim();
             var hidden = menuItemEditor.find('[name=hidden]').val();
             var icon = menuItemEditor.find('.btn-menu-icon i').attr('class') || '';
-            
+
             editItem.attr('data-href', href);
             editItem.attr('data-hidden', hidden);
             editItem.find('.menuItemText').text(text);
             editItem.find('.menuItemIcon i').attr('class', icon);
             editItem = null;
-            
+
             menuItemEditor.fhide();
             menuEditor.fshow();
         });
-        
+
         form.on('click', '.editMenuItemDelete', function (e) {
             e.preventDefault();
-            
+
             editItem.closest('li').remove();
-            
+
             menuItemEditor.fhide();
             menuEditor.fshow();
         });
-        
+
         form.on('click', '.editMenuItemCancel', function (e) {
             e.preventDefault();
             editItem = null;
             menuItemEditor.fhide();
             menuEditor.fshow();
         });
-        
+
         form.on('click', '.saveMenu', function (e) {
             e.preventDefault();
-            
+
             var topOl = $('.menuTree ol.rootMenuList');
             var list = [];
             contentEditor.toMenuData(topOl, list);
             var menuJson = JSON.stringify({
                 items: list
             }, null, 4);
-            
-            
+
+
             $.ajax({
                 url: '/theme/menu.json',
                 type: 'PUT',
@@ -1244,112 +1244,112 @@
             });
         });
     };
-    
+
     contentEditor.initDefaultMenuControls = function (form, keditor) {
         flog('[jquery.contentEditor] initDefaultMenuControls', form, keditor);
-        
+
         form.find('.menuList .menuList .menuList .btnAddMenuItem').remove();
-        
+
         form.find('.navbar-layout').on('change', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
-            
+
             component.attr('data-navbar-layout', this.value);
             keditor.initDynamicContent(dynamicElement);
         });
-        
+
         form.find('.navbar-style').on('change', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
-            
+
             component.attr('data-navbar-style', this.value);
             keditor.initDynamicContent(dynamicElement);
         });
-        
+
         form.find('.logo-padding').on('change', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
-            
+
             component.attr('data-logopadding', this.value);
             keditor.initDynamicContent(dynamicElement);
         });
-        
+
         initMSelectImage(form.find('.logo-edit'), keditor, function (url, relativeUrl, fileType, hash, isAsset) {
             var imageUrl = isAsset ? url : '/_hashes/files/' + hash;
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
-            
+
             component.attr('data-logo', imageUrl);
             keditor.initDynamicContent(dynamicElement);
             form.find('.logo-previewer').attr('src', imageUrl);
         });
         form.find('.logo-delete').on('click', function (e) {
             e.preventDefault();
-            
+
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
-            
+
             component.attr('data-logo', this.value);
             keditor.initDynamicContent(dynamicElement);
             form.find('.logo-previewer').attr('src', '/static/images/photo_holder.png');
         });
-        
+
         form.on('change', '.cbb-display-menu-item', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
-            
+
             component.attr('data-display-menu-item', this.value);
             keditor.initDynamicContent(dynamicElement);
         });
-        
+
         form.on('click', '.chk-show-user-menu', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
-            
+
             component.attr('data-show-user-menu', this.checked);
             keditor.initDynamicContent(dynamicElement);
         });
-        
+
         form.on('click', '.chk-show-org-selector', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
-            
+
             component.attr('data-show-org-selector', this.checked);
             keditor.initDynamicContent(dynamicElement);
         });
-        
+
         form.on('click', '.chk-show-lang-selector', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
-            
+
             component.attr('data-show-lang-selector', this.checked);
             keditor.initDynamicContent(dynamicElement);
         });
-        
+
         form.on('click', '.chk-show-search', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
-            
+
             component.attr('data-show-search', this.checked);
             keditor.initDynamicContent(dynamicElement);
         });
-        
+
         form.on('click', '.chk-inverse-menu', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
-            
+
             component.attr('data-inverse-menu', this.checked);
             keditor.initDynamicContent(dynamicElement);
         });
-        
+
         form.on('click', '.chk-show-sub-menu-on-hover', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
-            
+
             component.attr('data-show-sub-menu-on-hover', this.checked);
             keditor.initDynamicContent(dynamicElement);
         });
-        
+
         var menuTemplate = $('<div />').html($('#menuTreeTemplate').html());
         $.ajax({
             type: 'get',
@@ -1357,7 +1357,7 @@
             url: '/theme/menu.json',
             success: function (resp) {
                 flog('[jquery.contentEditor] Menu item data', resp);
-                
+
                 var items = resp.items;
                 items.splice(0, 1);
                 for (var i = 0; i < items.length; i++) {
@@ -1373,30 +1373,30 @@
             }
         });
     };
-    
+
     contentEditor.showDefaultMenuControls = function (form, component, keditor) {
         flog('[jquery.contentEditor] showDefaultMenuControls', form, component, keditor);
-        
+
         var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
         var imageUrl = dataAttributes['data-logo'];
         form.find('.logo-previewer').attr('src', imageUrl ? imageUrl : '/static/images/photo_holder.png');
         form.find('[name=logo]').val(dataAttributes['data-logo']);
-        
+
         form.find('.cbb-display-menu-item').val(dataAttributes['data-display-menu-item'] || 'text');
-        
+
         form.find('.chk-show-user-menu').prop('checked', dataAttributes['data-show-user-menu'] === 'true');
         form.find('.chk-show-org-selector').prop('checked', dataAttributes['data-show-org-selector'] === 'true');
         form.find('.chk-show-lang-selector').prop('checked', dataAttributes['data-show-lang-selector'] === 'true');
         form.find('.chk-inverse-menu').prop('checked', dataAttributes['data-inverse-menu'] === 'true');
         form.find('.chk-show-search').prop('checked', dataAttributes['data-show-search'] === 'true');
         form.find('.chk-show-sub-menu-on-hover').prop('checked', dataAttributes['data-show-sub-menu-on-hover'] === 'true');
-        
+
         form.find('.navbar-layout').val(dataAttributes['data-navbar-layout'] || 'container-fluid');
         form.find('.logo-padding').val(dataAttributes['data-logopadding'] || '');
         form.find('.navbar-style').val(dataAttributes['data-navbar-style'] || 'navbar-default');
-        
+
         var tree = $('.menuTree ol.menuList').not('.rootMenuList');
-        
+
         try {
             tree.sortable('destroy');
         } catch (e) {
@@ -1408,35 +1408,35 @@
             tolerance: 'pointer'
         });
     };
-    
+
     contentEditor.rgb2Hex = function (value) {
         if (!value) {
             return '';
         }
-        
+
         var hexDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
         var hex = function (x) {
             return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
         }
-        
+
         value = value.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-        
+
         if ($.isArray(value)) {
             return "#" + hex(value[1]) + hex(value[2]) + hex(value[3]);
         } else {
             return '';
         }
     };
-    
+
     contentEditor.initSimpleColorPicker = function (target, onChange) {
         flog('[jquery.contentEditor] initSimpleColorPicker', target);
-        
+
         target.wrap('<div class="input-group"></div>');
-        
+
         var previewer = $('<span class="input-group-addon" style="color: transparent;"><i class="fa fa-stop"></i></span>');
         target.before(previewer);
         previewer.css('color', target.val() || 'transparent');
-        
+
         var getColor = function (color) {
             if (color) {
                 previewer.css('color', color);
@@ -1445,16 +1445,16 @@
                 previewer.css('color', 'transparent');
                 color = '';
             }
-            
+
             return color;
         };
-        
+
         target.on({
             change: function () {
                 var color = getColor(this.value);
-                
+
                 target.val(color);
-                
+
                 if (typeof onChange === 'function') {
                     onChange.call(target, color);
                 }
@@ -1465,15 +1465,15 @@
             }
         });
     };
-    
+
     contentEditor.initColorPicker = function (target, onChange) {
         flog('[jquery.contentEditor] initColorPicker', target);
-        
+
         target.wrap('<div class="input-group"></div>');
         target.before('<span class="input-group-addon"><i class="fa fa-stop" style="color: transparent;"></i></span>');
-        
+
         var previewer = target.prev().find('i');
-        
+
         target.colorpicker({
             format: 'hex',
             container: target.parent(),
@@ -1485,20 +1485,20 @@
             }
         }).on('changeColor.colorpicker', function (e) {
             var colorHex = e.color.toHex();
-            
+
             if (!target.val() || target.val().trim().length === 0) {
                 colorHex = '';
                 previewer.css('color', 'transparent');
             } else {
                 previewer.css('color', colorHex);
             }
-            
+
             if (typeof onChange === 'function') {
                 onChange.call(target, colorHex);
             }
         });
     };
-    
+
     contentEditor.renderContainerForOldContent = function (content) {
         var newContainer = $(
             '<section>' +
@@ -1520,24 +1520,24 @@
             '</section>'
         );
         newContainer.find('.keditor-component-text-content-inner').html(content);
-        
+
         return newContainer;
     };
-    
+
     var methods = {
         init: function (options) {
             options = $.extend({}, contentEditor.DEFAULTS, options);
-            
+
             return $(this).each(function () {
                 var target = $(this);
-                
+
                 flog('[jquery.contentEditor] Initializing...', target, options);
-                
+
                 if (target.data('contentEditorOptions')) {
                     flog('[jquery.contentEditor] Content Editor is already initialized', target);
                     return target;
                 }
-                
+
                 contentEditor.checkDependencies(options, function () {
                     CKEDITOR.dtd.$removeEmpty['span'] = false;
                     target.keditor({
@@ -1570,13 +1570,13 @@
                         snippetsTooltipEnabled: false,
                         onContentChanged: function (e, contentArea) {
                             var content = contentArea.html() || '';
-                            
+
                             if (content.trim() === '') {
                                 contentArea.addClass('empty');
                             } else {
                                 contentArea.removeClass('empty');
                             }
-                            
+
                             if (!$(document.body).hasClass('content-changed')) {
                                 $(document.body).addClass('content-changed');
                             }
@@ -1586,7 +1586,7 @@
                             contentArea.find('[data-type^=component]').each(function () {
                                 var component = $(this);
                                 var componentContent = component.find('.keditor-component-content');
-                                
+
                                 if (componentContent.length > 1) {
                                     flog('Component has incorrect HTML structure. Prepare structure');
                                     component.html(componentContent.last().html());
@@ -1595,11 +1595,11 @@
                         },
                         onInitContentArea: function (contentArea) {
                             var content = contentArea.html() || '';
-                            
+
                             if (content === '') {
                                 contentArea.addClass('empty');
                             }
-                            
+
                             var oldContent = contentArea.children().not('section');
                             var newContainers = [];
                             if (oldContent.length > 0) {
@@ -1608,7 +1608,7 @@
                                 contentArea.append(newContainer);
                                 newContainers.push(newContainer);
                             }
-                            
+
                             var textNodes = contentArea.contents().filter(function () {
                                 return this.nodeType === 3 && (this.nodeValue || '').trim() !== '';
                             });
@@ -1618,7 +1618,7 @@
                                 contentArea.append(newContainer);
                                 newContainers.push(newContainer);
                             }
-                            
+
                             return newContainers;
                         },
                         containerSettingEnabled: true,
@@ -1645,33 +1645,33 @@
                         onContainerChanged: function (event, changedContainer) {
                             changedContainer.find('[data-type="container-content"]').each(function () {
                                 var containerContent = $(this);
-                                
+
                                 var tileComponents = containerContent.find('.keditor-component').filter(function () {
                                     var type = $(this).attr('data-type');
-                                    
+
                                     return type.indexOf('Tile') !== -1;
                                 });
-                                
+
                                 if (tileComponents.length > 0) {
                                     flog('Container content contains tile component', tileComponents);
-                                    
+
                                     if (!containerContent.hasClass('row')) {
                                         flog('Add div.row');
-                                        
+
                                         var colClasses = [];
                                         $.each(containerContent.attr('class').split(' '), function (i, className) {
                                             if (className && className.indexOf('col-') !== -1) {
                                                 colClasses.push(className);
                                             }
                                         });
-                                        
+
                                         colClasses = colClasses.join(' ');
                                         containerContent.removeClass(colClasses).addClass('row');
                                         containerContent.wrap('<div class="' + colClasses + '"></div>');
                                     }
                                 } else {
                                     flog('Container content does not contains tile component');
-                                    
+
                                     var parent = containerContent.parent();
                                     if (containerContent.hasClass('row')) {
                                         flog('Remove div.row');
@@ -1682,16 +1682,16 @@
                         }
                     });
                 });
-                
+
                 target.data('contentEditorOptions', options);
             });
         },
-        
+
         getContent: function () {
             return $(this).keditor('getContent', false);
         }
     };
-    
+
     $.contentEditor = contentEditor;
-    
+
 })(jQuery);

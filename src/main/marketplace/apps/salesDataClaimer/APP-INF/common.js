@@ -67,7 +67,8 @@ function getSearchClaimsQuery(page, status, user, claimForm) {
             'amount',
             'status',
             'productSku',
-            'claimGroupId'
+            'claimGroupId',
+            'ocrFileHash'
         ],
         'size': 10000,
         'sort': [
@@ -196,6 +197,25 @@ function getClaim(page, params) {
         result.messages = ['Error when getting claim: ' + e];
     }
 
+    return views.jsonObjectView(JSON.stringify(result));
+}
+
+function getClaimOCRFile(page, params) {
+    log.info('getClaimOCRFile > page={}, params={}', page, params);
+    
+    var result = {
+        status: true,
+        hash: params.hash
+    };
+    
+    var OCRFileByteArray = fileManager.getAsByteArray(params.hash);
+     
+    var OCRFileXML = formatter.format(OCRFileByteArray);
+    
+//    log.info('OCRFileXML: {}', OCRFileXML);
+    
+    result.OCRFileXML = OCRFileXML;
+     
     return views.jsonObjectView(JSON.stringify(result));
 }
 

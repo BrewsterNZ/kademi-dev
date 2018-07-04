@@ -275,18 +275,42 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            #set($fields = $page.extraFields)
+
+                                            #foreach($mem in $page.memberships)
+                                            #if( $mem.groupEntity.fieldMetaData.size() > 0 )
+                                            <h3>
+                                                <a href="$page.href?membershipHistory=$mem.id" class="pull-right text-muted">
+                                                    <i class="fa fa-clock-o"></i>
+                                                </a>
+                                                <a href="/groups/$mem.groupEntity.name/">
+                                                    #if( $mem.groupEntity.title)
+                                                    $mem.groupEntity.title
+                                                    #else
+                                                    $mem.groupEntity.name
+                                                    #end
+                                                </a> in
+                                                <a href="/organisations/$mem.withinOrg.id/viewDetails">$mem.withinOrg.formattedName</a>
+                                            </h3>
+                                            #set( $fields = $page.getExtraFields($mem) )
+                                            #set( $memPrefix = "${mem.id}." )
                                             #foreach($field in $fields.keySet())
                                             <div class="form-group">
                                                 <label title="From group $!field.group.name" class="control-label col-md-3">$!field.text</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"> <i class="fa fa-star-o"></i> </span>
-                                                        $field.html( $fields[$field] )
+                                                        $field.html( $fields[$field], "", $memPrefix )
                                                     </div>
                                                 </div>
                                             </div>
                                             #end
+                                            #end
+                                            <br/>
+                                            #end
+
+                                            <hr/>
+
+
                                             <div class="form-group">
                                                 <div class="col-md-12">
                                                     <button class="btn btn-sm btn-success pull-right" type="submit">
@@ -466,15 +490,35 @@
                                     <button class="btn btn-danger">Unsubscribe - $!page.profile.email</button>
                                 </form>
                             </div>
+
+                            #portlets("adminProfile")
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-8">
-                            #portlets("adminProfile")
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-12">
+                            <hr/>
+                            <h2>Notes</h2>
+                            <form action="$page.href" method="POST" class="form-inline form-addnote">
+                                <textarea name="newNote" class="form-control" style="width: 100%"></textarea>
+                                <button class="btn btn-success pull-right">
+                                    <i class="fa fa-plus"></i>
+                                    Add note
+                                </button>
+                            </form>
+                            <div class="clearfix"></div>
 
+                            #set( $notes = $services.criteriaBuilders.leadNote.eq("relatedProfile", $page.profile).sortDesc("createDate").execute(1000) )
+                            <div id="profile-notes">
+                            #foreach( $note in $notes )
+                            <div>
+                                $note.notes
+                                <br/>
+                                <small>By $note.createdBy.formattedName at $formatter.formatDateTime($note.createDate)</small>
+                                <hr/>
+                            </div>
+                            #end
+                            </div>
                         </div>
                     </div>
                 </div>

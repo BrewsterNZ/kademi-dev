@@ -107,6 +107,13 @@
                             <div class="col-md-8">
                                 <textarea class="hide" id="reasonMvel" name="reasonMvel"></textarea>
                                 <div id="expression2Editor" class="expressionEditor" style="display:none;">$formatter.htmlEncode($page.rule.reasonMvel)</div>
+                                <div class="well">
+                                    Template variables:     reward (the points bucket), originalAmount, amount (calcuated amount), formatter, reason, issueTo, rule
+                                    <br/>
+                                    Example:
+                                    <br/>
+                                    <code>@{rule.promotion.title} applied to @{originalAmount} for '@{reason}'</code>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -114,7 +121,14 @@
                             <div class="col-md-8">
                                 <textarea class="hide" id="mvelExpression" name="mvelExpression"></textarea>
                                 <div id="expressionEditor" class="expressionEditor" style="display:none;">$formatter.htmlEncode($page.rule.mvelExpression)</div>
-                                <!--<textarea cols="100" name="mvelExpression" id="mvelExpression" rows="10" placeholder="" class="form-control">$!page.rule.mvelExpression</textarea>-->
+                                <div class="well">
+                                    Template variables:
+                                    reward (the points bucket), originalAmount, amount (calcuated amount), formatter, reason, issueTo
+                                    <br/>
+                                    Example:
+                                    <br/>
+                                    <code>@{rule.promotion.title} applied to @{originalAmount} for '@{reason}'</code>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">

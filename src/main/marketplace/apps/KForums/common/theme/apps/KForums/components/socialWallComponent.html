@@ -1,0 +1,91 @@
+
+<div class="text-right">
+    #if( $user )
+    <a href="#forumPostForm" data-toggle="modal" class="btn btn-primary">
+        <i class="fa fa-plus"><!----></i>
+        Post a
+        question</a>
+    #end
+    <p>&nbsp;</p>
+</div>
+
+#set( $forum = $services.forumManager.forums.get(0) )
+
+#set( $postsResp = $applications.KForums.call("doWallSearch", $forum, 0, 100) )
+
+<div class="well">
+
+
+    #if( $postsResp.hits.total == 0 )
+    <p>No one has posted anything yet, <a href="#forumPostForm" data-toggle="modal">be the first to ask</a></p>
+    #else
+    #foreach($postHit in $postsResp.hits.hits)
+    <div class="panel panel-default post-item" data-post-id="$postHit.fields.postId.value" >
+        <div class="panel-heading">
+            <div class="questionAvatar pull-left" style="width: 20px; height: 20px; background-image: url($formatter.profilePicHref($post.poster)); background-size: cover"></div>
+            <h4>$postHit.fields.title.value</h4>
+            <small>
+                <i class="fa fa-clock-o"></i>
+                <abbr title="$formatter.formatDateISO8601($postHit.fields.postDate.value)" class="timeago">$postHit.fields.postDate.value</abbr>
+                &nbsp;
+                <i class="fa fa-comments-o"></i>
+                <strong>$postHit.fields.numInteractions.value</strong> replies
+            </small>
+        </div>
+
+        #set( $relatedAppName = $postHit.fields.relatedAppName.value )
+        #set( $relatedId = $postHit.fields.relatedId.value )
+        #set( $forumManager = $services.forumManager )
+
+        <div class="panel-body">
+            #if( $relatedAppName )
+            $forumManager.renderSharedItem( $rootFolder, $relatedAppName, $relatedId, $postHit )
+            #else
+            $postHit.fields.content.value
+            #end
+            <div class="clearfix"></div>
+
+            <hr>
+
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button class="btn btn-default btn-vote-up">+1</button>
+                    <button class="btn btn-default"><i class="glyphicon glyphicon-share"></i></button>
+                </div>
+                <input class="form-control post-reply" placeholder="Add a comment.." type="text">
+            </div>
+
+        </div>
+    </div>
+    #end
+    #end
+</div>
+
+
+
+<div class="modal fade" id="forumPostForm" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Post</h4>
+            </div>
+            <form method="POST" action="/kforums" class="form-horizontal forum-post-form">
+                <input type="hidden" name="forumName" value="$forum.name" />
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="comment">Details</label>
+                        <div class="col-sm-10">
+                            <textarea name="newPost" placeholder="Leave a comment here" cols="50" rows="8" class="required form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn" data-dismiss="modal" >Close</a>
+                    <button class="btn btn-primary" type="submit">Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
