@@ -302,7 +302,7 @@ function processImageClaims(page, params, files){
     var XMLDocumentString = '<?xml version="1.0" encoding="UTF-8"?>\n';
 
     XMLDocumentString += '<rows totalConfidence="' + params.totalConfidence + '" oldHash="' + params.old_hash + '">';
-
+    
     for(rows_counter = 0; rows_counter < rows.length; rows_counter++){
         var row = rows[rows_counter];
 
@@ -316,7 +316,8 @@ function processImageClaims(page, params, files){
             XMLDocumentString += '</cell>\n';
         } 
         XMLDocumentString += '</row>\n';
-    }
+    }   
+
 
     XMLDocumentString += '</rows>';
 

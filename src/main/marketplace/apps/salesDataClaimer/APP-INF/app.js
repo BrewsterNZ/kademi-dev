@@ -360,14 +360,8 @@ function handleScanJobEvent(rf, event) {
         while (cells.iterator.hasNext()) {
             var cell = cells.iterator.next();
             XMLDocumentString += '<cell>\n'; 
-            
-            // log.info('handleScanJobEvent(): cell(): {}', cell);
-            // log.info('handleScanJobEvent(): cell.text: {}', cell.text);
-            // log.info('handleScanJobEvent(): cell.confidence: {}', cell.confidence);
-            
             XMLDocumentString += '<text>' + formatter.htmlEncode(formatter.toString(cell.text).trim()) + '</text>\n';
             XMLDocumentString += '<confidence>' + formatter.toString(cell.confidence).trim() + '</confidence>\n';
-            
             XMLDocumentString += '</cell>\n';
         }
         
@@ -377,63 +371,134 @@ function handleScanJobEvent(rf, event) {
     
     XMLDocumentString += '</rows>';
     
-    log.info("XMLDocumentString: {}", XMLDocumentString);
+//    log.info("XMLDocumentString: {}", XMLDocumentString);
     
     /***
      * Dummy XML with multi-columns
      */
-    // var XMLSample = '<?xml version="1.0" encoding="UTF-8"?>';
-    // XMLSample += '<rows>';
-    // for(counter = 0; counter < 30; counter++){
-    //     XMLSample += '  <row index="' + counter + '">';
-    //     for(cells_counter = 0; cells_counter < 5; cells_counter++){
-    //         XMLSample += '      <cell>';
-    //         XMLSample += '          <text>' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '</text>';
-    //         XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
-    //         XMLSample += '      </cell>';
-    //     }
-    //     XMLSample += '  </row>';
-    // }
-    // XMLSample += '</rows>';
+     var XMLSample = '<?xml version="1.0" encoding="UTF-8"?>';
+     XMLSample += '<rows totalConfidence="80.0">';
+//     for(counter = 0; counter < 30; counter++){
+//         XMLSample += '  <row index="' + counter + '">';
+//         for(cells_counter = 0; cells_counter < 5; cells_counter++){
+//             XMLSample += '      <cell>';
+//             XMLSample += '          <text>' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '</text>';
+//             XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
+//             XMLSample += '      </cell>';
+//         }
+//         XMLSample += '  </row>';
+//     }
     
-    // XMLDocumentString = XMLSample;
+    var index = 0;
+    XMLSample += '  <row index="' + index++ + '">';
+    XMLSample += '      <cell>';
+    XMLSample += '          <text>' + Math.floor(Math.random() * 10) + '</text>';
+    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
+    XMLSample += '      </cell>';
+    XMLSample += '      <cell>';
+    XMLSample += '          <text>ABC' + Math.floor(Math.random() * 30) + '</text>';
+    XMLSample += '          <confidence></confidence>';
+    XMLSample += '      </cell>';
+    XMLSample += '      <cell>';
+    XMLSample += '          <text>' + (30 + Math.floor(Math.random() * 100)) + '</text>';
+    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
+    XMLSample += '      </cell>';
+    XMLSample += '  </row>';
+    XMLSample += '  <row index="' + index++ + '">';
+    XMLSample += '      <cell>';
+    XMLSample += '          <text>' + Math.floor(Math.random() * 10) + '</text>';
+    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
+    XMLSample += '      </cell>';
+    XMLSample += '      <cell>';
+    XMLSample += '          <text>ABC' + Math.floor(Math.random() * 30) + '</text>';
+    XMLSample += '          <confidence></confidence>';
+    XMLSample += '      </cell>';
+    XMLSample += '      <cell>';
+    XMLSample += '          <text>' + (30 + Math.floor(Math.random() * 100)) + '</text>';
+    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
+    XMLSample += '      </cell>';
+    XMLSample += '  </row>';
+    XMLSample += '  <row index="' + index++ + '">';
+    XMLSample += '      <cell>';
+    XMLSample += '          <text>' + Math.floor(Math.random() * 10) + '</text>';
+    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
+    XMLSample += '      </cell>';
+    XMLSample += '      <cell>';
+    XMLSample += '          <text>ABC' + Math.floor(Math.random() * 30) + '</text>';
+    XMLSample += '          <confidence></confidence>';
+    XMLSample += '      </cell>';
+    XMLSample += '      <cell>';
+    XMLSample += '          <text>' + (30 + Math.floor(Math.random() * 100)) + '</text>';
+    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
+    XMLSample += '      </cell>';
+    XMLSample += '  </row>';
+    XMLSample += '  <row index="' + index++ + '">';
+    XMLSample += '      <cell>';
+    XMLSample += '          <text>' + Math.floor(Math.random() * 10) + '</text>';
+    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
+    XMLSample += '      </cell>';
+    XMLSample += '      <cell>';
+    XMLSample += '          <text>ABC' + Math.floor(Math.random() * 30) + '</text>';
+    XMLSample += '          <confidence></confidence>';
+    XMLSample += '      </cell>';
+    XMLSample += '      <cell>';
+    XMLSample += '          <text>' + (30 + Math.floor(Math.random() * 100)) + '</text>';
+    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
+    XMLSample += '      </cell>';
+    XMLSample += '  </row>';
+    
+     XMLSample += '</rows>';
+    
+     XMLDocumentString = XMLSample;
     
     var XMLDocumentHash = fileManager.upload(XMLDocumentString.getBytes());
     
-    log.info("XMLDocumentHash: {}", XMLDocumentHash);
-     
+//    log.info("XMLDocumentHash: {}", XMLDocumentHash);
+    
+    /**
+     * Update Claim with retrieved Hash
+     */
     try {
-        var org = rf.organisation;
-        var db = getDB(rf);
-        var contactFormService = services.contactFormService;
+        var page = rf;
+        var id = "claim-" + event.jobId;
+        var params = event;
+        
+        var db = getDB(page);
+        var claim = db.child(id);
+
+        if (claim !== null) {
+            var obj = {
+                recordId: id,
+                soldBy: claim.jsonObject.soldBy,
+                soldById: claim.jsonObject.soldById,
+                amount: claim.jsonObject.amount,
+                soldDate: claim.jsonObject.soldDate,
+                enteredDate: claim.jsonObject.enteredDate,
+                modifiedDate: formatter.formatDateISO8601(formatter.now),
+                productSku: claim.jsonObject.productSku,
+                status: claim.jsonObject.status,
+                receipt: claim.jsonObject.receipt,
+                status: claim.jsonObject.status,
+                ocrFileHash: XMLDocumentHash
+            }; 
             
-        transactionManager.runInTransaction(function () { 
-            securityManager.runAsUser('mohamed-owda', function () {                                           
-                var enteredUser = securityManager.currentUser;
-                var now = formatter.formatDateISO8601(formatter.now, org.timezone);
-                
-                var soldBy = enteredUser.name;
-                var soldById = enteredUser.userId;
-                var custProfileBean = enteredUser.extProfileBean;
-                
-                var claimId = 'claim-' + generateRandomText(32);
-                var claimObj = {
-                    recordId: claimId,
-                    enteredDate: now,
-                    modifiedDate: now,
-                    amount: 1,
-                    status: RECORD_STATUS.APPROVED,
-                    soldBy: soldBy,
-                    soldById: soldById,
-                    ocrFileHash: XMLDocumentHash
-                };
-                
-                db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
-                eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});
-                eventManager.goalAchieved("claimProcessedGoal", custProfileBean, {"claim": claimId, 'status': RECORD_STATUS.APPROVED});
-            });
-        });
+            log.info("handleScanJobEvent: obj {} ocrFileHash {}", obj.recordId, obj.ocrFileHash);
+
+            // Parse extra fields
+            var extraFields = getSalesDataExtreFields(page);
+            for (var i = 0; i < extraFields.length; i++) {
+                var ex = extraFields[i];
+                var fieldName = 'field_' + ex.name;
+
+//                obj[fieldName] = params.get(fieldName) || '';
+            }
+
+            claim.update(JSON.stringify(obj), TYPE_RECORD);
+        } else {
+            result.status = false;
+            result.messages = ['This claim does not exist'];
+        }
     } catch (e) {
-        log.error('Error when saving claim: ' + e, e);
+        log.error('Error when updating claim: ' + e, e);
     }
 }

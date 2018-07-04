@@ -953,9 +953,45 @@ function imageClaim(page, params, files) {
     
     var uploadedFiles = uploadFile(page, params, files);
     if (uploadedFiles.length > 0) {
-        // log.info("uploadedFiles[0].hash > {}", uploadedFiles[0].hash);
-        // log.info("services.ocrManager.scanToTable(uploadedFiles[0].hash) > {}", services.ocrManager.scanToTable(uploadedFiles[0].hash));
-        services.ocrManager.scanToTable(uploadedFiles[0].hash);
+        var scanJobId = services.ocrManager.scanToTable(uploadedFiles[0].hash);
+        log.info('imageClaim(): scanJobId {}', scanJobId);
+        
+        /**
+         * Create Claim
+         */
+        try {
+            var rf = page;
+            var org = rf.organisation;
+            var db = getDB(rf);
+
+            transactionManager.runInTransaction(function () { 
+                var enteredUser = securityManager.currentUser;
+                var now = formatter.formatDateISO8601(formatter.now, org.timezone);
+
+                var soldBy = enteredUser.name;
+                var soldById = enteredUser.userId;
+                var custProfileBean = enteredUser.extProfileBean;
+
+                var claimId = 'claim-' + scanJobId;
+                log.info('imageClaim(): claimId {}', claimId);
+                var claimObj = {
+                    recordId: claimId,
+                    enteredDate: now,
+                    modifiedDate: now,
+                    amount: 1,
+                    status: RECORD_STATUS.NEW,
+                    soldBy: soldBy,
+                    soldById: soldById
+                };
+
+                db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
+                eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});
+                eventManager.goalAchieved("claimProcessedGoal", custProfileBean, {"claim": claimId, 'status': RECORD_STATUS.NEW});
+            });
+        } catch (e) {
+            log.error('imageClaim(): Error when saving claim: ' + e, e);
+        }
+        
         result.status = true;
     } 
 
