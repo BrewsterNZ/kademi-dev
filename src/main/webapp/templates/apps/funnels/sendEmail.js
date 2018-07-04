@@ -163,6 +163,58 @@
             return chart;
         });
     }
+    
+    function loadFields(form, callback) {
+        var selectQuery = form.find('.assetQueryId');
+        var targetType = selectQuery.find('option[value="' + selectQuery.val() + '"]').attr('data-target-type');
+
+        if (targetType == undefined) {
+            var optionsStr = '<option value="">[Manual entry]</option>';
+            form.find('.select-asset-field').html(optionsStr).change();
+
+            if (typeof callback === 'function') {
+                callback();
+            }
+
+            return;
+        }
+
+        $.ajax({
+            url: '/content-types/' + targetType,
+            dataType: 'json',
+            type: 'get',
+            data: {
+                asJson: true
+            },
+            success: function (resp) {
+                var optionsStr = '<option value="">[Manual entry]</option>';
+                if (resp && resp.status && resp.data && resp.data && resp.data.fields) {
+                    $.each(resp.data.fields, function (index, item) {
+                        var itemTitle = item.name;
+                        if (item.title) {
+                            itemTitle = item.title;
+                        }
+                        optionsStr += '<option value="' + item.name + '">' + itemTitle + '</option>';
+                    });
+                }
+
+                form.find('.select-asset-field').html(optionsStr).show();
+
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            },
+            error: function (jqXHR, textStatus, errorText) {
+                flog('Error in loading fields', jqXHR, textStatus, errorText);
+                var optionsStr = '<option value="">[Manual entry]</option>';
+                form.find('.select-asset-field').html(optionsStr);
+
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }
+        });
+    }
 
     $(function () {
         Handlebars.registerHelper('formatISODate', function (dateString, options) {
@@ -274,5 +326,23 @@
         });
 
         initReportDateRange();
+        
+        $("#frmDetails .assetQueryId").on('change', function () {
+            loadFields($("#frmDetails"));
+        });
+
+        $("#frmDetails").on('change', '.select-asset-field', function () {
+            if ($(this).val() === "") {
+                $(this).hide().nextAll().show();
+            } else {
+                $(this).show().nextAll().hide();
+            }
+        });
+
+        loadFields($("#frmDetails"), function() {
+            $(".select-asset-field").each(function() {
+                $(this).val($(this).data("value"));
+            }).change();
+        });
     });
 })(jQuery);
