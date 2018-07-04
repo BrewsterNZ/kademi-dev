@@ -50,8 +50,8 @@
                     <div role="tabpanel" class="tab-pane active" id="home">
                         #if( $format == "text/html" )
                         <textarea name="text" class="form-control contenteditor" style="height: 800px">$!page.text($lang)</textarea>
-                        #else
-                        <textarea name="text" class="form-control" style="height: 400px">$!page.text($lang)</textarea>
+                        #elseif ($format == "text/html/edm")
+                        <textarea name="text" class="form-control edmeditor" style="height: 400px">$!page.text($lang)</textarea>
                         #end
                     </div>
                     <div role="tabpanel" class="tab-pane" id="profile">

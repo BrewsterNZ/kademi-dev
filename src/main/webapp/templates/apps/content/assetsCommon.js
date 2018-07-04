@@ -102,7 +102,14 @@ function initAssetContainer(container) {
     var isModal = container.hasClass('modal');
     flog('initAssetContainer', container, 'isAddModal=' + isAddModal);
 
-    initIframeContentEditor(container.find('.contenteditor'));
+    var edmEditor = container.find('.edmeditor');
+    var contentEditor = container.find('.contenteditor');
+    if (edmEditor.length){
+        initIframeEDMEditor(edmEditor)
+    } else if (contentEditor.length){
+        initIframeContentEditor(contentEditor);
+    }
+
 
     container.find('.form-edit').forms({
         onValid: function (form) {
@@ -139,11 +146,11 @@ function initAssetContainer(container) {
 
     container.find('.form-asset-main').forms({
         onValid: function (form) {
-            form.find('.contenteditor').each(function () {
-                var contentEditor = $(this);
-
+            if (edmEditor.length){
+                edmEditor.val(edmEditor.edmEditor('getContent') || "");
+            } else if (contentEditor.length){
                 contentEditor.val(contentEditor.contentEditor('getContent') || '');
-            });
+            }
         },
         onSuccess: function (resp) {
             if (resp.status) {
@@ -238,11 +245,13 @@ function initEditRelations() {
 function initForm(redirectOnCreated) {
     $('.form-edit').forms({
         onValid: function (form) {
-            form.find('.contenteditor').each(function () {
-                var contentEditor = $(this);
-
+            var edmEditor = form.find('.edmeditor');
+            var contentEditor = form.find('.contenteditor');
+            if (edmEditor.length){
+                edmEditor.val(edmEditor.edmEditor('getContent') || "");
+            } else if (contentEditor.length){
                 contentEditor.val(contentEditor.contentEditor('getContent') || '');
-            });
+            }
         },
         onSuccess: function (resp) {
             if (resp.status) {
@@ -263,11 +272,13 @@ function initForm(redirectOnCreated) {
 
     $('.form-asset-main').forms({
         onValid: function (form) {
-            form.find('.contenteditor').each(function () {
-                var contentEditor = $(this);
-
+            var edmEditor = form.find('.edmeditor');
+            var contentEditor = form.find('.contenteditor');
+            if (edmEditor.length){
+                edmEditor.val(edmEditor.edmEditor('getContent') || "");
+            } else if (contentEditor.length){
                 contentEditor.val(contentEditor.contentEditor('getContent') || '');
-            });
+            }
         },
         onSuccess: function (resp) {
             if (resp.status) {
