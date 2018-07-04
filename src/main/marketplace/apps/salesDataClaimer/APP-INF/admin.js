@@ -28,7 +28,7 @@ controllerMappings
         .addMethod('POST', 'approveClaims', 'approveClaims')
         .addMethod('POST', 'rejectClaims', 'rejectClaims')
         .addMethod('POST', 'deleteClaims', 'deleteClaims')
-        .addMethod('POST', 'approveImageClaims')
+        .addMethod('POST', 'processImageClaims')
         .postPriviledge('READ_CONTENT')
         .enabled(true)
         .build();
@@ -287,8 +287,8 @@ function createImageClaimTagging(page, params, files) {
     return views.jsonObjectView(response);
 }
 	
-function approveImageClaims(page, params, files){
-    log.info('approveImageClaims(): {} {}', page, files);
+function processImageClaims(page, params, files){
+    log.info('processImageClaims(): {} {}', page, files);
 
     var result = {
         status: true
@@ -301,7 +301,7 @@ function approveImageClaims(page, params, files){
      */
     var XMLDocumentString = '<?xml version="1.0" encoding="UTF-8"?>\n';
 
-    XMLDocumentString += '<rows oldHash="' + params.old_hash + '">';
+    XMLDocumentString += '<rows totalConfidence="' + params.totalConfidence + '" oldHash="' + params.old_hash + '">';
 
     for(rows_counter = 0; rows_counter < rows.length; rows_counter++){
         var row = rows[rows_counter];
@@ -311,7 +311,7 @@ function approveImageClaims(page, params, files){
             var cell = row['cells'][cells_counter];
 
             XMLDocumentString += '<cell>\n';
-            XMLDocumentString += '<' + cell['column'] + '>' + formatter.toString(cell['value']).trim() + '</' + cell['column'] + '>\n';
+            XMLDocumentString += '<' + cell['column'] + '>' + formatter.htmlEncode(formatter.toString(cell['value']).trim()) + '</' + cell['column'] + '>\n';
             XMLDocumentString += '<confidence>' + formatter.toString(cell['confidence']).trim() + '</confidence>\n';
             XMLDocumentString += '</cell>\n';
         } 
@@ -322,21 +322,23 @@ function approveImageClaims(page, params, files){
 
     result.XMLDocumentHash = fileManager.upload(XMLDocumentString.getBytes());
 
-    /**
-     * Save data-series
-     */
-    var salesDataApp = applications.get("salesData");
-    var ocrDataSeries = salesDataApp.getSalesDataSeries('sales-data-image-claim');
+    if(params.action == "approve"){
+        /**
+         * Save data-series
+         */
+        var salesDataApp = applications.get("salesData");
+        var ocrDataSeries = salesDataApp.getSalesDataSeries('sales-data-image-claim');
 
-    for(rows_counter = 0; rows_counter < rows.length; rows_counter++){
-        var fieldsMap = formatter.newMap();
-        for(cells_counter = 0; cells_counter < rows[rows_counter]['cells'].length; cells_counter++){
-            fieldsMap.put(rows[rows_counter]['cells'][cells_counter]['column'], formatter.toString(rows[rows_counter]['cells'][cells_counter]['value']).trim());
+        for(rows_counter = 0; rows_counter < rows.length; rows_counter++){
+            var fieldsMap = formatter.newMap();
+            for(cells_counter = 0; cells_counter < rows[rows_counter]['cells'].length; cells_counter++){
+                fieldsMap.put(rows[rows_counter]['cells'][cells_counter]['column'], formatter.toString(rows[rows_counter]['cells'][cells_counter]['value']).trim());
+            }
+
+            securityManager.runAsUser("mohamed-owda", function () {
+                salesDataApp.insertOrUpdateDataPoint(ocrDataSeries, formatter.toBigDecimal(1), formatter.now, formatter.now, securityManager.currentUser.thisProfile, formatter.now, fieldsMap);
+            });
         }
-
-        securityManager.runAsUser("mohamed-owda", function () {
-            salesDataApp.insertOrUpdateDataPoint(ocrDataSeries, formatter.toBigDecimal(1), formatter.now, formatter.now, securityManager.currentUser.thisProfile, formatter.now, fieldsMap);
-        });
     }
 
     /**
@@ -359,9 +361,14 @@ function approveImageClaims(page, params, files){
                 productSku: claim.jsonObject.productSku,
                 status: claim.jsonObject.status,
                 receipt: claim.jsonObject.receipt,
-                status: RECORD_STATUS.APPROVED,
                 ocrFileHash: result.XMLDocumentHash
             }; 
+            
+            if(params.action == "approve"){
+                obj.status = RECORD_STATUS.APPROVED;
+            }else{
+                obj.status = claim.jsonObject.status;
+            }
 
             // Parse extra fields
             var extraFields = getSalesDataExtreFields(page);

@@ -341,7 +341,7 @@ function handleScanJobEvent(rf, event) {
     
     var XMLDocumentString = '<?xml version="1.0" encoding="UTF-8"?>\n';
     
-    XMLDocumentString += '<rows>';
+    XMLDocumentString += '<rows totalConfidence="' + event.generatedOCRTable.getTotalConfidence() + '">';
     
     var rows = {
         index: 0,
@@ -365,7 +365,7 @@ function handleScanJobEvent(rf, event) {
             // log.info('handleScanJobEvent(): cell.text: {}', cell.text);
             // log.info('handleScanJobEvent(): cell.confidence: {}', cell.confidence);
             
-            XMLDocumentString += '<text>' + formatter.toString(cell.text).trim() + '</text>\n';
+            XMLDocumentString += '<text>' + formatter.htmlEncode(formatter.toString(cell.text).trim()) + '</text>\n';
             XMLDocumentString += '<confidence>' + formatter.toString(cell.confidence).trim() + '</confidence>\n';
             
             XMLDocumentString += '</cell>\n';

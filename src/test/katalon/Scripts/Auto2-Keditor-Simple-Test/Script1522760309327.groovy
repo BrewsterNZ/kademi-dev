@@ -26,7 +26,7 @@ def randomdigit = rnd.nextInt(9999)
 
 def pagetestname = WebUI.concatenate(((['pagetest', randomdigit]) as String[]))
 
-WebUI.openBrowser('http://vladtest52e.admin.kademi-ci.co')
+WebUI.openBrowser('http://vladtest52zz.admin.kademi-ci.co')
 
 not_run: WebUI.maximizeWindow()
 
