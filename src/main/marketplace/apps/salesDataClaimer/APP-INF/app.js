@@ -449,7 +449,7 @@ function handleScanJobEvent(rf, event) {
     
      XMLSample += '</rows>';
     
-     XMLDocumentString = XMLSample;
+//     XMLDocumentString = XMLSample;
     
     var XMLDocumentHash = fileManager.upload(XMLDocumentString.getBytes());
     
