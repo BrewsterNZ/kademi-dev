@@ -266,13 +266,18 @@
             modalProcess.find('thead tr').html("");
 
             modalProcess.modal('show');
+            modalProcess.find('.modal-dialog').fullscreen();
 
             var btn = $(this);
             var id = btn.attr('data-id');
             var url = MAIN_URL + 'ocrFile/' + id + '/?hash=' + btn.data('ocrfilehash');
 
+            $('.btn-save-image-claims').attr('data-ocrfilehash', btn.data('ocrfilehash'));
+            $('.btn-save-image-claims').attr('data-id', btn.data('id'));
+            
             $('.btn-approve-image-claims').attr('data-ocrfilehash', btn.data('ocrfilehash'));
             $('.btn-approve-image-claims').attr('data-id', btn.data('id'));
+            
             $('.btn-reject-image-claims').attr('data-id', btn.data('id'));
 
             $.ajax({
@@ -286,6 +291,10 @@
 
                         var xmlDocument = $.parseXML(resp.OCRFileXML);
                         var $xml = $(xmlDocument);
+                        
+                        var totalConfidence = (Math.round(Number($xml.find('rows').attr('totalConfidence')) * 100) / 100);
+                        $('.totalConfidence span').html(totalConfidence);
+                        
                         var $rows = $xml.find("row");
 
                         modalProcess.find('thead tr').append('<th width="30"><input type="checkbox" name="select-all" /></th>');
@@ -331,9 +340,7 @@
                                 }
 
                                 row += '    <td style="background: ' + cell_background + ';">';
-                                row += '        <span>';
-                                row +=              confidence;
-                                row += '        </span>';
+                                row += '        <span>' + confidence + '</span>';
                                 row += '        <input type="text" value="' + $cell.find(':first-child').text()  + '" />';
                                 row += '    </td>';
                             } 
@@ -441,11 +448,25 @@
         modalProcess.on('focus', 'input[type="text"]', function () {
            $(this).select();
         });
+        
+        modalProcess.on('click', '[data-dismiss="modal"]', function(){
+            $.fullscreen.exit();
+        });
 
-        $('.btn-approve-image-claims').on('click', function (e) {
+        modalProcess.on('click', '.btn-approve-image-claims, .btn-save-image-claims', function (e) {
             e.preventDefault();
+            
+            var $btn = $(this);
+            var action;
+            
+            if($btn.hasClass('btn-approve-image-claims')){
+                action = 'approve';
+            }
+            if($btn.hasClass('btn-save-image-claims')){
+                action = 'save';
+            }
 
-            if(!confirm("Are you sure you want to approve these claim records?")){
+            if(!confirm("Are you sure you want to " + action + " these claim records?")){
                 return;
             }
 
@@ -470,8 +491,6 @@
                 return;
             }
 
-            $btn = $(this);
-
             modalProcess.find('select').attr('disabled', 'disabled');
             modalProcess.find('input').attr('disabled', 'disabled');
 
@@ -487,10 +506,9 @@
                     'index': $tr.attr('data-index')
                 };
 
-                $inputs.each(function () {
-                    if(columns[column] == ""){
+                $inputs.each(function() {
+                    if(columns[column] === ""){
                         return true;
-
                     }
 
                     $input = $(this);
@@ -501,9 +519,9 @@
                 rows.push(row);
             }); 
 
-            // console.log(rows);
-            // console.log(columns);
-            // return;
+//             console.log(rows);
+//             console.log(columns);
+//             return;
 
             setTimeout(function(){
                 $.ajax({
@@ -511,7 +529,8 @@
                     type: 'POST',
                     dataType: 'JSON',
                     data: {
-                        approveImageClaims: true,
+                        processImageClaims: true,
+                        action: action,
                         rows: JSON.stringify(rows),
                         old_hash: $btn.data('ocrfilehash'),
                         id: $btn.data('id')
@@ -521,7 +540,7 @@
                         reloadClaimsList();
 
                         flog('RESP ', resp);
-                        Msg.success("Claims approved successfully");
+                        Msg.success("Claims " + action + " done successfully");
                         modalProcess.modal('hide');
 
                         modalProcess.find('[name="select-all"]').prop('checked', false);
