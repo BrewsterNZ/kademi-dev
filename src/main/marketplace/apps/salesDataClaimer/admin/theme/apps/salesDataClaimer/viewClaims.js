@@ -533,7 +533,8 @@
                         action: action,
                         rows: JSON.stringify(rows),
                         old_hash: $btn.data('ocrfilehash'),
-                        id: $btn.data('id')
+                        id: $btn.data('id'),
+                        totalConfidence: $('.totalConfidence span').html()
                     },
                     async: false,
                     success: function (resp) {
