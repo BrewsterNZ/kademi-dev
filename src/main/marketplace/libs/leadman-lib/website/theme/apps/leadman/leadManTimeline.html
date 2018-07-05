@@ -11,7 +11,7 @@
     <li class="tldateLi"><div class="tldate"><span>$month $formatter.getYear($action.actionDate)</span></div></li>
     #end
     #set( $lastMonth = $month )
-    <li class="$formatter.ifTrue($action.inbound, '', 'timeline-inverted')">
+    <li class="$formatter.ifTrue($action.inbound, 'timeline-inverted', 'timeline-inverted')">
         <div class="timeline-badge $action.category"><i class="fa $action.itemType"></i></div>
         <div class="timeline-panel">
             <div class="timeline-heading">

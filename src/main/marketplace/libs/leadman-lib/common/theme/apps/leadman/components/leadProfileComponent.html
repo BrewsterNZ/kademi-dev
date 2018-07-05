@@ -19,9 +19,9 @@
             $page.customerDescription
             #end
         </h1>
-        <p>55 City Street<br>
-            Auckland, 2025<br>
-            New Zealand</p>
+        <p>$page.profile.addressLine1<br>
+            $page.profile.state, $page.profile.postcode<br>
+            $page.profile.country</p>
         #if( $page.profile.email )
         <p>
             <div class="btn-group">

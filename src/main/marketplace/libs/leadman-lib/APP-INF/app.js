@@ -4,8 +4,11 @@ controllerMappings.addComponent("leadman/components", "leadStatsSummary", "html"
 controllerMappings.addComponent("leadman/components", "leadsList", "html", "Display leads list", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadSalesSummary", "html", "Displays sales and tasks summary for Team Leaders / Sales Managers ", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadProfile", "html", "Displays lead profile details and tags (NEW) ", "Leadman App component");
-controllerMappings.addComponent("leadman/components", "leadProfileTabs", "html", "Displays lead profile tabs ie Summary, Contact, Company, etc (NEW) ", "Leadman App component");
-controllerMappings.addComponent("leadman/components", "leadProfileTabContent", "html", "Displays lead profile content which loads via pjax (NEW) ", "Leadman App component");
+controllerMappings.addComponent("leadman/components", "leadDetailTabs", "html", "Displays lead detail tabs ie Summary, Contact, Company, etc (NEW) ", "Leadman App component");
+controllerMappings.addComponent("leadman/components", "leadDetailTabContent", "html", "Displays lead profile content which loads via pjax (NEW) ", "Leadman App component");
+controllerMappings.addComponent("leadman/components", "leadDetailCompanyTabContent", "html", "Displays lead profile content which loads via pjax (NEW) ", "Leadman App component");
+controllerMappings.addComponent("leadman/components", "leadDetailContactTabContent", "html", "Displays lead profile content which loads via pjax (NEW) ", "Leadman App component");
+controllerMappings.addComponent("leadman/components", "leadDetailActivities", "html", "Displays lead profile content which loads via pjax (NEW) ", "Leadman App component");
 
 controllerMappings.addComponent("leadman/components", "leadAnalyticsNewLeadsCreated", "html", "Display new leads created", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadAnalyticsLeadsLost", "html", "Display the leads lost", "Leadman App component");

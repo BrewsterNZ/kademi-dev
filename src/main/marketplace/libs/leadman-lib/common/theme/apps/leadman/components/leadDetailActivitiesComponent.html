@@ -1,113 +1,16 @@
-<div class="panel panel-default panel-leadProfileTabContent">
-    <div class="panel-body">
-        #if ($params.contains("view"))
-        #else
-        <div class="leadSummary">
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <div class="btn-group">
-                            <button id="assignedBlock" class="btn dropdown-toggle btn-primary btn-block" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
-                        <span>
-                            #if( $page.assignedTo )
-                                Assigned to: $!page.assignedTo.thisUser.formattedName
-                            #else
-                                Not assigned
-                            #end
-                        </span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" id="assignToMenu" role="menu">
-                                <li><a href="$user.name">Assign to me</a></li>
-                                <li><a href="">Clear</a></li>
-                                #if ($page.find("/leads").teamMembers.size() > 0)
-                                <li role="separator" class="divider"></li>
-                                #end
-                                #foreach($user in $page.find("/leads").teamMembers)
-                                <li><a href="$user.name">$!user.firstName $!user.surName</a></li>
-                                #end
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Lead Title:</label>
-                        <input type="text" value="$!page.leadTitle" name="leadTitle" class="form-control immediateUpdate"/>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <!-- Split button -->
-                        <select name="stageName" class="form-control immediateUpdate selectpicker" data-style="btn-primary">
-                            <option value="">[None]</option>
-                            #foreach( $stage in $page.allStages )
-                            #set($a = $formatter.ifNull($stage.desc, $stage.name))
-                            #set($oText = "Stage: "+$a)
-                            $formatter.option($stage.name, $oText, $page.stageName)
-                            #end
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Lead value:</label>
-                        <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate"/>
-                    </div>
-
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <!-- Split button -->
-                        <select data-placeholder="Select a source" name="source" class="form-control immediateUpdate selectpicker" data-style="btn-primary">
-                            <option data-subtext="Source" value="">[None]</option>
-                            #set($foundSource = false)
-                            #foreach( $source in $page.allSources )
-                                #if($source == $page.source)
-                                #set($foundSource = true)
-                            #end
-                            #set($oText = "Source: "+$source)
-                            $formatter.option($source, $oText, $page.source)
-                            #end
-                            #if(!$foundSource && $page.source)
-                                $formatter.option($page.source, $page.source, $page.source)
-                            #end
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Created date:</label>
-                        <input type="text" name="createDate" id="createDate" class="form-control date-time immediateUpdate" value=" $formatter.formatDateTime( $!page.createDate )" />
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="form-group">
-                        <label class="control-label">Lead description:</label>
-                        <textarea id="description" class="form-control immediateUpdate" placeholder="Description" name="description" style="height: 100px">$!page.description</textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="form-group text-right">
-                        <button type="submit" class="btn btn-success">Update</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        #end
-    </div>
-</div>
-
 <div class="row">
     <div class="col-sm-12">
         <div class="btn-group" role="group" aria-label="...">
+            <a type="button" class="btn btn-default createNote" href="$page.href"><i class="fa fa-sticky-note-o"></i> Create Note</a>
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-plus-circle"></i> Add Activity
                     <i class="fa fa-angle-down"></i>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#">Dropdown link</a></li>
-                    <li><a href="#">Dropdown link</a></li>
+                    #foreach ($a in $page.actions)
+                    <li><a href="$a.id">$a.text</a></li>
+                    #end
                 </ul>
             </div>
             <button data-toggle="modal" data-target="#newTaskModal" type="button" class="btn btn-default"><i class="fa fa-clock-o"></i> Create Task</button>
@@ -115,31 +18,19 @@
             <button type="button" class="btn btn-default upload-files"><i class="fa fa-cloud-upload"></i> Upload File</button>
 
             <div class="btn-group" role="group">
+                <button class="btn btn-default"> <i class="fa fa-dollar"></i>
+                    New proposal</button>
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-dollar"></i>
-                    Proposal/Quote
                     <i class="fa fa-angle-down"></i>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#">New Proposal</a></li>
-                    <li><a href="#">New Quote</a></li>
+                    <li><a href="javascript:void(0)">New Quote</a></li>
                 </ul>
             </div>
         </div>
     </div>
 </div>
 <br>
-<div class="panel panel-default panel-leadProfileTabContent">
-    <div class="panel-body">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <textarea id="leadNotes" class="form-control immediateUpdate" placeholder="Start typing your notes here" name="leadNotes" style="height: 100px"></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div id="activity" >
     #parse("/theme/apps/leadman/leadManTimeline.html")

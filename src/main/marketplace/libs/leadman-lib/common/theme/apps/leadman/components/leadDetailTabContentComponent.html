@@ -1,0 +1,94 @@
+<div class="panel panel-default panel-leadProfileTabContent">
+    <div class="panel-body">
+        <div class="leadSummary">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="btn-group">
+                            <button id="assignedBlock" class="btn dropdown-toggle btn-primary btn-block" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
+                        <span>
+                            #if( $page.assignedTo )
+                                Assigned to: $!page.assignedTo.thisUser.formattedName
+                            #else
+                                Not assigned
+                            #end
+                        </span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" id="assignToMenu" role="menu">
+                                <li><a href="$user.name">Assign to me</a></li>
+                                <li><a href="">Clear</a></li>
+                                #if ($page.find("/leads").teamMembers.size() > 0)
+                                <li role="separator" class="divider"></li>
+                                #end
+                                #foreach($user in $page.find("/leads").teamMembers)
+                                <li><a href="$user.name">$!user.firstName $!user.surName</a></li>
+                                #end
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Lead Title:</label>
+                        <input type="text" value="$!page.leadTitle" name="leadTitle" class="form-control immediateUpdate"/>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <!-- Split button -->
+                        <select name="stageName" class="form-control immediateUpdate selectpicker" data-style="btn-primary">
+                            <option value="">[None]</option>
+                            #foreach( $stage in $page.allStages )
+                            #set($a = $formatter.ifNull($stage.desc, $stage.name))
+                            #set($oText = "Stage: "+$a)
+                            $formatter.option($stage.name, $oText, $page.stageName)
+                            #end
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Lead value:</label>
+                        <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate"/>
+                    </div>
+
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <!-- Split button -->
+                        <select data-placeholder="Select a source" name="source" class="form-control immediateUpdate selectpicker" data-style="btn-primary">
+                            <option data-subtext="Source" value="">[None]</option>
+                            #set($foundSource = false)
+                            #foreach( $source in $page.allSources )
+                                #if($source == $page.source)
+                                #set($foundSource = true)
+                            #end
+                            #set($oText = "Source: "+$source)
+                            $formatter.option($source, $oText, $page.source)
+                            #end
+                            #if(!$foundSource && $page.source)
+                                $formatter.option($page.source, $page.source, $page.source)
+                            #end
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Created date:</label>
+                        <input type="text" name="createDate" id="createDate" class="form-control date-time immediateUpdate" value=" $formatter.formatDateTime( $!page.createDate )" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label">Lead description:</label>
+                        <textarea id="description" class="form-control immediateUpdate" placeholder="Description" name="description" style="height: 100px">$!page.description</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group text-right">
+                        <button type="submit" class="btn btn-success">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,125 @@
+<div class="panel panel-default panel-leadProfileTabContent">
+    <div class="panel-body">
+        <div class="leadSummary">
+            <form action="$page.href" method="post" id="leadDetails">
+                <input type="hidden" name="saveDetails" value="saveDetails" />
+                #set( $p = $page.leadProfile )
+                #set( $profile = $page.profile )
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Title</label>
+                            <select name="contactTitle" id="contactTitle" class="form-control" placeholder="Job Title">
+                                <option value="Mr">Mr</option>
+                                <option value="Mrs">Mrs</option>
+                                <option value="Ms">Ms</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">First name</label>
+                            <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!profile.firstName" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Last name</label>
+                            <input type="text" name="firstName" id="surName" class="form-control" placeholder="First name" value="$!profile.surName" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Middle name</label>
+                            <input type="text" name="middleName" id="middleName" class="form-control" placeholder="MiddleName name" value="$!profile.middleName" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Preferred name</label>
+                            <input type="text" name="nickName" id="nickname" class="form-control" placeholder="Preferred name" value="$!profile.nickName" />
+                        </div>
+                    </div>
+                    #if (!$page.href.contains("cust"))
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Job Title</label>
+                            <input type="text" name="jobTitle" id="jobTitle" class="form-control" placeholder="Job Title" value="$!page.jobTitle" />
+                        </div>
+                    </div>
+                    #end
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Mobile number</label>
+                            <input type="text" name="phone" id="phone" class="form-control" placeholder="Mobile number" value="$!profile.phone" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Home phone</label>
+                            <input type="text" name="homePhone" id="homePhone" class="form-control" placeholder="Home phone" value="$!profile.homePhone" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Business phone</label>
+                            <input type="text" name="businessPhone" id="businessPhone" class="form-control" placeholder="Business phone" value="$!profile.businessPhone" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Email address</label>
+                            <input type="text" name="email" id="email" class="form-control" placeholder="Email address" value="$!profile.email" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Address Line 1</label>
+                            <input type="text" name="address" id="address" class="form-control" placeholder="Address Line 1" value="$!profile.address" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Address Line 2</label>
+                            <input type="text" name="addressLine2" id="addressLine2" class="form-control" placeholder="Address Line 2" value="$!profile.addressLine2" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Town/City</label>
+                            <input type="text" name="state" id="state" class="form-control" placeholder="Town/City" value="$!profile.state" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Postcode</label>
+                            <input type="text" name="postcode" id="postcode" class="form-control" placeholder="Postcode" value="$!profile.postcode" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Country</label>
+                            <input type="text" name="country" id="country" class="form-control" placeholder="Country" value="$!profile.country" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <button type="submit" class="btn btn-info">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
