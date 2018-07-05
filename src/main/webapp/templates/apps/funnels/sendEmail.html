@@ -184,7 +184,7 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-4" for="subject">Email subject</label>
                                     <div class="col-md-8">
-                                        <select id="subjectAssetField" name="subjectAssetField" class="form-control select-asset-field" data-value="$page.node.subjectAssetField">
+                                        <select id="subjectAssetField" name="subjectAssetField" class="form-control select-asset-field" data-value="$!page.node.subjectAssetField">
                                         </select>
                                         <textarea style="height: 70px" name="subject" id="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.subject )</textarea>
                                     </div>
@@ -208,7 +208,7 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-4" for="from">Email from address</label>
                                     <div class="col-md-8">
-                                        <select id="fromAssetField" name="fromAssetField" class="form-control select-asset-field" data-value="$page.node.fromAssetField">
+                                        <select id="fromAssetField" name="fromAssetField" class="form-control select-asset-field" data-value="$!page.node.fromAssetField">
                                         </select>
                                         <input type="text" name="from" id="from" value="$!formatter.htmlEncode( $page.node.from )" placeholder="admin@mybusinessname.com" class="form-control" />
                                         <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank but
@@ -219,7 +219,7 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-4" for="replyT">Reply to address</label>
                                     <div class="col-md-8">
-                                        <select id="replyToAssetField" name="replyToAssetField" class="form-control select-asset-field" data-value="$page.node.replyToAssetField">
+                                        <select id="replyToAssetField" name="replyToAssetField" class="form-control select-asset-field" data-value="$!page.node.replyToAssetField">
                                         </select>
                                         <input type="text" name="replyTo" id="replyTo" value="$!formatter.htmlEncode( $page.node.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
                                         <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>.</small>
@@ -228,7 +228,7 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-4" for="replyT">To address</label>
                                     <div class="col-sm-8">
-                                        <select id="toAssetField" name="toAssetField" class="form-control select-asset-field" data-value="$page.node.toAssetField">
+                                        <select id="toAssetField" name="toAssetField" class="form-control select-asset-field" data-value="$!page.node.toAssetField">
                                         </select>
                                         <input type="text" id="to" name="to" value="$!formatter.htmlEncode( $page.node.to )" placeholder="admin@mybusinessname.com" class="form-control" />
                                         <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>.</small>

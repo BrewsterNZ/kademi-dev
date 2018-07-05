@@ -29,9 +29,9 @@ JBNodes['emailAction'] = {
 
         form.on('change', '.select-asset-field', function () {
             if ($(this).val() === "") {
-                $(this).hide().nextAll().show();
+                $(this).nextAll().show();
             } else {
-                $(this).show().nextAll().hide();
+                $(this).nextAll().hide();
             }
         });
     },
@@ -41,7 +41,7 @@ JBNodes['emailAction'] = {
 
         if (targetType == undefined) {
             var optionsStr = '<option value="">[Manual entry]</option>';
-            form.find('.select-asset-field').html(optionsStr).change();
+            form.find('.select-asset-field').html(optionsStr).hide().nextAll().show();
 
             if (typeof callback === 'function') {
                 callback();
