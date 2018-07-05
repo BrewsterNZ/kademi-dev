@@ -25,6 +25,7 @@
             .addMethod('POST', '_createBadge', 'createBadge')
             .addMethod('POST', '_deleteBadge', 'deleteBadge')
             .addMethod('POST', '_updateBadge', 'updateBadge')
+            .addMethod('POST', '_createAssetForRecognition', 'createAssetType')
             .addMethod('POST', '_uploadBadgeImage', 'uploadBadgeImage')
             .addMethod('POST', '_removeBadgeImage', 'removeBadgeImage')
             /* Levels */
@@ -241,6 +242,26 @@
 
             page.dataBind(badge, m);
         });
+
+        return page.jsonResult(true, 'Success');
+    };
+    
+    /**
+     * API to delete an award
+     *
+     * @param {type} page
+     * @param {type} params
+     * @returns {undefined}
+     */
+    g._createAssetForRecognition = function (page, params) {
+        var assetTypeToCreate = Utils.safeString(params.createAssetType);
+        var topic = page.attributes.topicId;
+        
+        var contentType = services.assetManager.assetTypeManager.getContentType(assetTypeToCreate);
+        
+        var badge = topic.getBadge(Utils.safeInt(params.badgeid));
+        
+        services.catalogManager.createAssetForRecognition(badge, contentType);
 
         return page.jsonResult(true, 'Success');
     };
