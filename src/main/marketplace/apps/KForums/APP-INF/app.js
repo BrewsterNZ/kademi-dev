@@ -33,7 +33,8 @@ function vote(page, params, files, form) {
 
 function replyToPost(page, params, files, form) {
     transactionManager.runInTransaction(function () {
-        var postId = form.longParam("voteId");
+        var postId = form.longParam("replyToPostId");
+        log.info("replyToPost postId={}", postId);
         var text = form.cleanedParam("replyText");
 
         services.forumManager.replyToPost(postId, text);

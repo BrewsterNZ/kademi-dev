@@ -12,6 +12,7 @@ $(function () {
 
     $("body").on("click", ".btn-post-reply", function (e) {
         e.preventDefault();
+        flog("reply");
         var target = $(e.target);
         var postContainer = target.closest(".post-item");
         var text = postContainer.find(".post-reply").val();
@@ -27,6 +28,16 @@ $(function () {
                 var modal = form.closest(".modal");
                 form.find("textarea").val("");
                 modal.modal("hide");
+                var id = form.data("forum-id");
+                var wall = $("#social-wall-" + id);
+
+                window.setTimeout(function() {
+                    wall.reloadFragment({
+                        whenComplete : function() {
+                            $(".timeago").timeago();
+                        }
+                    });
+                }, 1000);
             } else {
                 Msg.warning("Sorry, there was an error posting your message " + resp.messages);
             }
@@ -46,7 +57,8 @@ function postReply(id, text, postContainer) {
         },
         success: function (resp) {
             if (resp.status) {
-                flog("done");
+                flog("done, reloading ", $("#post-" + id), id);
+                $("#post-" + id).reloadFragment();
             } else {
                 Msg.warning(resp.messages);
             }

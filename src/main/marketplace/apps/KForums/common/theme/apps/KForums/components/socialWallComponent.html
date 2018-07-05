@@ -13,14 +13,14 @@
 
 #set( $postsResp = $applications.KForums.call("doWallSearch", $forum, 0, 100) )
 
-<div class="well">
+<div class="well social-wall" id="social-wall-$forum.id">
 
 
     #if( $postsResp.hits.total == 0 )
     <p>No one has posted anything yet, <a href="#forumPostForm" data-toggle="modal">be the first to ask</a></p>
     #else
     #foreach($postHit in $postsResp.hits.hits)
-    <div class="panel panel-default post-item" data-post-id="$postHit.fields.postId.value" >
+    <div class="panel panel-default post-item" data-post-id="$postHit.fields.postId.value" id="post-$postHit.fields.postId.value">
         <div class="panel-heading">
             <div class="questionAvatar pull-left" style="width: 20px; height: 20px; background-image: url($formatter.profilePicHref($post.poster)); background-size: cover"></div>
             <h4>$postHit.fields.title.value</h4>
@@ -29,7 +29,7 @@
                 <abbr title="$formatter.formatDateISO8601($postHit.fields.postDate.value)" class="timeago">$postHit.fields.postDate.value</abbr>
                 &nbsp;
                 <i class="fa fa-comments-o"></i>
-                <strong>$postHit.fields.numInteractions.value</strong> replies
+                <strong>$postHit.fields.numInteractions.value</strong> reactions
             </small>
         </div>
 
@@ -47,10 +47,17 @@
 
             <hr>
 
+            #set( $replies = $services.forumManager.replies($postHit.fields.postId.value) )
+            #foreach( $reply  in $replies )
+            <b>$reply.poster.nickName</b> said $reply.notes
+            <hr/>
+            #end
+
+
             <div class="input-group">
                 <div class="input-group-btn">
                     <button class="btn btn-default btn-vote-up">+1</button>
-                    <button class="btn btn-default"><i class="glyphicon glyphicon-share"></i></button>
+                    <button class="btn btn-default btn-post-reply"><i class="glyphicon glyphicon-share"></i></button>
                 </div>
                 <input class="form-control post-reply" placeholder="Add a comment.." type="text">
             </div>
@@ -71,7 +78,7 @@
                 </button>
                 <h4 class="modal-title">Post</h4>
             </div>
-            <form method="POST" action="/kforums" class="form-horizontal forum-post-form">
+            <form method="POST" action="/kforums" class="form-horizontal forum-post-form" data-forum-id="$forum.id">
                 <input type="hidden" name="forumName" value="$forum.name" />
                 <div class="modal-body">
                     <div class="form-group">

@@ -1,0 +1,16 @@
+#set($seoBean = $page.seoContent)
+#if($seoBean)
+
+    #if($formatter.isNotNull($formatter.cleanString($seoBean.description)))
+    <meta name="description" content="$formatter.htmlEncode($formatter.cleanString($seoBean.description))">
+    #end
+    #if($formatter.isNotNull($seoBean.keywords))
+    <meta name="keywords" content="$formatter.toCsv($seoBean.keywords)">
+    #end
+    #if($formatter.isNotNull($formatter.cleanString($seoBean.canonical)))
+    <meta name="canonical" content="$!seoBean.canonical">
+    #end
+    #if($formatter.isNotNull($seoBean.structuredData))
+    <script type="application/ld+json">$formatter.toJson($seoBean.structuredData)</script>
+    #end
+#end
