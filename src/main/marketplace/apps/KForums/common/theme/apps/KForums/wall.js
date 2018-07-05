@@ -23,21 +23,14 @@ $(function () {
 
     $(".forum-post-form").forms({
         onSuccess: function (resp, form) {
-            if( resp.status){
+            if (resp.status) {
                 Msg.success("Posted");
                 var modal = form.closest(".modal");
                 form.find("textarea").val("");
                 modal.modal("hide");
                 var id = form.data("forum-id");
                 var wall = $("#social-wall-" + id);
-
-                window.setTimeout(function() {
-                    wall.reloadFragment({
-                        whenComplete : function() {
-                            $(".timeago").timeago();
-                        }
-                    });
-                }, 1000);
+                reloadWall(wall);
             } else {
                 Msg.warning("Sorry, there was an error posting your message " + resp.messages);
             }
@@ -52,13 +45,12 @@ function postReply(id, text, postContainer) {
         type: 'POST',
         dataType: 'JSON',
         data: {
-            replyToPostId : id,
-            replyText : text
+            replyToPostId: id,
+            replyText: text
         },
         success: function (resp) {
             if (resp.status) {
-                flog("done, reloading ", $("#post-" + id), id);
-                $("#post-" + id).reloadFragment();
+                reloadPost($("#post-" + id));
             } else {
                 Msg.warning(resp.messages);
             }
@@ -76,12 +68,13 @@ function upvote(id, postContainer) {
         type: 'POST',
         dataType: 'JSON',
         data: {
-            voteId : id,
-            isUp : true
+            voteId: id,
+            isUp: true
         },
         success: function (resp) {
             if (resp.status) {
                 flog("done");
+                reloadPost($("#post-" + id));
             } else {
                 Msg.warning(resp.messages);
             }
@@ -90,4 +83,24 @@ function upvote(id, postContainer) {
             Msg.error('Sorry, couldnt send your vote');
         }
     });
+}
+
+function reloadWall(wall) {
+    window.setTimeout(function () {
+        wall.reloadFragment({
+            whenComplete: function () {
+                $(".timeago").timeago();
+            }
+        });
+    }, 1000);
+}
+
+function reloadPost(postContainer) {
+    window.setTimeout(function () {
+        wall.reloadFragment({
+            whenComplete: function () {
+                $(".timeago").timeago();
+            }
+        });
+    }, 1000);
 }
