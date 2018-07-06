@@ -110,7 +110,12 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label class="control-label">Country</label>
-                            <input type="text" name="country" id="country" class="form-control" placeholder="Country" value="$!profile.country" />
+                            <select name="country" class="form-control selectpicker" data-live-search="true" data-live-search-normalize="true" id="country">
+                                <option value="">[No country selected]</option>
+                                #foreach($cc in $formatter.countryCodes.list)
+                                $formatter.option( $cc.alpha2Code, $cc.englishShortName, $!profile.country )
+                                #end
+                            </select>
                         </div>
                     </div>
                 </div>

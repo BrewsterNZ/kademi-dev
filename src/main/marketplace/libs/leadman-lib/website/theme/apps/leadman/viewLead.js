@@ -236,7 +236,7 @@
             }
         });
         var orgTitleSearch = $('#orgTitleSearch');
-        var form = orgTitleSearch.closest('.form-horizontal');
+        var form = orgTitleSearch.closest('form');
         var btnSaveCompany = form.find('.btn-save-company');
 
         orgTitleSearch.typeahead({
@@ -290,6 +290,7 @@
             form.find('input[name=postcode]').val(sug.postcode);
             form.find('input[name=leadOrgId]').val(sug.orgId);
             form.find('[name=country]').val(sug.country);
+            $('.selectpicker').selectpicker('refresh')
             form.find('.btn-company-details').css('display', 'inline').attr('href', '/companies/' + sug.id);
             btnSaveCompany.html('Save details');
         });
@@ -402,25 +403,30 @@
         leadOrgDetailsForm.forms({
             onSuccess: function (resp) {
                 var btnSaveCompany = $('.btn-save-company');
-
-                $('#leadOrgDetailsPreview, #btn-company-details-wrapper').reloadFragment({
+                $('#companyTabButtons').reloadFragment({
+                    url: window.location.href,
                     whenComplete: function () {
-                        if (btnSaveCompany.text().trim() === 'Create new company') {
-                            btnSaveCompany.html('Save details');
-                            Msg.success('New company is created');
-                        } else {
-                            if (leadOrgDetailsForm.find('[name=title]').val() === '') {
-                                Msg.success('Company is unlinked');
-                            } else {
-                                Msg.success('Company details is saved')
-                            }
-                        }
-
-                        if (leadOrgDetailsForm.find('[name=title]').val() === '') {
-                            form.find('.btn-unlink-company').css('display', 'none');
-                        }
+                        Msg.success('Updated');
                     }
                 });
+                // $('#leadOrgDetailsPreview, #btn-company-details-wrapper').reloadFragment({
+                //     whenComplete: function () {
+                //         if (btnSaveCompany.text().trim() === 'Create new company') {
+                //             btnSaveCompany.html('Save details');
+                //             Msg.success('New company is created');
+                //         } else {
+                //             if (leadOrgDetailsForm.find('[name=title]').val() === '') {
+                //                 Msg.success('Company is unlinked');
+                //             } else {
+                //                 Msg.success('Company details is saved')
+                //             }
+                //         }
+                //
+                //         if (leadOrgDetailsForm.find('[name=title]').val() === '') {
+                //             form.find('.btn-unlink-company').css('display', 'none');
+                //         }
+                //     }
+                // });
             }
         });
 
@@ -583,7 +589,7 @@
         $(document.body).on('click', '.btn-unlink-company', function (e) {
             e.preventDefault();
 
-            var form = $(this).closest('.form-horizontal');
+            var form = $(this).closest('form');
             form.find('input[name=title]').val('');
             form.find('input[name=email]').val('');
             form.find('input[name=phone]').val('');
@@ -779,7 +785,9 @@
     function initSelectPicker() {
         var sp = $('.selectpicker');
         if( sp.length > 0){
-            $('.selectpicker').selectpicker();
+            $('.selectpicker').selectpicker({
+                maxOptions
+            });
         }
     }
 
