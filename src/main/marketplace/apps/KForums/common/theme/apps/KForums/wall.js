@@ -28,8 +28,7 @@ $(function () {
                 var modal = form.closest(".modal");
                 form.find("textarea").val("");
                 modal.modal("hide");
-                var id = form.data("forum-id");
-                var wall = $("#social-wall-" + id);
+                var wall = $("#social-wall");
                 reloadWall(wall);
             } else {
                 Msg.warning("Sorry, there was an error posting your message " + resp.messages);
@@ -97,7 +96,7 @@ function reloadWall(wall) {
 
 function reloadPost(postContainer) {
     window.setTimeout(function () {
-        wall.reloadFragment({
+        postContainer.reloadFragment({
             whenComplete: function () {
                 $(".timeago").timeago();
             }

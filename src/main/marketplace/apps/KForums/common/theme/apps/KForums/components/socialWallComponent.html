@@ -9,9 +9,11 @@
     <p>&nbsp;</p>
 </div>
 
-#set( $postsResp = $applications.KForums.call("doWallSearch", null, 0, 100) )
 
-<div class="well social-wall" id="social-wall-$forum.id">
+
+#set( $postsResp = $applications.KForums.call("doWallSearch", $page.attributes.teamOrgId.id, 0, 100) )
+
+<div class="well social-wall" id="social-wall">
 
 
     #if( $postsResp.hits.total == 0 )

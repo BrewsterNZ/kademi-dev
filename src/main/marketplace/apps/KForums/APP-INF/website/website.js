@@ -5,9 +5,9 @@
  * @param {type} pageSize
  * @returns {unresolved}
  */
-function doWallSearch(currentOrg, pageFrom, pageSize) {
-    log.info("doWallSearch", currentOrg, pageFrom, pageSize);
- 
+function doWallSearch(currentOrgId, pageFrom, pageSize) {
+    log.info("doWallSearch {} {} {}", currentOrgId, pageFrom, pageSize);
+
     var query = {
         "stored_fields": [
             "name",
@@ -30,7 +30,7 @@ function doWallSearch(currentOrg, pageFrom, pageSize) {
             }
         ],
     };
-    appendCriteria(query, currentOrg);
+    appendCriteria(query, currentOrgId);
 
     var queryText = JSON.stringify(query);
     log.info("query: {}", queryText);
@@ -40,11 +40,11 @@ function doWallSearch(currentOrg, pageFrom, pageSize) {
 }
 
 
-function appendCriteria(query, currentOrg) {
+function appendCriteria(query, currentOrgId) {
     return;
     // TODO: Add constraint to limit to posts from current user and followers
     var must = [
-        {"term": {"forumId": currentOrg.id}}
+        {"term": {"forumId": currentOrgId}}
     ];
 
     query.query = {

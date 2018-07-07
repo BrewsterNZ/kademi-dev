@@ -11,12 +11,25 @@ controllerMappings
         .enabled(true)
         .build();
 
+    controllerMappings
+            .websiteController()
+            .enabled(true)
+            .path('/teams/(?<teamOrgId>[^/]*)/')
+            .addPathResolver('teamOrgId', 'resolveTeam')
+            .defaultView(views.templateView('/theme/apps/KForums/viewTeamWall.html'))
+            .build();
 
+function resolveTeam(page, groupName, teamOrgId) {
+    var teamOrg = page.find("/").orgData.childOrg(teamOrgId);
+    return teamOrg;
+}
 
 function post(page, params, files, form) {
     transactionManager.runInTransaction(function () {
         var newPost = form.cleanedParam("newPost");
-        services.forumManager.post( newPost);
+        var teamOrgId = form.longParam("teamOrgID"); // nullable, long
+        var teamOrg = null;
+        services.forumManager.post(teamOrgId, newPost);
 
     });
     return views.jsonView(true, "Posted");
