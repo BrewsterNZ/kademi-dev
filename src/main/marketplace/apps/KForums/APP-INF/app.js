@@ -1,6 +1,7 @@
 controllerMappings.addComponent("KForums/components",
         "socialWall", "html", "Displays a facebook style wall of actitivy", "Forums");
 
+
 controllerMappings
         .websiteController()
         .path('/kforums')
@@ -10,12 +11,12 @@ controllerMappings
         .enabled(true)
         .build();
 
+
+
 function post(page, params, files, form) {
     transactionManager.runInTransaction(function () {
         var newPost = form.cleanedParam("newPost");
-        var forumName = form.rawParam("forumName");
-
-        services.forumManager.post(forumName, newPost);
+        services.forumManager.post( newPost);
 
     });
     return views.jsonView(true, "Posted");
