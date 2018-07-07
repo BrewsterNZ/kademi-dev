@@ -1,22 +1,19 @@
 <div class="panel panel-default panel-leadProfileTabContent">
     <div class="panel-body">
-        <!--<div class="text-center">-->
-            <!--<i class="fa fa-building"></i> Click to add company-->
-        <!--</div>-->
         #set( $leadOrg = $page.leadOrg )
-        <form action="$page.href" method="post">
+        <form action="$page.href" method="post" id="leadOrgDetails">
             <input type="hidden" name="leadOrgDetails" value="leadOrgDetails" />
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label class="control-label">Company name</label>
-                        <input type="text" id="orgTitleSearch" name="title" class="form-control immediateUpdate">
+                        <input type="text" id="orgTitleSearch" name="title" class="form-control" value="$!leadOrg.title">
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label class="control-label">Company email</label>
-                        <input type="text" value="$!leadOrg.email" name="email" class="form-control immediateUpdate">
+                        <input type="text" value="$!leadOrg.email" name="email" class="form-control">
                     </div>
                 </div>
             </div>
@@ -25,13 +22,13 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label class="control-label">Company phone</label>
-                        <input type="text" value="$!leadOrg.phone" name="phone" class="form-control immediateUpdate">
+                        <input type="text" value="$!leadOrg.phone" name="phone" class="form-control">
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label class="control-label">Address Line 1</label>
-                        <input type="text" value="$!leadOrg.address" name="address" class="form-control immediateUpdate">
+                        <input type="text" value="$!leadOrg.address" name="address" class="form-control">
                     </div>
                 </div>
             </div>
@@ -39,31 +36,71 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label class="control-label">Address Line 2</label>
-                        <input type="text" value="$!leadOrg.addressLine2" name="addressLine2" class="form-control immediateUpdate">
+                        <input type="text" value="$!leadOrg.addressLine2" name="addressLine2" class="form-control">
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label class="control-label">Postcode</label>
-                        <input type="text" value="$!leadOrg.postcode" name="postcode" class="form-control immediateUpdate">
+                        <input type="text" value="$!leadOrg.postcode" name="postcode" class="form-control">
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label class="control-label">State</label>
-                        <input type="text" value="$!leadOrg.addressState" name="addressState" class="form-control immediateUpdate">
+                        <label class="control-label">Town/City</label>
+                        <input type="text" value="$!leadOrg.addressState" name="addressState" class="form-control">
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label class="control-label">Country</label>
-                        <input type="text" value="$!leadOrg.country" name="country" class="form-control immediateUpdate">
+                        <select name="country" class="form-control selectpicker" data-live-search="true" data-live-search-normalize="true" id="country">
+                            <option value="">[No country selected]</option>
+                            #foreach($cc in $formatter.countryCodes.list)
+                            $formatter.option( $cc.alpha2Code, $cc.englishShortName, $leadOrg.country )
+                            #end
+                        </select>
                     </div>
                 </div>
             </div>
+            <div class="row">
+                #set($fields = $page.leadCompanyExtraFields)
+                #set($counter = 0)
+                #foreach($field in $fields.keySet())
+                #if ($extraFields && $extraFields.contains($field.name))
+                #else
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">$field.text</label>
+                        $field.html( $fields[$field], "", "extraField_" )
+                    </div>
+                </div>
+                #end
+                #end
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label">Notes</label>
+                        <textarea rows="5" name="notes" class="form-control" placeholder="Notes" id="notes">$!leadOrg.notes</textarea>
+                    </div>
+                </div>
+            </div>
+
             <input type="hidden" name="leadOrgId" value="$!leadOrg.orgId" />
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group text-right" id="companyTabButtons">
+                        <button type="submit" class="btn btn-primary btn-save-company">Save details</button>
+                        #if ($leadOrg)
+                        <button type="submit" class="btn btn-warning btn-unlink-company">Unlink company</button>
+                        #end
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 </div>
