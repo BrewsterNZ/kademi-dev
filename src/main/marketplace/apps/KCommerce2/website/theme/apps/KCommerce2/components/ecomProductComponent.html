@@ -105,13 +105,15 @@
             <div class="caption product-actions">
                 <h3  class="text-center product-price bg-info">
                     #set ($priceArraySize = $priceArray.size())
+                    #set( $initialSkuId = "" )
                     #if ($priceArraySize > 0)
                         #set ($priceArray = $formatter.sort($priceArray))
                         #set ($priceArrayLastIndex = $priceArraySize - 1)
                         #if ($priceArray.size() > 1)
                             $$formatter.formatCurrency($priceArray[0]) -  $$formatter.formatCurrency($priceArray[$priceArrayLastIndex])
                         #else
-                            $priceArray[0]
+                            $$formatter.formatCurrency($priceArray[0])
+                            #set( $initialSkuId = $formatter.safeGet($product.productSkus, 0).id )
                         #end
                     #else
                         N/A
@@ -122,7 +124,7 @@
                     <span class="input-group-addon" id="basic-addon1">Quantity</span>
                     <input required min="0" type="number" class="product-quantity form-control required" placeholder="Quantity" value="1" />
                     <span class="input-group-btn">
-                        <a href="/$page.attributes.store.name/cart" class="btn btn-info btn-ecom-add-to-cart" role="button">Add to cart <i class="fa fa-shopping-cart"></i></a>
+                        <a href="/$page.attributes.store.name/cart" class="btn btn-info btn-ecom-add-to-cart" data-sku-id="$!initialSkuId" role="button">Add to cart <i class="fa fa-shopping-cart"></i></a>
                       </span>
                 </div>
 

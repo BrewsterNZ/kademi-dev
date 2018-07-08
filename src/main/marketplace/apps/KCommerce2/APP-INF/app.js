@@ -18,13 +18,20 @@ controllerMappings.addTemplate("theme/apps/KCommerce2/","viewProduct","Product d
 controllerMappings.addTemplate("theme/apps/KCommerce2/","viewProduct","Product detail page for an ecom store", false);
 controllerMappings.addTemplate("theme/apps/KCommerce2/","storeCheckout","Checkout page for an ecom store", false);
 
+controllerMappings
+        .websitePortletController()
+        .portletSection('shoppingCart')
+        .templatePath('/theme/apps/KCommerce2/cartMenuItem.html')
+        .enabled(true)
+        .build();
+
 
 function initKCommerce2App(orgRoot, webRoot, enabled) {
     var catalogManager = services.catalogManager;
     log.info("initKCommerceApp: orgRoot={} app={}", orgRoot, catalogManager);
     var alertsApp = applications.alerts;
     var productsApp = applications.productsApp;
-    
+
     if (webRoot) {
         var website = webRoot.website;
         var webName = webRoot.websiteName;

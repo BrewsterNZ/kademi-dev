@@ -1,0 +1,22 @@
+#set( $cartItems = $services.cartManager.checkoutItems )
+#if( $cartItems.items.size() > 0 )
+#set( $cartDisplay = "" )
+#else
+#set( $cartDisplay = "none" )
+#end
+
+#set( $menuStore = $page.attributes("store") )
+#if( $menuStore )
+#else
+    #set( $menuStore = $services.criteriaBuilders.ecommerceStore.eq("website", $rootFolder.website).executeSingle() )
+#end
+
+<li id="cart-link" class="ecomCartLink">
+    <div style="display: $!cartDisplay">
+        <a href="/$menuStore.name/cart" class="btn-sm btn-block btn btn-primary">
+            <span class="glyphicon glyphicon-shopping-cart"></span>
+            <span class="visible-xs-inline">Shopping cart </span>
+            $cartItems.items.size() Items
+        </a>
+    </div>
+</li>
