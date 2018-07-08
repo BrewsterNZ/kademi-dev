@@ -6,66 +6,66 @@
     <div class="product-item">
         <div class="product kcom2Product thumbnail">
             <div class="product-info" id="product-images">
-                    #set ($productsImages = $product.images)
-                    #foreach($img in $productsImages)
-                    #set ($productImage = "/_hashes/files/$!img.imageHash")
-                    <li class="slickItem" data-sku-id="">
-                        <a class="embed-responsive embed-responsive-4by3" href="javascript:void(0)" title="$!sku.title">
-                            <div style="background-image: url('$!{productImage}'); background-repeat: no-repeat; background-size: contain; background-position: center" class="embed-responsive-item"></div>
-                        </a>
-                        <a href="$!prodUrl">$!p.title</a>
-                    </li>
-                    #end
-                    #set ($foundSkuImage = false)
-                    #foreach( $sku in $product.productSkus )
-                        #if ($sku.imageHash)
-                            #set ($skuImage = "/_hashes/files/$!sku.imageHash")
-                            <li class="slickItem" data-sku-id="$!sku.id">
-                                <a class="embed-responsive embed-responsive-4by3" href="javascript:void(0)" title="$!sku.title">
-                                    <div style="background-image: url('$!{skuImage}'); background-repeat: no-repeat; background-size: contain; background-position: center" class="embed-responsive-item"></div>
-                                </a>
-                                <a href="$!prodUrl">$!p.title</a>
-                            </li>
-                            #set ($foundSkuImage = true)
-                        #end
-                    #end
-                    #if ($productsImages.size() < 1 && !$foundSkuImage)
-                        <li class="slickItem" data-sku-id="">
-                            <a class="embed-responsive embed-responsive-4by3" href="javascript:void(0)" title="$!product.title">
-                                <div style="background-image: url('/static/images/photo_holder.png'); background-repeat: no-repeat; background-size: contain; background-position: center" class="embed-responsive-item"></div>
-                            </a>
-                            <a href="$!prodUrl">$!p.title</a>
-                        </li>
-                    #end
+                #set ($productsImages = $product.images)
+                #foreach($img in $productsImages)
+                #set ($productImage = "/_hashes/files/$!img.imageHash")
+                <li class="slickItem" data-sku-id="">
+                    <a class="embed-responsive embed-responsive-4by3" href="javascript:void(0)" title="$!sku.title">
+                        <div style="background-image: url('$!{productImage}'); background-repeat: no-repeat; background-size: contain; background-position: center" class="embed-responsive-item"></div>
+                    </a>
+                    <a href="$!prodUrl">$!p.title</a>
+                </li>
+                #end
+                #set ($foundSkuImage = false)
+                #foreach( $sku in $product.productSkus )
+                #if ($sku.imageHash)
+                #set ($skuImage = "/_hashes/files/$!sku.imageHash")
+                <li class="slickItem" data-sku-id="$!sku.id">
+                    <a class="embed-responsive embed-responsive-4by3" href="javascript:void(0)" title="$!sku.title">
+                        <div style="background-image: url('$!{skuImage}'); background-repeat: no-repeat; background-size: contain; background-position: center" class="embed-responsive-item"></div>
+                    </a>
+                    <a href="$!prodUrl">$!p.title</a>
+                </li>
+                #set ($foundSkuImage = true)
+                #end
+                #end
+                #if ($productsImages.size() < 1 && !$foundSkuImage)
+                <li class="slickItem" data-sku-id="">
+                    <a class="embed-responsive embed-responsive-4by3" href="javascript:void(0)" title="$!product.title">
+                        <div style="background-image: url('/static/images/photo_holder.png'); background-repeat: no-repeat; background-size: contain; background-position: center" class="embed-responsive-item"></div>
+                    </a>
+                    <a href="$!prodUrl">$!p.title</a>
+                </li>
+                #end
             </div>
 
             #set ($totalParams = 0)
             #foreach( $param in $product.productParameters)
-                #if( $param.parameterOptions.size() > 0 )
-                    #set ($totalParams = $totalParams + 1)
-                #end
+            #if( $param.parameterOptions.size() > 0 )
+            #set ($totalParams = $totalParams + 1)
+            #end
             #end
 
             #if ($totalParams > 0)
             <br>
             <div class="product-variants form-horizontal">
-                    #foreach( $param in $product.productParameters)
-                    #if( $param.parameterOptions.size() > 0 )
-                    <div class="caption product-param" style="padding-bottom: 15px" data-param-name="$param.name">
-                        <span class="param-title">${param.title}:</span>
-                        #foreach( $opt in $param.parameterOptions)
-                        <a href="$opt.name" class="select-product-option">
-                            #if( $opt.imageHash )
-                            <img src="/_hashes/files/$opt.imageHash" />
-                            #else
-                            $opt.title
-                            #end
-                        </a>
+                #foreach( $param in $product.productParameters)
+                #if( $param.parameterOptions.size() > 0 )
+                <div class="caption product-param" style="padding-bottom: 15px" data-param-name="$param.name">
+                    <span class="param-title">${param.title}:</span>
+                    #foreach( $opt in $param.parameterOptions)
+                    <a href="$opt.name" class="select-product-option">
+                        #if( $opt.imageHash )
+                        <img src="/_hashes/files/$opt.imageHash" />
+                        #else
+                        $opt.title
                         #end
-                    </div>
-                    <br>
+                    </a>
                     #end
-                    #end
+                </div>
+                <br>
+                #end
+                #end
             </div>
             #end
 
@@ -79,10 +79,10 @@
                 #if ($priceArray.add($itemisedPrice.finalCost)) #end
                 #end
                 <div data-sku-id="$sku.id" data-price="$$formatter.formatCurrency($itemisedPrice.finalCost)"
-                    data-image="$sku.imageHash"
-                    #foreach( $opt in $sku.options )
-                    data-$opt.productParameter.name="$opt.name"
-                    #end
+                     data-image="$sku.imageHash"
+                     #foreach( $opt in $sku.options )
+                     data-$opt.productParameter.name="$opt.name"
+                     #end
                      >
                      $sku.title
 
@@ -107,16 +107,16 @@
                     #set ($priceArraySize = $priceArray.size())
                     #set( $initialSkuId = "" )
                     #if ($priceArraySize > 0)
-                        #set ($priceArray = $formatter.sort($priceArray))
-                        #set ($priceArrayLastIndex = $priceArraySize - 1)
-                        #if ($priceArray.size() > 1)
-                            $$formatter.formatCurrency($priceArray[0]) -  $$formatter.formatCurrency($priceArray[$priceArrayLastIndex])
-                        #else
-                            $$formatter.formatCurrency($priceArray[0])
-                            #set( $initialSkuId = $formatter.safeGet($product.productSkus, 0).id )
-                        #end
+                    #set ($priceArray = $formatter.sort($priceArray))
+                    #set ($priceArrayLastIndex = $priceArraySize - 1)
+                    #if ($priceArray.size() > 1)
+                    $$formatter.formatCurrency($priceArray[0]) -  $$formatter.formatCurrency($priceArray[$priceArrayLastIndex])
                     #else
-                        N/A
+                    $$formatter.formatCurrency($priceArray[0])
+                    #set( $initialSkuId = $formatter.safeGet($product.productSkus, 0).id )
+                    #end
+                    #else
+                    N/A
                     #end
                 </h3>
 
@@ -125,7 +125,7 @@
                     <input required min="0" type="number" class="product-quantity form-control required" placeholder="Quantity" value="1" />
                     <span class="input-group-btn">
                         <a href="/$page.attributes.store.name/cart" class="btn btn-info btn-ecom-add-to-cart" data-sku-id="$!initialSkuId" role="button">Add to cart <i class="fa fa-shopping-cart"></i></a>
-                      </span>
+                    </span>
                 </div>
 
             </div>
@@ -156,3 +156,14 @@
     </div>
 </div>
 #end
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="after-add-to-cart">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>Please wait..</p>
+            </div>
+        </div>
+    </div>
+</div>

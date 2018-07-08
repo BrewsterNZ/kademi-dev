@@ -39,13 +39,18 @@
             type: 'POST',
             url: cartHref,
             data: {
-                skuId : skuId,
-                quantity : quantity
+                skuId: skuId,
+                quantity: quantity
             },
             datatype: 'json',
             success: function (data) {
                 Msg.info('Added item to shopping cart');
                 $('#cart-link').reloadFragment();
+
+                var suggestionsHref = window.location.pathname + "?afterAddToCart";
+                $('#after-add-to-cart .modal-body').load(suggestionsHref, function () {
+                    $('#after-add-to-cart').modal({show: true});
+                });
             },
             error: function (resp) {
                 Msg.error('An error occured adding the product to your shopping cart. Please check your internet connection and try again');
