@@ -47,6 +47,8 @@
             };
 
             eventManager.goalAchieved(g.BADGE_AWARDED_GOAL_NAME, profile, m);
+            
+            services.forumManager.fireShareableItemEvent(profile, null, "Badge awarded", "KRecognition", award.id + "" );
         }
     }
 

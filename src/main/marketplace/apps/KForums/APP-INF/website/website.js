@@ -30,7 +30,7 @@ function doWallSearch(currentOrgId, pageFrom, pageSize) {
             }
         ],
     };
-    appendCriteria(query, currentOrgId);
+    appendCriteria(query, currentOrgId, securityManager.currentUser.thisProfile);
 
     var queryText = JSON.stringify(query);
     log.info("query: {}", queryText);
@@ -40,11 +40,21 @@ function doWallSearch(currentOrgId, pageFrom, pageSize) {
 }
 
 
-function appendCriteria(query, currentOrgId) {
-    return;
-    // TODO: Add constraint to limit to posts from current user and followers
+function appendCriteria(query, currentOrgId, profile) {
+    log.info("appendCriteria: {}", currentOrgId);
+    var orgs = [];
+    if( currentOrgId == null ) {        
+        orgs = [];
+        var list = findTeamOrgs(profile);
+        for( var i=0; i<list.size(); i++ ) {
+            orgs.push( list.get(i).id );
+        }
+    } else {
+        orgs.push( currentOrgId );
+    }
+    log.info("appendCriteria: {}", orgs);
     var must = [
-        {"term": {"forumId": currentOrgId}}
+        {"terms": {"teamOrgId": orgs}}
     ];
 
     query.query = {
