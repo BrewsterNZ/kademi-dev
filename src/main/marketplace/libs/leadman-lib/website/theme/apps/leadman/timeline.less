@@ -46,6 +46,9 @@
     clear: both;
 }
 
+.timeline > li > .panel-leadProfileTabContent {
+    width: 80%;
+}
 .timeline > li > .timeline-panel {
     width: 80%;
     float: left;
@@ -57,7 +60,8 @@
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
 }
 
-.timeline-left > li > .timeline-panel {
+.timeline-left > li > .timeline-panel,
+.timeline-left > li > .panel-leadProfileTabContent{
     width: 80%;
 }
 
@@ -109,7 +113,9 @@
     line-height: 50px;
 }
 
-.timeline > li.timeline-inverted > .timeline-panel {
+.timeline > li.timeline-inverted > .timeline-panel,
+.timeline > li.timeline-inverted > .panel-leadProfileTabContent
+{
     float: right;
 }
 
@@ -260,4 +266,12 @@
     .timeline > li > .timeline-badge{
         left: 60%;
     }
+}
+
+.timeline-btn + .timeline-btn{
+    margin-left: 10px;
+}
+
+.timeline-heading{
+    margin-top: -15px;
 }

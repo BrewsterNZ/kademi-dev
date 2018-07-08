@@ -11,13 +11,13 @@
         {
             "js": {
                 "group": "main",
-                "path": "/static/bootstrap-datetimepicker/4.17.37/bootstrap-datetimepicker.js"
+                "path": "/static/bootstrap-datetimepicker/4.17.47/bootstrap-datetimepicker.js"
             }
         },
         {
             "css": {
                 "cssMedia": "all",
-                "path": "/static/bootstrap-datetimepicker/4.17.37/bootstrap-datetimepicker.css"
+                "path": "/static/bootstrap-datetimepicker/4.17.47/bootstrap-datetimepicker.css"
             }
         }
     ]

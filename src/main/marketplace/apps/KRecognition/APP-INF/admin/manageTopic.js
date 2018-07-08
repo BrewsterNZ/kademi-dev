@@ -261,7 +261,9 @@
         
         var badge = topic.getBadge(Utils.safeInt(params.badgeid));
         
-        services.catalogManager.createAssetForRecognition(badge, contentType);
+        transactionManager.runInTransaction(function () {
+            services.catalogManager.createAssetForRecognition(badge, contentType);
+        });
 
         return page.jsonResult(true, 'Success');
     };

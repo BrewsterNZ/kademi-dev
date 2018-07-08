@@ -9,21 +9,24 @@
     <p>&nbsp;</p>
 </div>
 
-#set( $forum = $services.forumManager.forums.get(0) )
 
-#set( $postsResp = $applications.KForums.call("doWallSearch", $forum, 0, 100) )
 
-<div class="well social-wall" id="social-wall-$forum.id">
+#set( $postsResp = $applications.KForums.call("doWallSearch", $page.attributes.teamOrgId.id, 0, 100) )
+
+
+<div class="well social-wall" id="social-wall" data-team-org="$!page.attributes.teamOrgId.id">
 
 
     #if( $postsResp.hits.total == 0 )
     <p>No one has posted anything yet, <a href="#forumPostForm" data-toggle="modal">be the first to ask</a></p>
     #else
+
     #foreach($postHit in $postsResp.hits.hits)
     <div class="panel panel-default post-item" data-post-id="$postHit.fields.postId.value" id="post-$postHit.fields.postId.value">
+        #set( $post = $services.forumManager.findPost($postHit.fields.postId.value) )
         <div class="panel-heading">
             <div class="questionAvatar pull-left" style="width: 20px; height: 20px; background-image: url($formatter.profilePicHref($post.poster)); background-size: cover"></div>
-            <h4>$postHit.fields.title.value</h4>
+            <h4>$post.poster.formattedName</h4>
             <small>
                 <i class="fa fa-clock-o"></i>
                 <abbr title="$formatter.formatDateISO8601($postHit.fields.postDate.value)" class="timeago">$postHit.fields.postDate.value</abbr>
@@ -79,7 +82,7 @@
                 <h4 class="modal-title">Post</h4>
             </div>
             <form method="POST" action="/kforums" class="form-horizontal forum-post-form" data-forum-id="$forum.id">
-                <input type="hidden" name="forumName" value="$forum.name" />
+                <input type="hidden" name="teamOrgId" value="$!page.attributes.teamOrgId.id" />
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="comment">Details</label>

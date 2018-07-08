@@ -47,6 +47,8 @@
             };
 
             eventManager.goalAchieved(g.BADGE_AWARDED_GOAL_NAME, profile, m);
+            
+            services.forumManager.fireShareableItemEvent(profile, null, "Badge awarded", "KRecognition", award.id + "" );
         }
     }
 
@@ -136,16 +138,3 @@
         return page.jsonResult(true, 'Success');
     };
 })(this);
-
-/*
-    $("#create-asset-form").forms({
-        onSuccess: function (resp) {
-            if( resp.status ) {
-                Msg.info("Created asset, reloading ..");
-                window.location.reload();
-            } else {
-                Msg.error("An error occurred creating the linked asset " + resp.messages);
-            }
-        }
-    });
- */

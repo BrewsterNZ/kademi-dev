@@ -194,6 +194,25 @@
         });
     }
 
+    function initBadgeContentTypeModal() {
+        $("#create-asset-form").forms({
+            onSuccess: function (resp) {
+                if (resp.status) {
+                    $("#modal-krecognition-create-recognition-asset").modal('hide');
+                    Msg.info("Created asset, reloading ..");
+                    window.location.reload();
+                } else {
+                    Msg.error("An error occurred creating the linked asset " + resp.messages);
+                }
+            }
+        });
+
+        $("body").on("click", ".associate-with-asset-button", function () {
+            $("#create-asset-badge-id").val($(this).data("badge-id"));
+            $("#modal-krecognition-create-recognition-asset").modal();
+        });
+    }
+
     function reloadBadges() {
         $('#krecognition-badges-body').reloadFragment({
             whenComplete: function () {
@@ -279,7 +298,7 @@
             var name = tr.data('levelname');
             var title = tr.data('leveltitle');
             var amount = tr.data('levelamount');
-            var colour =  tr.data('colour');
+            var colour = tr.data('colour');
 
             modal.find('[name=updateLevel]').val(true);
             modal.find('[name=levelid]').val(levelid);
@@ -406,7 +425,7 @@
                     }
                 });
             });
-        });        
+        });
     }
 
     function reloadLevels() {
@@ -429,6 +448,7 @@
         initUpdateBadge();
         initBadgeImageUpload();
         initBadgeImageDelete();
+        initBadgeContentTypeModal();
 
         /* Levels */
         initCreateLevel();

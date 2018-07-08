@@ -13,26 +13,44 @@
     #set( $lastMonth = $month )
     <li class="$formatter.ifTrue($action.inbound, 'timeline-inverted', 'timeline-inverted')">
         <div class="timeline-badge $action.category"><i class="fa $action.itemType"></i></div>
-        <div class="timeline-panel">
-            <div class="timeline-heading">
-                #if( $action.actionDate)
-                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
-                    <abbr title="$formatter.formatDateISO8601($action.actionDate)" class="info timeago">$action.actionDate</abbr>
-                </small>
-                #end
-                <h4 class="timeline-title">$action.itemTitle</h4>
-            </div>
-            <div class="timeline-body">
-                <p>
-                    $!action.actionDesc
-                </p>
-                #if($action.path)
-                <p>
-                    <a href="$action.path" class="btn btn-sm btn-info pull-right">
-                        View <i class="fa fa-arrow-circle-right"></i>
-                    </a>
-                </p>
-                #end
+        <div class="panel panel-default panel-leadProfileTabContent">
+            <div class="panel-body">
+                <div class="timeline-heading">
+
+                    <div class="row">
+                        <div class="col-sm-8"><h4>$action.itemTitle</h4></div>
+                        <div class="col-sm-4 text-right">
+                            #if( $action.actionDate)
+                            <span class="timeline-btn">
+                                <i class="fa fa-calendar-o"></i>
+                                <small>
+                                    <abbr title="$formatter.formatDateISO8601($action.actionDate)" class="info timeago">$action.actionDate</abbr>
+                                </small>
+                            </span>
+                            #end
+                            <i role="button" class="fa fa-pencil timeline-btn"></i>
+                            <div class="btn-group timeline-btn">
+                                <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a href="#"><i class="fa fa-pencil"></i> Edit</a></li>
+                                    <li><a href="#"><i class="fa fa-trash"></i> Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-body">
+                    <p>
+                        $!action.actionDesc
+                    </p>
+                    #if($action.path)
+                    <p>
+                        <a href="$action.path" class="btn btn-sm btn-info pull-right">
+                            View <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    </p>
+                    #end
+                </div>
             </div>
         </div>
     </li>

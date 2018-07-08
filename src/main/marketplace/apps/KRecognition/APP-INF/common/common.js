@@ -41,7 +41,22 @@
      */
     g.resolveTopicId = function (page, groupName, groupValue) {
         var id = formatter.toLong(groupValue);
-        return applications.userApp.recognitionService.getTopic(id);
+        
+        page.attributes.topicId = applications.userApp.recognitionService.getTopic(id);
+        
+        return page.attributes.topicId;
+    };
+
+    /**
+     * A URL Resolver for badgeId
+     * @param {type} page
+     * @param {type} groupName
+     * @param {type} groupValue
+     * @returns {unresolved}
+     */
+    g.resolveBadgeId = function (page, groupName, groupValue) {
+        var id = formatter.toLong(groupValue);
+        return page.attributes.topicId.getBadge(id);
     };
 
     /**

@@ -181,9 +181,15 @@
                                         <i class="fa fa-upload"></i>
                                     </button>
                                     #end
-                                    <button type="button" title="Associate Asset" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-krecognition-create-recognition-asset">
+                                    #if($badge.assetId)
+                                    <a type="button" title="View Associated Asset" class="btn btn-sm btn-success" href="/asset-manager/$badge.assetId" target="_blank">
+                                        <i class="fa fa-puzzle-piece"></i>
+                                    </a>
+                                    #else
+                                    <button data-badge-id="$badge.id" type="button" title="Associate Asset" class="btn btn-sm btn-info associate-with-asset-button">
                                         <i class="fa fa-puzzle-piece"></i>
                                     </button>
+                                    #end
                                 </td>
                                 <td>$!badge.title</td>
                                 <td></td>
@@ -227,10 +233,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <form method="POST" class="form-horizontal" action="$page.href" id="create-asset-form">
-                        <input type="hidden" name="badgeid" value="1" />
-                        #if( !$topic.badges.isEmpty() && $topic.badges[0].assetId )
-                        <a class="btn btn-info" href="/asset-manager/$page.product.assetId">Edit asset</a>
-                        #else
+                        <input type="hidden" id="create-asset-badge-id" name="badgeid" value="1" />
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <h4 class="modal-title">Create Recognition Asset</h4>
@@ -263,10 +266,8 @@
                                 </div>
                             </div>
                         </div>
-                        #end
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Create</button>
                         </div>
                     </form>
                 </div>
