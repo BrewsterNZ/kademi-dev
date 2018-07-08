@@ -1,0 +1,157 @@
+<html>
+    <head>
+        <title>Recognition Badge</title>
+    </head>
+    <body>
+        #set( $topic = $page.attributes.topicId )
+        #set( $badge = $page.attributes.badgeId )
+        <h1>$badge.title</h1>
+        
+        <div class="tabbable">
+            <ul class="nav nav-tabs tab-bricky" id="myTab">
+                <li role="presentation" class="active"><a data-toggle="tab" href="#panel_details"><i class="green fa fa-home"></i> Details</a></li>
+                <li role="presentation"><a data-toggle="tab" href="#attributes"><i class="green fa fa-list"></i> Attributes</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="panel_details" class="tab-pane active">
+                    <form action="." method="POST" enctype="multipart/form-data" class="updateProduct form-horizontal" role="form" data-source-type="Product" data-source-id="$page.name">
+                        <input type="hidden" name="action" value="update" />
+                        <div class="form-group">
+                            <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="title">Name</label>
+                            <div class="col-sm-10 col-lg-4">
+                                <input type="text" class="form-control required translatable" name="name" data-source-field="name" value="$!badge.name" />
+                            </div>
+
+                            <div class="col-sm-6">
+                                <button type="submit" class="btn btn-lg btn-success pull-right">
+                                    <span class="fa fa-save"></span>
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="position">Title</label>
+                            <div class="col-sm-10 col-lg-4">
+                                <input type="numeric" class="form-control" name="position" data-source-field="position" value="$!badge.title" />
+                            </div>
+                            <label class="col-sm-2 control-label" for="name">Colour</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control required" id="productName" name="name" value="$!badge.colour" />
+                                <i>This color can be used to render the badge</i>
+                            </div>
+
+                        </div>
+                        
+                    </form>
+
+                    <hr />
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="clip-pictures"></i>Badge image
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-4 col-md-2">
+                                    <button id="btn-change-ava" class="btn btn-success">#if($badge.imageHash) Change image #else Upload image #end</button>
+                                </div>
+                                #if($badge.imageHash)
+                                <div>
+                                    <div class="col-xs-6 col-md-3 product-image-thumb">
+                                        <a href="/_hashes/files/$!badge.imageHash" target="_blank" class="thumbnail"><img src="/_hashes/files/$!badge.imageHash" /></a>
+                                        <a class="delete-image btn btn-xs btn-danger" href="/_hashes/files/$!badge.imageHash">
+                                            <span class="fa fa-times"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                                #end
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+                </div>
+                <div id="attributes" class="tab-pane">
+                    <div class="alert alert-info">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        To store additional structured content or extended attributes on this badge, first create an asset type with the required
+                        fields, and then select it here and press "create asset".
+                    </div>
+
+
+                    #if( $badge.assetId )
+
+                    <a class="btn btn-info" href="/asset-manager/$badge.assetId">Edit asset</a>
+
+                    <hr/>
+
+                        #set( $hasCalcFields = false )
+                        #foreach($field in $page.allFields )
+                            #if( $field.editable )
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" for="$field.name">$field.title</label>
+
+                                    <div class="col-md-8">
+                                        $page.renderField($field)
+                                    </div>
+                                </div>
+                            #else
+                            #set( $hasCalcFields = true )
+                            #end
+                        #end
+
+                        #if( $page.asset && $hasCalcFields )
+                        <hr/>
+                        <h3>Calculated fields</h3>
+                        #foreach($field in $page.allFields )
+                        #if( !$field.editable )
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="$field.name">$field.name</label>
+
+                                <div class="col-md-8">
+                                    $page.renderField($field)
+                                </div>
+                            </div>
+                        #end
+                        #end
+                        #end
+
+                    #else
+                    <form method="POST" class="form-horizontal" action="$page.href" id="create-asset-form">
+                        #set( $types = $services.catalogManager.findRecognitionAssetTypes() )
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="createAssetType">Type</label>
+                            <div class="col-md-9">
+                                <select class="form-control" name="createAssetType" id="createAssetType">
+                                    <option value="">[No type selected]</option>
+                                    #foreach($type in $types)
+                                        $formatter.option($type.name, $type.name, "")
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-9">
+                                <button type="submit" class="btn btn-lg btn-success">
+                                    <span class="fa fa-save"></span>
+                                    Create asset
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    #end
+                </div>
+            </div>
+        </div>
+        
+        <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
+        <script type="text/javascript" src="/theme/apps/KRecognition/manageTopic.js">//</script>
+    </body>
+</html>
