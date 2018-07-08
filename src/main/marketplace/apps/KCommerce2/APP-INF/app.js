@@ -23,6 +23,8 @@ function initKCommerce2App(orgRoot, webRoot, enabled) {
     var catalogManager = services.catalogManager;
     log.info("initKCommerceApp: orgRoot={} app={}", orgRoot, catalogManager);
     var alertsApp = applications.alerts;
+    var productsApp = applications.productsApp;
+    
     if (webRoot) {
         var website = webRoot.website;
         var webName = webRoot.websiteName;
