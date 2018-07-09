@@ -588,6 +588,36 @@
                 }
             });
         });
+        
+        table.on('click', '.btn-review-claim', function(){
+            var $this = $(this);
+            
+            var $tableClaimItemsBody = $('#table-claim-items-body');
+            $tableClaimItemsBody.html("");
+            
+            $.get('/getSearchClaimItemsResult?claimRecordId=' + $this.data('id')).success(function(response){
+                response = JSON.parse(response);
+                var html = '';
+
+                if(!response.data.length){
+                    html += '<td colspan="99">No claim found</td>';
+                }else{
+                    for(counter = 0; counter < response.data.length; counter++){
+                        var record = response.data[counter];
+
+                        html += '<tr>';
+                        html += '   <td>' + record.amount + '</td>';
+                        html += '   <td>' + record.productSku + '</td>';
+                        html += '   <td><abbr class="timeago" title="' + record.soldDate.formatDateISO8601 + '">' + record.soldDate.formatTimeLong + '</abbr></td>';
+                        html += '   <td><a href="/manageUsers/' + record.soldById + '/">' + record.soldBy + '</a></td>';
+                        html += '   <td><abbr class="timeago" title="' + record.modifiedDate.formatDateISO8601 + '">' + record.modifiedDate.formatTimeLong + '</abbr></td>';
+                        html += '</tr>';
+                    } 
+                }
+
+                $tableClaimItemsBody.html(html).find('.timeago').timeago();
+            });
+        });
     }
     
     function reloadClaimsGroupList(callback) {

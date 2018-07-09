@@ -9,6 +9,7 @@ var productInStoreMapping = controllerMappings
         })
         // .seoContent('_genDealSeoContent')
         .defaultView(views.templateView('/theme/apps/KCommerce2/viewProduct.html'))
+        .addMethod('GET', 'doAfterAddToCartSuggestionsModal', 'afterAddToCart')
         .pathSegmentResolver('productInStore', 'resolveProduct');
 
 
@@ -42,10 +43,7 @@ var cartMapping = controllerMappings
         .addMethod('POST', 'createAccount', 'kcom2Firstname')
         .addMethod('POST', 'findProfile', 'findProfileEmail')
         .addMethod('POST', 'saveAddress', 'addressLine1')
-        .addMethod('POST', 'saveShippingProfider', 'shippingProviderId')
-;
-
-
+        .addMethod('POST', 'saveShippingProfider', 'shippingProviderId');
 
 
 controllerMappings
@@ -74,6 +72,10 @@ function doSuggestionList(page, params) {
     var searchResults = productInCategorySearch(store, page.attributes.category, query); // aggregation to find top cats with matching products
     page.attributes.suggestionList = searchResults; // make available to templates
     return views.templateView("KCommerce2/suggestionList");
+}
+
+function doAfterAddToCartSuggestionsModal(page, params) {
+    return views.templateView("KCommerce2/afterAddToCart");
 }
 
 function doEcomSearch(page, params) {

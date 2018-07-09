@@ -46,29 +46,28 @@ controllerMappings
         .addMethod('GET', 'getClaim')
         .enabled(true)
         .build();
-        
+
 controllerMappings
         .adminController()
         .path('/manageSaleDataClaimer/ocrFile/(?<claimId>[^/]*)')
         .addMethod('GET', 'checkRedirect')
         .enabled(true)
         .build();
- 	        
- controllerMappings
+
+controllerMappings
         .adminController()
         .path('/manageSaleDataClaimer/ocrFile/(?<claimId>[^/]*)/')
         .addMethod('GET', 'getClaimOCRFile')
         .enabled(true)
         .build();
-	        
+
 controllerMappings
         .adminController()
-        .pathSegmentName('manageSalesDataImageClaimer')
+        .pathSegmentName('getSearchClaimItemsResult')
         .enabled(true)
-//        .defaultView(views.templateView('salesDataImageClaimer/manageSalesDataImageClaimer.html'))
-        .addMethod('GET', 'getSalesDataImageClaimerRows') 
+        .addMethod('GET', 'getSearchClaimItemsResult')
         .build();
-        
+
 controllerMappings
         .adminController()
         .path('/salesDataClaimsProducts/tagClaim')
@@ -86,6 +85,50 @@ function getAllClaims(page, params) {
         page.attributes.searchClaimGroupsResult = claimGroupsResult;
         page.attributes.settings = getAppSettings(page);
     }
+}
+
+function getSearchClaimItemsResult(page, params) {
+    var searchClaimItemsResult = searchClaimItems(page, params.claimRecordId, null);
+    var result = {"status": true, "data": []};
+
+    var hits = searchClaimItemsResult.hits;
+    var hitsList = hits.getHits();
+    for (counter = 0; counter < hits.totalHits(); counter++) {
+        var soldDate = "";
+        var modifiedDate = "";
+        var productSku = "";
+        
+        if(hitsList[counter].getField('soldDate') !== null){
+            soldDate = hitsList[counter].getField('soldDate').value;
+        }
+        if(hitsList[counter].getField('modifiedDate') !== null){
+            modifiedDate = hitsList[counter].getField('modifiedDate').value;
+        }
+        if(hitsList[counter].getField('productSku') !== null){
+            productSku = hitsList[counter].getField('productSku').value;
+        }
+
+        var row = {
+            "amount": hitsList[counter].getField('amount').value,
+            "productSku": productSku,
+            "soldDate": {
+                "value": soldDate,
+                "formatDateISO8601": formatter.toDate(soldDate),
+                "formatTimeLong": formatter.formatTimeLong(soldDate, page.organisation.timezone)
+            },
+            "soldBy": hitsList[counter].getField('soldBy').value,
+            "modifiedDate": {
+                "value": modifiedDate,
+                "formatDateISO8601": formatter.toDate(modifiedDate),
+                "formatTimeLong": formatter.formatTimeLong(modifiedDate, page.organisation.timezone)
+            },
+            "soldById": hitsList[counter].getField('soldById').value
+        };
+
+        result.data.push(row);
+    }
+
+    return views.jsonObjectView(JSON.stringify(result));
 }
 
 function changeClaimsStatus(status, page, params, callback) {
@@ -119,8 +162,8 @@ function changeClaimsStatus(status, page, params, callback) {
                     claim.jsonObject.status = status;
                     claim.save();
 
-                    var enteredUser = applications.userApp.findUserResourceById(claim.jsonObject.soldById);
-                    var custProfileBean = enteredUser.extProfileBean;
+//                    var enteredUser = applications.userApp.findUserResourceById(claim.jsonObject.soldById);
+//                    var custProfileBean = enteredUser.extProfileBean;
 
 //                    eventManager.goalAchieved('claimProcessedGoal', {'claim': id, 'status': status});
 
@@ -158,19 +201,61 @@ function approveClaims(page, params) {
                     var claim = db.child(id);
 
                     if (claim !== null) {
-                        var obj = {
-                            soldById: claim.jsonObject.soldById,
-                            amount: formatter.toBigDecimal(claim.jsonObject.amount),
-                            soldDate: formatter.toDate(claim.jsonObject.soldDate),
-                            enteredDate: formatter.toDate(claim.jsonObject.enteredDate),
-                            productSku: claim.jsonObject.productSku
+                        var queryJson = {
+                            'stored_fields': [
+                                'recordId',
+                                'claimRecordId',
+                                'modifiedDate',
+                                'soldBy',
+                                'soldById',
+                                'amount',
+                                'productSku',
+                                'soldDate'
+                            ],
+                            'size': 10000,
+                            'sort': [
+                                {
+                                    'soldDate': 'desc'
+                                }
+                            ],
+                            'query': {
+                                'bool': {
+                                    'must': [
+                                        {'type': {'value': TYPE_CLAIM_ITEM}},
+                                        {'term': {'claimRecordId': claim.jsonObject.recordId}}
+                                    ]
+                                }
+                            }
                         };
 
-                        var enteredUser = applications.userApp.findUserResourceById(obj.soldById);
-                        var custProfileBean = enteredUser.extProfileBean;
-                        applications.salesData.insertDataPoint(dataSeries, obj.amount, obj.soldDate, obj.soldDate, enteredUser.thisUser, enteredUser.thisUser, obj.enteredDate, obj.productSku);
+                        var claim_items = doDBSearch(page, queryJson);
+                        var hits = claim_items.hits;
+                        var hitsList = hits.getHits();
 
-                        eventManager.goalAchieved('claimProcessedGoal', custProfileBean, {'claim': id, 'status': RECORD_STATUS.APPROVED});
+                        for (counter = 0; counter < hits.totalHits(); counter++) {
+                            var soldById = hitsList[counter].getField('soldById').value;
+                            var amount = hitsList[counter].getField('amount').value;
+                            var soldDate = hitsList[counter].getField('soldDate').value;
+                            var productSku = hitsList[counter].getField('productSku').value;
+
+                            amount = formatter.toBigDecimal(amount);
+                            soldDate = formatter.toDate(Date.parse(soldDate).toString());
+                            enteredDate = formatter.toDate(Date.parse(claim.jsonObject.enteredDate).toString());
+
+                            var obj = {
+                                soldById: soldById,
+                                amount: amount,
+                                soldDate: soldDate,
+                                enteredDate: enteredDate,
+                                productSku: productSku
+                            };
+
+                            var enteredUser = applications.userApp.findUserResourceById(obj.soldById);
+                            var custProfileBean = enteredUser.extProfileBean;
+                            applications.salesData.insertDataPoint(dataSeries, obj.amount, obj.soldDate, obj.soldDate, enteredUser.thisUser, enteredUser.thisUser, obj.enteredDate, obj.productSku);
+
+                            eventManager.goalAchieved('claimProcessedGoal', custProfileBean, {'claim': id, 'status': RECORD_STATUS.APPROVED});
+                        }
                     }
                 })(ids[i]);
             }
@@ -221,59 +306,16 @@ function deleteClaims(page, params) {
     return views.jsonObjectView(JSON.stringify(result));
 }
 
-function getSalesDataImageClaimerRows(page, params) {
-    var claimedSalesIds = getClaimedSales(page);
-    
-    page.attributes.salesQuery = JSON.stringify({
-            "stored_fields": [
-                "profileId",
-                "periodFrom",
-                "confidence",
-                "rowIndex",
-                "text",
-                "recordId"
-            ],
-            "query": { 
-                        "bool": {
-                            "must": [
-                                {
-                                    "term": {
-                                        "dataSeriesName": "ocr-series"
-                                    }
-                                },
-                                {
-                                    "range": {
-                                        "periodFrom": {
-                                            "gte": formatter.formatDate(queryManager.commonStartDate),
-                                            "lte": formatter.formatDate(queryManager.commonFinishDate),
-                                            "format":"dd/MM/yyyy"
-                                        }
-                                    }
-                                }
-                            ],
-                            "must_not": [
-                                {
-                                    "terms": {
-                                        "recordId": claimedSalesIds
-                                    }
-                                }
-                            ]
-                        }
-                    },
-            "size": 10000
-        });
-}
-
 function createImageClaimTagging(page, params, files) {
     log.info('createImageClaimTagging(): {} {}', page, files);
-    
+
     var response = [];
-    
+
     var salesDataIds = params.salesDataIds.split(',');
-    
+
 //    log.info("params.salesDataIds: {}", params.salesDataIds);
-    
-    for(counter = 0; counter < salesDataIds.length; counter++){
+
+    for (counter = 0; counter < salesDataIds.length; counter++) {
         var params_temp = {
             salesDataId: salesDataIds[counter]
         };
@@ -283,16 +325,16 @@ function createImageClaimTagging(page, params, files) {
             "response": createClaimTaggingInner(page, params_temp, files)
         });
     }
-    
+
     return views.jsonObjectView(response);
 }
-	
-function processImageClaims(page, params, files){
+
+function processImageClaims(page, params, files) {
     log.info('processImageClaims(): {} {}', page, files);
 
     var result = {
         status: true
-    } 
+    }
 
     var rows = JSON.parse(params.rows);
 
@@ -302,43 +344,48 @@ function processImageClaims(page, params, files){
     var XMLDocumentString = '<?xml version="1.0" encoding="UTF-8"?>\n';
 
     XMLDocumentString += '<rows totalConfidence="' + params.totalConfidence + '" oldHash="' + params.old_hash + '">';
-    
-    for(rows_counter = 0; rows_counter < rows.length; rows_counter++){
+
+    for (rows_counter = 0; rows_counter < rows.length; rows_counter++) {
         var row = rows[rows_counter];
 
         XMLDocumentString += '<row index="' + row['index'] + '">\n';
-        for(cells_counter = 0; cells_counter < row['cells'].length; cells_counter++){
+        for (cells_counter = 0; cells_counter < row['cells'].length; cells_counter++) {
             var cell = row['cells'][cells_counter];
 
             XMLDocumentString += '<cell>\n';
             XMLDocumentString += '<' + cell['column'] + '>' + formatter.htmlEncode(formatter.toString(cell['value']).trim()) + '</' + cell['column'] + '>\n';
             XMLDocumentString += '<confidence>' + formatter.toString(cell['confidence']).trim() + '</confidence>\n';
             XMLDocumentString += '</cell>\n';
-        } 
+        }
         XMLDocumentString += '</row>\n';
-    }   
+    }
 
 
     XMLDocumentString += '</rows>';
 
     result.XMLDocumentHash = fileManager.upload(XMLDocumentString.getBytes());
 
-    if(params.action == "approve"){
+    if (params.action == "approve") {
         /**
          * Save data-series
          */
-        var salesDataApp = applications.get("salesData");
-        var ocrDataSeries = salesDataApp.getSalesDataSeries('sales-data-image-claim');
+        var settings = getAppSettings(page);
+        var selectedDataSeries = settings.get('dataSeries');
+        var dataSeries = applications.salesData.getSalesDataSeries(selectedDataSeries);
+//        var salesDataApp = applications.get("salesData");
+//        var ocrDataSeries = salesDataApp.getSalesDataSeries('sales-data-image-claim');
 
-        for(rows_counter = 0; rows_counter < rows.length; rows_counter++){
+        for (rows_counter = 0; rows_counter < rows.length; rows_counter++) {
             var fieldsMap = formatter.newMap();
-            for(cells_counter = 0; cells_counter < rows[rows_counter]['cells'].length; cells_counter++){
+            for (cells_counter = 0; cells_counter < rows[rows_counter]['cells'].length; cells_counter++) {
                 fieldsMap.put(rows[rows_counter]['cells'][cells_counter]['column'], formatter.toString(rows[rows_counter]['cells'][cells_counter]['value']).trim());
             }
+            
+            log.info("fieldsMap {}", fieldsMap);
 
-            securityManager.runAsUser("mohamed-owda", function () {
-                salesDataApp.insertOrUpdateDataPoint(ocrDataSeries, formatter.toBigDecimal(1), formatter.now, formatter.now, securityManager.currentUser.thisProfile, formatter.now, fieldsMap);
-            });
+//            securityManager.runAsUser("mohamed-owda", function () {
+//                salesDataApp.insertOrUpdateDataPoint(dataSeries, formatter.toBigDecimal(1), formatter.now, formatter.now, securityManager.currentUser.thisProfile, formatter.now, fieldsMap);
+//            });
         }
     }
 
@@ -353,21 +400,21 @@ function processImageClaims(page, params, files){
         if (claim !== null) {
             var obj = {
                 recordId: id,
-                soldBy: claim.jsonObject.soldBy,
-                soldById: claim.jsonObject.soldById,
-                amount: claim.jsonObject.amount,
-                soldDate: claim.jsonObject.soldDate,
+//                soldBy: claim.jsonObject.soldBy,
+//                soldById: claim.jsonObject.soldById,
+//                amount: claim.jsonObject.amount,
+//                soldDate: claim.jsonObject.soldDate,
                 enteredDate: claim.jsonObject.enteredDate,
                 modifiedDate: formatter.formatDateISO8601(formatter.now),
-                productSku: claim.jsonObject.productSku,
+//                productSku: claim.jsonObject.productSku,
                 status: claim.jsonObject.status,
                 receipt: claim.jsonObject.receipt,
                 ocrFileHash: result.XMLDocumentHash
-            }; 
-            
-            if(params.action == "approve"){
+            };
+
+            if (params.action == "approve") {
                 obj.status = RECORD_STATUS.APPROVED;
-            }else{
+            } else {
                 obj.status = claim.jsonObject.status;
             }
 
@@ -390,6 +437,6 @@ function processImageClaims(page, params, files){
         result.status = false;
         result.messages = ['Error when updating claim: ' + e];
     }
-	    
+
     return views.jsonObjectView(JSON.stringify(result));
 }

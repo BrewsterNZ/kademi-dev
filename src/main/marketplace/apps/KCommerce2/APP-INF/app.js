@@ -8,6 +8,7 @@ controllerMappings.addComponent("KCommerce2/components", "ecomCheckoutCart", "ht
 controllerMappings.addComponent("KCommerce2/components", "ecomCheckoutForm", "html", "Shows the checkout form", "E-commerce App component");
 controllerMappings.addComponent("KCommerce2/components", "ecomSearchInput", "html", "A search input field with suggestions", "E-commerce App component");
 controllerMappings.addComponent("KCommerce2/components", "suggestionList", "html", "Renders the suggestion list for the search input component", "E-commerce App component");
+controllerMappings.addComponent("KCommerce2/components", "afterAddToCartSuggestions", "html", "Shows suggestions following an item being added to the cart", "E-commerce App component");
 
 controllerMappings.addComponent("ecommerce/components", "ecomProduct", "html", "Display ecom product details", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "orderHistoryECom", "html", "Shows the current user's orders and status", "E-commerce App component");
@@ -18,13 +19,20 @@ controllerMappings.addTemplate("theme/apps/KCommerce2/","viewProduct","Product d
 controllerMappings.addTemplate("theme/apps/KCommerce2/","viewProduct","Product detail page for an ecom store", false);
 controllerMappings.addTemplate("theme/apps/KCommerce2/","storeCheckout","Checkout page for an ecom store", false);
 
+controllerMappings
+        .websitePortletController()
+        .portletSection('shoppingCart')
+        .templatePath('/theme/apps/KCommerce2/cartMenuItem.html')
+        .enabled(true)
+        .build();
+
 
 function initKCommerce2App(orgRoot, webRoot, enabled) {
     var catalogManager = services.catalogManager;
     log.info("initKCommerceApp: orgRoot={} app={}", orgRoot, catalogManager);
     var alertsApp = applications.alerts;
     var productsApp = applications.productsApp;
-    
+
     if (webRoot) {
         var website = webRoot.website;
         var webName = webRoot.websiteName;

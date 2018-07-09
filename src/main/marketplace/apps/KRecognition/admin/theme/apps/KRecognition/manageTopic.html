@@ -98,7 +98,7 @@
                         </thead>
                         <tbody id="krecognition-levels-body">
                             #foreach($level in $formatter.sortByProperty($topic.levels, "levelAmount"))
-                            <tr 
+                            <tr
                                 data-levelid="$level.id"
                                 data-levelname="$!formatter.htmlEncode($level.name)"
                                 data-leveltitle="$!formatter.htmlEncode($level.title)"
@@ -202,9 +202,9 @@
                 </div>
             </div>
         </div>
-        
+
         <hr/>
-        
+
         <div class="panel panel-default">
             <div class="panel-heading"><i class="fa fa-shield" aria-hidden="true"></i>Rewards</div>
             <table class="table">
@@ -212,14 +212,14 @@
                 <tr>
                     <td>$award.recognition.title</td>
                     <td>
-                        <a href="/manageUsers/$award.awardedTo.id">$award.awardedTo.formattedName</a>                        
+                        <a href="/manageUsers/$award.awardedTo.id">$award.awardedTo.formattedName</a>
                     </td>
                     <td>$award.createdDate</td>
                 </tr>
                 #end
-            </table>                    
+            </table>
         </div>
-        
+
         <div id="modal-krecognition-create-recognition-asset" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -235,7 +235,7 @@
                                 To store additional structured content or extended attributes of this recognition element, first create an asset type with the required
                                 fields, and then select it here and press "create asset".
                             </div>
-                            
+
                             #set( $types = $services.catalogManager.findBaseRecognitionAssetTypes() )
                             <div class="form-group">
                                 <label class="control-label col-md-2" for="createAssetType">Type</label>
@@ -432,7 +432,7 @@
                                         <input type="number" step="0.01" name="levelAmount" class="form-control required" placeholder="The amount needed to reach this level"/>
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label class="control-label col-md-2">Color</label>
 
@@ -440,7 +440,7 @@
                                         <input type="text" name="colour" class="form-control" placeholder="Select a color for this level"/>
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div>
                         <div class="modal-footer">

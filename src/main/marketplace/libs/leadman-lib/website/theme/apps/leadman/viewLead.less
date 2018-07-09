@@ -1,3 +1,4 @@
+@white: #fff;
 #lead-cover {
     background: url(/theme/img/profile.jpg) center center;
     background-size: cover;
@@ -159,4 +160,14 @@
 
 .panel-leadProfileTabContent{
     .bg-variant(@gray-lighter);
+}
+
+[data-role="remove"]{
+    font-size: 10px;
+    color: .darken(@white, 30%);
+}
+
+.leadDetailDropzone{
+    border: 1px solid @gray-light !important;
+    border-radius: @border-radius-base !important;
 }

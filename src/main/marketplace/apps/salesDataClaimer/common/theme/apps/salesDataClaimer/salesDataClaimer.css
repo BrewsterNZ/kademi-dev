@@ -56,3 +56,15 @@ span.compulsory-field {
         position: absolute; top: -2px; left: 49.2%; font-size: 26px;   
     }
 }
+
+.claim-item{
+    border: solid 1px #ddd;
+    padding:  17px;
+    margin-bottom:  10px;
+}
+.claim-item > :nth-last-child(1) {
+    margin-bottom: 0;
+}
+.claim-items{
+    margin-bottom:  10px;
+}

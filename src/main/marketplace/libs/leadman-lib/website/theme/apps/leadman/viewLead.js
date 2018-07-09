@@ -102,18 +102,6 @@
         });
     }
 
-    function initFileUploads() {
-        var modal = $('#uploadFileModal');
-
-        $('body').on('click', '.upload-files', function (e) {
-            e.preventDefault();
-
-            modal.modal('show');
-        });
-
-        initUpload(modal);
-    }
-
     function initUpload(modal) {
         if (typeof Dropzone !== 'undefined') {
             Dropzone.autoDiscover = false;
@@ -130,7 +118,7 @@
                 flog('dropz', Dropzone, dz, dz.options.url);
                 dz.on('success', function (file) {
                     flog('added file', file);
-                    reloadFileList();
+                    reloadLeadActivities();
                 });
                 dz.on('error', function (file, errorMessage) {
                     Msg.error('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
@@ -171,13 +159,12 @@
     }
 
     function initNewTaskModal() {
-        var modal = $("#newTaskModal");
+        var modal = $('.panel[data-activity="newTask"]');
         var form = modal.find("form");
         form.forms({
             onSuccess: function (resp) {
                 Msg.info('Created new task');
-                reloadTasks();
-                modal.modal("hide");
+                reloadLeadActivities();
             }
         });
     }
@@ -786,9 +773,75 @@
         var sp = $('.selectpicker');
         if( sp.length > 0){
             $('.selectpicker').selectpicker({
-                maxOptions
+                maxOptions: 5
             });
         }
+    }
+
+    function initLeadDetailActivities() {
+        $(document).on('click', '.btnActivity', function (e) {
+            e.preventDefault();
+            var activity = $(this).attr('data-activity');
+
+            if (activity) {
+                $('.btnActivity, .btnActivityGroup').removeClass('active');
+                if (activity == "newNote"){
+                    $(this).closest('ul').siblings('.btnActivityGroup').addClass('active');
+                    var action = $(this).attr('data-action');
+                    $('.detailActivitiesBody').find('.panel[data-activity='+activity+']').find('input[name=action]').val(action);
+                } else {
+                    $(this).addClass('active');
+                }
+
+                $('.detailActivitiesBody').find('.panel').addClass('hide');
+                $('.detailActivitiesBody').find('.panel[data-activity='+activity+']').removeClass('hide').stop().fadeIn();
+
+            }
+
+        })
+    }
+
+    function initNewNotePanel() {
+        var modal = $('.panel[data-activity="newNote"]');
+        var form = modal.find("form");
+        form.forms({
+            onSuccess: function (resp) {
+                Msg.info('Created new activity');
+                reloadLeadActivities();
+            }
+        });
+    }
+    
+    function initFilterActivities() {
+        $('#filterActivities').on('change', function (e) {
+            if (this.value){
+                $('#leadDetailActivities').find('li[data-action-type]').addClass('hide');
+                $('#leadDetailActivities').find('li[data-action-type='+this.value+']').removeClass('hide');
+            } else {
+                $('#leadDetailActivities').find('li[data-action-type]').removeClass('hide');
+            }
+        })
+    }
+
+    function reloadLeadActivities() {
+        $('#leadDetailActivities').reloadFragment({
+            whenComplete: function () {
+                $('#filterActivities').trigger('change');
+            }
+        })
+    }
+
+    function initDeleteFile() {
+        $(document).on('click', '.btn-delete-timeline-file', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var fname = btn.attr('href');
+            confirmDelete(fname, fname, function () {
+                Msg.info('File deleted');
+                reloadLeadActivities()
+            });
+        });
     }
 
     // Run init functions
@@ -798,7 +851,6 @@
 
     function initViewLeadsPage() {
         initNewTaskModal();
-        initFileUploads();
         initFileNoteEdit();
         initUpdateUserModal();
         initOrgSearchTab();
@@ -814,5 +866,10 @@
         initTags();
         initClosingLead();
         initSelectPicker();
+        initLeadDetailActivities();
+        initUpload($('.panel[data-activity="newFile"]'));
+        initNewNotePanel();
+        initFilterActivities();
+        initDeleteFile();
     }
 })();
