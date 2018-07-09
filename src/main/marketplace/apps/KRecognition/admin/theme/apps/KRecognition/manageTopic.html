@@ -181,17 +181,8 @@
                                         <i class="fa fa-upload"></i>
                                     </button>
                                     #end
-                                    #if($badge.assetId)
-                                    <a type="button" title="View Associated Asset" class="btn btn-sm btn-success" href="/asset-manager/$badge.assetId" target="_blank">
-                                        <i class="fa fa-puzzle-piece"></i>
-                                    </a>
-                                    #else
-                                    <button data-badge-id="$badge.id" type="button" title="Associate Asset" class="btn btn-sm btn-info associate-with-asset-button">
-                                        <i class="fa fa-puzzle-piece"></i>
-                                    </button>
-                                    #end
                                 </td>
-                                <td>$!badge.title</td>
+                                <td><a href="/recognition/$topic.id/badges/$badge.id">$!badge.title</a></td>
                                 <td></td>
                                 <td>
                                     <div class="btn-group pull-right" role="group">
