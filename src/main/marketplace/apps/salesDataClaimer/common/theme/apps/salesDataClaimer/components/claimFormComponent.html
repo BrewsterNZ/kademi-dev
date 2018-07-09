@@ -16,6 +16,8 @@
             #end
             <div class="form-message alert alert-danger" style="display: none;"></div>
             <input type="hidden" name="createClaim" value="true" class="modal-action" />
+            <input type="hidden" name="claimItemsLength" value="1" class="modal-action" />
+            
             
             #if ($user)
                 <input type="hidden" name="soldBy" value="$!userResource.name" />
@@ -37,31 +39,10 @@
                 </div>
             #end
             
-            <div class="form-group">
-                <label for="amount" class="control-label sr-only">Amount</label>
+            <div class="claim-items">
+                <div class="claim-items-body"></div>
                 
-                <div class="col-sm-12">
-                    <input type="number" id="amount" class="form-control required" name="amount" placeholder="Sale amount" />
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="soldDate" class="control-label sr-only">Date</label>
-                
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <input type="text" name="soldDate" id="soldDate" placeholder="Purchase date" data-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker required" />
-                        <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="productSku" class="control-label sr-only">Product SKU</label>
-                
-                <div class="col-sm-12">
-                    <input name="productSku" id="productSku" class="form-control" placeholder="Product name" value="" />
-                </div>
+                <button class="btn btn-primary btn-block" type="button" data-action="add-claim-item"><i class="fa fa-plus"></i> Add claim item</button>
             </div>
             
             #foreach($xf in $app.call("getSalesDataExtreFields", $page))
@@ -105,32 +86,41 @@
         #if ($formDescription && $formDescription != "")
             <p>$formDescription</p>
         #end
-        <div class="form-group">
-            <label for="amount" class="control-label sr-only">Amount</label>
-            
-            <div class="col-sm-12">
-                <input type="number" id="amount" class="form-control required" name="amount" placeholder="Sale amount" />
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label for="soldDate" class="control-label sr-only">Date</label>
-            
-            <div class="col-sm-12">
-                <div class="input-group">
-                    <input type="text" name="soldDate" id="soldDate" placeholder="Purchase date" data-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker required" />
-                    <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+        <div class="claim-items">
+            <div class="claim-items-body">
+                <div class="claim-item">
+                    <div class="form-group">
+                        <label for="amount" class="control-label sr-only">Amount</label>
+
+                        <div class="col-sm-12">
+                            <input type="number" id="amount" class="form-control required" placeholder="Sale amount" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="soldDate" class="control-label sr-only">Date</label>
+
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="text" id="soldDate" placeholder="Purchase date" data-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker required" />
+                                <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productSku" class="control-label sr-only">Product SKU</label>
+
+                        <div class="col-sm-12">
+                            <input id="productSku" class="form-control required" placeholder="Product name" value="" />
+                        </div>
+                    </div>
                 </div>
             </div>
+            
+            <button class="btn btn-primary btn-block" type="button" data-action="add-claim-item"><i class="fa fa-plus"></i> Add claim item</button>
         </div>
         
-        <div class="form-group">
-            <label for="productSku" class="control-label sr-only">Product SKU</label>
-            
-            <div class="col-sm-12">
-                <input name="productSku" id="productSku" class="form-control" placeholder="Product name" value="" />
-            </div>
-        </div>
         <input type="hidden" name="claimType" value="$!claimType" />
         <div class="form-group">
             <label class="control-label sr-only">Receipt</label>
@@ -148,4 +138,4 @@
         </div>
         <button class="btn btn-primary btn-block" type="button">Save claim</button>
     </div>
-#end
+#end 

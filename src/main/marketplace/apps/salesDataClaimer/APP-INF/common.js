@@ -106,6 +106,48 @@ function getSearchClaimsQuery(page, status, user, claimForm) {
     return queryJson;
 }
 
+function getSearchClaimItemsQuery(page, claimRecordId, user) {
+    var queryJson = {
+        'stored_fields': [
+            'recordId',
+            'claimRecordId',
+            'soldDate',
+            'soldBy',
+            'soldById',
+            'modifiedDate',
+            'amount',
+            'productSku'
+        ],
+        'size': 10000,
+        'sort': [
+            {
+                'soldDate': 'desc'
+            }
+        ],
+        'query': {
+            'bool': {
+                'must': [
+                    {'type': {'value': TYPE_CLAIM_ITEM}}
+                ]
+            }
+        }
+    };
+
+    if (claimRecordId) {
+        queryJson.query.bool.must.push({
+            'term': {'claimRecordId': claimRecordId}
+        });
+    }
+
+    if (user) {
+        queryJson.query.bool.must.push({
+            'term': {'soldBy': user.name}
+        });
+    }
+    
+    return queryJson;
+}
+
 function getSearchClaimGroupsQuery(page, claimForm) {
     var queryJson = {        
         'size': 10000,        
@@ -131,7 +173,7 @@ function totalAmountOfClaims(page, status, user) {
     var searchResult = null;
 
     try {
-        var queryJson = getSearchClaimsQuery(page, status, user);
+        var queryJson = getSearchClaimItemsQuery(page, null, user);
         queryJson.aggregations = {
             "total": {
                 "sum": {
@@ -158,6 +200,19 @@ function searchClaims(page, status, user, claimForm) {
         log.error('ERROR in searchClaims: ' + e, e);
     }
     log.info("searchClaims {}", searchResult);
+    return searchResult;
+}
+
+function searchClaimItems(page, claimRecordId, user) {
+    var searchResult = null;
+
+    try {
+        var queryJson = getSearchClaimItemsQuery(page, claimRecordId, user);
+        searchResult = doDBSearch(page, queryJson);
+    } catch (e) {
+        log.error('ERROR in searchClaimItems: ' + e, e);
+    }
+    log.info("searchClaimItems {}", searchResult);
     return searchResult;
 }
 

@@ -15,7 +15,7 @@ controllerMappings.addComponent("salesDataClaimer/components", "claimTracking", 
 controllerMappings.addComponent("salesDataClaimer/components", "claimsTag", "html", "Display untagged claims for tagging", "Sales Data Claimer");
 controllerMappings.addComponent("salesDataClaimer/components", "claimsTagTraining", "html", "Display untagged claims for Training tagging", "Sales Data Claimer");
 
-controllerMappings.addComponent("salesDataClaimer/components", "salesDataImageClaimerForm", "html", "Upload new file for scan and import it's records", "Sales Data Image Claimer App component");
+controllerMappings.addComponent("salesDataClaimer/components", "salesDataImageClaimerForm", "html", "Upload new claim by OCR scanner", "Sales Data Claimer");
 
 controllerMappings.addEventListener('ScanJobEvent', true, 'handleScanJobEvent');
         
@@ -340,7 +340,7 @@ function handleScanJobEvent(rf, event) {
     log.info('handleScanJobEvent(): {}', event);
     
     var XMLDocumentString = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    
+    /*
     XMLDocumentString += '<rows totalConfidence="' + event.generatedOCRTable.getTotalConfidence() + '">';
     
     var rows = {
@@ -370,13 +370,66 @@ function handleScanJobEvent(rf, event) {
     }
     
     XMLDocumentString += '</rows>';
-    
+    */
 //    log.info("XMLDocumentString: {}", XMLDocumentString);
     
-    /***
-     * Dummy XML with multi-columns
+//    Dummy XML with multi-columns
+    XMLDocumentString = dummyXML();
+    log.info("XMLDocumentString: {}", XMLDocumentString);
+    
+    var XMLDocumentHash = fileManager.upload(XMLDocumentString.getBytes());
+    
+    log.info("XMLDocumentHash: {}", XMLDocumentHash);
+    
+    /**
+     * Update Claim with retrieved Hash
      */
-     var XMLSample = '<?xml version="1.0" encoding="UTF-8"?>';
+    try {
+        var page = rf;
+        var id = "claim-" + event.jobId;
+        var params = event;
+        log.info("id: {}", id);
+        
+        var db = getDB(page);
+        var claim = db.child(id);
+
+        if (claim !== null) {
+            var obj = {
+                recordId: id,
+//                soldBy: claim.jsonObject.soldBy,
+//                soldById: claim.jsonObject.soldById,
+//                amount: claim.jsonObject.amount,
+//                soldDate: claim.jsonObject.soldDate,
+                enteredDate: claim.jsonObject.enteredDate,
+                modifiedDate: formatter.formatDateISO8601(formatter.now),
+//                productSku: claim.jsonObject.productSku,
+                status: claim.jsonObject.status,
+                receipt: claim.jsonObject.receipt,
+                ocrFileHash: XMLDocumentHash
+            }; 
+            
+            log.info("handleScanJobEvent: obj {} ocrFileHash {}", obj.recordId, obj.ocrFileHash);
+
+            // Parse extra fields
+            var extraFields = getSalesDataExtreFields(page);
+            for (var i = 0; i < extraFields.length; i++) {
+                var ex = extraFields[i];
+                var fieldName = 'field_' + ex.name;
+
+//                obj[fieldName] = params.get(fieldName) || '';
+            }
+
+            claim.update(JSON.stringify(obj), TYPE_RECORD);
+        } else {
+            log.error('This claim does not exist');
+        }
+    } catch (e) {
+        log.error('Error when updating claim: ' + e, e);
+    }
+}
+
+function dummyXML(){
+    var XMLSample = '<?xml version="1.0" encoding="UTF-8"?>';
      XMLSample += '<rows totalConfidence="80.0">';
 //     for(counter = 0; counter < 30; counter++){
 //         XMLSample += '  <row index="' + counter + '">';
@@ -447,58 +500,7 @@ function handleScanJobEvent(rf, event) {
     XMLSample += '      </cell>';
     XMLSample += '  </row>';
     
-     XMLSample += '</rows>';
-    
-//     XMLDocumentString = XMLSample;
-    
-    var XMLDocumentHash = fileManager.upload(XMLDocumentString.getBytes());
-    
-//    log.info("XMLDocumentHash: {}", XMLDocumentHash);
-    
-    /**
-     * Update Claim with retrieved Hash
-     */
-    try {
-        var page = rf;
-        var id = "claim-" + event.jobId;
-        var params = event;
-        
-        var db = getDB(page);
-        var claim = db.child(id);
+    XMLSample += '</rows>';
 
-        if (claim !== null) {
-            var obj = {
-                recordId: id,
-                soldBy: claim.jsonObject.soldBy,
-                soldById: claim.jsonObject.soldById,
-                amount: claim.jsonObject.amount,
-                soldDate: claim.jsonObject.soldDate,
-                enteredDate: claim.jsonObject.enteredDate,
-                modifiedDate: formatter.formatDateISO8601(formatter.now),
-                productSku: claim.jsonObject.productSku,
-                status: claim.jsonObject.status,
-                receipt: claim.jsonObject.receipt,
-                status: claim.jsonObject.status,
-                ocrFileHash: XMLDocumentHash
-            }; 
-            
-            log.info("handleScanJobEvent: obj {} ocrFileHash {}", obj.recordId, obj.ocrFileHash);
-
-            // Parse extra fields
-            var extraFields = getSalesDataExtreFields(page);
-            for (var i = 0; i < extraFields.length; i++) {
-                var ex = extraFields[i];
-                var fieldName = 'field_' + ex.name;
-
-//                obj[fieldName] = params.get(fieldName) || '';
-            }
-
-            claim.update(JSON.stringify(obj), TYPE_RECORD);
-        } else {
-            result.status = false;
-            result.messages = ['This claim does not exist'];
-        }
-    } catch (e) {
-        log.error('Error when updating claim: ' + e, e);
-    }
+    return XMLSample;
 }

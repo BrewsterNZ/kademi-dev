@@ -165,3 +165,60 @@ var claimGroupMapping = {
         }
     }
 };
+
+var claimItemMapping = {
+    "properties": {
+        "recordId": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
+        "soldDate": {
+            "store": true,
+            "type": "date"
+        },
+        "modifiedDate": {
+            "store": true,
+            "type": "date"
+        },
+        "amount": {
+            "type": "long",
+            "store": true
+        },
+        "soldBy": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
+        "soldById": {
+            "type": "long",
+            "store": true
+        },
+        "productSku": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
+        "claimRecordId": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        }
+    }
+};
