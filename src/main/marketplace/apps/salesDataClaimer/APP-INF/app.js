@@ -340,7 +340,7 @@ function handleScanJobEvent(rf, event) {
     log.info('handleScanJobEvent(): {}', event);
     
     var XMLDocumentString = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    /*
+
     XMLDocumentString += '<rows totalConfidence="' + event.generatedOCRTable.getTotalConfidence() + '">';
     
     var rows = {
@@ -370,12 +370,11 @@ function handleScanJobEvent(rf, event) {
     }
     
     XMLDocumentString += '</rows>';
-    */
 //    log.info("XMLDocumentString: {}", XMLDocumentString);
     
 //    Dummy XML with multi-columns
-    XMLDocumentString = dummyXML();
-    log.info("XMLDocumentString: {}", XMLDocumentString);
+//    XMLDocumentString = dummyXML();
+//    log.info("XMLDocumentString: {}", XMLDocumentString);
     
     var XMLDocumentHash = fileManager.upload(XMLDocumentString.getBytes());
     
