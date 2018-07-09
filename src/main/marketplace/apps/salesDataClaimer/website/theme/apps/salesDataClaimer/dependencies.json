@@ -119,6 +119,12 @@
                 "group": "main",
                 "path": "/theme/apps/salesDataClaimer/claimsTag.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesDataClaimer/claimForm.js"
+            }
         }
     ]
 }

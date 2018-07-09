@@ -26,7 +26,7 @@
         $(document.body).off('click', '.btn-start-autoloader').on('click', '.btn-start-autoloader', function (e) {
             e.preventDefault();
 
-            Kalert.confirm('You want to start the Autoloader?', 'Yes', function () {
+
                 var appIds = $("#autoLoadAppIds").val();
                 $.ajax({
                     url: '/_autoloader',
@@ -43,7 +43,7 @@
                         Msg.error('Oh No! Something went wrong!');
                     }
                 });
-            });
+                Msg.info("Started autoloader " + appIds);
         });
 
         $(document.body).off('click', '.btn-check-autoloader').on('click', '.btn-check-autoloader', function (e) {

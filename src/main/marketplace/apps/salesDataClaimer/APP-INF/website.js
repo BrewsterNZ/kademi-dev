@@ -253,30 +253,30 @@ function createClaim(page, params, files) {
         var db = getDB(page);
         var id = 'claim-' + generateRandomText(32);
 
-        var amount = +params.amount;
-        if (isNaN(amount)) {
-            result.status = false;
-            result.messages = ['Amount must be digits'];
-            return views.jsonObjectView(JSON.stringify(result));
-        }
-
-        var tempDateTime = params.soldDate;
-        var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
-        var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
-        var soldDateTmp = formatter.parseDate(tempDateTime);
-        var soldDate = formatter.formatDateISO8601(soldDateTmp, org.timezone);
-        log.info('createClaim > soldDate={}', soldDate);
+//        var amount = +params.amount;
+//        if (isNaN(amount)) {
+//            result.status = false;
+//            result.messages = ['Amount must be digits'];
+//            return views.jsonObjectView(JSON.stringify(result));
+//        }
+//
+//        var tempDateTime = params.soldDate;
+//        var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
+//        var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
+//        var soldDateTmp = formatter.parseDate(tempDateTime);
+//        var soldDate = formatter.formatDateISO8601(soldDateTmp, org.timezone);
+//        log.info('createClaim > soldDate={}', soldDate);
         var now = formatter.formatDateISO8601(formatter.now, org.timezone);                    
         
         var obj = {
             recordId: id,
-            soldBy: params.soldBy,
-            soldById: params.soldById,
-            amount: amount,
-            soldDate: soldDate,
+            // soldBy: params.soldBy,
+            // soldById: params.soldById,
+            // amount: amount,
+            // soldDate: soldDate,
             enteredDate: now,
             modifiedDate: now,
-            productSku: params.productSku || '',
+            // productSku: params.productSku || '',
             status: RECORD_STATUS.NEW
         };
         
@@ -340,6 +340,34 @@ function createClaim(page, params, files) {
             securityManager.runAsUser(enteredUser, function () {
                 db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
                 eventManager.goalAchieved("claimSubmittedGoal", {"claim": id, "claimType": params.claimType});
+                
+                var claimItems = [];
+
+                for(counter = 0; counter < params.claimItemsLength; counter++){
+                    var params_amount = params['amount.' + counter];
+                    var params_productSku = params['productSku.' + counter] || '';
+                    var params_soldDate = params['soldDate.' + counter];
+                    
+                    log.info('params_amount={}, params_productSku={}, params_soldDate={}', params_amount, params_productSku, params_soldDate);
+                    
+                    var amount = +params_amount;
+                    if (isNaN(amount)) {
+                        result.status = false;
+                        result.messages = ['Amount must be digits'];
+                        return views.jsonObjectView(JSON.stringify(result));
+                    }
+                    
+                    var tempDateTime = params_soldDate;
+                    var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
+                    var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
+                    var soldDateTmp = formatter.parseDate(tempDateTime);
+                    var soldDate = formatter.formatDateISO8601(soldDateTmp, org.timezone);
+                    log.info('createClaim > soldDate={}', soldDate);
+                   
+                    claimItems.push({amount: amount, productSku: params_productSku, soldDate: soldDate, soldBy: params.soldBy, soldById: params.soldById});
+                }
+                
+                createClaimItem(db, obj, claimItems);
             });
         });
     } catch (e) {
@@ -379,13 +407,13 @@ function updateClaim(page, params, files) {
 
             var obj = {
                 recordId: id,
-                soldBy: claim.jsonObject.soldBy,
-                soldById: claim.jsonObject.soldById,
-                amount: amount,
-                soldDate: soldDate,
+//                soldBy: claim.jsonObject.soldBy,
+//                soldById: claim.jsonObject.soldById,
+//                amount: amount,
+//                soldDate: soldDate,
                 enteredDate: claim.jsonObject.enteredDate,
                 modifiedDate: now,
-                productSku: params.productSku || '',
+//                productSku: params.productSku || '',
                 status: claim.jsonObject.status,
                 receipt: claim.jsonObject.receipt
             };
@@ -540,18 +568,24 @@ function saveProductClaim(page, params, files) {
                     enteredDate: now,
                     modifiedDate: now,
                     receipt: cr.attachments.length > 0 ? ('/_hashes/files/' + cr.attachments[0].attachmentHash) : null,
-                    amount: 1,
+//                    amount: 1,
                     status: RECORD_STATUS.NEW,
-                    productSku: productsSKUs[i],
-                    soldDate: soldDate,
-                    soldBy: soldBy,
-                    soldById: soldById,
+//                    productSku: productsSKUs[i],
+//                    soldDate: soldDate,
+//                    soldBy: soldBy,
+//                    soldById: soldById,
                     claimGroupId: claimGroupId
                 };
     
                 securityManager.runAsUser(enteredUser, function () {
                     db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
                     eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});
+                    
+                    var claimItems = [
+                        {amount: 1, productSku: productsSKUs[i], soldDate: soldDate, soldBy: soldBy, soldById: soldById}
+                    ];
+
+                    createClaimItem(db, claimObj, claimItems);
                 });
             }
             
@@ -655,11 +689,11 @@ function createClaimTaggingInner(page, params, files){
                 recordId: claimId,
                 enteredDate: now,
                 modifiedDate: now,
-                amount: 1,
+//                amount: 1,
                 status: RECORD_STATUS.APPROVED,
-                soldBy: soldBy,
-                soldById: soldById,
-                soldDate: soldDate,
+//                soldBy: soldBy,
+//                soldById: soldById,
+//                soldDate: soldDate,
                 taggedFromSalesRecordId: salesDataId
             };
             
@@ -675,6 +709,12 @@ function createClaimTaggingInner(page, params, files){
                 }
                 eventManager.goalAchieved("claimSubmittedGoal", nodeParams);
                 eventManager.goalAchieved("claimProcessedGoal", custProfileBean, {"claim": claimId, "claimType": salesDataRecord.type, 'status': RECORD_STATUS.APPROVED});
+                    
+                var claimItems = [
+                    {amount: 1, productSku: null, soldDate: soldDate, soldBy: soldBy, soldById: soldById}
+                ];
+
+                createClaimItem(db, claimObj, claimItems);
             });
             
             result.data = {};
@@ -967,26 +1007,28 @@ function imageClaim(page, params, files) {
             transactionManager.runInTransaction(function () { 
                 var enteredUser = securityManager.currentUser;
                 var now = formatter.formatDateISO8601(formatter.now, org.timezone);
-
-                var soldBy = enteredUser.name;
-                var soldById = enteredUser.userId;
                 var custProfileBean = enteredUser.extProfileBean;
 
                 var claimId = 'claim-' + scanJobId;
                 log.info('imageClaim(): claimId {}', claimId);
+                
                 var claimObj = {
                     recordId: claimId,
                     enteredDate: now,
                     modifiedDate: now,
-                    amount: 1,
                     status: RECORD_STATUS.NEW,
-                    soldBy: soldBy,
-                    soldById: soldById
+                    receipt: '/_hashes/files/' + uploadedFiles[0].hash
                 };
 
                 db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
                 eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});
                 eventManager.goalAchieved("claimProcessedGoal", custProfileBean, {"claim": claimId, 'status': RECORD_STATUS.NEW});
+                
+                var claimItems = [
+                    {amount: 1, productSku: null, soldDate: null}
+                ];
+                
+                createClaimItem(db, claimObj, claimItems);
             });
         } catch (e) {
             log.error('imageClaim(): Error when saving claim: ' + e, e);
@@ -996,4 +1038,38 @@ function imageClaim(page, params, files) {
     } 
 
     return views.jsonObjectView(JSON.stringify(result));
+}
+
+function createClaimItem(db, claimObj, claimItems){
+    log.info('imageClaim(): claimId {}, createClaimItem()', claimObj.recordId);
+    
+    var enteredUser = securityManager.currentUser;
+    var soldBy = enteredUser.name;
+    var soldById = enteredUser.userId;
+                
+    for(counter = 0; counter < claimItems.length; counter++){
+        var claimItem = claimItems[counter];
+        
+        var claimItemObj = {};
+        
+        claimItemObj.recordId = 'claimItem-' + generateRandomText(32);
+        claimItemObj.claimRecordId = claimObj.recordId;
+        
+        claimItemObj.modifiedDate = claimObj.modifiedDate;
+        claimItemObj.soldBy = soldBy;
+        claimItemObj.soldById = soldById;
+        
+        claimItemObj.amount = claimItem.amount;
+        claimItemObj.productSku = claimItem.productSku;
+        claimItemObj.soldDate = claimItem.soldDate;
+        
+        if(claimItem.hasOwnProperty('soldBy')){
+            claimItemObj.soldBy = claimItem.soldBy;
+        }
+        if(claimItem.hasOwnProperty('soldById')){
+            claimItemObj.soldById = claimItem.soldById;
+        }
+        
+        db.createNew(claimItemObj.recordId, JSON.stringify(claimItemObj), TYPE_CLAIM_ITEM);
+    }
 }

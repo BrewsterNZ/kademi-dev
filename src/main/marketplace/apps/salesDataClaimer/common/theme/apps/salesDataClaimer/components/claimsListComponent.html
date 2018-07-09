@@ -172,9 +172,12 @@
                 <div class="modal-body">
                     <div class="form-message alert alert-danger" style="display: none;"></div>
                     <input type="hidden" name="createClaim" value="true" class="modal-action" />
+                    <input type="hidden" name="claimItemsLength" value="1" class="modal-action" />
+
                     <input type="hidden" name="soldBy" value="$!userResource.name" />
                     <input type="hidden" name="soldById" value="$!userResource.userId" />
 
+                    <!--
                     <div class="form-group">
                         <label for="amount" class="control-label sr-only">Amount</label>
 
@@ -200,6 +203,13 @@
                         <div class="col-sm-12">
                             <input name="productSku" id="productSku" class="form-control" placeholder="Product name" value="" />
                         </div>
+                    </div>
+                    -->
+
+                    <div class="claim-items">
+                        <div class="claim-items-body"></div>
+
+                        <button class="btn btn-primary btn-block" type="button" data-action="add-claim-item"><i class="fa fa-plus"></i> Add claim item</button>
                     </div>
 
                     #foreach($xf in $app.call("getSalesDataExtreFields", $page))
