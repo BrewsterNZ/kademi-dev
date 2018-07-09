@@ -19,9 +19,9 @@
             $page.customerDescription
             #end
         </h1>
-        <p>$page.profile.addressLine1<br>
-            $page.profile.state, $page.profile.postcode<br>
-            $page.profile.country</p>
+        <!--<p>$page.profile.addressLine1<br>-->
+            <!--$page.profile.state, $page.profile.postcode<br>-->
+            <!--$page.profile.country</p>-->
         #if( $page.profile.email )
         <p>
             <div class="btn-group">
@@ -59,7 +59,7 @@
         <div class="leadTags">
             <br><br>
             <div class="row">
-                <div class="col-sm-offset-2 col-sm-8">
+                <div class="col-sm-offset-1 col-sm-11 text-left">
                     <div class="input-group">
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-plus"></i></button>
@@ -77,14 +77,14 @@
                                 #end
                             </ul>
                         </div><!-- /btn-group -->
-                        <input type="text" class="form-control" placeholder="Type to add tags">
+                        <input id="view-lead-tags" type="text" class="form-control" placeholder="Type to add tags">
                     </div><!-- /input-group -->
                 </div>
             </div>
             <br>
             <div class="assignedTags">
                 #foreach($tag in $page.assignedTags)
-                <a href="javascript:void(0)" class="btn btn-primary"><i class="fa fa-tag"></i> $tag.title</a>
+                <a href="javascript:void(0)" class="btn btn-primary"><i class="fa fa-tag"></i> $tag.title <span class="text-muted" data-role="remove">x</span></a>
                 #end
             </div>
         </div>
