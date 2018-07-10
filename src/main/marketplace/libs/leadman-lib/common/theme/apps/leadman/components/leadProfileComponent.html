@@ -59,7 +59,7 @@
         <div class="leadTags">
             <br><br>
             <div class="row">
-                <div class="col-sm-offset-1 col-sm-11 text-left">
+                <div class="col-sm-offset-1 col-sm-10 text-left">
                     <div class="input-group">
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-plus"></i></button>
@@ -82,9 +82,9 @@
                 </div>
             </div>
             <br>
-            <div class="assignedTags">
+            <div class="assignedTags" id="assignedTags">
                 #foreach($tag in $page.assignedTags)
-                <a href="javascript:void(0)" class="btn btn-primary"><i class="fa fa-tag"></i> $tag.title <span class="text-muted" data-role="remove">x</span></a>
+                <a data-tag-id="$tag.name" href="javascript:void(0)" class="btn btn-primary"><i class="fa fa-tag"></i> $tag.title <span class="text-muted" data-role="removetag">X</span></a>
                 #end
             </div>
         </div>

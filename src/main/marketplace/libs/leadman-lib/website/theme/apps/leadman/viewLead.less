@@ -162,9 +162,21 @@
     .bg-variant(@gray-lighter);
 }
 
-[data-role="remove"]{
-    font-size: 10px;
-    color: .darken(@white, 30%);
+#assignedTags{
+    a{
+        margin-bottom: 10px;
+        [data-role="removetag"]{
+            font-size: 10px;
+            margin-left: 8px
+        }
+    }
+}
+
+.leadTags{
+    .twitter-typeahead{
+        border-top-right-radius: @input-border-radius ;
+        border-bottom-right-radius: @input-border-radius ;
+    }
 }
 
 .leadDetailDropzone{

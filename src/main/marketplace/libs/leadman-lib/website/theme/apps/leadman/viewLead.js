@@ -417,9 +417,9 @@
             }
         });
 
-        $('#source-select').select2({
-            tags: "true"
-        });
+        // $('#source-select').select2({
+        //     tags: "true"
+        // });
 
         $(document.body).off('click', '.btn-reopen').on('click', '.btn-reopen', function (e) {
             e.preventDefault();
@@ -492,14 +492,6 @@
 
     function doAddToGroup(groupName) {
         $('#view-lead-tags').tagsinput('add', {id: groupName, name: groupName});
-    }
-
-    function reloadTags() {
-        $('#membershipsContainer').reloadFragment({
-            whenComplete: function () {
-                initTagsInput();
-            }
-        });
     }
 
     function initLeadTimerControls() {
@@ -591,149 +583,6 @@
         });
     }
 
-
-    function initTagsInput() {
-        if ($("#view-lead-tags").length === 0) {
-            return;
-        }
-
-        var tagsSearch = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            remote: {
-                url: '/leads/?asJson&tags&q=%QUERY',
-                wildcard: '%QUERY'
-            }
-        });
-
-        tagsSearch.initialize();
-
-        $("#view-lead-tags").tagsinput({
-            itemValue: 'id',
-            itemText: 'name',
-            typeaheadjs: {
-                name: tagsSearch.name,
-                displayKey: 'name',
-                source: tagsSearch.ttAdapter()
-            }
-        });
-
-        try {
-            var data = JSON.parse($("#view-lead-tags").val());
-            $.each(data, function (key, element) {
-                $('#view-lead-tags').tagsinput('add', {id: element.id, name: element.name}, {preventPost: true});
-            });
-        } catch (e) {
-            flog("Could not parse tags JSON " + e);
-        }
-
-
-        $("#view-lead-tags").on('beforeItemRemove', function (event) {
-            if (event.options !== undefined && event.options.preventPost !== undefined && event.options.preventPost === true) {
-                return;
-            }
-
-            var tag = event.item.id;
-
-            if (confirm('Are you sure you want to remove this tag?')) {
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        deleteTag: tag
-                    },
-                    success: function (resp) {
-                        if (resp.status) {
-                            reloadTags();
-                        } else {
-                            Msg.error("Couldnt remove tag: " + resp.messages);
-
-                            reloadTags();
-                        }
-                    },
-                    error: function (e) {
-                        Msg.error(e.status + ': ' + e.statusText);
-
-                        reloadTags();
-                    }
-                });
-            } else {
-                event.cancel = true;
-                return false;
-            }
-        });
-
-        $('#view-lead-tags').on('beforeItemAdd', function (event) {
-            if (event.options !== undefined && event.options.preventPost !== undefined && event.options.preventPost === true) {
-                return;
-            }
-
-            var tag = event.item;
-
-            $("#membershipsContainer .twitter-typeahead input").data("adding", true);
-
-            $.ajax({
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    addTag: tag.id
-                },
-                success: function (resp) {
-                    $("#membershipsContainer .twitter-typeahead input").data("adding", false);
-
-                    if (resp.status) {
-                        reloadTags();
-                    } else {
-                        Msg.error("Couldnt add tag: " + resp.messages);
-
-                        reloadTags();
-                    }
-                },
-                error: function (e) {
-                    $("#membershipsContainer .twitter-typeahead input").data("adding", false);
-
-                    Msg.error(e.status + ': ' + e.statusText);
-
-                    reloadTags();
-                }
-            });
-        });
-
-
-        $("#membershipsContainer .twitter-typeahead input").on("keyup", function (event) {
-            if (event.keyCode !== 13 || $(this).data("adding") === true) {
-                return;
-            }
-
-            if (confirm('Are you sure you want to add this tag?')) {
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        title: $(this).val()
-                    },
-                    success: function (resp) {
-                        if (resp.status) {
-                            Msg.info(resp.messages);
-                            reloadTags();
-                        } else {
-                            Msg.error("Couldnt add tag: " + resp.messages);
-
-                            reloadTags();
-                        }
-                    },
-                    error: function (e) {
-                        Msg.error(e.status + ': ' + e.statusText);
-
-                        reloadTags();
-                    }
-                });
-            }
-        });
-
-        $("#membershipsContainer .twitter-typeahead").focus();
-    }
-
     function initLeadActivity() {
         $(document).on('onLeadTimelineUpdate', function () {
             $('#activity').reloadFragment({
@@ -741,12 +590,6 @@
                     $('abbr.timeago').timeago();
                 }
             });
-        })
-    }
-
-    function initTags() {
-        $(document).on('leadClosed', function () {
-            setTimeout(reloadTags, 100);
         })
     }
 
@@ -844,6 +687,118 @@
         });
     }
 
+    function initLeadDetailTags() {
+        var assignedTags = $('#assignedTags');
+        var viewLeadTagsInput = $("#view-lead-tags");
+        var tagsSearch = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/leads/?asJson&tags&q=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+
+        tagsSearch.initialize();
+
+        viewLeadTagsInput.typeahead({
+            highlight: true
+        },{
+            name: tagsSearch.name,
+            displayKey: 'name',
+            source: tagsSearch.ttAdapter(),
+            templates: {
+                empty: '<div class="text-danger" style="padding: 5px 10px;">No existing tags were found. Press enter to add</div>',
+                suggestion: Handlebars.compile(
+                    '<div>'
+                    + '<div><i class="fa fa-tag"></i> {{name}}</div>'
+                    + '</div><hr>')
+            }
+        }).on('keyup', function (event) {
+            if (event.keyCode == 13) {
+                var newTag = this.value;
+                if (confirm('Are you sure you want to add this tag?')) {
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            title: newTag
+                        },
+                        success: function (resp) {
+                            if (resp.status) {
+                                reloadTags();
+                            } else {
+                                Msg.error("Couldnt add tag: " + resp.messages);
+                            }
+                        },
+                        error: function (e) {
+                            Msg.error(e.status + ': ' + e.statusText);
+                        }
+                    }).always(function () {
+                        viewLeadTagsInput.typeahead('val','');
+                    })
+                }
+            }
+        });
+
+        viewLeadTagsInput.on('typeahead:select', function (ev, tag) {
+            viewLeadTagsInput.typeahead('val','');
+            if (!assignedTags.find('[data-tag-id='+tag.id+']').length){
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        addTag: tag.id
+                    },
+                    success: function (resp) {
+                        reloadTags();
+                    },
+                    error: function (e) {
+                        Msg.error('Could not add tag');
+                    }
+                });
+            } else {
+                Msg.info('Tag already added');
+            }
+        });
+
+        assignedTags.on('click', '[data-role=removetag]', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var tagId = $(this).parent().attr('data-tag-id');
+            if (tagId){
+                if (confirm('Are you sure you want to remove this tag?')) {
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            deleteTag: tagId
+                        },
+                        success: function (resp) {
+                            if (resp.status) {
+                                reloadTags();
+                            } else {
+                                Msg.error("Couldnt remove tag: " + resp.messages);
+                            }
+                        },
+                        error: function (e) {
+                            Msg.error(e.status + ': ' + e.statusText);
+                        }
+                    });
+                }
+            }
+        })
+    }
+
+    function reloadTags() {
+        $('#assignedTags').reloadFragment({
+            whenComplete: function () {
+                Msg.success('Tags updated');
+            }
+        });
+    }
+
     // Run init functions
     $(function () {
         initViewLeadsPage();
@@ -856,14 +811,13 @@
         initOrgSearchTab();
         initReopenTask();
         initBodyForm();
-        initTagsInput();
+        // initTagsInput();
         initAddTag();
         initJobTitleSearch();
         initLeadTimerControls();
         initUnlinkCompany();
         initLeadManEvents();
         initLeadActivity();
-        initTags();
         initClosingLead();
         initSelectPicker();
         initLeadDetailActivities();
@@ -871,5 +825,6 @@
         initNewNotePanel();
         initFilterActivities();
         initDeleteFile();
+        initLeadDetailTags();
     }
 })();
