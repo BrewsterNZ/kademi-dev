@@ -194,25 +194,6 @@
         });
     }
 
-    function initBadgeContentTypeModal() {
-        $("#create-asset-form").forms({
-            onSuccess: function (resp) {
-                if (resp.status) {
-                    $("#modal-krecognition-create-recognition-asset").modal('hide');
-                    Msg.info("Created asset, reloading ..");
-                    window.location.reload();
-                } else {
-                    Msg.error("An error occurred creating the linked asset " + resp.messages);
-                }
-            }
-        });
-
-        $("body").on("click", ".associate-with-asset-button", function () {
-            $("#create-asset-badge-id").val($(this).data("badge-id"));
-            $("#modal-krecognition-create-recognition-asset").modal();
-        });
-    }
-
     function reloadBadges() {
         $('#krecognition-badges-body').reloadFragment({
             whenComplete: function () {
@@ -448,7 +429,6 @@
         initUpdateBadge();
         initBadgeImageUpload();
         initBadgeImageDelete();
-        initBadgeContentTypeModal();
 
         /* Levels */
         initCreateLevel();
