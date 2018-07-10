@@ -417,10 +417,6 @@
             }
         });
 
-        // $('#source-select').select2({
-        //     tags: "true"
-        // });
-
         $(document.body).off('click', '.btn-reopen').on('click', '.btn-reopen', function (e) {
             e.preventDefault();
 
@@ -488,10 +484,6 @@
             form.find(".clicked").removeClass("clicked");
             $(this).addClass("clicked");
         });
-    }
-
-    function doAddToGroup(groupName) {
-        $('#view-lead-tags').tagsinput('add', {id: groupName, name: groupName});
     }
 
     function initLeadTimerControls() {
@@ -670,6 +662,7 @@
         $('#leadDetailActivities').reloadFragment({
             whenComplete: function () {
                 $('#filterActivities').trigger('change');
+                $('.timeago').timeago();
             }
         })
     }
@@ -741,14 +734,13 @@
             }
         });
 
-        viewLeadTagsInput.on('typeahead:select', function (ev, tag) {
-            viewLeadTagsInput.typeahead('val','');
-            if (!assignedTags.find('[data-tag-id='+tag.id+']').length){
+        function doAddTag(tagId) {
+            if (!assignedTags.find('[data-tag-id='+tagId+']').length){
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        addTag: tag.id
+                        addTag: tagId
                     },
                     success: function (resp) {
                         reloadTags();
@@ -760,6 +752,18 @@
             } else {
                 Msg.info('Tag already added');
             }
+        }
+
+        viewLeadTagsInput.on('typeahead:select', function (ev, tag) {
+            viewLeadTagsInput.typeahead('val','');
+            doAddTag(tag.id);
+        });
+
+        $(document).on('click', 'li.addTag a', function (e) {
+            e.preventDefault();
+            var tagId = $(this).attr('href');
+
+            doAddTag(tagId);
         });
 
         assignedTags.on('click', '[data-role=removetag]', function (e) {

@@ -29,6 +29,10 @@
             "branch": "1.0.0"
         },
         {
+            "appId": "bootstrap-tagsinput-lib",
+            "branch": "0.6.1"
+        },
+        {
             "appId": "googlemap-lib",
             "branch": "1.0.4"
         },
