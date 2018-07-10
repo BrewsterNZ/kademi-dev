@@ -4,7 +4,7 @@
         #if ($page.profile.photoHash && $page.profile.photoHash != "/templates/apps/user/profile.png")
         #set ($ava = "/_hashes/files/" + $page.profile.photoHash)
         #end
-        <img src="$ava" class="profile-avatar-img media-object thumb96 img-circle">
+        <img src="$ava" class="profile-avatar-img media-object img-circle">
 
         <h1 class="leadTitle">
             #if($page.leadOrg)
