@@ -5,6 +5,7 @@
     <thead>
         <tr>
             <th colspan="2">Item</th>
+            <th>Progress</th>
             <th></th>
             #foreach($profile in $teamProfiles)
             <th>
@@ -21,6 +22,9 @@
                 <a href="/leads/$lead.id/">$lead.formattedName</a>                
                 <small class="pull-right"><i class="text-muted">$lead.funnel.name</i></small>
             </td>
+            <td>
+                $lead.hoursWorked() / $lead.estimatedHours
+            </td>
             <td>$!lead.stageName</td>
             #foreach($profile in $teamProfiles)
             <td>#showLeadStatus($lead, $profile)</td>
@@ -34,6 +38,10 @@
             <td>
                 <a href="/leads/$lead.id/">$task.formattedName</a>                
             </td>
+            <td>
+                $task.hoursWorked() / $task.estimatedHours
+            </td>
+            
             <td>
                 #if( $task.dueDate )
                 #if( $task.dueDate.before($formatter.now) )
