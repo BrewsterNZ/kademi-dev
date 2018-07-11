@@ -802,6 +802,18 @@
             }
         });
     }
+    
+    function initSendEmail() {
+        $('.panel[data-activity="newEmail"] form').forms({
+            onSuccess: function (resp) {
+                if (resp && resp.status){
+                    Msg.success('Your email has been sent');
+                } else {
+                    Msg.error(resp.messages.join("\n"));
+                }
+            }
+        })
+    }
 
     // Run init functions
     $(function () {
@@ -815,7 +827,6 @@
         initOrgSearchTab();
         initReopenTask();
         initBodyForm();
-        // initTagsInput();
         initAddTag();
         initJobTitleSearch();
         initLeadTimerControls();
@@ -830,5 +841,6 @@
         initFilterActivities();
         initDeleteFile();
         initLeadDetailTags();
+        initSendEmail();
     }
 })();
