@@ -10,8 +10,17 @@ controllerMappings
         .enabled(true)
         .build();
 
+controllerMappings
+        .websiteController()
+        .path('/team-tasks/')
+        .defaultView(views.templateView('/theme/apps/KTimesheets/viewTeamTasks.html'))
+        .postPriviledge('READ_CONTENT')
+        .enabled(true)
+        .build();
+
 controllerMappings.addComponent("KTimesheets", "timesheet", "web", "Shows a table to enter timesheet hours", "KTimesheets component");
 controllerMappings.addComponent("KTimesheets", "timesheetSummary", "lead", "Shows hours related to a lead on the lead page", "KTimesheets component");
+controllerMappings.addComponent("KTimesheets", "timesheetTasks", "lead", "A list of users and what leads/tasks they're assigned to", "KTimesheets component");
 
 
 function submitTimesheet(page, params) {
