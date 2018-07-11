@@ -5,10 +5,10 @@
     <thead>
         <tr>
             <th colspan="2">Item</th>
-            <th>Progress</th>
+            <th class="text-center">Hours</th>
             <th></th>
             #foreach($profile in $teamProfiles)
-            <th>
+            <th class="text-center">
                 <a href="/users/$profile.name">$profile.formattedName</a>                
             </th>
             #end
@@ -22,12 +22,15 @@
                 <a href="/leads/$lead.id/">$lead.formattedName</a>                
                 <small class="pull-right"><i class="text-muted">$lead.funnel.name</i></small>
             </td>
-            <td>
-                $lead.hoursWorked() / $lead.estimatedHours
+            <td class="text-center">
+                $!formatter.toInteger($lead.hoursWorked())
+                #if( $lead.estimatedHours )
+                / $lead.estimatedHours
+                #end
             </td>
-            <td>$!lead.stageName</td>
+            <td class="text-center">$!lead.stageName</td>
             #foreach($profile in $teamProfiles)
-            <td>#showLeadStatus($lead, $profile)</td>
+            <td class="text-center">#showLeadStatus($lead, $profile)</td>
             #end            
         </tr>
         #foreach($task in $lead.tasks())
@@ -38,11 +41,14 @@
             <td>
                 <a href="/leads/$lead.id/">$task.formattedName</a>                
             </td>
-            <td>
-                $task.hoursWorked() / $task.estimatedHours
+            <td class="text-center">
+                $!formatter.toInteger($task.hoursWorked() )
+                #if( $task.estimatedHours )
+                / $task.estimatedHours
+                #end
             </td>
             
-            <td>
+            <td class="text-center">
                 #if( $task.dueDate )
                 #if( $task.dueDate.before($formatter.now) )
                 <span class="label label-warning"><abbr class="timeago" title="$formatter.formatDateISO8601($task.dueDate)">$task.dueDate</abbr></span>                
@@ -52,7 +58,7 @@
                 #end
             </td>
             #foreach($profile in $teamProfiles)
-            <td>#showTaskStatus($lead, $profile)</td>
+            <td class="text-center">#showTaskStatus($lead, $profile)</td>
             #end            
         </tr>
         #end
@@ -69,6 +75,6 @@
 
 #macro( showTaskStatus $task $teamMember )
     #if( $task.assignedToProfile.id == $teamMember.id )
-    Y
+    <i class="fa fa-check-circle-o"></i>
     #end
 #end
