@@ -1,1 +1,66 @@
-TODO
+
+#set( $teamProfiles = $services.criteriaBuilders.profile.joinOnProp("memberships", "m").eq("m.groupEntity", $applications.leadMan.salesGroup).distinct().sortAsc("id").execute(100)  )
+
+<table class="table">
+    <thead>
+        <tr>
+            <th colspan="2">Item</th>
+            <th></th>
+            #foreach($profile in $teamProfiles)
+            <th>
+                <a href="/users/$profile.name">$profile.formattedName</a>                
+            </th>
+            #end
+        </tr>    
+    </thead>
+    <tbody>
+        #set( $leads = $services.criteriaBuilders.lead.isNull("closedDate").eq("cancelled", false).isNull("deletedDate").sortAsc("id").execute(100) )
+        #foreach($lead in $leads)
+        <tr>
+            <td colspan="2">
+                <a href="/leads/$lead.id/">$lead.formattedName</a>                
+                <small class="pull-right"><i class="text-muted">$lead.funnel.name</i></small>
+            </td>
+            <td>$!lead.stageName</td>
+            #foreach($profile in $teamProfiles)
+            <td>#showLeadStatus($lead, $profile)</td>
+            #end            
+        </tr>
+        #foreach($task in $lead.tasks())
+        #if( $task.isCancelled() || $task.completedDate )
+        #else
+        <tr>
+            <td></td>
+            <td>
+                <a href="/leads/$lead.id/">$task.formattedName</a>                
+            </td>
+            <td>
+                #if( $task.dueDate )
+                #if( $task.dueDate.before($formatter.now) )
+                <span class="label label-warning"><abbr class="timeago" title="$formatter.formatDateISO8601($task.dueDate)">$task.dueDate</abbr></span>                
+                #else
+                <abbr class="timeago" title="$formatter.formatDateISO8601($task.dueDate)">$task.dueDate</abbr>
+                #end                
+                #end
+            </td>
+            #foreach($profile in $teamProfiles)
+            <td>#showTaskStatus($lead, $profile)</td>
+            #end            
+        </tr>
+        #end
+        #end
+        #end        
+    </tbody>
+</table>
+
+#macro( showLeadStatus $lead $teamMember )
+    #if( $lead.assignedToProfile.id == $teamMember.id )
+    <i class="fa fa-check-circle-o"></i>
+    #end
+#end
+
+#macro( showTaskStatus $task $teamMember )
+    #if( $task.assignedToProfile.id == $teamMember.id )
+    Y
+    #end
+#end
