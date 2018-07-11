@@ -1,6 +1,7 @@
 function hindaApp() {
     startSaveSettings();
     startImport();
+    initControlButtons();
 }
 
 function startImport() {
@@ -25,5 +26,57 @@ function startSaveSettings() {
                 }
             });
         }
+    });
+}
+
+function initControlButtons() {
+    $(".btn-run-orders").click(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: window.location.pathname,
+            type: 'POST',
+            dataType: 'JSON',
+            data: {
+                runImportOrderStatus: "true"
+            },
+            success: function (data, textStatus, jqXHR) {
+                if (data.status) {
+                    Msg.info("Done");
+                    window.location = data.nextHref;
+                } else {
+                    flog("err", data);
+                    Msg.error('Oh No! Something went wrong!');
+                }
+            },
+            error: function (data) {
+                flog("err", data);
+                Msg.error('Oh No! Something went wrong!');
+            }
+        });
+    });
+
+    $(".btn-run-products").click(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: window.location.pathname,
+            type: 'POST',
+            dataType: 'JSON',
+            data: {
+                run: "true"
+            },
+            success: function (data, textStatus, jqXHR) {
+                if (data.status) {
+                    Msg.info("Done");
+                    window.location = data.nextHref;
+                } else {
+                    flog("err", data);
+                    Msg.error('Oh No! Something went wrong!');
+                }
+            },
+            error: function (data) {
+                flog("err", data);
+                Msg.error('Oh No! Something went wrong!');
+            }
+        });
     });
 }

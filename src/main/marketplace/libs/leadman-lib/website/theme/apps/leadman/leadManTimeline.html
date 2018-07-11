@@ -11,31 +11,37 @@
     <li class="tldateLi"><div class="tldate"><span>$month $formatter.getYear($action.actionDate)</span></div></li>
     #end
     #set( $lastMonth = $month )
-    <li class="$formatter.ifTrue($action.inbound, 'timeline-inverted', 'timeline-inverted')">
+    <li data-action-type="$action.itemType" class="$formatter.ifTrue($action.inbound, 'timeline-inverted', 'timeline-inverted')">
         <div class="timeline-badge $action.category"><i class="fa $action.itemType"></i></div>
         <div class="panel panel-default panel-leadProfileTabContent">
             <div class="panel-body">
                 <div class="timeline-heading">
 
                     <div class="row">
-                        <div class="col-sm-8"><h4>$action.itemTitle</h4></div>
-                        <div class="col-sm-4 text-right">
-                            #if( $action.actionDate)
-                            <span class="timeline-btn">
-                                <i class="fa fa-calendar-o"></i>
-                                <small>
-                                    <abbr title="$formatter.formatDateISO8601($action.actionDate)" class="info timeago">$action.actionDate</abbr>
-                                </small>
-                            </span>
+                        <div class="col-sm-6"><h4>$action.itemTitle</h4></div>
+                        <div class="col-sm-6 text-right">
+                            #if ($action.itemType == "fa-file")
+                                <a href="$action.actionDesc" download="$action.actionDesc" class="btn btn-success"><i class="fa fa-cloud-download"></i></a>
+                                <a href="$action.actionDesc" download="$action.actionDesc" class="btn btn-danger btn-delete-timeline-file"><i class="fa fa-trash"></i></a>
+                            #else
+                                #if( $action.actionDate)
+                                <span class="timeline-btn">
+                                    <i class="fa fa-calendar-o"></i>
+                                    <small>
+                                        <abbr title="$formatter.formatDateISO8601($action.actionDate)" class="info timeago">$action.actionDate</abbr>
+                                    </small>
+                                </span>
+                                #end
+                                #if ($action.itemType != "fa-users" && $action.itemType != "fa-user")
+                                <div class="btn-group timeline-btn">
+                                    <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a href="#"><i class="fa fa-pencil"></i> Edit</a></li>
+                                        <li><a href="#"><i class="fa fa-trash"></i> Delete</a></li>
+                                    </ul>
+                                </div>
+                                #end
                             #end
-                            <i role="button" class="fa fa-pencil timeline-btn"></i>
-                            <div class="btn-group timeline-btn">
-                                <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#"><i class="fa fa-pencil"></i> Edit</a></li>
-                                    <li><a href="#"><i class="fa fa-trash"></i> Delete</a></li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -43,7 +49,7 @@
                     <p>
                         $!action.actionDesc
                     </p>
-                    #if($action.path)
+                    #if($action.path && $action.itemType != "fa-file")
                     <p>
                         <a href="$action.path" class="btn btn-sm btn-info pull-right">
                             View <i class="fa fa-arrow-circle-right"></i>

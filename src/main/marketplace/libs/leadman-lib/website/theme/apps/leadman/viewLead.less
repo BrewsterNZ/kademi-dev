@@ -1,3 +1,4 @@
+@white: #fff;
 #lead-cover {
     background: url(/theme/img/profile.jpg) center center;
     background-size: cover;
@@ -125,6 +126,8 @@
     }
     .profile-avatar-img{
         display: inline-block;
+        width: 96px;
+        height: 96px;
     }
     .leadTitle{
         a{
@@ -159,4 +162,26 @@
 
 .panel-leadProfileTabContent{
     .bg-variant(@gray-lighter);
+}
+
+#assignedTags{
+    a{
+        margin-bottom: 10px;
+        [data-role="removetag"]{
+            font-size: 10px;
+            margin-left: 8px
+        }
+    }
+}
+
+.leadTags{
+    .twitter-typeahead{
+        border-top-right-radius: @input-border-radius ;
+        border-bottom-right-radius: @input-border-radius ;
+    }
+}
+
+.leadDetailDropzone{
+    border: 1px solid @gray-light !important;
+    border-radius: @border-radius-base !important;
 }

@@ -14,8 +14,8 @@
             </ul>
             <div class="tab-content">
                 <div id="panel_details" class="tab-pane active">
-                    <form action="." method="POST" enctype="multipart/form-data" class="updateProduct form-horizontal" role="form" data-source-type="Product" data-source-id="$page.name">
-                        <input type="hidden" name="action" value="update" />
+                    <form action="." method="POST" class="updateBadge form-horizontal" role="form" data-source-type="Badge" data-source-id="$badge.name">
+                        <input type="hidden" name="updateBadge" value="updateBadge" />
                         <div class="form-group">
                             <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
                         </div>
@@ -37,11 +37,11 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="position">Title</label>
                             <div class="col-sm-10 col-lg-4">
-                                <input type="numeric" class="form-control" name="position" data-source-field="position" value="$!badge.title" />
+                                <input type="numeric" class="form-control" name="title" data-source-field="title" value="$!badge.title" />
                             </div>
                             <label class="col-sm-2 control-label" for="name">Colour</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control required" id="productName" name="name" value="$!badge.colour" />
+                                <input type="text" class="form-control" name="colour" data-source-field="colour" value="$!badge.colour" />
                                 <i>This color can be used to render the badge</i>
                             </div>
 
@@ -58,13 +58,13 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-xs-4 col-md-2">
-                                    <button id="btn-change-ava" class="btn btn-success">#if($badge.imageHash) Change image #else Upload image #end</button>
+                                    <button class="btn btn-success btn-krecognition-badge-img-upload">#if($badge.imageHash) Change image #else Upload image #end</button>
                                 </div>
                                 #if($badge.imageHash)
                                 <div>
                                     <div class="col-xs-6 col-md-3 product-image-thumb">
-                                        <a href="/_hashes/files/$!badge.imageHash" target="_blank" class="thumbnail"><img src="/_hashes/files/$!badge.imageHash" /></a>
-                                        <a class="delete-image btn btn-xs btn-danger" href="/_hashes/files/$!badge.imageHash">
+                                        <a href="/_hashes/files/$!badge.imageHash" target="_blank" class="thumbnail"><img src="/_hashes/files/$!badge.imageHash/alt-150-150.png" /></a>
+                                        <a class="btn-krecognition-badge-img-del btn btn-xs btn-danger" href="/_hashes/files/$!badge.imageHash">
                                             <span class="fa fa-times"></span>
                                         </a>
                                     </div>
@@ -77,27 +77,29 @@
                     <hr />
                 </div>
                 <div id="attributes" class="tab-pane">
-                    <div class="alert alert-info">
-                        <i class="fa fa-exclamation-triangle"></i>
-                        To store additional structured content or extended attributes on this badge, first create an asset type with the required
-                        fields, and then select it here and press "create asset".
-                    </div>
-
+                    #set( $asset = $services.assetManager.find($badge.assetId) )
+                    #set( $fields = [] )
+                    
+                    #foreach ($ctName in $asset.assetTypes)
+                        #set ($ct = $services.assetManager.assetTypeManager.getAssetType($ctName))
+                        #foreach ($f in $ct.fields)
+                            #set( $x = $fields.add($f) )
+                        #end
+                    #end
 
                     #if( $badge.assetId )
 
                     <a class="btn btn-info" href="/asset-manager/$badge.assetId">Edit asset</a>
 
                     <hr/>
-
                         #set( $hasCalcFields = false )
-                        #foreach($field in $page.allFields )
+                        #foreach($field in $fields )
                             #if( $field.editable )
                                 <div class="form-group">
                                     <label class="control-label col-md-3" for="$field.name">$field.title</label>
 
                                     <div class="col-md-8">
-                                        $page.renderField($field)
+                                        $services.assetManager.render($asset, $field)
                                     </div>
                                 </div>
                             #else
@@ -105,16 +107,16 @@
                             #end
                         #end
 
-                        #if( $page.asset && $hasCalcFields )
+                        #if( $asset && $hasCalcFields )
                         <hr/>
                         <h3>Calculated fields</h3>
-                        #foreach($field in $page.allFields )
+                        #foreach($field in $fields )
                         #if( !$field.editable )
                             <div class="form-group">
                                 <label class="control-label col-md-3" for="$field.name">$field.name</label>
 
                                 <div class="col-md-8">
-                                    $page.renderField($field)
+                                    $services.assetManager.render($asset, $field)
                                 </div>
                             </div>
                         #end
@@ -122,8 +124,14 @@
                         #end
 
                     #else
+                    <div class="alert alert-info">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        To store additional structured content or extended attributes on this badge, first create an asset type with the required
+                        fields, and then select it here and press "create asset".
+                    </div>
+                    
                     <form method="POST" class="form-horizontal" action="$page.href" id="create-asset-form">
-                        #set( $types = $services.catalogManager.findRecognitionAssetTypes() )
+                        #set( $types = $services.catalogManager.findBaseRecognitionAssetTypes() )
 
                         <div class="form-group">
                             <label class="control-label col-md-2" for="createAssetType">Type</label>
@@ -152,6 +160,6 @@
         
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
-        <script type="text/javascript" src="/theme/apps/KRecognition/manageTopic.js">//</script>
+        <script type="text/javascript" src="/theme/apps/KRecognition/manageBadge.js">//</script>
     </body>
 </html>

@@ -1,21 +1,25 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="btn-group" role="group" aria-label="...">
-            <a type="button" class="btn btn-default createNote" href="$page.href"><i class="fa fa-sticky-note-o"></i> Create Note</a>
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-default dropdown-toggle btnActivityGroup" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-plus-circle"></i> Add Activity
                     <i class="fa fa-angle-down"></i>
                 </button>
                 <ul class="dropdown-menu">
+                    <li><a  data-activity="newNote" class="btnActivity" href="javascript:void(0)" data-action="note-false">General note</a></li>
+                    <li><a  data-activity="newNote" class="btnActivity" href="javascript:void(0)" data-action="phone-false">Call to customer</a></li>
+                    <li><a  data-activity="newNote" class="btnActivity" href="javascript:void(0)" data-action="phone-true">Call from customer</a></li>
+                    <li><a  data-activity="newNote" class="btnActivity" href="javascript:void(0)" data-action="email-false">Email to customer</a></li>
+                    <li><a  data-activity="newNote" class="btnActivity" href="javascript:void(0)" data-action="email-true">Email from customer</a></li>
                     #foreach ($a in $page.actions)
-                    <li><a href="$a.id">$a.text</a></li>
+                    <li><a  data-activity="newNote" class="btnActivity" href="javascript:void(0)" data-action="${a.id}-${a.inbound}">$a.text</a></li>
                     #end
                 </ul>
             </div>
-            <button data-toggle="modal" data-target="#newTaskModal" type="button" class="btn btn-default"><i class="fa fa-clock-o"></i> Create Task</button>
-            <button type="button" class="btn btn-default"><i class="fa fa-envelope"></i> Send Email</button>
-            <button type="button" class="btn btn-default upload-files"><i class="fa fa-cloud-upload"></i> Upload File</button>
+            <button type="button" class="btn btn-default btnActivity" data-activity="newTask"><i class="fa fa-clock-o"></i> Create Task</button>
+            <button type="button" class="btn btn-default btnActivity" data-activity="newEmail"><i class="fa fa-envelope"></i> Send Email</button>
+            <button type="button" class="btn btn-default btnActivity" data-activity="newFile"><i class="fa fa-cloud-upload"></i> Upload File</button>
 
             <div class="btn-group" role="group">
                 <button class="btn btn-default"> <i class="fa fa-dollar"></i>
@@ -32,24 +36,59 @@
 </div>
 <br>
 
-<div id="activity" >
-    #parse("/theme/apps/leadman/leadManTimeline.html")
-</div>
-
-
-
-<div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="">Create a task</h4>
-            </div>
-            <form method="post" action="$page.href" class="form-horizontal">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newTaskTitle">Title</label>
-                        <div class="col-md-9">
+<div class="detailActivitiesBody">
+    <div data-activity="newNote" class="panel panel-default panel-leadProfileTabContent hide">
+        <div class="panel-body">
+            <form method="post" action="$page.href" class="">
+                <input type="hidden" name="action" value="note-false">
+                <div class="form-group">
+                    <label class="control-label">Note</label>
+                    <textarea placeholder="New note" name="newNote" class="form-control" style="height: 120px"></textarea>
+                </div>
+                <div class="form-group text-right">
+                    <button type="submit" class="btn btn-success">Create activity</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div data-activity="newEmail" class="panel panel-default panel-leadProfileTabContent hide">
+        <div class="panel-body">
+            <form method="post" action="$page.href" class="">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">From address</label>
+                            <input placeholder="From email address" name="fromAddress" class="form-control" >
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">To address</label>
+                            <input placeholder="To email address" name="toAddress" class="form-control" >
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Subject</label>
+                    <input placeholder="Email subject" name="emailSubject" class="form-control" >
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Message</label>
+                    <textarea placeholder="Email body" name="emailBody" class="form-control" style="height: 120px"></textarea>
+                </div>
+                <div class="form-group text-right">
+                    <button type="submit" class="btn btn-success">Send email</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div data-activity="newTask" class="panel panel-default panel-leadProfileTabContent hide">
+        <div class="panel-body">
+            <form method="post" action="$page.href" class="">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label" for="newTaskTitle">Title</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" name="title" placeholder="Next follow-up task" />
                                 <div class="input-group-btn">
@@ -67,9 +106,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="dueDate">Task Due</label>
-                        <div class="col-md-9">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label" for="dueDate">Task Due</label>
                             <div class="input-group">
                                 <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDateTime($formatter.addDays($formatter.now, 7))">
                                 <span class="input-group-addon">
@@ -78,40 +117,50 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="taskDescription">Description</label>
-                        <div class="col-md-9">
-                            <textarea name="taskDescription" id="taskDescription" class="form-control" placeholder="Enter task details here"></textarea>
-                        </div>
-                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
 
-                    <button class="btn btn-primary" type="submit">Create</button>
+                <div class="form-group">
+                    <label class="control-label" for="taskDescription">Description</label>
+                    <textarea rows="3" name="taskDescription" id="taskDescription" class="form-control" placeholder="Enter task details here"></textarea>
+                </div>
+                <div class="form-group text-right">
+                    <button class="btn btn-success" type="submit">Create task</button>
                 </div>
             </form>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+        </div>
+    </div>
+    <div data-activity="newFile" class="panel panel-default panel-leadProfileTabContent hide">
+        <div class="panel-body">
+            <label for="" class="control-label">Upload file</label>
+            <form action="$page.href" class="dropzone dropzone-fullwidth leadDetailDropzone" id="uploadFileDropzone">
+                <input type="hidden" name="uploadFiles" value="uploadFiles" />
+            </form>
+        </div>
+    </div>
+</div>
+<br>
+<div class="filterActivities">
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4 text-center">
+            <select name="filterActivities" id="filterActivities" class="form-control selectpicker" data-live-search="true" data-live-search-normalize="true">
+                <option value="">[No Filter]</option>
+                <option value="fa-pencil">Filtered by: Activities</option>
+                <option value="fa-tasks">Filtered by: Tasks</option>
+                <option value="fa-phone">Filtered by: Call</option>
+                <option value="fa-envelope">Filtered by: Emails</option>
+                <option value="fa-file">Filtered by: Files</option>
+                <option value="fa-users">Filtered by: Tags changes</option>
+                <option value="fa-dollar">Filtered by: Proposals/Quotes</option>
+            </select>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<div id="leadDetailActivities" >
+    #parse("/theme/apps/leadman/leadManTimeline.html")
 </div>
 
-
-<div class="modal fade" id="uploadFileModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Upload Files</h4>
-            </div>
-            <div class="modal-body">
-                <form action="$page.href" class="dropzone dropzone-fullwidth" id="uploadFileDropzone">
-                    <input type="hidden" name="uploadFiles" value="uploadFiles" />
-                </form>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div>
 
 <div class="modal fade" id="modal-change-profile" role="dialog" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog">

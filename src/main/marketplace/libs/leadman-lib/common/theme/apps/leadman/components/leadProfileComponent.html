@@ -4,7 +4,7 @@
         #if ($page.profile.photoHash && $page.profile.photoHash != "/templates/apps/user/profile.png")
         #set ($ava = "/_hashes/files/" + $page.profile.photoHash)
         #end
-        <img src="$ava" class="profile-avatar-img media-object thumb96 img-circle">
+        <img src="$ava" class="profile-avatar-img media-object img-circle">
 
         <h1 class="leadTitle">
             #if($page.leadOrg)
@@ -19,9 +19,9 @@
             $page.customerDescription
             #end
         </h1>
-        <p>$page.profile.addressLine1<br>
-            $page.profile.state, $page.profile.postcode<br>
-            $page.profile.country</p>
+        <!--<p>$page.profile.addressLine1<br>-->
+            <!--$page.profile.state, $page.profile.postcode<br>-->
+            <!--$page.profile.country</p>-->
         #if( $page.profile.email )
         <p>
             <div class="btn-group">
@@ -59,7 +59,7 @@
         <div class="leadTags">
             <br><br>
             <div class="row">
-                <div class="col-sm-offset-2 col-sm-8">
+                <div class="col-sm-offset-1 col-sm-10 text-left">
                     <div class="input-group">
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-plus"></i></button>
@@ -77,14 +77,14 @@
                                 #end
                             </ul>
                         </div><!-- /btn-group -->
-                        <input type="text" class="form-control" placeholder="Type to add tags">
+                        <input id="view-lead-tags" type="text" class="form-control" placeholder="Type to add tags">
                     </div><!-- /input-group -->
                 </div>
             </div>
             <br>
-            <div class="assignedTags">
+            <div class="assignedTags" id="assignedTags">
                 #foreach($tag in $page.assignedTags)
-                <a href="javascript:void(0)" class="btn btn-primary"><i class="fa fa-tag"></i> $tag.title</a>
+                <a data-tag-id="$tag.name" href="javascript:void(0)" class="btn btn-primary"><i class="fa fa-tag"></i> $tag.title <span class="text-muted" data-role="removetag">X</span></a>
                 #end
             </div>
         </div>
