@@ -3,11 +3,24 @@
     Checkout
 </a>
 <hr/>
+#set( $prodInStore = $page.attributes.productInStore )
+#set( $store = $prodInStore.store  )
+#set( $prods = $formatter.newArrayList()  )
+#foreach( $otherPic in $prodInStore.product.productInCategorys )
+    #if( !$prods.contains($otherPic.product) )
+        #if( $store.contains( $otherPic.product ) )
+            #if( $prods.add( $otherPic.product ) ) #end
+
+            #if( $prods.size() > 10 )
+                #break
+            #end
+        #end
+    #end
+#end
+
 <div class="row">
-    #foreach( $pic in $page.attributes.productInStore.product.productInCategorys )
-    #foreach( $otherPic in $pic.category.productInCategorys )
+    #foreach( $otherProd in $prods )
     <div class="col-xs-6 col-md-4 col-lg-3">
-        #set( $otherProd = $$otherPic.product )
         #set ($productsImages = false)
         #set ($productsImages = $otherProd.images)
         #set( $img = false )
@@ -20,6 +33,5 @@
             </div>
         </a>
     </div>
-    #end
     #end
 </div>

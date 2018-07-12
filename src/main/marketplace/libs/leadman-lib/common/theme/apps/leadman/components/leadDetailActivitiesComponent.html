@@ -22,13 +22,13 @@
             <button type="button" class="btn btn-default btnActivity" data-activity="newFile"><i class="fa fa-cloud-upload"></i> Upload File</button>
 
             <div class="btn-group" role="group">
-                <button class="btn btn-default"> <i class="fa fa-dollar"></i>
+                <button data-activity="newProposal" class="btn btn-default btnActivity"> <i class="fa fa-dollar"></i>
                     New proposal</button>
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-angle-down"></i>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="javascript:void(0)">New Quote</a></li>
+                    <li><a data-activity="newQuote" class="btnActivity" href="javascript:void(0)">New Quote</a></li>
                 </ul>
             </div>
         </div>
@@ -53,28 +53,28 @@
     </div>
     <div data-activity="newEmail" class="panel panel-default panel-leadProfileTabContent hide">
         <div class="panel-body">
-            <form method="post" action="$page.href" class="">
+            <form method="post" action="/leadSendEmail" class="">
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="control-label">From address</label>
-                            <input placeholder="From email address" name="fromAddress" class="form-control" >
+                            <input placeholder="From email address" name="fromAddress" class="form-control required email" value="$!userResource.email" >
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="control-label">To address</label>
-                            <input placeholder="To email address" name="toAddress" class="form-control" >
+                            <input placeholder="To email address" name="toAddress" class="form-control required email" value="$!page.profile.email" >
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label">Subject</label>
-                    <input placeholder="Email subject" name="emailSubject" class="form-control" >
+                    <input placeholder="Email subject" name="subject" class="form-control required" >
                 </div>
                 <div class="form-group">
                     <label class="control-label">Message</label>
-                    <textarea placeholder="Email body" name="emailBody" class="form-control" style="height: 120px"></textarea>
+                    <textarea placeholder="Email body" name="message" class="form-control required" rows="5"></textarea>
                 </div>
                 <div class="form-group text-right">
                     <button type="submit" class="btn btn-success">Send email</button>
@@ -134,6 +134,20 @@
             <label for="" class="control-label">Upload file</label>
             <form action="$page.href" class="dropzone dropzone-fullwidth leadDetailDropzone" id="uploadFileDropzone">
                 <input type="hidden" name="uploadFiles" value="uploadFiles" />
+            </form>
+        </div>
+    </div>
+    <div data-activity="newProposal" class="panel panel-default panel-leadProfileTabContent hide">
+        <div class="panel-body">
+            <form method="post" action="" class="">
+                <h3>Proposal</h3>
+            </form>
+        </div>
+    </div>
+    <div data-activity="newQuote" class="panel panel-default panel-leadProfileTabContent hide">
+        <div class="panel-body">
+            <form method="post" action="" class="">
+                <h3>Quote</h3>
             </form>
         </div>
     </div>

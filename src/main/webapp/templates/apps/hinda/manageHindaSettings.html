@@ -7,14 +7,12 @@
         <div id="settings-content">
             <h3>Settings</h3>
 
-            <form method="post" action="$page.href" class="form-horizontal importForm" role="form">
-                <div class="form-group">
-                    <div class="col-md-9">
-                        <input type="hidden" name="run" value="true" />
-                        <button class="btn btn-danger" name="import" type="submit" id="btn-cancel">Manual import</button>
-                    </div>
-                </div>
-            </form>
+            <div class="btn-group">
+                <button class="btn btn-info btn-run-orders">Update orders</button>
+                <button class="btn btn-info btn-run-products">Sync cats and products</button>
+            </div>
+
+            <hr/>
 
             <form action="." method="POST" id="hindaForm" class="form-horizontal">
                 <input type="hidden" name="save" value="true" />

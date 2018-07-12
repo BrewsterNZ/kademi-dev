@@ -153,7 +153,8 @@ function checkout(page, params, files, form) {
     if (checkoutItems == null) {
         return views.jsonView(false, "No cart");
     }
-    if (checkoutItems.cartId != processCartId) {
+    if (formatter.cleanString(checkoutItems.cartId) != formatter.cleanString(processCartId)) {
+        log.info('checkoutItems.cartId={} processCartId={}', checkoutItems.cartId, processCartId);
         return views.jsonView(false, "Cart is invalid, please refresh your page");
     }
     if (!checkoutItems.totalCost.equals(totalAmountFromForm)) {

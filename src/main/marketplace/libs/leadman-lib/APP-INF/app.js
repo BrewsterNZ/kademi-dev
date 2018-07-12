@@ -50,3 +50,32 @@ function urlify(text) {
         return '';
     }
 }
+
+controllerMappings
+    .websiteController()
+    .enabled(true)
+    .isPublic(false)
+    .path('/leadSendEmail')
+    .addMethod('POST', 'leadDetailSendEmail')
+    .postPriviledge("READ_CONTENT")
+    .build();
+
+function leadDetailSendEmail(page, params) {
+    var toAddress = params.toAddress;
+    var fromAddress = params.fromAddress;
+    var subject = params.subject;
+    var message = params.message;
+    log.info('leadDetailSendEmail toAddress={} fromAddress={} subject={} message={}', toAddress, fromAddress, subject, message);
+    if (!toAddress){
+        return views.jsonObjectView({status: false, messages: ["Please enter email to send"]});
+    }
+
+    applications.email.emailBuilder()
+        .recipientAddress(toAddress)
+        .fromAddress(fromAddress)
+        .subject(subject)
+        .text(message)
+        .build();
+
+    return views.jsonObjectView({status: true});
+}

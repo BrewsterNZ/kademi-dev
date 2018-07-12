@@ -6,7 +6,7 @@
         <script type="text/javascript" src="cal-utils.js">//</script>
         <link rel="stylesheet" type="text/css" href="/static/common/jquery-ui-1.8.11.custom.css" />
         <link href="/static/common/fileuploader.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="/static/js/fileuploader.js">//</script>    
+        <script type="text/javascript" src="/static/js/fileuploader.js">//</script>
         <title></title>
         <style>
             td.partstat-ACCEPTED {
@@ -29,7 +29,7 @@
                 <div class=""><h3>People attending $page.title</h3></div>
                 #end
 
-                <div class="pull-right"> 
+                <div class="pull-right">
                     <button class="btn btn-sm btn-primary attendee-add" data-toggle="modal" data-target="#attendeeModal">Add a Attendee</button>
                     <button class="btn btn-sm btn-default confirmAttendee" >Confirm Attendees</button>
                     <button class="btn btn-sm btn-default generateInvoices" >Generate Invoices</button>
@@ -69,7 +69,7 @@
                                 #if( $att.guestOf )
                                 <a href="$att.guestOf.href">
                                     #if( $att.guestOf.firstName )
-                                    $att.guestOf.firstName 
+                                    $att.guestOf.firstName
                                     #end
                                     #if( $att.guestOf.surName )
                                     $att.guestOf.surName
@@ -80,13 +80,13 @@
                             </td>
                             #else
                                 <td></td>
-                            #end    
+                            #end
                             <td style="text-align: right"><input type="checkbox" name="toRemoveId" value="$att.id"/></td>
                         </tr>
                         #end
                     </tbody>
                 </table>
-            </div>			
+            </div>
         </section>
 
         <div class="modal fade attendee-modal" id="attendeeModal">
@@ -101,15 +101,15 @@
                             <input type="hidden" name="addAttendee" value="addAttendee" />
                             <div class="form-group">
                                 <label for="firstName">First name</label>
-                                <input type="text" class="form-control" name="firstName" required='true' placeholder="Attendee's first name">
+                                <input type="text" class="form-control" name="firstName" placeholder="Attendee's first name">
                             </div>
                             <div class="form-group">
                                 <label for="surName">Surname</label>
-                                <input type="text" class="form-control" name="surName" required='true' placeholder="Attendee's surname">
+                                <input type="text" class="form-control" name="surName" placeholder="Attendee's surname">
                             </div>
                             <div class="form-group">
                                 <label for="email">Email address</label>
-                                <input type="email" class="form-control" name="email" placeholder="Enter email">
+                                <input type="email" class="form-control required" name="email" placeholder="Enter email">
                             </div>
                             <div class="form-group">
                                 <label for="orgId">Organisation</label>
@@ -117,7 +117,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="guestOf">Guest of</label>
-                                <input type="text" class="form-control required" name="guestOf" id="guestOf" autocomplete="off" />
+                                <input type="text" class="form-control" name="guestOf" id="guestOf" autocomplete="off" />
                             </div>
                         </div>
                         <div class="modal-footer">

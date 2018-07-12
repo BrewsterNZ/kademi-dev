@@ -32,7 +32,7 @@
                                     </small>
                                 </span>
                                 #end
-                                <i role="button" class="fa fa-pencil timeline-btn"></i>
+                                #if ($action.itemType != "fa-users" && $action.itemType != "fa-user")
                                 <div class="btn-group timeline-btn">
                                     <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                                     <ul class="dropdown-menu dropdown-menu-right">
@@ -40,6 +40,7 @@
                                         <li><a href="#"><i class="fa fa-trash"></i> Delete</a></li>
                                     </ul>
                                 </div>
+                                #end
                             #end
                         </div>
                     </div>
