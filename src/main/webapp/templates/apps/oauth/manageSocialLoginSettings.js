@@ -30,6 +30,7 @@
             } else {
                 addProviderModal.find('input[name=providerId]').val(template.providerId);
                 addProviderModal.find('select[name=providerType]').val(template.providerTypeId);
+                addProviderModal.find('select[name=tokenType]').val(template.tokenType);
                 addProviderModal.find('input[name=clientId]').val(template.clientId);
                 addProviderModal.find('input[name=clientSecret]').val(template.clientSecret);
                 addProviderModal.find('input[name=authLocation]').val(template.authLocation);
@@ -99,6 +100,7 @@
         } else {
             add_provider_modal.find('input[name=providerId]').val(data.providerId);
             add_provider_modal.find('select[name=providerType]').val(data.providerTypeId);
+            add_provider_modal.find('select[name=tokenType]').val(data.OAuth2AccessTokenType);
             add_provider_modal.find('input[name=clientId]').val(data.clientId);
             add_provider_modal.find('input[name=clientSecret]').val(data.clientSecret);
             add_provider_modal.find('input[name=authLocation]').val(data.authLocation);
