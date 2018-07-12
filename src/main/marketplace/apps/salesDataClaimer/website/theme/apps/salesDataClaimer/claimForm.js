@@ -46,5 +46,8 @@ $(function() {
         $('[name="claimItemsLength"]').val(claimItemsCounter);
     });
 
-    $('.claim-items [data-action="add-claim-item"]')[0].click();
+    $('.claim-items [data-action="add-claim-item"]').each(function() {
+        $(this).click();
+        return false; 
+    });
 });
