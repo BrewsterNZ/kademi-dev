@@ -28,10 +28,10 @@ def randomdigit = rnd.nextInt(9999)
 
 def emailtestname = WebUI.concatenate(((['emailjob', randomdigit]) as String[]))
 
-WebUI.openBrowser('http://vladtest52m.admin.kademi-ci.co')
+WebUI.openBrowser('http://vladtest53b.admin.kademi-ci.co')
 
 not_run: WebUI.maximizeWindow()
-	
+
 WebUI.setViewPortSize(1920, 1080)
 
 WebUI.setText(findTestObject('kademi-vladtest/input_email'), GlobalVariable.admin)

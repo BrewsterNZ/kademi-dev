@@ -26,7 +26,7 @@ def randomdigit = rnd.nextInt(9999)
 
 def usertestname = WebUI.concatenate(((['autouserqa', randomdigit]) as String[]))
 
-WebUI.openBrowser('http://vladtest52m.admin.kademi-ci.co')
+WebUI.openBrowser('http://vladtest53b.admin.kademi-ci.co')
 
 WebUI.setViewPortSize(1920, 1080)
 
