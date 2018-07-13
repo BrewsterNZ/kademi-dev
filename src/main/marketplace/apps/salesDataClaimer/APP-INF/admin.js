@@ -97,7 +97,7 @@ function getSearchClaimItemsResult(page, params) {
         var soldDate = "";
         var modifiedDate = "";
         var productSku = "";
-        
+
         if(hitsList[counter].getField('soldDate') !== null){
             soldDate = hitsList[counter].getField('soldDate').value;
         }
@@ -366,13 +366,14 @@ function processImageClaims(page, params, files) {
     result.XMLDocumentHash = fileManager.upload(XMLDocumentString.getBytes());
 
     if (params.action == "approve") {
+        log.info("processImageClaims: approve");
         /**
          * Save data-series
          */
         var settings = getAppSettings(page);
         var selectedDataSeries = settings.get('dataSeries');
         var dataSeries = applications.salesData.getSalesDataSeries(selectedDataSeries);
-//        var salesDataApp = applications.get("salesData");
+        var salesDataApp = applications.get("salesData");
 //        var ocrDataSeries = salesDataApp.getSalesDataSeries('sales-data-image-claim');
 
         for (rows_counter = 0; rows_counter < rows.length; rows_counter++) {
@@ -380,12 +381,10 @@ function processImageClaims(page, params, files) {
             for (cells_counter = 0; cells_counter < rows[rows_counter]['cells'].length; cells_counter++) {
                 fieldsMap.put(rows[rows_counter]['cells'][cells_counter]['column'], formatter.toString(rows[rows_counter]['cells'][cells_counter]['value']).trim());
             }
-            
+
             log.info("fieldsMap {}", fieldsMap);
 
-//            securityManager.runAsUser("mohamed-owda", function () {
-//                salesDataApp.insertOrUpdateDataPoint(dataSeries, formatter.toBigDecimal(1), formatter.now, formatter.now, securityManager.currentUser.thisProfile, formatter.now, fieldsMap);
-//            });
+            salesDataApp.insertOrUpdateDataPoint(dataSeries, formatter.toBigDecimal(1), formatter.now, formatter.now, securityManager.currentUser.thisProfile, formatter.now, fieldsMap);
         }
     }
 
