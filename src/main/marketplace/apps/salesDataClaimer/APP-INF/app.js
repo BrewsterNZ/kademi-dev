@@ -18,7 +18,7 @@ controllerMappings.addComponent("salesDataClaimer/components", "claimsTagTrainin
 controllerMappings.addComponent("salesDataClaimer/components", "salesDataImageClaimerForm", "html", "Upload new claim by OCR scanner", "Sales Data Claimer");
 
 controllerMappings.addEventListener('ScanJobEvent', true, 'handleScanJobEvent');
-        
+
 controllerMappings.addTableDef("tableOCRManagerRows", "OCR Manager Rows", "getRows")
     .addHeader("Sales by")
     .addHeader("Date")
@@ -29,32 +29,32 @@ controllerMappings.addTableDef("tableOCRManagerRows", "OCR Manager Rows", "getRo
 controllerMappings.addGoalNodeType("claimSubmittedGoal", "salesDataClaimer/claimSubmittedGoalNode.js", "checkSubmittedGoal");
 
 function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
-    log.info('checkSubmittedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);    
-    
-    if(customSettings && customSettings.claimType && eventParams.claimType != customSettings.claimType){        
+    log.info('checkSubmittedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);
+
+    if(customSettings && customSettings.claimType && eventParams.claimType != customSettings.claimType){
         return false;
     }
-    
+
     if(eventParams.claimType){
         attributes.put(CLAIM_TYPE, eventParams.claimType);
     }
-    
+
     if(eventParams.points){
         attributes.put("points", eventParams.points);
     }
-    
+
     if (!lead) {
         attributes.put(LEAD_CLAIM_ID, eventParams.claim);
-        
+
         return true;
     }
-    
-    var claimId = attributes.get(LEAD_CLAIM_ID);        
-   
-    if (isNotBlank(claimId)) {       
+
+    var claimId = attributes.get(LEAD_CLAIM_ID);
+
+    if (isNotBlank(claimId)) {
         // Process only for this claim ID
         return safeString(eventParams.claim) === safeString(claimId);
-    } else {        
+    } else {
         attributes.put(LEAD_CLAIM_ID, eventParams.claim);
 
         return true;
@@ -74,10 +74,10 @@ function checkProcessedGoal(rootFolder, lead, funnel, eventParams, customNextNod
     var claimId = attributes.get(LEAD_CLAIM_ID);
     var claimType = attributes.get(CLAIM_TYPE);
 
-    if(customSettings && customSettings.claimType && claimType != customSettings.claimType){        
+    if(customSettings && customSettings.claimType && claimType != customSettings.claimType){
         return false;
     }
-    
+
     if (isNotBlank(claimId)) {
         // Process only for this claim ID
         return safeString(eventParams.claim) === safeString(claimId);
@@ -94,13 +94,13 @@ controllerMappings.addGoalNodeType("claimGroupSubmittedGoal", "salesDataClaimer/
 
 function checkGroupSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
     log.info('checkGroupSubmittedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);
-    
+
     if (!lead) {
         log.info('checkGroupSubmittedGoal > No Lead Found');
-        
+
         return true;
     }
-    
+
     //var submitted = false;
 
     /*if (isNotBlank(claimId)) {
@@ -111,10 +111,10 @@ function checkGroupSubmittedGoal(rootFolder, lead, funnel, eventParams, customNe
 
         submitted = true;
     }*/
-    
-    
+
+
     log.info('checkGroupSubmittedGoal > Added claim group id {}', eventParams.claimGroup);
-    
+
     //if (submitted) {
     lead.setFieldValue("claim_group_recordId", eventParams.claimGroup);
     //}
@@ -208,41 +208,41 @@ function saveSettings(page, params) {
             var dataSeries = params.dataSeries || '';
             page.setAppSetting(APP_NAME, 'dataSeries', dataSeries);
         }
-        
+
         if (params.claimTypes) {
             var claimTypes = params.claimTypes || '';
             page.setAppSetting(APP_NAME, 'claimTypes', claimTypes);
         }
-        
+
         if (params.dataSeries) {
             var allowAnonymous = params.allowAnonymous || '';
             page.setAppSetting(APP_NAME, 'allowAnonymous', allowAnonymous);
         }
-         
+
         if (params.highConfidenceFrom) {
             page.setAppSetting(APP_NAME, 'highConfidenceFrom', params.highConfidenceFrom);
         }
-        
+
         if (params.highConfidenceTo) {
             page.setAppSetting(APP_NAME, 'highConfidenceTo', params.highConfidenceTo);
         }
-        
+
         if (params.mediumConfidenceFrom) {
             page.setAppSetting(APP_NAME, 'mediumConfidenceFrom', params.mediumConfidenceFrom);
         }
-        
+
         if (params.mediumConfidenceTo) {
             page.setAppSetting(APP_NAME, 'mediumConfidenceTo', params.mediumConfidenceTo);
         }
-        
+
         if (params.lowConfidenceFrom) {
             page.setAppSetting(APP_NAME, 'lowConfidenceFrom', params.lowConfidenceFrom);
         }
-        
+
         if (params.lowConfidenceTo) {
             page.setAppSetting(APP_NAME, 'lowConfidenceTo', params.lowConfidenceTo);
         }
-        
+
         if (params.defaultColumns) {
             page.setAppSetting(APP_NAME, 'defaultColumns', params.defaultColumns);
         }
@@ -338,48 +338,49 @@ function loadTableClaimsOverTime(start, maxRows, rowsResult, rootFolder) {
 
 function handleScanJobEvent(rf, event) {
     log.info('handleScanJobEvent(): {}', event);
-    
+
     var XMLDocumentString = '<?xml version="1.0" encoding="UTF-8"?>\n';
 
     XMLDocumentString += '<rows totalConfidence="' + event.generatedOCRTable.getTotalConfidence() + '">';
-    
+
     var rows = {
         index: 0,
         iterator: event.generatedOCRTable.getRows().iterator()
     }
-    
+
     while (rows.iterator.hasNext()) {
+        log.info("New row");
         XMLDocumentString += '<row index="' + formatter.toString(rows.index) + '">\n';
-        
+
         var row = rows.iterator.next();
-        
+
         var cells = {
             iterator: row.getCells().iterator()
         };
-        
+
         while (cells.iterator.hasNext()) {
             var cell = cells.iterator.next();
-            XMLDocumentString += '<cell>\n'; 
+            XMLDocumentString += '<cell>\n';
             XMLDocumentString += '<text>' + formatter.htmlEncode(formatter.toString(cell.text).trim()) + '</text>\n';
             XMLDocumentString += '<confidence>' + formatter.toString(cell.confidence).trim() + '</confidence>\n';
             XMLDocumentString += '</cell>\n';
         }
-        
+
         rows.index++;
         XMLDocumentString += '</row>\n';
     }
-    
+
     XMLDocumentString += '</rows>';
 //    log.info("XMLDocumentString: {}", XMLDocumentString);
-    
+
 //    Dummy XML with multi-columns
 //    XMLDocumentString = dummyXML();
 //    log.info("XMLDocumentString: {}", XMLDocumentString);
-    
+
     var XMLDocumentHash = fileManager.upload(XMLDocumentString.getBytes());
-    
+
     log.info("XMLDocumentHash: {}", XMLDocumentHash);
-    
+
     /**
      * Update Claim with retrieved Hash
      */
@@ -388,7 +389,7 @@ function handleScanJobEvent(rf, event) {
         var id = "claim-" + event.jobId;
         var params = event;
         log.info("id: {}", id);
-        
+
         var db = getDB(page);
         var claim = db.child(id);
 
@@ -405,101 +406,30 @@ function handleScanJobEvent(rf, event) {
                 status: claim.jsonObject.status,
                 receipt: claim.jsonObject.receipt,
                 ocrFileHash: XMLDocumentHash
-            }; 
-            
+            };
+
             log.info("handleScanJobEvent: obj {} ocrFileHash {}", obj.recordId, obj.ocrFileHash);
 
             // Parse extra fields
             var extraFields = getSalesDataExtreFields(page);
+            log.info("handleScanJobEvent.2");
             for (var i = 0; i < extraFields.length; i++) {
                 var ex = extraFields[i];
                 var fieldName = 'field_' + ex.name;
 
 //                obj[fieldName] = params.get(fieldName) || '';
             }
+            log.info("handleScanJobEvent.3");
 
-            claim.update(JSON.stringify(obj), TYPE_RECORD);
+            securityManager.runAsUser(claim.modifiedBy, function () {
+                log.info("handleScanJobEvent.4");
+                claim.update(JSON.stringify(obj), TYPE_RECORD);
+            });
+            log.info("handleScanJobEvent.5");
         } else {
             log.error('This claim does not exist');
         }
     } catch (e) {
         log.error('Error when updating claim: ' + e, e);
     }
-}
-
-function dummyXML(){
-    var XMLSample = '<?xml version="1.0" encoding="UTF-8"?>';
-     XMLSample += '<rows totalConfidence="80.0">';
-//     for(counter = 0; counter < 30; counter++){
-//         XMLSample += '  <row index="' + counter + '">';
-//         for(cells_counter = 0; cells_counter < 5; cells_counter++){
-//             XMLSample += '      <cell>';
-//             XMLSample += '          <text>' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '</text>';
-//             XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
-//             XMLSample += '      </cell>';
-//         }
-//         XMLSample += '  </row>';
-//     }
-    
-    var index = 0;
-    XMLSample += '  <row index="' + index++ + '">';
-    XMLSample += '      <cell>';
-    XMLSample += '          <text>' + Math.floor(Math.random() * 10) + '</text>';
-    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
-    XMLSample += '      </cell>';
-    XMLSample += '      <cell>';
-    XMLSample += '          <text>ABC' + Math.floor(Math.random() * 30) + '</text>';
-    XMLSample += '          <confidence></confidence>';
-    XMLSample += '      </cell>';
-    XMLSample += '      <cell>';
-    XMLSample += '          <text>' + (30 + Math.floor(Math.random() * 100)) + '</text>';
-    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
-    XMLSample += '      </cell>';
-    XMLSample += '  </row>';
-    XMLSample += '  <row index="' + index++ + '">';
-    XMLSample += '      <cell>';
-    XMLSample += '          <text>' + Math.floor(Math.random() * 10) + '</text>';
-    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
-    XMLSample += '      </cell>';
-    XMLSample += '      <cell>';
-    XMLSample += '          <text>ABC' + Math.floor(Math.random() * 30) + '</text>';
-    XMLSample += '          <confidence></confidence>';
-    XMLSample += '      </cell>';
-    XMLSample += '      <cell>';
-    XMLSample += '          <text>' + (30 + Math.floor(Math.random() * 100)) + '</text>';
-    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
-    XMLSample += '      </cell>';
-    XMLSample += '  </row>';
-    XMLSample += '  <row index="' + index++ + '">';
-    XMLSample += '      <cell>';
-    XMLSample += '          <text>' + Math.floor(Math.random() * 10) + '</text>';
-    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
-    XMLSample += '      </cell>';
-    XMLSample += '      <cell>';
-    XMLSample += '          <text>ABC' + Math.floor(Math.random() * 30) + '</text>';
-    XMLSample += '          <confidence></confidence>';
-    XMLSample += '      </cell>';
-    XMLSample += '      <cell>';
-    XMLSample += '          <text>' + (30 + Math.floor(Math.random() * 100)) + '</text>';
-    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
-    XMLSample += '      </cell>';
-    XMLSample += '  </row>';
-    XMLSample += '  <row index="' + index++ + '">';
-    XMLSample += '      <cell>';
-    XMLSample += '          <text>' + Math.floor(Math.random() * 10) + '</text>';
-    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
-    XMLSample += '      </cell>';
-    XMLSample += '      <cell>';
-    XMLSample += '          <text>ABC' + Math.floor(Math.random() * 30) + '</text>';
-    XMLSample += '          <confidence></confidence>';
-    XMLSample += '      </cell>';
-    XMLSample += '      <cell>';
-    XMLSample += '          <text>' + (30 + Math.floor(Math.random() * 100)) + '</text>';
-    XMLSample += '          <confidence>' + Math.floor(Math.random() * 100) + '</confidence>';
-    XMLSample += '      </cell>';
-    XMLSample += '  </row>';
-    
-    XMLSample += '</rows>';
-
-    return XMLSample;
 }

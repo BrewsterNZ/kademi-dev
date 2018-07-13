@@ -3,10 +3,10 @@
         <title>View Claims</title>
         <link rel="stylesheet" type="text/css" href="/theme/apps/salesDataClaimer/salesDataClaimer.css" />
         <link rel="stylesheet" type="text/css" href="/theme/apps/salesDataClaimer/salesDataImageClaimer.css" />
-        
+
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js"></script>
         <script type="text/javascript" src="/theme/apps/salesDataClaimer/viewClaims.js"></script>
-        
+
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.min.js"></script>
         <script type="text/javascript" src="/static/jquery.fullscreen/0.4.1/jquery.fullscreen-0.4.1.min.js">//</script>
     </head>
@@ -83,7 +83,7 @@
                             </div>
                         </div>
                         <br />
-                        
+
                         <table class="table table-hover table-striped" id="table-claims">
                             <thead>
                                 <tr>
@@ -100,7 +100,7 @@
                                 </tr>
                             </thead>
                             <tbody id="table-claims-body">
-                                
+
                                 #set ($searchResult = $page.attributes.searchResult)
                                 #if ($searchResult.hits.hits.size() > 0)
                                 #foreach($hit in $searchResult.hits.hits)
@@ -122,9 +122,9 @@
                         </table>
                     </div>
                 </div>
-                
+
                 <div class="tab-pane" id="claim-groups">
-                    <div class="claim-groups-component">   
+                    <div class="claim-groups-component">
                         <div class="row">
                             <div class="col-sm-3">
                                 <p class="input-group input-group-sm">
@@ -152,10 +152,10 @@
                                 #set ($searchResult = $page.attributes.searchClaimGroupsResult)
                                 #if ($searchResult.hits.hits.size() > 0)
                                     #foreach($hit in $searchResult.hits.hits)
-                                        
+
                                         #renderClaimGroup($hit)
-                                        
-                                    #end                                    
+
+                                    #end
                                 #else
                                 <tr>
                                     <td colspan="99">No claim Groups found</td>
@@ -165,7 +165,7 @@
                         </table>
                     </div>
                 </div>
-                
+
                 <div class="tab-pane" id="claims-setting">
                     <form class="form-horizontal form-settings-claim" action="/settingSaleDataClaimer" method="post">
                         #set ($allowAnonymous = $page.attributes.settings.allowAnonymous)
@@ -270,11 +270,11 @@
             </td>
             <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
         </tr>
-        #end 
-        
-        #macro (renderClaimGroup $hit)            
+        #end
+
+        #macro (renderClaimGroup $hit)
             #if($formatter.isNotNull($hit.source.contactRequest))
-                #set( $contactPath = "/manageContacts/" + $hit.source.contactRequest )                
+                #set( $contactPath = "/manageContacts/" + $hit.source.contactRequest )
                 #set( $contactRequest = $page.find($contactPath) )
                 <tr>
                     <td>$hit.source.claimGroupId</td>
@@ -287,7 +287,7 @@
                     <td><a href='/manageContacts/$contactRequest.contactRequest.id'>View</a></td>
                     <td>#set($createDate = $formatter.parseDate($hit.source.enteredDate)) $formatter.formatDate($createDate, $page.organisation.timezone)</td>
                 </tr>
-            #end         
+            #end
         #end
 
         <div class="modal fade" id="modal-review-claim">
@@ -302,7 +302,7 @@
                             <div class="form-message alert alert-danger" style="display: none;"></div>
                             <input type="hidden" name="createClaim" value="true" class="modal-action" />
                             <input type="hidden" name="ids" value="" class="" />
-                            
+
                             #*
                             <div class="form-group">
                                 <label class="control-label col-md-4">Amount</label>
@@ -348,7 +348,7 @@
                                 </div>
                             </div>
                             *#
-                            
+
 
                             <table class="table table-hover table-striped" id="table-claims">
                                 <thead>
@@ -373,33 +373,33 @@
                 </div>
             </div>
         </div>
-        
-        <div class="modal fade" id="modal-process-claim">
+
+        <div class="modal modal-full fade" id="modal-process-claim">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <code class="pull-right totalConfidence">Total Confidence: <span></span></code>
-                        
+
                         <h3 class="modal-title">Process claim OCR file</h3>
                     </div>
                     <form class="form-horizontal form-new-claim" action="/manageSaleDataClaimer/" method="post" enctype="multipart/form-data">
                         <div class="modal-body">
                             <div class="form-message alert alert-danger" style="display: none;"></div>
-                            
+
                             <div class="row">
                                 <div id="scanned-image-section" class="col-sm-4">
                                     <!--<img src="http://moudatest.admin.kademi-ci.co/_hashes/files/65bcb80709c2dd68f11096190691958a28b05d03" alt="OCR File Hash" name="ocrFileHash">-->
                                     <!--<img src="http://moudatest.admin.kademi-ci.co/assets/2a0766a3-1344-4d2d-bbf2-396da618349a" alt="OCR File Hash" name="ocrFileHash">-->
-                                    
+
                                     <span class='zoom' id='ocrFile'>
                                         <span>Click to Zoom</span>
                                         <img src="http://moudatest.admin.kademi-ci.co/assets/2a0766a3-1344-4d2d-bbf2-396da618349a" alt="OCR File Hash" name="ocrFileHash"/>
                                     </span>
                                 </div>
-                                
-                                <div class="col-sm-8">   
-                                    <table class="table table-striped table-hover table-bordered table-condensed">
+
+                                <div class="col-sm-8">
+                                    <table class="table table-striped table-hover table-condensed">
                                         <thead><tr></tr></thead>
                                         <tbody id="table-ocr-manager-body"></tbody>
                                     </table>
@@ -416,17 +416,17 @@
                 </div>
             </div>
         </div>
-        
-        <script>        
+
+        <script>
             var highConfidenceFrom = $page.attributes.settings.highConfidenceFrom;
             var highConfidenceTo = $page.attributes.settings.highConfidenceTo;
-            
+
             var mediumConfidenceFrom = $page.attributes.settings.mediumConfidenceFrom;
             var mediumConfidenceTo = $page.attributes.settings.mediumConfidenceTo;
-            
+
             var lowConfidenceFrom = $page.attributes.settings.lowConfidenceFrom;
             var lowConfidenceTo = $page.attributes.settings.lowConfidenceTo;
-            
+
             #if($page.attributes.settings.defaultColumns)
               var defaultColumns = $page.attributes.settings.defaultColumns;
             #else
@@ -440,7 +440,7 @@
                     "tags"
                 ];
             #end
-            
+
             var options = [
                 {value: "", title: "[Do not import]"},
                 {value: "amount", title: "Amount"},
@@ -450,18 +450,18 @@
                 {value: "periodFrom", title: "Sale date"},
                 {value: "id", title: "Sales Data Id"},
                 {value: "tags", title: "tags"},
-                
+
                 #foreach($xf in $applications.salesData.getDataSeriesExtraFields($page.attributes.settings.dataSeries))
                     {value: "$xf.name", title: "$xf.title"},
-                #end  
+                #end
             ];
-            
+
             $('#modal-process-claim').on('change', 'select', function(){
                 var index = $('#modal-process-claim').find('select').index(this);
                 defaultColumns[index] = $(this).val();
-                
+
                 $.post('/settingSaleDataClaimer', {defaultColumns: JSON.stringify(defaultColumns)}, function(response){
-                    
+
                 });
             });
         </script>
