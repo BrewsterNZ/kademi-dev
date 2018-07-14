@@ -1,4 +1,4 @@
-<div class="panel panel-primary panel-leadProfile">
+<div class="panel panel-primary panel-leadProfile" id="leadProfileLeft">
     <div class="panel-body text-center">
         #set ($ava = "/theme/apps/leadman/user-placeholder.png")
         #if ($page.profile.photoHash && $page.profile.photoHash != "/templates/apps/user/profile.png")
@@ -25,9 +25,9 @@
         #if( $page.profile.email )
         <p>
             <div class="btn-group">
-                <a href="mailto:${page.profile.email}" class="btn btn-primary"><i class="fa fa-envelope"></i> $page.profile.email</a>
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Capture <i class="fa fa-angle-down"></i>
+                <a href="mailto:${page.profile.email}" class="btn btn-primary btn-primary-light"><i class="fa fa-envelope"></i> $page.profile.email</a>
+                <button type="button" class="btn btn-primary btn-primary-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i title="Capture" class="fa fa-bullhorn" aria-hidden="true"></i> <i class="fa fa-angle-down"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right">
                     <li><a href="mailto:from-lead-$page.leadId@${page.find('/').domainName}"><i class="fa fa-envelope"></i> From</a></li>
@@ -41,7 +41,7 @@
         #end
         #if( $page.profile.phone )
         <p>
-            <a href="tel:${page.profile.phone}" class="btn btn-primary"><i class="fa fa-phone"></i> $page.profile.phone</a>
+            <a href="tel:${page.profile.phone}" class="btn btn-primary btn-primary-light"><i class="fa fa-phone"></i> $page.profile.phone</a>
         </p>
         #end
         <div class="row">
@@ -60,9 +60,9 @@
             <br><br>
             <div class="row">
                 <div class="col-sm-offset-1 col-sm-10 text-left">
-                    <div class="input-group">
-                        <div class="input-group-btn">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-plus"></i></button>
+                    <div class="row">
+                        <div class="col-sm-2 text-center">
+                            <i role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="fa fa-plus fa-2x dropdown-toggle"></i>
                             <ul class="dropdown-menu">
                                 <a href="#" class="createTagModal">
                                     <li class="dropdown-header"><strong>Create and add tag</strong></li>
@@ -76,15 +76,17 @@
                                 </li>
                                 #end
                             </ul>
-                        </div><!-- /btn-group -->
-                        <input id="view-lead-tags" type="text" class="form-control" placeholder="Type to add tags">
-                    </div><!-- /input-group -->
+                        </div>
+                        <div class="col-sm-10">
+                            <input id="view-lead-tags" type="text" class="" placeholder="Type to add tags">
+                        </div>
+                    </div>
                 </div>
             </div>
             <br>
             <div class="assignedTags" id="assignedTags">
                 #foreach($tag in $page.assignedTags)
-                <a data-tag-id="$tag.name" href="javascript:void(0)" class="btn btn-primary"><i class="fa fa-tag"></i> $tag.title <span class="text-muted" data-role="removetag">X</span></a>
+                <a data-tag-id="$tag.name" href="javascript:void(0)" class="btn btn-primary btn-primary-light"><i class="fa fa-tag"></i> $tag.title <span class="" data-role="removetag">X</span></a>
                 #end
             </div>
         </div>

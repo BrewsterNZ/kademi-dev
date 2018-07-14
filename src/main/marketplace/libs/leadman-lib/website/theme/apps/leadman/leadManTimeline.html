@@ -32,7 +32,18 @@
                                     </small>
                                 </span>
                                 #end
-                                #if ($action.itemType != "fa-users" && $action.itemType != "fa-user")
+
+                                #if ($action.itemType == "fa-tasks")
+                                <span title="Complete this task" class="timeline-btn"><i role="button" class="fa fa-check"></i></span>
+                                <div class="btn-group timeline-btn">
+                                    <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a href="#"><i class="fa fa-pencil"></i> Edit</a></li>
+                                        <li><a href="#"><i class="fa fa-ban"></i> Cancel</a></li>
+                                    </ul>
+                                </div>
+                                #end
+                                #if ($action.itemType == "fa-pencil")
                                 <div class="btn-group timeline-btn">
                                     <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                                     <ul class="dropdown-menu dropdown-menu-right">
