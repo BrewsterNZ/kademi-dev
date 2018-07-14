@@ -119,7 +119,8 @@ WebUI.click(findTestObject('Email-job-case/Page_emailjob1/input_subject_for_emai
 WebUI.sendKeys(findTestObject('Email-job-case/Page_emailjob1/input_subject_for_email_job'), WebUI.concatenate(((['Subject for '
                 , emailtestname]) as String[])))
 
-WebUI.selectOptionByIndex(findTestObject('Email-job-case/Page_emailjob1/select_Select a website-email-job'), 0, FailureHandling.STOP_ON_FAILURE)
+WebUI.selectOptionByLabel(findTestObject('Email-job-case/Page_emailjob1/select_Select a website-email-job'), 'vladtest52mweb', 
+    false)
 
 WebUI.delay(1)
 
