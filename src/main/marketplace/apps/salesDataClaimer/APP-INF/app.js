@@ -371,7 +371,7 @@ function handleScanJobEvent(rf, event) {
     }
 
     XMLDocumentString += '</rows>';
-//    log.info("XMLDocumentString: {}", XMLDocumentString);
+    log.info("XMLDocumentString: {}", XMLDocumentString);
 
 //    Dummy XML with multi-columns
 //    XMLDocumentString = dummyXML();
