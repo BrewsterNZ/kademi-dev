@@ -481,7 +481,14 @@
                         </div>
                         <br />
 
-                        <p>KPI start date: starting $formatter.formatDateTime($page.kpi.startDate, $page.organisation.timezone) </p>
+                        <p>
+                            KPI start date:
+                            #if( $page.kpi.startDate )
+                            starting $formatter.formatDateTime($page.kpi.startDate)
+                            #else
+                            Warning: No start date
+                            #end
+                        </p>
 
                         <table class="table table-bordered table-striped" id="table-periods">
                             <colgroup>
