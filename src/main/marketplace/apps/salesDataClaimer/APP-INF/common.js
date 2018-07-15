@@ -267,7 +267,7 @@ function getClaimOCRFile(page, params) {
      
     var OCRFileXML = formatter.format(OCRFileByteArray);
     
-//    log.info('OCRFileXML: {}', OCRFileXML);
+    log.info('OCRFileXML: {}', OCRFileXML);
     
     result.OCRFileXML = OCRFileXML;
      
