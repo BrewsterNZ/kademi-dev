@@ -9,17 +9,17 @@
             <th></th>
             #foreach($profile in $teamProfiles)
             <th class="text-center">
-                <a href="/users/$profile.name">$profile.formattedName</a>                
+                <a href="/team/$profile.id">$profile.firstName</a>
             </th>
             #end
-        </tr>    
+        </tr>
     </thead>
     <tbody>
         #set( $leads = $services.criteriaBuilders.lead.isNull("closedDate").eq("cancelled", false).isNull("deletedDate").sortAsc("id").execute(100) )
         #foreach($lead in $leads)
         <tr>
             <td colspan="2">
-                <a href="/leads/$lead.id/">$lead.formattedName</a>                
+                <a href="/leads/$lead.id/">$lead.formattedName</a>
                 <small class="pull-right"><i class="text-muted">$lead.funnel.name</i></small>
             </td>
             <td class="text-center">
@@ -31,7 +31,7 @@
             <td class="text-center">$!lead.stageName</td>
             #foreach($profile in $teamProfiles)
             <td class="text-center">#showLeadStatus($lead, $profile)</td>
-            #end            
+            #end
         </tr>
         #foreach($task in $lead.tasks())
         #if( $task.isCancelled() || $task.completedDate )
@@ -39,7 +39,7 @@
         <tr>
             <td></td>
             <td>
-                <a href="/leads/$lead.id/">$task.formattedName</a>                
+                <a href="/leads/$lead.id/">$task.formattedName</a>
             </td>
             <td class="text-center">
                 $!formatter.toInteger($task.hoursWorked() )
@@ -47,23 +47,23 @@
                 / $task.estimatedHours
                 #end
             </td>
-            
+
             <td class="text-center">
                 #if( $task.dueDate )
                 #if( $task.dueDate.before($formatter.now) )
-                <span class="label label-warning"><abbr class="timeago" title="$formatter.formatDateISO8601($task.dueDate)">$task.dueDate</abbr></span>                
+                <span class="label label-warning"><abbr class="timeago" title="$formatter.formatDateISO8601($task.dueDate)">$task.dueDate</abbr></span>
                 #else
                 <abbr class="timeago" title="$formatter.formatDateISO8601($task.dueDate)">$task.dueDate</abbr>
-                #end                
+                #end
                 #end
             </td>
             #foreach($profile in $teamProfiles)
             <td class="text-center">#showTaskStatus($lead, $profile)</td>
-            #end            
+            #end
         </tr>
         #end
         #end
-        #end        
+        #end
     </tbody>
 </table>
 
