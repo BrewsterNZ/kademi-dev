@@ -48,13 +48,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label" for="hindaDelta">Delta</label>
-                    <div class="col-sm-9">
-                        $formatter.checkbox($!page.delta, "hindaDelta", $!page.delta)
-                    </div>
-                </div>
-
-                <div class="form-group">
                     <label class="col-sm-2 control-label" for="hindaCatalogId">Catalog ($!page.catalogId)</label>
                     <div class="col-sm-9">
 
@@ -100,6 +93,27 @@
                         <i>All the products are going to be added automatically to this reward store.</i>
                     </div>
                 </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="trackingCategory">Tracking Category</label>
+                    <div class="col-sm-9">
+                        <select name="trackingCategory" class="form-control">
+                            #set($foundHindaCat = false)
+                            #foreach($cat in $page.categoryBeans)
+                                $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $page.trackingCategory)
+                                
+                                #if($cat.name == "Hinda")
+                                    #set($foundHindaCat = true)
+                                #end
+                            #end
+                            
+                            #if(!$foundHindaCat)
+                                $formatter.option("Hinda", "Hinda (Default)", $page.trackingCategory)
+                            #end
+                        </select>
+                        <i>The Category used to track product imports</i>
+                    </div>
+                </div>
 
                 <hr/>
 
@@ -114,7 +128,7 @@
                     <label class="col-sm-2 control-label" for="hindaCategory">Category</label>
                     <div class="col-sm-9">
                         <select name="hindaCategory" class="form-control">
-                            #genCategories($page.categoryBeans)
+                            #genCategories($page.categoryBeans, $page.category)
                         </select>
                         <i>For any product exceeding the configured percentage it will add the product to the configured category.</i>
                     </div>
@@ -139,9 +153,9 @@
                 </div>
 
 
-                #macro(genCategories $categories)
+                #macro(genCategories $categories $selectedVal)
                 #foreach($cat in $categories)
-                $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $page.category)
+                $formatter.option($cat.name, "$formatter.padWith('-', '', $cat.level) $cat.title", $selectedVal)
                 #end
                 #end
 
