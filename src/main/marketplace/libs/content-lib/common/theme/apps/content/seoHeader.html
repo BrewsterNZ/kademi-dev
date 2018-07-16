@@ -1,6 +1,5 @@
 #set($seoBean = $page.seoContent)
 #if($seoBean)
-
     #if($formatter.isNotNull($formatter.cleanString($seoBean.description)))
     <meta name="description" content="$formatter.htmlEncode($formatter.cleanString($seoBean.description))">
     #end
