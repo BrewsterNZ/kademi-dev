@@ -34,14 +34,16 @@
                                 #end
 
                                 #if ($action.itemType == "fa-tasks")
-                                <span title="Complete this task" class="timeline-btn"><i role="button" class="fa fa-check"></i></span>
+                                #if ($action.itemTitle != "Task cancelled")
+                                <span href="${page.href}$!{action.data['taskId']}" title="Complete this task" class="timeline-btn"><i role="button" class="fa fa-check text-success"></i></span>
                                 <div class="btn-group timeline-btn">
                                     <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                                     <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a href="#"><i class="fa fa-pencil"></i> Edit</a></li>
-                                        <li><a href="#"><i class="fa fa-ban"></i> Cancel</a></li>
+                                        <li><a class="timeline-edit-task" href="${page.href}$!{action.data['taskId']} .taskEditModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-pencil"></i> Edit</a></li>
+                                        <li><a class="btnCancelTask" href="${page.href}$!{action.data['taskId']}"><i class="fa fa-ban"></i> Cancel</a></li>
                                     </ul>
                                 </div>
+                                #end
                                 #end
                                 #if ($action.itemType == "fa-pencil")
                                 <div class="btn-group timeline-btn">
@@ -57,9 +59,13 @@
                     </div>
                 </div>
                 <div class="timeline-body">
-                    <p>
+                    <p class="">
                         $!action.actionDesc
                     </p>
+                    #if ($action.itemType == "fa-tasks")
+                    <p class="small">$!action.data['taskDesc']</p>
+                    #end
+
                     #if($action.path && $action.itemType != "fa-file")
                     <p>
                         <a href="$action.path" class="btn btn-sm btn-info pull-right">

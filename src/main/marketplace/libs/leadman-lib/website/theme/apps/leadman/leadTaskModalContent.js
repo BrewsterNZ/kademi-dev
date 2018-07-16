@@ -3,6 +3,12 @@
         var taskList = $('#tasksList');
         var leadTaskTablePanel = $('#leadTaskTablePanel');
         var modal = $('#modalEditTask');
+        var leadDetailActivities = $('#leadDetailActivities');
+        if (leadDetailActivities.length){
+            leadDetailActivities.on('click', '.timeline-edit-task', function () {
+                modal.addClass('editingTask');
+            });
+        }
         if (taskList.length){
             taskList.on('click', '.task-item .task-edit', function () {
                 modal.addClass('editingTask');
@@ -17,19 +23,19 @@
 
         if (modal.length > 0) {
             flog('Init modalEditTask');
-            $(document.body).on('hide.bs.modal', '#modalEditTask', function () {
+            $(document.body).on('hidden.bs.modal', '#modalEditTask', function () {
                 modal.removeClass('editingTask');
             });
             $(document.body).on('loaded.bs.modal shown.bs.modal', '#modalEditTask', function () {
                 flog('Modal Loaded');
-                $(".completeTaskDiv").show(300);
-                // $(".hideOnComplete").hide(300);
-                
+                // $(".completeTaskDiv").show(300);
+
                 var modal = $(this);
                 var notes = modal.find('.lead-notes');
-                if (modal.hasClass('editingTask')){
-                    modal.find('.hideWhenEditTask').addClass('hide');
-                }
+                var selectpicker = modal.find('.selectpicker');
+                selectpicker.selectpicker({
+                    maxOptions: 5
+                });
                 notes.dotdotdot({
                     height: 200,
                     callback: function (isTruncated, orgContent) {

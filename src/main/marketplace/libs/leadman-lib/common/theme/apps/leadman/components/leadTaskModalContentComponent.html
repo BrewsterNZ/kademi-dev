@@ -119,17 +119,15 @@
     <div class="taskEditModal modal-body">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
-        <div class="hideOnComplete">
+        <div class="hideOnComplete form-horizontal">
             <input type="text" value="$page.title" name="title" class="form-control immediateUpdate input-lg" data-href="$page.href" />
-            <hr />
+            <br>
             <textarea name="taskDescription" class="form-control immediateUpdate" data-href="$page.href" style="height: 100px">$!page.taskDescription</textarea>
-            <hr />
+            <br>
             <div class="row">
                 <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label class="control-label" style="padding-top: 7px;">Task due</label>
-                        </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4 text-left">Task due</label>
                         <div class="col-sm-8">
                             <div class="input-group">
                                 <input type="text" name="dueDate" class="form-control date-time immediateUpdate" data-href="$page.href" data-original-value="$formatter.formatDateTime($page.dueDate)" value="$formatter.formatDateTime($page.dueDate)">
@@ -141,38 +139,18 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <label for="" style="padding-top: 7px;">Assignee</label>
-                    <div class="btn-group pull-right" role="group">
-                        <div class="btn-group mb-sm dropdown">
-                            <button id="assignedBlockTask" class="btn dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" title="Assign this task to someone">
-                                <i class="fa fa-user"></i>
-                                <span>
-                                    #if( $page.assignedTo )
-                                        $page.assignedTo.formattedName()
-                                    #else
-                                        Not assigned
-                                    #end
-                                </span>
-                                <i class="fa fa-angle-down"></i>
-                            </button>
-                            <ul class="dropdown-menu" data-href="$page.href" id="assignToMenuTask" role="menu">
-                                <li><a href="$user.name">Assign to me</a></li>
-                                <li><a href="">Assign to nobody</a></li>
-                                #set($teamMembers = $page.find("/leads").teamMembers)
-                                #if($teamMembers && $teamMembers.size() > 0)
-                                    #if ($teamMembers.size() > 1)
-                                    <li role="separator" class="divider"></li>
-                                    #end
-                                    #foreach($user in $teamMembers)
-                                        #if ($user.name != $userResource.name)
-                                        <li><a href="$user.name">$!user.formattedName</a></li>
-                                        #end
-                                    #end
+                    <div class="form-group">
+                        <label class="col-md-4 control-label text-left" for="">Assignee</label>
+                        <div class="col-md-8">
+                            <select id="assignToName" data-live-search="true" data-live-search-normalize="true" name="assignToName" class="form-control selectpicker immediateUpdate" data-style="btn-default" data-href="$page.href">
+                                <option value="">[Not Assigned]</option>
+                                #foreach($user in $page.find("/leads").teamMembers)
+                                #set($oText = "Assigned to: " + $user.formattedName)
+                                $formatter.option($user.name, $oText, $page.assignedTo.name)
                                 #end
-                            </ul>
+                            </select>
                         </div>
                     </div>
-
                 </div>
 
             </div>
