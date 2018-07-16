@@ -28,7 +28,9 @@ def randomdigit = rnd.nextInt(9999)
 
 def emailtestname = WebUI.concatenate(((['emailjob', randomdigit]) as String[]))
 
-WebUI.openBrowser('http://vladtest53b.admin.kademi-ci.co')
+def sitename = 'vladtest53b'
+
+WebUI.openBrowser(WebUI.concatenate(((['http://', sitename,'.admin.kademi-ci.co']) as String[])))
 
 not_run: WebUI.maximizeWindow()
 
@@ -119,7 +121,7 @@ WebUI.click(findTestObject('Email-job-case/Page_emailjob1/input_subject_for_emai
 WebUI.sendKeys(findTestObject('Email-job-case/Page_emailjob1/input_subject_for_email_job'), WebUI.concatenate(((['Subject for '
                 , emailtestname]) as String[])))
 
-WebUI.selectOptionByLabel(findTestObject('Email-job-case/Page_emailjob1/select_Select a website-email-job'), 'vladtest52mweb', 
+WebUI.selectOptionByLabel(findTestObject('Email-job-case/Page_emailjob1/select_Select a website-email-job'), WebUI.concatenate((([sitename, 'web']) as String[])), 
     false)
 
 WebUI.delay(1)

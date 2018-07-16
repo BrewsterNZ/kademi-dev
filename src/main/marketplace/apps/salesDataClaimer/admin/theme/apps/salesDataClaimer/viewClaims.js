@@ -321,6 +321,7 @@
                             modalProcess.find('thead tr').append(column_select);
                         }
 
+                        flog("rows", $rows.length);
                         for(counter = 0; counter < $rows.length; counter++){
                             var row = '';
                             row += '<tr data-index="' + $($rows[counter]).attr('index') + '">';
@@ -508,20 +509,20 @@
                 var $checkbox = $(this);
                 var $tr = $checkbox.closest('tr');
                 var $inputs = $tr.find('input[type="text"]');
-                var column = 0;
                 var row = {
                     'cells': [],
                     'index': $tr.attr('data-index')
                 };
 
-                $inputs.each(function() {
-                    if(columns[column] === ""){
-                        return true;
-                    }
-
+                flog("inputs", $inputs.length);
+                $inputs.each(function(i, n) {
                     $input = $(this);
-
-                    row.cells.push({column: columns[column++], value: this.value, confidence: $.trim($input.closest('td').find('span').html())});
+                    flog("process col", i, columns[i], $input.val());
+                    if(columns[i] === ""){
+                        
+                    } else {                       
+                        row.cells.push({column: columns[i], value: this.value, confidence: $.trim($input.closest('td').find('span').html())});                        
+                    }
                 });
 
                 rows.push(row);

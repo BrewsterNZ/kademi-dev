@@ -72,7 +72,10 @@
         </td>
         #if ($showPoints == "true")
         <td>
-            $!points pts
+            #if( $points )
+            $formatter.toInteger($points )
+            pts
+            #end
         </td>
         #end
     </tr>

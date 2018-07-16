@@ -28,7 +28,7 @@ controllerMappings
         .addMethod('POST', 'approveClaims', 'approveClaims')
         .addMethod('POST', 'rejectClaims', 'rejectClaims')
         .addMethod('POST', 'deleteClaims', 'deleteClaims')
-        .addMethod('POST', 'processImageClaims')
+        .addMethod('POST', 'saveImageClaims')
         .postPriviledge('READ_CONTENT')
         .enabled(true)
         .build();
@@ -329,8 +329,8 @@ function createImageClaimTagging(page, params, files) {
     return views.jsonObjectView(response);
 }
 
-function processImageClaims(page, params, files) {
-    log.info('processImageClaims(): {} {}', page, files);
+function saveImageClaims(page, params, files) {
+    log.info('saveImageClaims(): {} {}', page, files);
 
     var result = {
         status: true
@@ -338,53 +338,65 @@ function processImageClaims(page, params, files) {
 
     var rows = JSON.parse(params.rows);
 
-    /**
-     * Save data in new XML
-     */
-    var XMLDocumentString = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    var xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
 
-    XMLDocumentString += '<rows totalConfidence="' + params.totalConfidence + '" oldHash="' + params.old_hash + '">';
+    xml += '<rows totalConfidence="' + params.totalConfidence + '" oldHash="' + params.old_hash + '">';
 
-    for (rows_counter = 0; rows_counter < rows.length; rows_counter++) {
+    for (var rows_counter = 0; rows_counter < rows.length; rows_counter++) {
         var row = rows[rows_counter];
 
-        XMLDocumentString += '<row index="' + row['index'] + '">\n';
+        xml += '<row index="' + row['index'] + '">\n';
         for (cells_counter = 0; cells_counter < row['cells'].length; cells_counter++) {
             var cell = row['cells'][cells_counter];
 
-            XMLDocumentString += '<cell>\n';
-            XMLDocumentString += '<' + cell['column'] + '>' + formatter.htmlEncode(formatter.toString(cell['value']).trim()) + '</' + cell['column'] + '>\n';
-            XMLDocumentString += '<confidence>' + formatter.toString(cell['confidence']).trim() + '</confidence>\n';
-            XMLDocumentString += '</cell>\n';
+            xml += '<cell>\n';
+            xml += '<' + cell['column'] + '>' + formatter.htmlEncode(formatter.toString(cell['value']).trim()) + '</' + cell['column'] + '>\n';
+            xml += '<confidence>' + formatter.toString(cell['confidence']).trim() + '</confidence>\n';
+            xml += '</cell>\n';
         }
-        XMLDocumentString += '</row>\n';
+        xml += '</row>\n';
     }
 
 
-    XMLDocumentString += '</rows>';
+    xml += '</rows>';
 
-    result.XMLDocumentHash = fileManager.upload(XMLDocumentString.getBytes());
+    result.XMLDocumentHash = fileManager.upload(xml.getBytes());
 
     if (params.action == "approve") {
         log.info("processImageClaims: approve");
-        /**
-         * Save data-series
-         */
+        
+        var dataManager = services.dataSeriesManager;
         var settings = getAppSettings(page);
         var selectedDataSeries = settings.get('dataSeries');
-        var dataSeries = applications.salesData.getSalesDataSeries(selectedDataSeries);
-        var salesDataApp = applications.get("salesData");
-//        var ocrDataSeries = salesDataApp.getSalesDataSeries('sales-data-image-claim');
-
-        for (rows_counter = 0; rows_counter < rows.length; rows_counter++) {
-            var fieldsMap = formatter.newMap();
-            for (cells_counter = 0; cells_counter < rows[rows_counter]['cells'].length; cells_counter++) {
-                fieldsMap.put(rows[rows_counter]['cells'][cells_counter]['column'], formatter.toString(rows[rows_counter]['cells'][cells_counter]['value']).trim());
+        var dataSeries = dataManager.dataSeries(selectedDataSeries);
+        
+        for (var rows_counter = 0; rows_counter < rows.length; rows_counter++) {
+            var row = rows[rows_counter];
+            var dp = dataManager.newDataPoint();
+            dp.series = dataSeries;
+            dp.saleDate = formatter.now;
+            dp.attributedTo = securityManager.currentUser.thisProfile;            
+            dp.fields = formatter.newMap();
+            
+            log.info("cells.. {}", row['cells'].length);
+            for (var cells_counter = 0; cells_counter < row['cells'].length; cells_counter++) {
+                var key = rows[rows_counter]['cells'][cells_counter]['column'];
+                var val = formatter.toString(rows[rows_counter]['cells'][cells_counter]['value']).trim();
+                log.info("processing key={} val={}", key, val);                
+                if( key == "productSku") {
+                    dp.productSku = val;
+                } else if( key == "attributedTo") {
+                    dp.attributedTo = findParticipant(val, dp.series);
+                } else if( key == "amount") {
+                    dp.amount = formatter.toBigDecimal(val);
+                } else if( key == "periodFrom") {
+                    dp.periodFrom = formatter.toDate(val);
+                } else {
+                    dp.fields.put(key, val);
+                }
             }
 
-            log.info("fieldsMap {}", fieldsMap);
-
-            salesDataApp.insertOrUpdateDataPoint(dataSeries, formatter.toBigDecimal(1), formatter.now, formatter.now, securityManager.currentUser.thisProfile, formatter.now, fieldsMap);
+            dataManager.insertDataPoint(dp);
         }
     }
 
@@ -438,4 +450,23 @@ function processImageClaims(page, params, files) {
     }
 
     return views.jsonObjectView(JSON.stringify(result));
+}
+
+function findParticipant(entityName, series) {
+    var st = series.salesType;
+    log.info("findParticipant {} {}", entityName, st);
+   
+    if( st == null || st == "SALES_PROFILE") {
+        var mr = services.userManager.newProfileMatchRequest();
+        mr.email(entityName).or().userName(entityName);
+        var profileBeans = services.userManager.findMatching(mr);
+        if( profileBeans.size() == 0 ) {
+            return null;
+        } else {
+            return profileBeans.get(0).entityObject(); // convert bean to Profile
+        }
+    } else {
+        // TODO
+    }
+    
 }

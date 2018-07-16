@@ -61,8 +61,12 @@
                                 #foreach($p in $page.children)
                                     <tr>
                                         <td class="clickableRow"><a href="$p.name">$p.pointsTag.title</a></td>
-                                        <td>$p.totalAwaredPoints</td>
-                                        <td>$p.totalDebitPoints</td>
+                                        <td>
+                                            $!formatter.toInteger($p.totalAwaredPoints)
+                                        </td>
+                                        <td>
+                                            $!formatter.toInteger($p.totalDebitPoints)
+                                        </td>
                                         <td class="center">
                                             <div class="checkbox-table">
                                                 <label>
