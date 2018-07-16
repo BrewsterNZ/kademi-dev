@@ -3,6 +3,15 @@
         <title>Manage Points Allocations and sales incentives</title>
     </head>
     <body>
+        <div class="alert alert-info">
+            <i class="fa fa-question-circle fa-4x pull-left"></i>
+            <p>
+                This screen shows points calculated from sales records.
+            </p>
+            <p>Each row shows a single points calculation, which can result in points being awarded, or debited (ie taken away), or zero
+            points being calculated, which means no points are awarded or taken away</p>
+            <p>Each row links 1 or more sales records to a points credit, debit, or neither (if zero points calculated). Use the <b>Reset</b> button if data changes and you need to recalculate awards.</p>
+        </div>
         #set( $query = $services.criteriaBuilders.pointsAllocation.ge("createdDate", $services.queryManager.commonStartDate).lt("createdDate", $services.queryManager.commonFinishDate) )
         #if( $formatter.isNotEmpty($request.params.minValue) )
             #if( $query.ge("pointsAmount", $formatter.toBigDecimal($request.params.minValue)) )#end
