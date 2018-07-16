@@ -35,7 +35,7 @@
 
                                 #if ($action.itemType == "fa-tasks")
                                 #if ($action.itemTitle != "Task cancelled")
-                                <span href="${page.href}$!{action.data['taskId']}" title="Complete this task" class="timeline-btn"><i role="button" class="fa fa-check text-success"></i></span>
+                                <span href="${page.href}$!{action.data['taskId']} .taskViewModal" data-target="#modalEditTask" data-toggle="modal" title="Complete this task" class="timeline-btn"><i role="button" class="fa fa-check text-success"></i></span>
                                 <div class="btn-group timeline-btn">
                                     <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                                     <ul class="dropdown-menu dropdown-menu-right">
@@ -45,12 +45,11 @@
                                 </div>
                                 #end
                                 #end
-                                #if ($action.itemType == "fa-pencil")
+                                #if ($action.data && $action.data["noteId"])
                                 <div class="btn-group timeline-btn">
                                     <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                                     <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a href="#"><i class="fa fa-pencil"></i> Edit</a></li>
-                                        <li><a href="#"><i class="fa fa-trash"></i> Delete</a></li>
+                                        <li><a class="note-edit" data-type="$!{action.data['actionType']}-${action.inbound}" href="$!{action.data['noteId']}"><i class="fa fa-pencil"></i> Edit</a></li>
                                     </ul>
                                 </div>
                                 #end
@@ -59,9 +58,17 @@
                     </div>
                 </div>
                 <div class="timeline-body">
-                    <p class="">
-                        $!action.actionDesc
-                    </p>
+
+                    #if ($action.data && $action.data["noteId"])
+                        #set ($app = $applications.get("leadman-lib"))
+                        <pre class="hide">$!action.actionDesc</pre>
+                        #set ($processedNotes = $app.call("urlify", $!action.actionDesc))
+                        <div class="note-content" style="white-space: pre-wrap">$!processedNotes <a class='note-more' href='#'>more</a></div>
+                    #else
+                        <p class="">
+                            $!action.actionDesc
+                        </p>
+                    #end
                     #if ($action.itemType == "fa-tasks")
                     <p class="small">$!action.data['taskDesc']</p>
                     #end
