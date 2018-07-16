@@ -3,21 +3,22 @@
         <title>Manage Points Allocations and sales incentives</title>
     </head>
     <body>
+        <h1>Manage sales incentive points allocations</h1>
         <div class="alert alert-info">
             <i class="fa fa-question-circle fa-4x pull-left"></i>
             <p>
                 This screen shows points calculated from sales records.
             </p>
             <p>Each row shows a single points calculation, which can result in points being awarded, or debited (ie taken away), or zero
-            points being calculated, which means no points are awarded or taken away</p>
+                points being calculated, which means no points are awarded or taken away</p>
             <p>Each row links 1 or more sales records to a points credit, debit, or neither (if zero points calculated). Use the <b>Reset</b> button if data changes and you need to recalculate awards.</p>
         </div>
         #set( $query = $services.criteriaBuilders.pointsAllocation.ge("createdDate", $services.queryManager.commonStartDate).lt("createdDate", $services.queryManager.commonFinishDate) )
         #if( $formatter.isNotEmpty($request.params.minValue) )
-            #if( $query.ge("pointsAmount", $formatter.toBigDecimal($request.params.minValue)) )#end
+        #if( $query.ge("pointsAmount", $formatter.toBigDecimal($request.params.minValue)) )#end
         #end
         #if( $formatter.isNotEmpty($request.params.maxValue) )
-            #if( $query.lt("pointsAmount", $formatter.toBigDecimal($request.params.maxValue)) )#end
+        #if( $query.lt("pointsAmount", $formatter.toBigDecimal($request.params.maxValue)) )#end
         #end
 
         #set( $allocs = $query.execute(1000) )
@@ -40,7 +41,7 @@
                 </div>
                 <div class="col-md-8">
                     <div class="btn-group pull-right">
-                        <a class="btn btn-danger btn-sm">
+                        <a class="btn btn-danger btn-sm btn-remove">
                             <span class="glyphicon glyphicon-remove"></span>
                             Reset
                         </a>
@@ -119,7 +120,7 @@
                             <td class="center">
                                 <div class="checkbox-table">
                                     <label>
-                                        <input type="checkbox" name="toRemoveId" class="" value="$p.pointsTag.id" />
+                                        <input type="checkbox" name="toRemoveId" class="" value="$p.id" />
                                     </label>
                                 </div>
                             </td>
@@ -139,6 +140,8 @@
                     $("#points-allocs-table").reloadFragment();
                 });
                 initDataQuery();
+                initRemoveAllocations();
+                initSelectAll();
             });
 
             function doSearch() {
@@ -148,7 +151,7 @@
                 history.pushState(null, null, uri.toString());
 
                 $("#points-allocs-table").reloadFragment({
-                    url : uri.toString()
+                    url: uri.toString()
                 });
             }
             function initDataQuery() {
@@ -167,7 +170,44 @@
                     doSearch();
                 });
             }
-
+            function initRemoveAllocations() {
+                $(".btn-remove").click(function (e) {
+                    e.preventDefault();
+                    var node = $(e.target);
+                    flog("initRemoveAllocations", node, node.is(":checked"));
+                    var checkBoxes = $('#points-allocs-table').find('input[name=toRemoveId]:checked');
+                    if (checkBoxes.length === 0) {
+                        Msg.error("Please select the records to reset by clicking the checkboxs to the right");
+                    } else {
+                        if (confirm("Are you sure you want to reset " + checkBoxes.length + " points allocations?")) {
+                            doRemovePointsAllocations(checkBoxes);
+                        }
+                    }
+                });
+            }
+            function doRemovePointsAllocations(checkBoxes) {
+                Msg.info("Deleting...", 2000);
+                $.ajax({
+                    type: 'POST',
+                    data: checkBoxes,
+                    dataType: "json",
+                    url: window.location.pathname,
+                    success: function (data) {
+                        flog("success", data);
+                        if (data.status) {
+                            Msg.success("Removed ok");
+                            checkBoxes.each(function (i, n) {
+                                $(n).closest("tr").remove();
+                            });
+                        } else {
+                            Msg.error("There was a problem resetting points allocations. Please try again and contact the administrator if you still have problems");
+                        }
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occurred resetting. You might not have permission to do this");
+                    }
+                });
+            }
         </script>
     </body>
 </html>
