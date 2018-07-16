@@ -1,4 +1,4 @@
-#if ($page.editedResource.is("email"))
+#if ($page.editedResource.is("email") || $page.editedResource.is("edm"))
     #parse("/theme/apps/content/edmSnippets.html")
 #else
     #parse("/theme/apps/content/webSnippets.html")
