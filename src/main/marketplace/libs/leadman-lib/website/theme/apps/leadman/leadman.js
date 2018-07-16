@@ -43,7 +43,7 @@ function initLeadManEvents() {
     initChangeLeadAvatar();
     initHideModalAndGoLinks();
     initStatsSummaryComponents();
-
+    initLeadCompanies();
     // init the login form
     $(".login").user({});
 
@@ -1959,4 +1959,20 @@ function initClipboard() {
             return "<img class='img-responsive' src='" + nextHref + "'/>";
         }
     });
+}
+
+function initLeadCompanies() {
+    if ($('#leadCompaniesTable').length){
+        var dataTable = $('#leadCompaniesTable').DataTable({
+            paging: false,
+            searching: false,
+            destroy: true,
+            info: false,
+        });
+        $('#leadCompaniesTable').on( 'draw.dt', function () {
+            $('#leadCompaniesTable').closest('.row').siblings('.row').remove();
+        } );
+
+        dataTable.draw();
+    }
 }

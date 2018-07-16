@@ -13,8 +13,9 @@
 <br/>
 <br/>
 
-<table class="table table-bordered table-striped table-hover">
-    <thead>
+<div class="panel panel-default">
+    <table id="leadCompaniesTable" class="table table-bordered table-striped table-hover kcrm-table">
+        <thead>
         <tr>
             <th>Title</th>
             <th>Email</th>
@@ -23,29 +24,32 @@
             <th width="90">Members</th>
             <th width="120"></th>
         </tr>
-    </thead>
-    <tbody id="searchResults">
+        </thead>
+        <tbody id="searchResults">
         #foreach($com in $page.paginator.records)
         <tr>
             <td>$com.title</td>
             <td>$!com.email</td>
             <td>$!com.phone</td>
             <td>
-                $!com.address<br />$!com.addressLine2
+                $!com.address, $!com.addressLine2
             </td>
             <td>$com.members.size()</td>
             <td><a href="./$com.id"><i class="fa fa-eye"></i> View details</a></td>
         </tr>
         #end
-    </tbody>
-    <tfoot id="pointsFooter">
+        </tbody>
+        #if ($page.paginator.html)
+        <tfoot id="pointsFooter">
         <tr>
             <td colspan="6">
                 $!page.paginator.html
             </td>
         </tr>
-    </tfoot>
-</table>
+        </tfoot>
+        #end
+    </table>
+</div>
 <script>
     $("#org-query").on({
         keyup: function () {

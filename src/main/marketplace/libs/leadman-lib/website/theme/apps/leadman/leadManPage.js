@@ -255,6 +255,10 @@
                     });
                 });
 
+        $('#leadTable').on( 'draw.dt', function () {
+            $('#leadTable').closest('.row').siblings('.row').remove();
+        } );
+
         for (var i = 0; i < hits.hits.length; i++) {
             var hit = hits.hits[i];
             var _source = hit._source;
