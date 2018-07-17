@@ -95,12 +95,12 @@
                                 NA
                                 #end
                             </td>
-                            <td>$p.pointsAmount</td>
+                            <td>$formatter.formatCurrency($p.pointsAmount)</td>
                             <td>
                                 #if( $p.points )
-                                <span class="text-success">$p.points.numPoints</span>
+                                <span class="text-success">$formatter.formatCurrency($p.points.numPoints)</span>
                                 #elseif( $p.pointsDebit )
-                                <span class="text-warning">($p.pointsDebit.numPoints)</span>
+                                <span class="text-warning">( $formatter.formatCurrency($p.pointsDebit.numPoints) )</span>
                                 #else
                                 NA
                                 #end
