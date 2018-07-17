@@ -1,125 +1,103 @@
-<div class="panel panel-default">
+<div class="panel panel-default panel-leadProfileTabContent">
     <div class="panel-body">
-        <div id="company">
-            <h4 class="page-header">Company information</h4>
-
-            <form method="post" action="$page.href" class="form-horizontal" id="leadOrgDetails">
-                <input type="hidden" name="leadOrgDetails" value="leadOrgDetails" />
-
-                <div class="panel-body">
-                    #set( $leadOrg = $page.leadOrg )
-
+        #set( $leadOrg = $page.leadOrg )
+        <form action="$page.href" method="post" id="leadOrgDetails">
+            <input type="hidden" name="leadOrgDetails" value="leadOrgDetails" />
+            <div class="row">
+                <div class="col-sm-6">
                     <div class="form-group">
-                        <label class="control-label col-md-2" for="">Company</label>
-
-                        <div class="col-md-8">
-                            <input type="text" id="orgTitleSearch" name="title" class="form-control" placeholder="Title" value="$!leadOrg.title" autocomplete="off" />
-                        </div>
-                        #if( $page.is("company") )
-                        #else
-                        <span id="btn-company-details-wrapper">
-                            <a href="/companies/$!leadOrg.id" class="btn-company-details" #if(!$leadOrg.id) style="display: none" #end>Company details</a>
-                        </span>
-                        #end
+                        <label class="control-label">Company name</label>
+                        <input type="text" name="title" class="form-control" value="$!leadOrg.title">
                     </div>
-
-                    <div id="leadOrgDetailsPreview">
-                        <input type="hidden" name="leadOrgId" value="$!leadOrg.orgId" />
-
-                        <div class="form-group">
-                            <label class="control-label col-md-2" for="newCompanyEmail">Contact</label>
-
-                            <div class="col-md-5">
-                                <input type="text" name="email" id="newCompanyEmail" class="form-control email" placeholder="Email" value="$!leadOrg.email" />
-                            </div>
-                            <div class="col-md-5">
-                                <input type="text" name="phone" class="form-control" placeholder="Phone" value="$!leadOrg.phone" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-2" for="newUserEmail">Address</label>
-
-                            <div class="col-md-5">
-                                <input type="text" name="address" class="form-control" placeholder="Address" value="$!leadOrg.address" />
-                            </div>
-                            <div class="col-md-5">
-                                <input type="text" name="addressLine2" class="form-control" placeholder="Address 2" value="$!leadOrg.addressLine2" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-5">
-                                <input type="text" name="addressState" class="form-control" placeholder="State" value="$!leadOrg.addressState" />
-                            </div>
-                            <div class="col-md-5">
-                                <input type="text" name="postcode" class="form-control" placeholder="Postcode" value="$!leadOrg.postcode" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="country" class="control-label col-md-2">Country</label>
-
-                            <div class="col-md-8">
-                                <select name="country" class="form-control chosen-select" id="country">
-                                    <option value="">[No country selected]</option>
-                                    #foreach($cc in $formatter.countryCodes.list)
-                                    $formatter.option( $cc.alpha2Code, $cc.englishShortName, $leadOrg.country )
-                                    #end
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="notes" class="control-label col-md-2">Notes</label>
-
-                            <div class="col-md-8">
-                                <textarea name="notes" class="form-control" placeholder="Notes" id="notes">$!leadOrg.notes</textarea>
-                            </div>
-                        </div>
-
-                        #set($fields = $page.leadCompanyExtraFields)
-                        #set($counter = 0)
-                        #foreach($field in $fields.keySet())
-                        #if ($extraFields && $extraFields.contains($field.name))
-                        #else
-
-                        #if ($counter % 2 == 0)
-                        <div class="control-group form-group">
-                            #end
-
-                            <label class="control-label col-md-2" for="extraField_${field.name}">$field.text</label>
-
-                            <div class="controls col-md-4">
-                                $field.html( $fields[$field], "", "extraField_" )
-                            </div>
-
-                            #if (($counter + 1) % 2 == 0)
-                        </div>
-                        #end
-
-                        #set($counter = $counter + 1)
-                        #end
-                        #end
-
-                        #if ($counter != 0 && ($counter) % 2 != 0)
-                    </div>
-                    #end
-
-                    #if( $page.completed)
-                    #else
-                    <div class="form-group">
-                        <div class="col-md-10 col-md-offset-2">
-                            <button class="btn btn-primary btn-save-company" type="submit">Save details</button>
-                            #if ($disableUnlink != "true")
-                            <button class="btn btn-info btn-unlink-company" type="button" #if(!$leadOrg.id) style="display: none" #end>Unlink company</button>
-                            #end
-                        </div>
-                    </div>
-                    #end
                 </div>
-        </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">Company email</label>
+                        <input type="text" value="$!leadOrg.email" name="email" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">Company phone</label>
+                        <input type="text" value="$!leadOrg.phone" name="phone" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">Address Line 1</label>
+                        <input type="text" value="$!leadOrg.address" name="address" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">Address Line 2</label>
+                        <input type="text" value="$!leadOrg.addressLine2" name="addressLine2" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">Postcode</label>
+                        <input type="text" value="$!leadOrg.postcode" name="postcode" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">Town/City</label>
+                        <input type="text" value="$!leadOrg.addressState" name="addressState" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">Country</label>
+                        <select name="country" class="form-control selectpicker" data-live-search="true" data-live-search-normalize="true" id="country">
+                            <option value="">[No country selected]</option>
+                            #foreach($cc in $formatter.countryCodes.list)
+                            $formatter.option( $cc.alpha2Code, $cc.englishShortName, $leadOrg.country )
+                            #end
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                #set($fields = $page.leadCompanyExtraFields)
+                #set($counter = 0)
+                #foreach($field in $fields.keySet())
+                #if ($extraFields && $extraFields.contains($field.name))
+                #else
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">$field.text</label>
+                        $field.html( $fields[$field], "", "extraField_" )
+                    </div>
+                </div>
+                #end
+                #end
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label">Notes</label>
+                        <textarea rows="5" name="notes" class="form-control" placeholder="Notes" id="notes">$!leadOrg.notes</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" name="leadOrgId" value="$!leadOrg.orgId" />
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group text-right" id="companyTabButtons">
+                        <button type="submit" class="btn btn-primary btn-save-company">Save details</button>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
-</div>
 </div>

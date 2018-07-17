@@ -4,6 +4,7 @@ controllerMappings.addComponent("leadman/components", "leadStatsSummary", "html"
 controllerMappings.addComponent("leadman/components", "leadsList", "html", "Display leads list", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadSalesSummary", "html", "Displays sales and tasks summary for Team Leaders / Sales Managers ", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadProfile", "html", "Displays lead profile details and tags (NEW) ", "Leadman App component");
+controllerMappings.addComponent("leadman/components", "leadCompanyProfile", "html", "Displays lead company details and tags (NEW) ", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadDetailTabs", "html", "Displays lead detail tabs ie Summary, Contact, Company, etc (NEW) ", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadDetailTabContent", "html", "Displays lead profile content which loads via pjax (NEW) ", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadDetailCompanyTabContent", "html", "Displays lead profile content which loads via pjax (NEW) ", "Leadman App component");
@@ -79,3 +80,5 @@ function leadDetailSendEmail(page, params) {
 
     return views.jsonObjectView({status: true});
 }
+
+

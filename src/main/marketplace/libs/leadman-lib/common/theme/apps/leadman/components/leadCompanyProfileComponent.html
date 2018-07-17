@@ -1,0 +1,54 @@
+<div class="panel panel-primary panel-leadProfile" id="leadProfileLeft">
+    <div class="panel-body text-center">
+        #set ($ava = "/theme/apps/leadman/user-placeholder.png")
+        #if ($page.leadOrg.photoHash)
+        #set ($ava = "/_hashes/files/" + $page.leadOrg.photoHash)
+        #end
+        <img src="$ava" class="profile-avatar-img media-object img-circle">
+
+        <h1 class="leadTitle">
+            #if($page.leadOrg)
+            <a href="javascript:void (0)">$page.leadOrg.formattedName</a>
+            #end
+        </h1>
+        <p>$!page.leadOrg.address <br>
+            $!page.leadOrg.addressLine2 <br>
+            $!page.leadOrg.state $!page.leadOrg.postcode<br>
+            #foreach($cc in $formatter.countryCodes.list)
+                #if ($cc.alpha2Code == $page.leadOrg.country)
+                    $cc.englishShortName
+                    #break
+                #end
+            #end
+            </p>
+        #if( $page.leadOrg.email )
+        <p>
+            <a href="mailto:${page.leadOrg.email}" class="btn btn-primary btn-primary-light"><i class="fa fa-envelope"></i> $page.leadOrg.email</a>
+        </p>
+        #end
+        #if( $page.leadOrg.phone )
+        <p>
+            <a href="tel:${page.leadOrg.phone}" class="btn btn-primary btn-primary-light"><i class="fa fa-phone"></i> $page.leadOrg.phone</a>
+        </p>
+        #end
+
+
+        #if($page.leadOrg)
+        <div class="leadCompanyTags">
+            <br><br>
+            <div class="row">
+                <div class="col-sm-offset-1 col-sm-10 text-left">
+                    <input id="view-company-tags" type="text" class="" placeholder="Type to add tags">
+                </div>
+            </div>
+            <br>
+            <div class="companyAssignedTags" id="companyAssignedTags">
+                #foreach($tag in $page.leadOrg.selectedOrgTypes)
+                <a data-tag-id="$tag.name" href="javascript:void(0)" class="btn btn-primary btn-primary-light"><i class="fa fa-tag"></i> $tag.displayName <span class="" data-role="removetag">X</span></a>
+                #end
+            </div>
+        </div>
+
+        #end
+    </div>
+</div>

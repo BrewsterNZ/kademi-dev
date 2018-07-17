@@ -60,27 +60,7 @@
             <br><br>
             <div class="row">
                 <div class="col-sm-offset-1 col-sm-10 text-left">
-                    <div class="row">
-                        <div class="col-sm-2 text-center">
-                            <i role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="fa fa-plus fa-2x dropdown-toggle"></i>
-                            <ul class="dropdown-menu">
-                                <a href="#" class="createTagModal">
-                                    <li class="dropdown-header"><strong>Create and add tag</strong></li>
-                                </a>
-                                <li class="dropdown-header"><strong>Quick add</strong></li>
-                                #foreach($group in $page.tags)
-                                <li class="addTag">
-                                    <a href="$group.name">
-                                        <i class="fa fa-tag"></i> $formatter.firstNotNull($group.title, $group.name)
-                                    </a>
-                                </li>
-                                #end
-                            </ul>
-                        </div>
-                        <div class="col-sm-10">
-                            <input id="view-lead-tags" type="text" class="" placeholder="Type to add tags">
-                        </div>
-                    </div>
+                    <input id="view-lead-tags" type="text" class="" placeholder="Type to add tags">
                 </div>
             </div>
             <br>

@@ -759,13 +759,6 @@
             doAddTag(tag.id);
         });
 
-        $(document).on('click', 'li.addTag a', function (e) {
-            e.preventDefault();
-            var tagId = $(this).attr('href');
-
-            doAddTag(tagId);
-        });
-
         assignedTags.on('click', '[data-role=removetag]', function (e) {
             e.preventDefault();
             e.stopPropagation();
