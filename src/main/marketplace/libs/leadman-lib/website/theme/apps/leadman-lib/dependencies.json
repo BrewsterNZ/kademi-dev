@@ -144,6 +144,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/leadman/viewCompany.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/leadman/analytics.js"
             }
         },
