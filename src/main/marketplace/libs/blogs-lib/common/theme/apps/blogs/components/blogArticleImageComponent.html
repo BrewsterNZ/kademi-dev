@@ -1,8 +1,10 @@
 #if($page)
-    #if ($orientation == 'horizontal')
+    #if ($orientation == 'horizontal' && $page.horizontalImageHref)
         #set($image = $page.horizontalImageHref)
-    #elseif ($orientation == 'vertical')
+    #elseif ($orientation == 'vertical' && $page.verticalImageHref)
         #set($image = $page.verticalImageHref)
+    #else
+        #set($image = $page.bestDefaultImageHref)
     #end
     #if($image)
         <div class="blog-article-image">

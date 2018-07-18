@@ -12,15 +12,25 @@ controllerMappings
 
 controllerMappings
         .websiteController()
+        .path('/timesheets-review/')
+        .defaultView(views.templateView('/theme/apps/KTimesheets/reviewTimesheets.html'))
+        .postPriviledge('READ_CONTENT')
+        .enabled(true)
+        .build();
+
+controllerMappings
+        .websiteController()
         .path('/team-tasks/')
         .defaultView(views.templateView('/theme/apps/KTimesheets/viewTeamTasks.html'))
         .postPriviledge('READ_CONTENT')
         .enabled(true)
         .build();
 
-controllerMappings.addComponent("KTimesheets", "timesheet", "web", "Shows a table to enter timesheet hours", "KTimesheets component");
+
+controllerMappings.addComponent("KTimesheets", "timesheet", "html", "Shows a table to enter timesheet hours", "KTimesheets component");
 controllerMappings.addComponent("KTimesheets", "timesheetSummary", "lead", "Shows hours related to a lead on the lead page", "KTimesheets component");
 controllerMappings.addComponent("KTimesheets", "timesheetTasks", "lead", "A list of users and what leads/tasks they're assigned to", "KTimesheets component");
+controllerMappings.addComponent("KTimesheets", "timesheetsReview", "html", "Allows reviewing all users timesheet entries", "KTimesheets component");
 
 
 function submitTimesheet(page, params) {
@@ -38,14 +48,16 @@ function submitTimesheet(page, params) {
 
 }
 
-function saveTime(page, params) {
+function saveTime(page, params, files, form) {
     try {
         transactionManager.runInTransaction(function () {
             var item = params.item;
             var hours = formatter.toDouble( params.hours );
-            var date = formatter.toDate(params.date);
-            log.info("saveTime: hours={} date={} item={}", hours, item, date);
-            services.timesheetManager.addUpdateHours(item, hours, date);
+            var date2 = form.dateParam("date");
+            date2 = formatter.addHours(date2, 24); // HACK HACK HACK. Needed this to get working in US cluster, but not obviously not right!
+
+            log.info("saveTime: hours={} date={} item={} orig-date={}", hours, date2, item, params.date);
+            services.timesheetManager.addUpdateHours(item, hours, date2);
         });
 
         return views.jsonView(true, "Saved");

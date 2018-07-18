@@ -47,13 +47,17 @@ $(function () {
         }
     });
 
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+        var reloadItems = $("#timesheets-review");
+        reloadItems.reloadFragment();
+    });
+
 
     $(".timesheet-table").each(function (i, n) {
         var table = $(n);
         updateTotals(table);
 
         $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
-            flog("reloading", table.attr("id"));
             table.reloadFragment({
                 whenComplete: function (newDom, resp, status, xhr) {
                     updateTotals(table);

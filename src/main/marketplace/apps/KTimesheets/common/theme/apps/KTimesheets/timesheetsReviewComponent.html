@@ -1,0 +1,76 @@
+
+<div class="timesheet timesheet-review-list" id="timesheets-review">
+    $formatter.formatDate($services.queryManager.commonStartDate) to
+    $formatter.formatDate($services.queryManager.commonFinishDate)
+    #set( $totalHours = 0 )
+    #set( $entries = $services.criteriaBuilders.timesheetEntry.ge("workedDate", $services.queryManager.commonStartDate).lt("workedDate", $services.queryManager.commonFinishDate).sortAsc("workedBy").sortAsc("workedDate").execute(1000) )
+
+    <table class="table timesheet-table-summary table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Task</th>
+                <th>Date</th>
+                <th>Hours</th>
+            </tr>
+        </thead>
+
+
+        <tbody>
+            #set( $curProfile = false )
+            #foreach( $entry in $entries )
+                #if( $curProfile.id != $entry.workedBy.id )
+                    #if( $curProfile )
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <th class="text-right">Total:</th>
+                    <th class="text-right">$totalHours</th>
+                </tr>
+                    #end
+                    #set( $totalHours = 0 )
+
+                    #set( $curProfile = $entry.workedBy )
+                <tr>
+                    <td colspan="4">
+                        <a href="/users/$entry.workedBy.name/public" title="ID $entry.workedBy.id">
+                        <i class="fa fa-user"></i>
+                        $applications.userApp.findUserResource($entry.workedBy).formattedName
+                        </a>
+                    </td>
+                </tr>
+                #end
+            <tr>
+                <td></td>
+                <td>
+                    #if( $entry.task )
+                    <i class="mr btn btn-info btn-sm btn-circle">T</i>
+                    $entry.task.formattedName
+                    #if( $entry.task.relatedLead )
+                    /
+                    <a href="/leads/$entry.task.relatedLead" class="">$entry.task.relatedLead.formattedName</a>
+                    #end
+                    #elseif( $entry.lead )
+                    <a href="/leads/$entry.lead.id" class="mr btn btn-info btn-sm btn-circle">L</a>
+                    $entry.lead.formattedName
+                    #else
+                    <i class="mr btn btn-info btn-sm btn-circle"><i class="fa fa-list"></i></i>
+                    $entry.label
+                    #end
+                </td>
+                <td>$formatter.formatDate($entry.workedDate)</td>
+                <td class="text-right">$entry.hours</td>
+                #set( $totalHours = $totalHours + $entry.hours )
+            </tr>
+            #end
+            <tr>
+                <td></td>
+                <td></td>
+                <th class="text-right">Total:</th>
+                <th class="text-right">$totalHours</th>
+            </tr>
+        </tbody>
+
+
+    </table>
+</div>
