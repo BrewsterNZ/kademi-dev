@@ -8,6 +8,7 @@ controllerMappings
         .addMethod('POST', 'post', 'newPost')
         .addMethod('POST', 'vote', 'voteId')
         .addMethod('POST', 'replyToPost', 'replyToPostId')
+        .addMethod('POST', 'deletePost', 'deletePostId')
         .enabled(true)
         .build();
 
@@ -72,6 +73,16 @@ function replyToPost(page, params, files, form) {
         services.forumManager.replyToPost(postId, text);
     });
     return views.jsonView(true, "Commented");
+}
+
+function deletePost(page, params, files, form) {
+    transactionManager.runInTransaction(function () {
+        var postId = form.longParam("deletePostId");
+        log.info("deletePost postId={}", postId);
+        
+        services.forumManager.replyToPost(postId, text);
+    });
+    return views.jsonView(true, "Deleted");
 }
 
 function findTeamOrgs(profile) {
