@@ -1,0 +1,62 @@
+
+<div class="timesheet timesheet-review-list" id="timesheets-review">
+    $services.queryManager.commonStartDate -
+    $services.queryManager.commonFinishDate
+            #set( $totalHours = 0 )
+            #set( $entries = $services.criteriaBuilders.timesheetEntry.ge("workedDate", $services.queryManager.commonStartDate).lt("workedDate", $services.queryManager.commonFinishDate).sortAsc("workedBy").sortAsc("workedDate").execute(1000) )
+
+    <table class="table timesheet-table-summary">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Task</th>
+                <th>Date</th>
+                <th>Hours</th>
+            </tr>
+        </thead>
+
+
+        <tbody>
+            #set( $curProfile = false )
+            #foreach( $entry in $entries )
+                #if( $curProfile != $entry.workedBy.id )
+                    #if( $curProfile )
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <th class="text-right">Total:</th>
+                    <th class="text-right">$totalHours</th>
+                </tr>
+                    #end
+
+                    #set( $curProfile = $entry.workedBy )
+                <tr>
+                    <td colspan="4">$applications.userApp.findUserResource($entry.workedBy).formattedName</td>
+                </tr>
+                #end
+            <tr>
+                <td></td>
+                <td>
+                    #if( $entry.task )
+                    $entry.task.formattedName
+                    #if( $entry.task.relatedLead )
+                    <a href="/leads/$entry.task.relatedLead" class="mr btn btn-info btn-sm btn-circle">L</a>
+                    $entry.task.relatedLead.formattedName
+                    #end
+                    #elseif( $entry.lead )
+                    <a href="/leads/$entry.lead.id" class="mr btn btn-info btn-sm btn-circle">L</a>
+                    $entry.lead.formattedName
+                    #else
+                    $entry.label
+                    #end
+                </td>
+                <td>$formatter.formatDate($entry.workedDate)</td>
+                <td class="text-right">$entry.hours</td>
+                #set( $totalHours = $totalHours + $entry.hours )
+            </tr>
+            #end
+        </tbody>
+
+
+    </table>
+</div>
