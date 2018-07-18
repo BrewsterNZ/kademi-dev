@@ -1,35 +1,49 @@
 
-#set( $teamProfiles = $services.criteriaBuilders.profile.joinOnProp("memberships", "m").eq("m.groupEntity", $applications.leadMan.salesGroup).distinct().sortAsc("id").execute(100)  )
-<div class="table-responsive">
-<table class="table">
+#set( $teamMembers = $rootFolder.orgData.members("kademi-team")  )
+
+$teamMembers.size()
+
+
+<table class="table table-striped table-bordered">
     <thead>
         <tr>
             <th colspan="2">Item</th>
             <th class="text-center">Hours</th>
             <th></th>
-            #foreach($profile in $teamProfiles)
+            #foreach($mem in $teamMembers)
             <th class="text-center">
-                <a href="/team/$profile.id">$profile.firstName</a>
+                #set( $prof = $mem.profile() )
+                <a href="/users/$prof.userName/public">$prof.nickName</a>
             </th>
             #end
         </tr>
     </thead>
     <tbody>
-        #set( $leads = $services.criteriaBuilders.lead.isNull("closedDate").eq("cancelled", false).isNull("deletedDate").sortAsc("id").execute(100) )
+        #set( $leads = $services.criteriaBuilders.lead.isNull("closedDate").eq("cancelled", false).isNull("deletedDate").sortDesc("id").execute(200) )
         #foreach($lead in $leads)
+        #if( $lead.funnel.name == "support-task" || $lead.funnel.name == "project" )
         <tr>
             <td colspan="2">
-                <a href="/leads/$lead.id/">$lead.formattedName</a>
+                <a href="/leads/$lead.id/">
+                    $lead.formattedName
+                </a>
+                #if( $lead.organisation )
+                | $lead.organisation.formattedName
+                #end
+                #if( $lead.profile )
+                | $lead.profile.firstName
+                #end
+
                 <small class="pull-right"><i class="text-muted">$lead.funnel.name</i></small>
             </td>
             <td class="text-center">
-                $!formatter.toInteger($lead.hoursWorked())
+
                 #if( $lead.estimatedHours )
                 / $lead.estimatedHours
                 #end
             </td>
             <td class="text-center">$!lead.stageName</td>
-            #foreach($profile in $teamProfiles)
+            #foreach($profile in $teamMembers)
             <td class="text-center">#showLeadStatus($lead, $profile)</td>
             #end
         </tr>
@@ -42,7 +56,7 @@
                 <a href="/leads/$lead.id/">$task.formattedName</a>
             </td>
             <td class="text-center">
-                $!formatter.toInteger($task.hoursWorked() )
+
                 #if( $task.estimatedHours )
                 / $task.estimatedHours
                 #end
@@ -57,26 +71,25 @@
                 #end
                 #end
             </td>
-            #foreach($profile in $teamProfiles)
-            <td class="text-center">#showTaskStatus($lead, $profile)</td>
+            #foreach($profile in $teamMembers)
+            <td class="text-center">#showTaskStatus($task, $profile)</td>
             #end
         </tr>
         #end
         #end
         #end
+        #end
     </tbody>
 </table>
-</div>
-
 
 #macro( showLeadStatus $lead $teamMember )
-    #if( $lead.assignedToProfile.id == $teamMember.id )
-    <i class="fa fa-check-circle-o"></i>
+    #if( $lead.assignedToProfile.id == $teamMember.profile().userId )
+    <i class="fa fa-2x fa-check-circle-o" title="Assigned to $lead.assignedToProfile.formattedName"></i>
     #end
 #end
 
 #macro( showTaskStatus $task $teamMember )
-    #if( $task.assignedToProfile.id == $teamMember.id )
-    <i class="fa fa-check-circle-o"></i>
+    #if( $task.assignedToProfile.id ==  $teamMember.profile().userId  )
+    <i class="fa fa-2x fa-check-circle-o" title="Assigned to $task.assignedToProfile.formattedName"></i>
     #end
 #end
