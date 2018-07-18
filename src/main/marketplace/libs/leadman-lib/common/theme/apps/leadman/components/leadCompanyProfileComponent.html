@@ -38,13 +38,13 @@
             <br><br>
             <div class="row">
                 <div class="col-sm-offset-1 col-sm-10 text-left">
-                    <input id="view-company-tags" type="text" class="" placeholder="Type to add tags">
+                    <input id="view-company-tags" type="text" data-orgid="$!page.leadOrg.orgId" class="" placeholder="Type to add tags">
                 </div>
             </div>
             <br>
             <div class="companyAssignedTags" id="companyAssignedTags">
                 #foreach($tag in $page.leadOrg.selectedOrgTypes)
-                <a data-tag-id="$tag.name" href="javascript:void(0)" class="btn btn-primary btn-primary-light"><i class="fa fa-tag"></i> $tag.displayName <span class="" data-role="removetag">X</span></a>
+                <a data-orgId="$!page.leadOrg.orgId" data-tag-id="$tag.name" href="javascript:void(0)" class="btn btn-primary btn-primary-light"><i class="fa fa-tag"></i> $tag.displayName <span class="" data-role="removetag">X</span></a>
                 #end
             </div>
         </div>

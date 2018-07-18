@@ -2,8 +2,11 @@ controllerMappings
     .websiteController()
     .enabled(true)
     .isPublic(false)
-    .path('/leadOrgTypes')
+    .path('/leadOrgType')
     .addMethod('GET', 'getLeadOrgTypes')
+    .addMethod('POST', 'newOrgType', "newOrgType")
+    .addMethod('POST', 'addOrgType', "addOrgType")
+    .addMethod('POST', 'removeOrgType', "removeOrgType")
     .postPriviledge("READ_CONTENT")
     .build();
 
@@ -16,4 +19,46 @@ function getLeadOrgTypes(page, params) {
         arr.push({name: orgTypes[i].name, displayName: orgTypes[i].displayName});
     }
     return views.textView(JSON.stringify(arr), "application/json");
+}
+
+function addOrgType(page, params) {
+    log.info('addOrgType {} {}', page, params);
+    var addOrgType = params.addOrgType;
+    var orgId = params.orgId;
+    if (addOrgType && orgId){
+        var rootFolder = page.find('/');
+        rootFolder.addOrgType(orgId, addOrgType);
+        return views.jsonObjectView({status: true});
+    }
+
+    return views.jsonObjectView({status: false});
+}
+
+function newOrgType(page, params) {
+    log.info('newOrgType {} {}', page, params);
+    var newOrgType = params.newOrgType;
+    var orgId = params.orgId;
+    if (newOrgType && orgId){
+        var name = newOrgType.replace(/[^a-zA-Z ]/g, "").replace(/\s/g, "-");
+        var rootFolder = page.find('/');
+        var orgType = rootFolder.createOrgType(name, newOrgType);
+        if (orgType){
+            rootFolder.addOrgType(orgId, orgType.name);
+            return views.jsonObjectView({status: true});
+        }
+    }
+    return views.jsonObjectView({status: false});
+}
+
+function removeOrgType(page, params) {
+    log.info('removeOrgType {} {}', page, params);
+    var removeOrgType = params.removeOrgType;
+    var orgId = params.orgId;
+    if (removeOrgType && orgId){
+        var rootFolder = page.find('/');
+        rootFolder.removeOrgType(orgId, removeOrgType);
+        return views.jsonObjectView({status: true});
+    }
+
+    return views.jsonObjectView({status: false});
 }

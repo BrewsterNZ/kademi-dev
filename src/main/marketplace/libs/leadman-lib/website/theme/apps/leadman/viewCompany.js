@@ -5,8 +5,9 @@ function initLeadCompanyDetailTags() {
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         prefetch: {
-            url: '/leadOrgTypes',
+            url: '/leadOrgType',
             ttl: 0,
+            cache: false
         }
     });
 
@@ -27,37 +28,46 @@ function initLeadCompanyDetailTags() {
     }).on('keyup', function (event) {
         if (event.keyCode == 13) {
             var newTag = this.value;
-            if (confirm('Are you sure you want to add this tag?')) {
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        title: newTag
-                    },
-                    success: function (resp) {
-                        if (resp.status) {
-                            reloadCompanyTags();
-                        } else {
-                            Msg.error("Couldnt add tag: " + resp.messages);
+            var orgId = $(this).attr('data-orgid');
+            if (orgId && newTag){
+                if (confirm('Are you sure you want to add this tag?')) {
+                    $.ajax({
+                        url: '/leadOrgType',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            newOrgType: newTag,
+                            orgId: orgId
+                        },
+                        success: function (resp) {
+                            if (resp.status) {
+                                reloadCompanyTags();
+                            } else {
+                                Msg.error("Couldnt add tag: " + resp.messages);
+                            }
+                        },
+                        error: function (e) {
+                            Msg.error(e.status + ': ' + e.statusText);
                         }
-                    },
-                    error: function (e) {
-                        Msg.error(e.status + ': ' + e.statusText);
-                    }
-                }).always(function () {
-                    viewLeadTagsInput.typeahead('val','');
-                })
+                    }).always(function () {
+                        viewLeadTagsInput.typeahead('val','');
+                    })
+                }
+            } else {
+                Msg.warning('Missing parameters');
             }
         }
     });
 
-    function doAddTag(tagId) {
+    function doAddTag(tagId, orgId) {
         if (!assignedTags.find('[data-tag-id='+tagId+']').length){
             $.ajax({
+                url: '/leadOrgType',
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    addTag: tagId
+                    addOrgType: tagId,
+                    orgId: orgId
                 },
                 success: function (resp) {
                     reloadCompanyTags();
@@ -73,7 +83,13 @@ function initLeadCompanyDetailTags() {
 
     viewLeadTagsInput.on('typeahead:select', function (ev, tag) {
         viewLeadTagsInput.typeahead('val','');
-        doAddTag(tag.id);
+        var orgId = viewLeadTagsInput.attr('data-orgId');
+        if (tag && tag.name && orgId){
+            doAddTag(tag.name, orgId);
+        } else {
+            Msg.error('Could not add tag');
+        }
+
     });
 
     assignedTags.on('click', '[data-role=removetag]', function (e) {
@@ -81,13 +97,16 @@ function initLeadCompanyDetailTags() {
         e.stopPropagation();
 
         var tagId = $(this).parent().attr('data-tag-id');
+        var orgId = $(this).parent().attr('data-orgid');
         if (tagId){
             if (confirm('Are you sure you want to remove this tag?')) {
                 $.ajax({
+                    url: '/leadOrgType',
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        deleteTag: tagId
+                        removeOrgType: tagId,
+                        orgId: orgId
                     },
                     success: function (resp) {
                         if (resp.status) {
