@@ -271,6 +271,12 @@ function initSaving(fileName, originalUrl) {
         $('[contenteditable]').blur();
         showLoadingIcon();
         var fileContent = $('#content-area').contentEditor('getContent');
+
+        // Add a extra check for unwanted html ie toolbar
+        var div = $('<div>').html(fileContent);
+        div.find('.keditor-toolbar.keditor-toolbar-component').remove();
+        fileContent = div.html();
+
         var saveUrl;
         if (fileName == "") {
             saveUrl = "./";
