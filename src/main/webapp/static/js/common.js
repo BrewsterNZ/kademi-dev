@@ -418,21 +418,27 @@ function getFileNames(pathArr) {
 }
 
 function getFileName(path) {
-    var arr = path.split('/');
-    if (arr.length === 1) {
-        return '';
-    }
-    var name = arr[arr.length - 1];
-    if (name === null || name.length === 0) { // might be empty if trailing slash
-        name = arr[arr.length - 2];
-    }
-    if (name.contains('#')) {
-        var pos = name.lastIndexOf('#');
-        name = name.substring(0, pos);
-    }
+    if( path.contains("?")) {
+        var i = path.lastIndexOf("?");
+        path = path.substring(0, i);
+        return getFileName(path);
+    } else {
+        var arr = path.split('/');
+        if (arr.length === 1) {
+            return '';
+        }
+        var name = arr[arr.length - 1];
+        if (name === null || name.length === 0) { // might be empty if trailing slash
+            name = arr[arr.length - 2];
+        }
+        if (name.contains('#')) {
+            var pos = name.lastIndexOf('#');
+            name = name.substring(0, pos);
+        }
 
-    path = path.replaceAll(' ', '%20'); // safari bug. path is returned encoded from window.location.pathname
-    return name;
+        path = path.replaceAll(' ', '%20'); // safari bug. path is returned encoded from window.location.pathname
+        return name;
+    }
 }
 
 /**

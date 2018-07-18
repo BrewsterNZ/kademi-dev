@@ -1507,6 +1507,15 @@ function initImagePicker(target, basePath, pagePath) {
         var pageName = getFileName(window.location.href);
         var pagePath = target.attr('data-page-path') || '';
         var basePath = target.attr('data-base-path') || '';
+
+        var urlParams = new URLSearchParams(window.location.search);
+        var format = urlParams.get("format");
+        flog("format", format);
+        if( format ) {
+            pageName += "&format=" + format;
+        }
+
+        flog("kademi.js: init edmEditor", pageName, window.location.href);
         target.edmEditor({
             iframeMode: true,
             snippetsUrl: './_components?fileName=' + pageName,
