@@ -24,11 +24,11 @@ controllerMappings
 controllerMappings.addEventListenerForType('co.kademi.server.recognition.ShareableItemEvent', true, "onShareableItemEvent");
 
 function onShareableItemEvent(rf, raae) {
-    if ( raae.isShareable() ) {
+    if (raae.isShareable()) {
         var teamOrg = findTeamOrg(raae.sourceProfile);
         var newItem = services.forumManager.newWallSharedItem(teamOrg, raae);
         log.info("onShareableItemEvent: Created RAP ID={}", newItem.getId());
-    }    
+    }
 }
 
 function resolveTeam(page, groupName, teamOrgId) {
@@ -42,7 +42,7 @@ function post(page, params, files, form) {
         var newPost = form.cleanedParam("newPost");
         var teamOrgId = form.longParam("teamOrgId"); // nullable, long
         var teamOrg;
-        if( teamOrgId == null ) {
+        if (teamOrgId == null) {
             var currentUser = securityManager.currentUser;
             teamOrg = findTeamOrg(currentUser.thisProfile);
         } else {
@@ -76,12 +76,22 @@ function replyToPost(page, params, files, form) {
 }
 
 function deletePost(page, params, files, form) {
+    var postId = form.longParam("deletePostId");
+
+    var postToDelete = services.forumManager.findPost(postId);
+
+    var currentUser = securityManager.currentUser;
+
+    if (postToDelete.poster.id != currentUser.id && getTopLevelPost(postToDelete).poster.id != currentUser.id) {
+        return views.jsonView(false, "You are not authorized to delete this post");
+    }
+
     transactionManager.runInTransaction(function () {
-        var postId = form.longParam("deletePostId");
         log.info("deletePost postId={}", postId);
-        
-        services.forumManager.replyToPost(postId, text);
+
+        services.forumManager.deletePost(postToDelete);
     });
+    
     return views.jsonView(true, "Deleted");
 }
 
@@ -90,11 +100,11 @@ function findTeamOrgs(profile) {
     // Find organisations in memberships with the given type
     var profileBean = services.userManager.toProfileBean(profile);
     var wallOrgs = profileBean.allMemberships().filterByOrgType(orgTypeSetting).toOrgsList();
-    
+
     // TODO: should integrate with selectedOrg framework
-    
+
     // Now find the highest hierarchyally
-    var orgsList =  services.userManager.toOrgList(wallOrgs);
+    var orgsList = services.userManager.toOrgList(wallOrgs);
     return orgsList;
 }
 
@@ -103,15 +113,23 @@ function findTeamOrg(profile) {
     // Find organisations in memberships with the given type
     var profileBean = services.userManager.toProfileBean(profile);
     var wallOrgs = profileBean.allMemberships().filterByOrgType(orgTypeSetting).toOrgsList();
-    
+
     // TODO: should integrate with selectedOrg framework
-    
+
     // Now find the highest hierarchyally
-    var orgsList =  services.userManager.toOrgList(wallOrgs);
+    var orgsList = services.userManager.toOrgList(wallOrgs);
     var highest = services.userManager.findHighest(orgsList);
     return highest;
 }
 
 function findOrgTypeSetting() {
     return "wall-org"; // todo make this a setting
+}
+
+function getTopLevelPost(post) {
+    if (post.parent != null) {
+        return getTopLevelPost(post.parent);
+    }
+
+    return post;
 }
