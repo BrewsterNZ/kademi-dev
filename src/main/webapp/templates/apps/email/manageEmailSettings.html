@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>Email Settings</title>
+        <link href="myInbox.less" rel="stylesheet" type="text/css" media="all" />
+
+    </head>
+    <body>
+        <h1>Email Settings</h1>
+
+        <hr/>
+
+        <div class="form-group">
+            <label for="autoEmailLimit" class="col-sm-5 control-label">Automation Email Limit</label>
+            <div class="col-sm-6">
+                <input min="0" type="number" class="form-control" name="autoEmailLimit" value="$!page.autoEmailLimit" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="groupEmailLimit" class="col-sm-5 control-label">Group Email Limit</label>
+            <div class="col-sm-6">
+                <input min="0" type="number" class="form-control" name="groupEmailLimit" value="$!page.groupEmailLimit" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="captureProfile" class="col-sm-5 control-label">Forward Emails to Profiles<small>Send an incoming email to a user</small></label>
+            <div class="col-sm-6">
+                $formatter.checkbox("captureProfile", $page.captureProfile)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="captureGroup" class="col-sm-5 control-label">Forward Emails to Groups<small>Send incoming emails to a group</small></label>
+            <div class="col-sm-6">
+                $formatter.checkbox("captureGroup", $page.captureGroup)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="groupEmailLimit" class="col-sm-5 control-label">Ignored email addresses</label>
+            <div class="col-sm-6">
+                <textarea class="form-control" name="ignoreAddresses">$!page.ignoreAddresses</textarea>
+                <p>Enter full or partial addresses seperated by commas. Eg @fake.com,fiona.apple@pop.com</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="indexEmailContent" class="col-sm-5 control-label">Index email content</label>
+            <div class="col-sm-6">
+                $formatter.checkbox("indexEmailContent", $page.indexEmailContent)
+            </div>
+        </div>
+
+
+    </body>
+</html>
+
+
