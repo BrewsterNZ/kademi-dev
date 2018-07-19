@@ -220,6 +220,10 @@
                         </div>
                         <div class="col-md-4">
                             <select name="action" class="form-control">
+                                <option value="Call customer">Call customer</option>
+                                <option value="Email customer">Email customer</option>
+                                <option value="Send documents">Send documents</option>
+                                <option value="Arrange a meeting">Arrange a meeting</option>
                                 #foreach( $action in $page.actions )
                                     <option value="${action.id}-${action.inbound}">$action.text</option>
                                 #end
@@ -348,8 +352,12 @@
                         </div>
                         <div class="col-md-4">
                             <select name="action" class="form-control">
+                                <option value="Call customer">Call customer</option>
+                                <option value="Email customer">Email customer</option>
+                                <option value="Send documents">Send documents</option>
+                                <option value="Arrange a meeting">Arrange a meeting</option>
                                 #foreach( $action in $page.actions )
-                                    <option value="${action.id}-${action.inbound}">$action.text</option>
+                                    <option value="$action.text">$action.text</option>
                                 #end
                             </select>
                         </div>
@@ -373,6 +381,10 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right autoFillText">
+                                        <li><a href="Call customer">Call customer</a></li>
+                                        <li><a href="Email customer">Email customer</a></li>
+                                        <li><a href="Send documents">Send documents</a></li>
+                                        <li><a href="Arrange a meeting">Arrange a meeting</a></li>
                                         #foreach( $action in $page.actions )
                                             <li><a href="#">$action.text</a></li>
                                         #end
