@@ -7,16 +7,20 @@
         <img src="$ava" class="profile-avatar-img media-object img-circle">
 
         <h1 class="leadTitle">
-            #if($page.leadOrg)
-            #if($page.profile)
-            <a href="/custs/$page.profile.name">$page.customerDescription ($page.leadOrg.formattedName)</a>
+            #if ($page.is("leadProfile"))
+                $page.profile.formattedName
             #else
-            <a href="javascript:void (0)">$page.leadOrg.formattedName</a>
-            #end
-            #elseif( $page.profile )
-            <a href="/custs/$page.profile.name">$page.customerDescription</a>
-            #else
-            $page.customerDescription
+                #if($page.leadOrg)
+                    #if($page.profile)
+                    <a href="/custs/$page.profile.name">$page.customerDescription ($page.leadOrg.formattedName)</a>
+                    #else
+                    <a href="javascript:void (0)">$page.leadOrg.formattedName</a>
+                    #end
+                #elseif( $page.profile )
+                    <a href="/custs/$page.profile.name">$page.customerDescription</a>
+                #else
+                    $page.customerDescription
+                #end
             #end
         </h1>
         <!--<p>$page.profile.addressLine1<br>-->
@@ -26,16 +30,16 @@
         <p>
             <div class="btn-group">
                 <a href="mailto:${page.profile.email}" class="btn btn-primary btn-primary-light"><i class="fa fa-envelope"></i> $page.profile.email</a>
-                <button type="button" class="btn btn-primary btn-primary-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i title="Capture" class="fa fa-bullhorn" aria-hidden="true"></i> <i class="fa fa-angle-down"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a href="mailto:from-lead-$page.leadId@${page.find('/').domainName}"><i class="fa fa-envelope"></i> From</a></li>
-                    #if( $page.profile.email)
-                    <li><a href="mailto:$page.profile.email?bcc=to-lead-$page.leadId@${page.find('/').domainName}"><i class="fa fa-envelope"></i> To</a></li>
-                    <li><a href="mailto:forward-to-$page.leadId@${page.find('/').domainName}"><i class="fa fa-envelope"></i> Forward</a></li>
-                    #end
-                </ul>
+                <!--<button type="button" class="btn btn-primary btn-primary-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                    <!--<i title="Capture" class="fa fa-bullhorn" aria-hidden="true"></i> <i class="fa fa-angle-down"></i>-->
+                <!--</button>-->
+                <!--<ul class="dropdown-menu dropdown-menu-right">-->
+                    <!--<li><a href="mailto:from-lead-$page.leadId@${page.find('/').domainName}"><i class="fa fa-envelope"></i> From</a></li>-->
+                    <!--#if( $page.profile.email)-->
+                    <!--<li><a href="mailto:$page.profile.email?bcc=to-lead-$page.leadId@${page.find('/').domainName}"><i class="fa fa-envelope"></i> To</a></li>-->
+                    <!--<li><a href="mailto:forward-to-$page.leadId@${page.find('/').domainName}"><i class="fa fa-envelope"></i> Forward</a></li>-->
+                    <!--#end-->
+                <!--</ul>-->
             </div>
         </p>
         #end
@@ -43,6 +47,13 @@
         <p>
             <a href="tel:${page.profile.phone}" class="btn btn-primary btn-primary-light"><i class="fa fa-phone"></i> $page.profile.phone</a>
         </p>
+        #end
+        #if ($page.is("leadProfile"))
+            #if ($page.leads.size() > 0)
+                #foreach($l in $page.leads)
+                <p><a class="btn btn-primary btn-primary-light" href="/companies/$l.organisation.id"><i class="fa fa-users"></i> $l.organisation.title</a></p>
+                #end
+            #end
         #end
         <div class="row">
             <div class="col-sm-6">

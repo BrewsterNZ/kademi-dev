@@ -296,6 +296,7 @@
                 }
             }
         });
+        orgTitleSearch.attr('autocomplete', 'nope');
     }
 
     function initJobTitleSearch() {

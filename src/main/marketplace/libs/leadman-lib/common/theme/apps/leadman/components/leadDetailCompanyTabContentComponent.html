@@ -7,7 +7,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label class="control-label">Company name</label>
-                        <input type="text" id="orgTitleSearch" name="title" class="form-control" value="$!leadOrg.title">
+                        <input type="text" id="orgTitleSearch" name="title" class="form-control" value="$!leadOrg.title" autocomplete="nope">
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -56,7 +56,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label class="control-label">Country</label>
-                        <select name="country" class="form-control selectpicker" data-live-search="true" data-live-search-normalize="true" id="country">
+                        <select autocomplete="nope" name="country" class="form-control selectpicker" data-live-search="true" data-live-search-normalize="true" id="country">
                             <option value="">[No country selected]</option>
                             #foreach($cc in $formatter.countryCodes.list)
                             $formatter.option( $cc.alpha2Code, $cc.englishShortName, $leadOrg.country )
