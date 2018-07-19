@@ -118,6 +118,25 @@ function deletePost(page, params, files, form) {
     return views.jsonView(true, "Deleted");
 }
 
+function reportPost(page, params, files, form) {
+    var postId = form.longParam("deletePostId");
+    var category = form.longParam("category");
+    var comment = form.longParam("comment");
+
+    var postToReport = services.forumManager.findPost(postId);
+    
+    report(postToReport, category, page.href, comment);
+    
+    transactionManager.runInTransaction(function () {
+        log.info("reportPost: postId={}", postId);
+
+        services.forumManager.report(postToReport, category, page.href, comment);
+    });
+    
+    return views.jsonView(true, "Reported");
+}
+
+
 function findTeamOrgs(profile) {
     var orgTypeSetting = findOrgTypeSetting();
     // Find organisations in memberships with the given type
