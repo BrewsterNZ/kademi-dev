@@ -2,69 +2,63 @@
 #set($searchResult = $page.searchResult.hits)
 #set($aggr = $sr.aggr)
 <div id="lead-tasks-page">
-    <div class="fw-boxed">
-        <div class="panel panel-default">
-            <div style="padding: 10px;">
-                <div class="btn-toolbar" role="toolbar">
-                    <div class="col-lg-4">
-                        <form id="search-tasks-form" class="form-horizontal">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search" value="$!request.params.q"/>
-                                            <span class="input-group-btn">
+    <div class="btn-toolbar" role="toolbar">
+        <div class="col-lg-4">
+            <form id="search-tasks-form" class="form-horizontal">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" value="$!request.params.q"/>
+                        <span class="input-group-btn">
                                                 <button class="btn" type="submit"><i class="fa fa-search"></i></button>
                                             </span>
-                                </div>
-                            </div>
-                        </form>
                     </div>
-                    <div class="btn-group" data-toggle="buttons">
-                        #set($type = "active")
-                        #if($request.params.type)
-                        #set($type = $request.params.type)
-                        #end
-                        <label class="btn btn-success #if($type == 'active')active#end">
-                            <input type="radio" name="taskType" value="active" autocomplete="off" #if($type == 'active')checked="checked"#end/> Active <span class="badge">$!aggr.aggregations.active.docCount</span>
-                        </label>
-                        <label class="btn btn-warning #if($type == 'closed')active#end">
-                            <input type="radio" name="taskType" value="closed" autocomplete="off" #if($type == 'closed')checked="checked"#end/> Closed <span class="badge">$!aggr.aggregations.closed.docCount</span>
-                        </label>
-                        <label class="btn btn-danger #if($type == 'cancelled')active#end">
-                            <input type="radio" name="taskType" value="cancelled" autocomplete="off" #if($type == 'cancelled')checked="checked"#end/> Cancelled <span class="badge">$!aggr.aggregations.cancelled.docCount</span>
-                        </label>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn dropdown-toggle" type="button" id="assigneeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            Assignee
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu taskAssigneeDropdown" aria-labelledby="assigneeDropdown" data-current-user="$userResource.name">
-                            <li><a href="#" data-name="assignedTo" data-value="NONE" class="filter">Assigned to nobody</a></li>
-                            <li><a href="#" data-name="assignedTo" data-value="ALL" class="filter">Any assigment</a></li>
-                            #foreach($b in $aggr.aggregations.assignee.buckets)
-                            #set($ur = false)
-                            #set($ur = $applications.userApp.findUserResourceById($b.key))
-                            <li><a href="#" data-name="assignedTo" data-value="$ur.name" class="filter">$ur.thisUser.formattedName</a></li>
-                            #end
-                        </ul>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn dropdown-toggle" type="button" id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            Sort
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="sortDropdown">
-                            <li><a href="#" data-name="sort" data-value="createdDate-desc" class="filter">Newest</a></li>
-                            <li><a href="#" data-name="sort" data-value="createdDate-asc" class="filter">Oldest</a></li>
-                            <li><a href="#" data-name="sort" data-value="title-asc" class="filter">Title</a></li>
-                            <li><a href="#" data-name="sort" data-value="title-desc" class="filter">Title - Reverse</a></li>
-                            <li><a href="#" data-name="sort" data-value="dueDate-asc" class="filter">Due First</a></li>
-                            <li><a href="#" data-name="sort" data-value="dueDate-desc" class="filter">Due Last</a></li>
-                        </ul>
-                    </div>
-                    <a href="$page.href" title="Clear search" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i></a>
                 </div>
-            </div>
+            </form>
         </div>
+        <div class="btn-group" data-toggle="buttons">
+            #set($type = "active")
+            #if($request.params.type)
+            #set($type = $request.params.type)
+            #end
+            <label class="btn btn-success #if($type == 'active')active#end">
+                <input type="radio" name="taskType" value="active" autocomplete="off" #if($type == 'active')checked="checked"#end/> Active <span class="badge">$!aggr.aggregations.active.docCount</span>
+            </label>
+            <label class="btn btn-warning #if($type == 'closed')active#end">
+                <input type="radio" name="taskType" value="closed" autocomplete="off" #if($type == 'closed')checked="checked"#end/> Closed <span class="badge">$!aggr.aggregations.closed.docCount</span>
+            </label>
+            <label class="btn btn-danger #if($type == 'cancelled')active#end">
+                <input type="radio" name="taskType" value="cancelled" autocomplete="off" #if($type == 'cancelled')checked="checked"#end/> Cancelled <span class="badge">$!aggr.aggregations.cancelled.docCount</span>
+            </label>
+        </div>
+        <div class="btn-group">
+            <button class="btn dropdown-toggle text-capitalize" type="button" id="assigneeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Assignee: $formatter.ifNull($params.assignedTo, "ALL")
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu taskAssigneeDropdown" aria-labelledby="assigneeDropdown" data-current-user="$userResource.name">
+                <li><a href="#" data-name="assignedTo" data-value="NONE" class="filter">Assigned to nobody</a></li>
+                <li><a href="#" data-name="assignedTo" data-value="ALL" class="filter">Any assigment</a></li>
+                #foreach($b in $aggr.aggregations.assignee.buckets)
+                #set($ur = false)
+                #set($ur = $applications.userApp.findUserResourceById($b.key))
+                <li><a href="#" data-name="assignedTo" data-value="$ur.name" class="filter">$ur.thisUser.formattedName</a></li>
+                #end
+            </ul>
+        </div>
+        <div class="btn-group">
+            <button class="btn dropdown-toggle" type="button" id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Sort
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                <li><a href="#" data-name="sort" data-value="createdDate-desc" class="filter">Newest</a></li>
+                <li><a href="#" data-name="sort" data-value="createdDate-asc" class="filter">Oldest</a></li>
+                <li><a href="#" data-name="sort" data-value="title-asc" class="filter">Title</a></li>
+                <li><a href="#" data-name="sort" data-value="title-desc" class="filter">Title - Reverse</a></li>
+                <li><a href="#" data-name="sort" data-value="dueDate-asc" class="filter">Due First</a></li>
+                <li><a href="#" data-name="sort" data-value="dueDate-desc" class="filter">Due Last</a></li>
+            </ul>
+        </div>
+        <a href="$page.href" title="Clear search" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i></a>
     </div>
 </div>

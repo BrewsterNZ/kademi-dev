@@ -1,92 +1,60 @@
 #set($sr = $page.searchResult)
 #set($searchResult = $page.searchResult.hits)
 #set($aggr = $sr.aggr)
-<div class="panel panel-default" id="leadTaskTablePanel">
-    <div class="row">
-        <div class="col-md-12">
-            <div style="padding: 10px;">
-                #if($searchResult.hits.hits.size() > 0)
-                #set( $leadsPage = $page.find("/leads") )
-                #foreach($hit in $searchResult.hits.hits)
-                <div class="media">
-                    #set( $lead = false  )
-                    #if( $hit.source.relatedLead.id )
-                    #set( $lead = $leadsPage.child( $formatter.toString($hit.source.relatedLead.id))  )
-                    #end
-                    <div class="media-left media-middle">
-                        #set($pic = "/theme/apps/user/profile.png")
-                        #if($hit.source.assignedToProfile.name)
-                        #set($pic = "/users/" + $hit.source.assignedToProfile.name + "/pic")
-                        #end
-                        #if($hit.source.assignedToProfile.name)
-                            <a href="#" data-name="assignedTo" data-value="$hit.source.assignedToProfile.name" class="filter"  title="View tasks assigned to $hit.source.assignedToProfile.name">
-                        #else
-                            <a href="#" data-name="assignedTo" data-value="NONE" class="filter" title="View all unassigned tasks">
-                        #end
-                            <img class="img-rounded media-object" alt="64x64" src="$pic" data-holder-rendered="true" style="width: 64px; height: 64px;">
-                            </a>
-                    </div>
-                    <div class="media-body">
-                        #if( $lead )
-                            <h4 class='pull-right'>
-                                <a href="$lead.href">
-                                    #if( $lead.leadTitle )
-                                    $lead.leadTitle
-                                    #end
-                                    #if( $lead.profile )
-                                        /
-                                        $lead.profile.formattedName
-                                    #end
-                                </a>
-                                #if( $lead.leadOrg )
-                                    /
-                                    $lead.leadOrg.formattedName
-                                #end
-
-                            </h4>
-                        #end
-
-                        #set($icon = '<i title="Active" class="fa fa-check-square-o text-success"></i>')
-                        #if(!$hit.source.cancelled && $hit.source.completedDate)
-                        #set($icon = '<i title="Closed" class="fa fa-exclamation-triangle text-warning"></i>')
-                        #elseif($hit.source.cancelled)
-                        #set($icon = '<i title="Cancelled" class="fa fa-times-circle-o text-danger"></i>')
-                        #end
-                        <h4 class="media-heading">$icon <a class="leadTaskEditBtn" href="$hit.source.id .taskEditModal" data-target="#modalEditTask" data-toggle="modal">
-                            &num;#if ($formatter.toString($hit.source.id).length >4) $formatter.toString($hit.source.id).substring(4) #end $!formatter.ifNull($hit.source.title, $hit.source.taskName)</a>
-                        </h4>
-                        <p>
-                            Opened <span title="$formatter.formatDateTime($formatter.parseDate($hit.source.createdDate))">$formatter.formatAge($formatter.parseDate($hit.source.createdDate))</span>
-                            #if($hit.source.dueDate)
-                                #set( $dueDate = $formatter.parseDate($hit.source.dueDate))
-                                #set( $dueDays = $formatter.durationDays($formatter.now, $dueDate) )
-                                &VerticalBar; Due
-                                #if( $dueDays < 1 )
-                                <span class='label label-danger'>$formatter.formatAge($dueDate)</span>
-                                #elseif( $dueDays < 3 )
-                                <span class='label label-warning'>$formatter.formatAge($dueDate)</span>
-                                #else
-                                $formatter.formatAge($dueDate)
-                                #end
-                            #end
-                            #if($hit.source.assignedToProfile.name)
-                                &VerticalBar; Assigned
-                                <a href="#" data-name="assignedTo" data-value="$hit.source.assignedToProfile.name" class="filter" >
-                                    $hit.source.assignedToProfile.name
-                                </a>
-                            #end
-                        </p>
-                        <p>
-
-
-                        </p>
-                    </div>
-                </div>
+<div class="panel panel-default">
+    <table id="leadCompaniesTable" class="table table-bordered table-striped table-hover kcrm-table">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Company</th>
+            <th>Lead Name</th>
+            <th>Created Date</th>
+            <th>Due Date</th>
+            <th>Assigned To</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        #if($searchResult.hits.hits.size() > 0)
+        #set( $leadsPage = $page.find("/leads") )
+        #foreach($hit in $searchResult.hits.hits)
+        <tr>
+            #set( $lead = false  )
+            #if( $hit.source.relatedLead.id )
+            #set( $lead = $leadsPage.child( $formatter.toString($hit.source.relatedLead.id))  )
+            #end
+            #set( $dueDate = $formatter.parseDate($hit.source.dueDate))
+            <td>$!formatter.ifNull($hit.source.title, $hit.source.taskName)</td>
+            <td>
+                #if( $lead && $lead.leadOrg)
+                <a href="/companies/$!lead.leadOrg.id">$!lead.leadOrg.title</a>
                 #end
-                #else
-                <p class="text-center">No tasks found</p>
+            </td>
+            <td>
+                #if( $lead )
+                <a href="$lead.href">
+                    $!lead.title
+                </a>
                 #end
-            </div>
-        </div>
-    </div>
+            </td>
+            <td>$formatter.formatDate($hit.source.createdDate)</td>
+            <td>$formatter.formatDate($hit.source.dueDate)</td>
+            <td>
+                #if($hit.source.assignedToProfile.name)
+                <a href="#" data-name="assignedTo" data-value="$hit.source.assignedToProfile.name" class="filter" >
+                    $!applications.userApp.findUserResource($hit.source.assignedToProfile.name).formattedName
+                </a>
+                #end
+            </td>
+            <td align="center">
+                #if ($lead && !$hit.source.cancelled && !$hit.source.completedDate)
+                <a href="/leads/$lead.leadId/$hit.source.id .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-2x fa-check-circle text-success"></i></a>
+                <a href="/leads/$lead.leadId/$hit.source.id .taskViewModal" class="btnCancelTask"><i class="fa fa-2x fa-times-circle text-danger"></i></a>
+                #end
+            </td>
+        </tr>
+        #end
+        #end
+        </tbody>
+    </table>
 </div>
