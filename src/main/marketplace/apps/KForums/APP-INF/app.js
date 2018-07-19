@@ -82,7 +82,7 @@ function deletePost(page, params, files, form) {
 
     var currentUser = securityManager.currentUser;
 
-    if (postToDelete.poster.id != currentUser.id && getTopLevelPost(postToDelete).poster.id != currentUser.id) {
+    if (!longEquality(postToDelete.poster.id, currentUser.thisUser.id) && !longEquality(getTopLevelPost(postToDelete).poster.id, currentUser.thisUser.id)) {
         return views.jsonView(false, "You are not authorized to delete this post");
     }
 
@@ -132,4 +132,8 @@ function getTopLevelPost(post) {
     }
 
     return post;
+}
+
+function longEquality(number1, number2) {
+    return number1 + 0 === number2 + 0;
 }
