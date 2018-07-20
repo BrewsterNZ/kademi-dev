@@ -34,7 +34,7 @@
                                 #end
 
                                 #if ($action.itemType == "fa-tasks")
-                                #if ($action.itemTitle != "Task cancelled")
+                                #if ($action.itemTitle != "Task cancelled" && $action.itemTitle != "Task completed")
                                 <span href="${page.href}$!{action.data['taskId']} .taskViewModal" data-target="#modalEditTask" data-toggle="modal" title="Complete this task" class="timeline-btn"><i role="button" class="fa fa-check text-success"></i></span>
                                 <div class="btn-group timeline-btn">
                                     <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>

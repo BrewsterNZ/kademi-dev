@@ -1963,16 +1963,171 @@ function initClipboard() {
 
 function initLeadCompanies() {
     if ($('#leadCompaniesTable').length){
+        var editor = new $.fn.dataTable.Editor({
+            ajax: {
+                url: '/leads/?updateLead&leadId=_id_'
+            },
+            table: '#leadCompaniesTable',
+            idSrc: 'id',
+            fields: [
+                {
+                    label: "Due date",
+                    name: "dueDate",
+                    type: "datetime",
+                    def:    function () { return new Date(); },
+                    format:    'DD/MM/YYYY',
+                },
+                {
+                    label: "Assigned to:",
+                    name: "assignedToProfile",
+                    type: 'select',
+                    data: 'assignedToProfile',
+                    placeholder: 'Select an assignment',
+                    optionsPair: {
+                        label: 'name',
+                        value: 'userId'
+                    },
+                    def: 'NONE'
+                }
+            ]
+        });
         var dataTable = $('#leadCompaniesTable').DataTable({
             paging: false,
             searching: false,
             destroy: true,
             info: false,
+            columns: [
+                { "data": "title" },
+                {
+                    data: "relatedLead.leadOrgTitle",
+                    render: function (data, type, full, meta) {
+                        if (data){
+                            return '<a href="/companies/'+full.relatedLead.leadOrgLongId+'">'+data+'</a>'
+                        }
+                    }
+                },
+                {
+                    data: "relatedLead.title",
+                    render: function (data, type, full, meta) {
+                        if (data){
+                            return '<a href="/leads/'+full.relatedLead.id+'">'+data+'</a>'
+                        }
+                    }
+                },
+                {
+                    data: 'createdDate',
+                    defaultContent: "",
+                    render: function (d) {
+                        if (d) {
+                            return moment(d).format('DD/MM/YYYY');
+                        }
+                        return '';
+                    }
+                },
+                {
+                    data: 'dueDate',
+                    className: 'editable',
+                },
+                {
+                    data: 'assignedToProfile',
+                    defaultContent: "",
+                    className: 'editable',
+                    render: function (d, type) {
+                        flog('Render Profile', d, type);
+                        if (d) {
+                            switch (type) {
+                                case "type":
+                                case "sort":
+                                {
+                                    return d.userId;
+                                    break;
+                                }
+                                case "display":
+                                {
+                                    if (d.firstName && d.firstName.trim().length > 0) {
+                                        var f = d.firstName || '';
+                                        var s = d.surName || '';
+                                        return (f + ' ' + s).trim();
+                                    } else if (d.nickName) {
+                                        return d.nickName.trim();
+                                    }
+                                }
+                                default:
+                                    return d.name;
+                            }
+                        }
+                        return d;
+                    }
+                },
+
+
+                {
+                    data: 'id',
+                    orderable: false,
+                    className: 'text-center',
+                    render: function (data, type, full, meta) {
+                        var lead = full.relatedLead;
+                        if (lead && !full.cancelled && !full.completedDate){
+                            return '<a href="/leads/'+lead.id+'/'+data+' .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-2x fa-check-circle text-success"></i></a>\n' +
+                            '<a href="/leads/'+lead.id+'/'+data+' .taskViewModal" class="btnCancelTask"><i class="fa fa-2x fa-times-circle text-danger"></i></a>';
+                        }
+                        return '';
+                    }
+                },
+            ]
         });
+
+        $.ajax({
+            url: window.location.href,
+            data: {asJson: true},
+            dataType: 'JSON',
+            success: function (resp, textStatus, jqXHR) {
+                var data = resp.data;
+                if (data && data.results){
+                    var hits = data.results.hits;
+                    for (var i = 0; i < hits.hits.length; i++) {
+                        var hit = hits.hits[i];
+                        var _source = hit._source;
+                        _source.dueDate = moment(_source.dueDate).format('DD/MM/YYYY');
+                        dataTable.row.add(_source);
+                    }
+                }
+
+                dataTable.draw();
+
+            },
+            error: function () {
+                Msg.error('Could not load data');
+            }
+        });
+
+        $.ajax({
+            url: '/leads/?teamUsers',
+            dataType: 'json'
+        }).done(function (data) {
+            if (data.status) {
+                data.data.push({
+                    name: "Clear assignment",
+                    userId: 0
+                });
+                editor.field('assignedToProfile').update(data.data);
+            }
+        });
+
+        $('#leadCompaniesTable')
+            .off('click', 'tbody td.editable')
+            .on('click', 'tbody td.editable', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).addClass('editing');
+                editor.inline(this, {
+                    onBlur: 'submit'
+                });
+            });
         $('#leadCompaniesTable').on( 'draw.dt', function () {
             $('#leadCompaniesTable').closest('.row').siblings('.row').remove();
         } );
 
-        dataTable.draw();
+
     }
 }

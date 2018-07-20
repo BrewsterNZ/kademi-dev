@@ -11,50 +11,12 @@
             <th>Created Date</th>
             <th>Due Date</th>
             <th>Assigned To</th>
-            <th>&nbsp;</th>
+            <th style="width: 80px" align="center">&nbsp;</th>
         </tr>
         </thead>
         <tbody>
-        #if($searchResult.hits.hits.size() > 0)
-        #set( $leadsPage = $page.find("/leads") )
-        #foreach($hit in $searchResult.hits.hits)
-        <tr>
-            #set( $lead = false  )
-            #if( $hit.source.relatedLead.id )
-            #set( $lead = $leadsPage.child( $formatter.toString($hit.source.relatedLead.id))  )
-            #end
-            #set( $dueDate = $formatter.parseDate($hit.source.dueDate))
-            <td>$!formatter.ifNull($hit.source.title, $hit.source.taskName)</td>
-            <td>
-                #if( $lead && $lead.leadOrg)
-                <a href="/companies/$!lead.leadOrg.id">$!lead.leadOrg.title</a>
-                #end
-            </td>
-            <td>
-                #if( $lead )
-                <a href="$lead.href">
-                    $!lead.title
-                </a>
-                #end
-            </td>
-            <td>$formatter.formatDate($hit.source.createdDate)</td>
-            <td>$formatter.formatDate($hit.source.dueDate)</td>
-            <td>
-                #if($hit.source.assignedToProfile.name)
-                <a href="#" data-name="assignedTo" data-value="$hit.source.assignedToProfile.name" class="filter" >
-                    $!applications.userApp.findUserResource($hit.source.assignedToProfile.name).formattedName
-                </a>
-                #end
-            </td>
-            <td align="center">
-                #if ($lead && !$hit.source.cancelled && !$hit.source.completedDate)
-                <a href="/leads/$lead.leadId/$hit.source.id .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-2x fa-check-circle text-success"></i></a>
-                <a href="/leads/$lead.leadId/$hit.source.id .taskViewModal" class="btnCancelTask"><i class="fa fa-2x fa-times-circle text-danger"></i></a>
-                #end
-            </td>
-        </tr>
-        #end
-        #end
+
         </tbody>
     </table>
+
 </div>
