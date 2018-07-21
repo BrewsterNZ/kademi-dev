@@ -1964,11 +1964,14 @@ function initClipboard() {
 function initLeadCompanies() {
     if ($('#leadCompaniesTable').length){
         var editor = new $.fn.dataTable.Editor({
-            ajax: {
-                url: '/leads/?updateLead&leadId=_id_'
-            },
             table: '#leadCompaniesTable',
+            ajax: {
+                url: '/leads/_leadId_/_id_/'
+            },
             idSrc: 'id',
+            idExtraSrc: {
+                '_leadId_': 'leadId'
+            },
             fields: [
                 {
                     label: "Due date",
@@ -1979,13 +1982,13 @@ function initLeadCompanies() {
                 },
                 {
                     label: "Assigned to:",
-                    name: "assignedToProfile",
+                    name: "assignToName",
                     type: 'select',
                     data: 'assignedToProfile',
                     placeholder: 'Select an assignment',
                     optionsPair: {
                         label: 'name',
-                        value: 'userId'
+                        value: 'userName'
                     },
                     def: 'NONE'
                 }
@@ -2027,6 +2030,14 @@ function initLeadCompanies() {
                 {
                     data: 'dueDate',
                     className: 'editable',
+                    render: function (d) {
+                        if (typeof d === "object" && d.time) {
+                            return moment(d.time).format('DD/MM/YYYY');
+                        } else if (typeof d === "string"){
+                            return d;
+                        }
+                        return '';
+                    }
                 },
                 {
                     data: 'assignedToProfile',
@@ -2056,7 +2067,7 @@ function initLeadCompanies() {
                                     return d.name;
                             }
                         }
-                        return d;
+                        return "";
                     }
                 },
 
@@ -2068,7 +2079,7 @@ function initLeadCompanies() {
                     render: function (data, type, full, meta) {
                         var lead = full.relatedLead;
                         if (lead && !full.cancelled && !full.completedDate){
-                            return '<a href="/leads/'+lead.id+'/'+data+' .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-2x fa-check-circle text-success"></i></a>\n' +
+                            return '<a data-leadid="'+lead.id+'" data-taskid="'+data+'" href="/leads/'+lead.id+'/'+data+' .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-2x fa-check-circle text-success"></i></a>\n' +
                             '<a href="/leads/'+lead.id+'/'+data+' .taskViewModal" class="btnCancelTask"><i class="fa fa-2x fa-times-circle text-danger"></i></a>';
                         }
                         return '';
@@ -2089,6 +2100,7 @@ function initLeadCompanies() {
                         var hit = hits.hits[i];
                         var _source = hit._source;
                         _source.dueDate = moment(_source.dueDate).format('DD/MM/YYYY');
+                        _source.taskPath = [_source.relatedLead.id, _source.id].join('/');
                         dataTable.row.add(_source);
                     }
                 }
@@ -2108,9 +2120,9 @@ function initLeadCompanies() {
             if (data.status) {
                 data.data.push({
                     name: "Clear assignment",
-                    userId: 0
+                    userName: ''
                 });
-                editor.field('assignedToProfile').update(data.data);
+                editor.field('assignToName').update(data.data);
             }
         });
 
@@ -2124,6 +2136,33 @@ function initLeadCompanies() {
                     onBlur: 'submit'
                 });
             });
+
+        editor.on('preSubmit', function (e, json, action) {
+            var taskId;
+            for (var key in json.data){
+                taskId = key;
+                var obj = json.data[key];
+                for (var j in obj){
+                    json[j] = obj[j];
+                }
+            }
+            if (!taskId){
+                return false;
+            }
+            var a = $('#leadCompaniesTable').find('[data-taskid='+taskId+']');
+            var leadId = a.attr('data-leadId');
+            if (!leadId){
+                return false;
+            }
+            json['leadId'] = leadId;
+        });
+
+        editor.on('submitComplete', function (e, json, data) {
+            $('#leadCompaniesTable').find('.editable.editing').removeClass('editing');
+            Msg.success('Updated');
+        });
+
+        dataTable.draw();
         $('#leadCompaniesTable').on( 'draw.dt', function () {
             $('#leadCompaniesTable').closest('.row').siblings('.row').remove();
         } );

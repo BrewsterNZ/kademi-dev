@@ -1,0 +1,19 @@
+{
+    "appDependencies": [
+
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/datatables-lib/datatables.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/datatables-lib/datatables.min.css"
+            }
+        }
+    ]
+}
