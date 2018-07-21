@@ -30,7 +30,7 @@
         </div>
 
         #set( $locks = $page.locks )
-        #if( !$locks.isEmpty() )
+        #if( $locks && !$locks.isEmpty() )
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-lock"></i>
@@ -119,19 +119,31 @@
                     </div>
                 </div>
 
+            #if( $page.parent.branch )
+            #set( $noBranch = false )
+            #else
+            #set( $noBranch = true )
+            #end
 
                 <div class="table-responsive">
                     <table id="commit-wrapper" class="table table-striped table-hover pagination-container" style="table-layout: fixed">
                         <colgroup>
+                            <col style="width: 70px" />
+                            #if( $noBranch )
                             <col />
-                            <col style="width: 320px;" />
-                            <col />
-                            <col />
+                            #end
+                            <col style="min-width: 320px;" />
+                            <col style="width: 150px"  />
+                            <col style="width: 170px"  />
                             <col style="width: 70px" />
                         </colgroup>
                         <thead>
                             <tr>
                                 <th>Link</th>
+                                #if( $noBranch )
+                                <th>Repo</th>
+                                #end
+
                                 <th>Hash</th>
                                 <th>User</th>
                                 <th>Edited</th>
@@ -141,12 +153,34 @@
                         <tbody id="history-table-body" class="pagination-results">
                             #foreach($c in $page.paginator.records)
                             <tr>
-                                <td>$!c.link</td>
-                                <td>$!c.commit.itemHash</td>
-                                <td>$!c.commit.editor.name</td>
-                                <td><abbr title="$formatter.formatDateISO8601($!c.commit.createdDate)" class="info timeago">$!c.commit.createdDate</abbr></td>
+                                <td>
+                                    <a href="/repositories/$c.branch.repository.name/commit-$c.id/" class="btn btn-sm btn-info">
+                                        <i class="fa fa-folder-o"></i>
+                                    </a>                                    
+                                </td>
+                                #if( $noBranch )
+                                <td>
+                                    <a href="/repositories/$c.branch.repository.name/commit-$c.id/">
+                                        $c.branch.repository.name / $c.branch.name
+                                    </a>
+                                </td>
+                                #end
+                                <td>$!c.itemHash</td>
+                                <td>
+                                    <a href="/manageUsers/$c.editor.id/">
+                                        #if( $c.editor.nickName )
+                                        $c.editor.nickName
+                                        #else
+                                        $c.editor.name
+                                        #end
+                                    </a>                                    
+                                </td>
+                                <td>
+                                    <abbr title="$formatter.formatDateISO8601($!c.createdDate)" class="info timeago">$!c.createdDate</abbr> @
+                                    $formatter.formatTime($c.createdDate)
+                                </td>
                                 <td class="action">
-                                    <a href="$page.parent.href" class="btn btn-sm btn-success btn-restore-repo" title="Restore this version" rel="$!c.commit.itemHash"><i class="fa fa-undo"></i></a>
+                                    <a href="/repositories/$c.branch.repository.name/" class="btn btn-sm btn-success btn-restore-repo" title="Restore this version" rel="$!c.commit.itemHash"><i class="fa fa-undo"></i></a>
                                 </td>
                             </tr>
                             #end
