@@ -43,7 +43,7 @@
             e.preventDefault();
 
             formAdd.attr('action', MAIN_URL);
-            modalAdd.find('.modal-action').attr('name', 'createClaim');
+            modalAdd.find('[name="updateClaim"]').attr('name', 'createClaim');
         });
 
         var uri = new URI(window.location.href);
@@ -117,6 +117,7 @@
                                 if(itemsResp && itemsResp.status){
                                     formAdd.attr('action', url);
                                     modalAdd.find('.modal-action').attr('name', 'updateClaim');
+                                    modalAdd.find('[name="createClaim"]').attr('name', 'updateClaim');
                                     var addBtn = modalAdd.find('.claim-items [data-action="add-claim-item"]');
 
                                     // Empty Modal items first
