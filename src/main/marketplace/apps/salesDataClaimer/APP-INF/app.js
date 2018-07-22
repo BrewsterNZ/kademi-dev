@@ -394,21 +394,12 @@ function handleScanJobEvent(rf, event) {
         var claim = db.child(id);
 
         if (claim !== null) {
-            var obj = {
-                recordId: id,
-//                soldBy: claim.jsonObject.soldBy,
-//                soldById: claim.jsonObject.soldById,
-//                amount: claim.jsonObject.amount,
-//                soldDate: claim.jsonObject.soldDate,
-                enteredDate: claim.jsonObject.enteredDate,
-                modifiedDate: formatter.formatDateISO8601(formatter.now),
-//                productSku: claim.jsonObject.productSku,
-                status: claim.jsonObject.status,
-                receipt: claim.jsonObject.receipt,
-                ocrFileHash: XMLDocumentHash
-            };
+            var claimJson = JSON.parse(claim.json);
+            
+            claimJson.ocrFileHash = XMLDocumentHash;
+            claimJson.modifiedDate = formatter.formatDateISO8601(formatter.now);
 
-            log.info("handleScanJobEvent: obj {} ocrFileHash {}", obj.recordId, obj.ocrFileHash);
+            log.info("handleScanJobEvent: obj {} ocrFileHash {}", claimJson.recordId, claimJson.ocrFileHash);
 
             // Parse extra fields
             var extraFields = getSalesDataExtreFields(page);
@@ -423,7 +414,7 @@ function handleScanJobEvent(rf, event) {
 
             securityManager.runAsUser(claim.modifiedBy, function () {
                 log.info("handleScanJobEvent.4");
-                claim.update(JSON.stringify(obj), TYPE_RECORD);
+                claim.update(JSON.stringify(claimJson), TYPE_RECORD);
             });
             log.info("handleScanJobEvent.5");
         } else {
