@@ -5,8 +5,9 @@
         #set( $activeRewards = $rewards.activeRewards )
         #if( $activeRewards.isEmpty() )
         #else
+        
         #foreach( $reward in $rewards.activeRewards )
-
+        #if( $!formatter.isEmpty($reward.pointsSystem) )
         #if( $reward.imageHash )
         #set( $bg = "/_hashes/files/$reward.imageHash/alt-300-300.png" )
         #else
@@ -38,6 +39,7 @@
                 </div>
             </div>
         </div>
+        #end
         #end
         #end
 
