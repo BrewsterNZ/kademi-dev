@@ -56,7 +56,7 @@ function doDBSearch(page, queryJson) {
     
     var db = getDB(page);
     var queryString = JSON.stringify(queryJson);
-    //log.info('query={}', queryString);
+    log.info('query={}', queryString);
     
     var searchResult = db.search(queryString);
     if (isNull(searchResult)) {

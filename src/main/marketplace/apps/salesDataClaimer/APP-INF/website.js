@@ -26,6 +26,7 @@ controllerMappings
 controllerMappings
         .websiteController()
         .path('/salesDataClaims/(?<claimId>[^/]*)/')
+        .addMethod('GET', 'getClaimItems', 'claimItems')
         .addMethod('GET', 'getClaim')
         .addMethod('POST', 'updateClaim', 'updateClaim')
         .postPriviledge('READ_CONTENT')
@@ -250,8 +251,30 @@ function createClaim(page, params, files) {
         var currentRoles = securityManager.getRoles();
         log.info('currentRoles={}', currentRoles);
 
+        var enteredUser = null;
         var db = getDB(page);
         var id = 'claim-' + generateRandomText(32);
+
+        if (params.email) {
+            log.info('Anonymous with email={}, firstName={}', params.email, params.firstName);
+            enteredUser = applications.userApp.findUserResource(params.email);
+
+            if (isNull(enteredUser)) {
+                log.info('Create new user with email={}, firstName={}', params.email, params.firstName);
+                enteredUser = securityManager.createProfile(page.organisation, params.email, null, null);
+                enteredUser = applications.userApp.findUserResource(enteredUser);
+                log.info('Created user: {}', enteredUser);
+                page.parent.orgData.updateProfile(enteredUser.profile, params.firstName, enteredUser.surName, enteredUser.phone);
+            } else {
+                log.info('Found existing user for anonymous: {}', enteredUser);
+            }
+
+            log.info('Profile for anonymous: userName={}, userId={}', enteredUser.name, enteredUser.userId);
+            obj.soldBy = enteredUser.name;
+            obj.soldById = enteredUser.userId;
+        } else {
+            enteredUser = securityManager.currentUser.profile;
+        }
 
 //        var amount = +params.amount;
 //        if (isNaN(amount)) {
@@ -270,8 +293,8 @@ function createClaim(page, params, files) {
 
         var obj = {
             recordId: id,
-            // soldBy: params.soldBy,
-            // soldById: params.soldById,
+            soldBy: params.soldBy,
+            soldById: params.soldById,
             // amount: amount,
             // soldDate: soldDate,
             enteredDate: now,
@@ -316,28 +339,9 @@ function createClaim(page, params, files) {
         }
 
         transactionManager.runInTransaction(function () {
-            if (params.email) {
-                log.info('Anonymous with email={}, firstName={}', params.email, params.firstName);
-                var enteredUser = applications.userApp.findUserResource(params.email);
-
-                if (isNull(enteredUser)) {
-                    log.info('Create new user with email={}, firstName={}', params.email, params.firstName);
-                    enteredUser = securityManager.createProfile(page.organisation, params.email, null, null);
-                    enteredUser = applications.userApp.findUserResource(enteredUser);
-                    log.info('Created user: {}', enteredUser);
-                    page.parent.orgData.updateProfile(enteredUser.profile, params.firstName, enteredUser.surName, enteredUser.phone);
-                } else {
-                    log.info('Found existing user for anonymous: {}', enteredUser);
-                }
-
-                log.info('Profile for anonymous: userName={}, userId={}', enteredUser.name, enteredUser.userId);
-                obj.soldBy = enteredUser.name;
-                obj.soldById = enteredUser.userId;
-            } else {
-                enteredUser = securityManager.currentUser.profile;
-            }
-
             securityManager.runAsUser(enteredUser, function () {
+                log.info("Run as user: {}", params.claimItemsLength);
+                
                 db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
                 eventManager.goalAchieved("claimSubmittedGoal", {"claim": id, "claimType": params.claimType});
 

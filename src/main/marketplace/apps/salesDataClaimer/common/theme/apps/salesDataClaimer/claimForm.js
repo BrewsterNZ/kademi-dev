@@ -1,9 +1,20 @@
-$(function() {
-    var claimItemsCounter = 0;
+$(function () {
+    $('.claim-items [data-action="add-claim-item"]').on('click', function () {
+        var btn = $(this);
+        var form = btn.closest('form');
+        var claimItemsLengthElem = form.find('[name="claimItemsLength"]');
 
-    $('.claim-items [data-action="add-claim-item"]').on('click', function(){
+        var claimItemsCounter = 0;
+        if (isNumber(claimItemsLengthElem.val())) {
+            claimItemsCounter = parseInt(claimItemsLengthElem.val());
+        }
+
+        if (claimItemsCounter < 0) {
+            claimItemsCounter = 0;
+        }
+
         var claimItemTemplte = '';
-        claimItemTemplte += '<div class="claim-item">';
+        claimItemTemplte += '<div class="claim-item claim-item-' + claimItemsCounter + '">';
         claimItemTemplte += '    <div class="form-group">';
         claimItemTemplte += '        <label for="amount" class="control-label sr-only">Amount</label>';
 
@@ -32,22 +43,22 @@ $(function() {
         claimItemTemplte += '    </div>';
         claimItemTemplte += '</div>';
 
-        $('.claim-items .claim-items-body').append(claimItemTemplte).find('.date-time-picker').each(function () {
+        form.find('.claim-items .claim-items-body').append(claimItemTemplte).find('.date-time-picker').each(function () {
             var input = $(this);
             var format = input.attr('data-format') || 'DD/MM/YYYY';
 
             input.datetimepicker({
                 format: format
             });
-        });;
+        });
 
         claimItemsCounter++;
 
-        $('[name="claimItemsLength"]').val(claimItemsCounter);
+        claimItemsLengthElem.val(claimItemsCounter);
     });
 
-    $('.claim-items [data-action="add-claim-item"]').each(function() {
+    $('.claim-items [data-action="add-claim-item"]').each(function () {
         $(this).click();
-        return false; 
+        return false;
     });
 });

@@ -44,12 +44,12 @@
             #if ($searchResult.hits.hits.size() > 0)
             #foreach($hit in $searchResult.hits.hits)
             #if ($hit.fields.status.value == 0)
-            #renderClaim($hit)
+                #renderClaim($hit $app.call('searchClaimItems', $page, $hit.fields.recordId.value, $profile))
             #end
             #end
             #foreach($hit in $searchResult.hits.hits)
             #if ($hit.fields.status.value != 0)
-            #renderClaim($hit)
+                #renderClaim($hit $app.call('searchClaimItems', $page, $hit.fields.recordId.value, $profile))
             #end
             #end
             #else
@@ -114,8 +114,8 @@
     </table>
 </div>
 
-#macro (renderClaim $hit)
-<tr>
+#macro (renderClaim $hit $claimItems)
+<tr data-id="$hit.fields.recordId.value">
     <td class="fa-2x text-center">
         #if ($hit.fields.status.value == 0)
         <i class="fa fa-circle text-muted" title="New"></i>
@@ -132,14 +132,33 @@
         </a>
         #end
     </td>
-    <td>$hit.fields.amount.value</td>
     <td>
-        #set ($soldDate = $formatter.toDate($hit.fields.soldDate.value))
-        <abbr class="timeago" title="$formatter.formatDateISO8601($soldDate, $page.organisation.timezone)">
-            $formatter.formatTimeLong($soldDate, $page.organisation.timezone)
-        </abbr>
+        #foreach($claimItem in $claimItems.hits.hits)
+            $claimItem.fields.amount.value
+            #if(!$foreach.isLast())
+            <br/>
+            #end
+        #end
     </td>
-    <td>$!hit.fields.productSku.value</td>
+    <td>
+        #foreach($claimItem in $claimItems.hits.hits)
+            #set ($soldDate = $formatter.toDate($claimItem.fields.soldDate.value))
+            <abbr class="timeago" title="$formatter.formatDateISO8601($soldDate, $page.organisation.timezone)">
+                $formatter.formatTimeLong($soldDate, $page.organisation.timezone)
+            </abbr>
+            #if(!$foreach.isLast())
+            <br/>
+            #end
+        #end
+    </td>
+    <td>
+        #foreach($claimItem in $claimItems.hits.hits)
+            $!claimItem.fields.productSku.value
+            #if(!$foreach.isLast())
+            <br/>
+            #end
+        #end
+    </td>
     <td>
         #if ($hit.fields.status.value == 0)
         <button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-edit"></i> Edit</button>
@@ -171,40 +190,11 @@
             <form class="form-horizontal form-new-claim" action="/salesDataClaims/" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="form-message alert alert-danger" style="display: none;"></div>
-                    <input type="hidden" name="createClaim" value="true" class="modal-action" />
-                    <input type="hidden" name="claimItemsLength" value="1" class="modal-action" />
+                    <input type="hidden" name="createClaim" value="true" />
+                    <input type="hidden" name="claimItemsLength" value="0" />
 
                     <input type="hidden" name="soldBy" value="$!userResource.name" />
                     <input type="hidden" name="soldById" value="$!userResource.userId" />
-
-                    <!--
-                    <div class="form-group">
-                        <label for="amount" class="control-label sr-only">Amount</label>
-
-                        <div class="col-sm-12">
-                            <input type="number" id="amount" class="form-control required" name="amount" placeholder="Sale amount" />
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="soldDate" class="control-label sr-only">Date</label>
-
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <input type="text" name="soldDate" id="soldDate" placeholder="Purchase date" data-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker required" />
-                                <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="productSku" class="control-label sr-only">Product SKU</label>
-
-                        <div class="col-sm-12">
-                            <input name="productSku" id="productSku" class="form-control" placeholder="Product name" value="" />
-                        </div>
-                    </div>
-                    -->
 
                     <div class="claim-items">
                         <div class="claim-items-body"></div>

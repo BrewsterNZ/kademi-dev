@@ -101,7 +101,7 @@ function getSearchClaimsQuery(page, status, user, claimForm) {
         queryJson.query.bool.must.push({
             'term': {'claimGroupId': claimForm}
         });
-    }
+    }    
     
     return queryJson;
 }
@@ -197,7 +197,11 @@ function searchClaims(page, status, user, claimForm) {
         var queryJson = getSearchClaimsQuery(page, status, user, claimForm);
         searchResult = doDBSearch(page, queryJson);
     } catch (e) {
-        log.error('ERROR in searchClaims: ' + e, e);
+        if(e instanceof Error) {
+            log.error('ERROR in searchClaims: {}', e.stack);   
+        } else {
+            log.error('ERROR in searchClaims: {}', e, e);
+        }
     }
     log.info("searchClaims {}", searchResult);
     return searchResult;
@@ -228,6 +232,26 @@ function searchClaimGroups(page, claimGroup) {
     }
     log.info("searchClaimGroups {}", searchResult);
     return searchResult;
+}
+
+function getClaimItems(page, params){
+    log.info('getClaimItems > page={}, params={}', page, params);
+    
+    var result = {
+        status: true
+    };
+    
+    try {
+        var queryJson = getSearchClaimItemsQuery(page, page.attributes.claimId);
+        var searchResult = doDBSearch(page, queryJson);
+        
+        result.data = searchResult.toString();
+    } catch(e) {
+        result.status = false;
+        result.messages = ['Error when getting claim: ' + e];
+    }
+    
+    return views.jsonObjectView(JSON.stringify(result));
 }
 
 function getClaim(page, params) {

@@ -9,6 +9,7 @@
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.min.js"></script>
         <script type="text/javascript" src="/static/jquery.fullscreen/0.4.1/jquery.fullscreen-0.4.1.min.js">//</script>
+        <script type="text/javascript" src="/theme/apps/salesDataClaimer/claimForm.js">//</script>
     </head>
     <body>
         #set ($isAdmin = false)
@@ -69,6 +70,9 @@
                                 #if ($isAdmin)
                                 <p class="btn-group btn-group-sm">
                                     <button type="button" class="btn btn-info btn-update-mapping"><i class="fa fa-refresh"></i> Update mapping</button>
+                                </p>
+                                <p class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-success" data-target="#modal-add-claim" data-toggle="modal"><i class="fa fa-plus"></i> Add Claim</button>
                                 </p>
                                 #end
                                 <p class="btn-group btn-group-sm">
@@ -411,54 +415,123 @@
                 </div>
             </div>
         </div>
+        
+        <div class="modal fade" id="modal-add-claim">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Add claim</h3>
+                    </div>
+                    <form class="form-horizontal form-new-claim" action="/manageSaleDataClaimer/" method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <input type="hidden" name="createClaim" value="true" />
+                            <input type="hidden" name="claimItemsLength" value="0" />
+                            <input name="soldBy" type="hidden"/>
+                            <input name="soldById" type="hidden"/>
+                            
+                            <div class="form-group">
+                                <label class="control-label col-lg-2">Sold By</label>
+                                <div class="col-lg-10">
+                                    <input id="soldBySearch" type="text" class="form-control required" required="required" placeholder="Sold By"/>
+                                </div>
+                            </div>
+
+                            <div class="claim-items">
+                                <div class="claim-items-body"></div>
+
+                                <button class="btn btn-primary btn-block" type="button" data-action="add-claim-item"><i class="fa fa-plus"></i> Add claim item</button>
+                            </div>
+
+                            #foreach($xf in $app.call("getSalesDataExtreFields", $page))
+                            <div class="form-group">
+                                <label for="field_${xf.name}" class="control-label sr-only">$formatter.firstNotNull($xf.title, $xf.name)</label>
+
+                                <div class="col-sm-12">
+                                    $xf.html
+                                </div>
+                            </div>
+                            #end
+
+                            <div class="form-group">
+                                <label class="control-label sr-only">Receipt</label>
+
+                                <div class="col-sm-12">
+                                    <p class="thumbnail">
+                                        <img src="/static/images/photo_holder.png" class="img-responsive" />
+                                    </p>
+                                    <button type="button" class="btn btn-sm btn-info btn-upload-receipt"><i class="fa fa-file-picture-o"></i> <span>Upload receipt</span></button>
+                                    <span class="text-danger img-error" style="display: none;">Selected file is not image!</span>
+                                    <input type="file" name="receiptImage" class="form-control" style="display: none !important;" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-success" type="submit">Save claim</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <script>
-            var highConfidenceFrom = $page.attributes.settings.highConfidenceFrom;
-            var highConfidenceTo = $page.attributes.settings.highConfidenceTo;
+            (function($){
+                var highConfidenceFrom = '$!page.attributes.settings.highConfidenceFrom';
+                var highConfidenceTo = '$!page.attributes.settings.highConfidenceTo';
 
-            var mediumConfidenceFrom = $page.attributes.settings.mediumConfidenceFrom;
-            var mediumConfidenceTo = $page.attributes.settings.mediumConfidenceTo;
+                var mediumConfidenceFrom = '$!page.attributes.settings.mediumConfidenceFrom';
+                var mediumConfidenceTo = '$!page.attributes.settings.mediumConfidenceTo';
 
-            var lowConfidenceFrom = $page.attributes.settings.lowConfidenceFrom;
-            var lowConfidenceTo = $page.attributes.settings.lowConfidenceTo;
+                var lowConfidenceFrom = '$!page.attributes.settings.lowConfidenceFrom';
+                var lowConfidenceTo = '$!page.attributes.settings.lowConfidenceTo';
 
-            #if($page.attributes.settings.defaultColumns)
-              var defaultColumns = $page.attributes.settings.defaultColumns;
-            #else
-                var defaultColumns = [
-                    "amount",
-                    "entered",
-                    "productSku",
-                    "attributedTo",
-                    "periodFrom",
-                    "id",
-                    "tags"
-                ];
-            #end
-
-            var options = [
-                {value: "", title: "[Do not import]"},
-                {value: "amount", title: "Amount"},
-                {value: "entered", title: "Entered Date"},
-                {value: "productSku", title: "Product Sku"},
-                {value: "attributedTo", title: "Sale attributed to"},
-                {value: "periodFrom", title: "Sale date"},
-                {value: "id", title: "Sales Data Id"},
-                {value: "tags", title: "tags"},
-
-                #foreach($xf in $applications.salesData.getDataSeriesExtraFields($page.attributes.settings.dataSeries))
-                    {value: "$xf.name", title: "$xf.title"},
+                #if($page.attributes.settings.defaultColumns)
+                  var defaultColumns = $page.attributes.settings.defaultColumns;
+                #else
+                    var defaultColumns = [
+                        "amount",
+                        "entered",
+                        "productSku",
+                        "attributedTo",
+                        "periodFrom",
+                        "id",
+                        "tags"
+                    ];
                 #end
-            ];
 
-            $('#modal-process-claim').on('change', 'select', function(){
-                var index = $('#modal-process-claim').find('select').index(this);
-                defaultColumns[index] = $(this).val();
+                var options = [
+                    {value: "", title: "[Do not import]"},
+                    {value: "amount", title: "Amount"},
+                    {value: "entered", title: "Entered Date"},
+                    {value: "productSku", title: "Product Sku"},
+                    {value: "attributedTo", title: "Sale attributed to"},
+                    {value: "periodFrom", title: "Sale date"},
+                    {value: "id", title: "Sales Data Id"},
+                    {value: "tags", title: "tags"},
 
-                $.post('/settingSaleDataClaimer', {defaultColumns: JSON.stringify(defaultColumns)}, function(response){
+                    #foreach($xf in $applications.salesData.getDataSeriesExtraFields($page.attributes.settings.dataSeries))
+                        {value: "$xf.name", title: "$xf.title"},
+                    #end
+                ];
 
+                function initProcessClaim() {
+                    $('#modal-process-claim').on('change', 'select', function(){
+                        var index = $('#modal-process-claim').find('select').index(this);
+                        defaultColumns[index] = $(this).val();
+
+                        $.post('/settingSaleDataClaimer', {defaultColumns: JSON.stringify(defaultColumns)}, function(response){
+                        });
+                    });
+                }
+
+                // Init
+                $(function(){
+                    initProcessClaim();
                 });
-            });
+            })(jQuery);
         </script>
     </body>
 </html>

@@ -28,6 +28,7 @@ controllerMappings
         .addMethod('POST', 'approveClaims', 'approveClaims')
         .addMethod('POST', 'rejectClaims', 'rejectClaims')
         .addMethod('POST', 'deleteClaims', 'deleteClaims')
+        .addMethod('POST', 'createClaim', 'createClaim')
         .addMethod('POST', 'saveImageClaims')
         .postPriviledge('READ_CONTENT')
         .enabled(true)
@@ -285,22 +286,46 @@ function deleteClaims(page, params) {
         ids = ids.split(',');
 
         for (var i = 0; i < ids.length; i++) {
-            (function (id) {
-                var claim = db.child(id);
+            var id = ids[i];
 
-                if (claim !== null) {
-                    claim.delete();
+            var claim = db.child(id);
+
+            if (claim !== null) {
+                claim.delete();
+            }
+            
+            // Delete any claim items as well
+            var resp = db.search(JSON.stringify({
+                'stored_fields': ['recordId', 'claimRecordId'],
+                'query': {
+                    'bool': {
+                        'must': [
+                            {'type': {'value': TYPE_CLAIM_ITEM}},
+                            {'term': {'claimRecordId': id}}
+                        ]
+                    }
                 }
-            })(ids[i]);
+            }));
+            
+            var respJson = JSON.parse(resp.toString());
+            for(var i = 0; i < respJson.hits.hits.length; i++){
+                var hit = respJson.hits.hits[i];
+                var claimItemId = hit.fields.recordId;
+                
+                var claimItem = db.child(claimItemId);
+                if(claimItem !== null){
+                    claimItem.delete();
+                }
+            }
         }
 
         if (typeof callback === 'function') {
             callback(result);
         }
     } catch (e) {
-        log.error('Error in ' + action + ': ' + e, e);
+        log.error('Error in deleteClaims: ' + e, e);
         result.status = false;
-        result.messages = ['Error in ' + action + ': ' + e];
+        result.messages = ['Error in deleteClaims: ' + e];
     }
 
     return views.jsonObjectView(JSON.stringify(result));
