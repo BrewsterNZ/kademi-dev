@@ -136,6 +136,8 @@
                                             itemElem = modalAdd.find('.claim-item-' + index);
                                         }
 
+                                        itemElem.append('<input type="hidden" name="claimid.' + index + '" value="' + claimItem.recordId[0] + '"/>');
+
                                         if (claimItem.amount && claimItem.amount.length > 0) {
                                             itemElem.find('[name="amount.' + index + '"]').val(claimItem.amount[0]);
                                         }
@@ -184,7 +186,7 @@
                     alert('Error in getting claim data: ' + errorThrown + '. Please contact your administrators to resolve this issue.');
                     flog('Error in getting claim data', jqXHR, textStatus, errorThrown);
                 }
-            })
+            });
         });
 
         tbody.find('.timeago').timeago();

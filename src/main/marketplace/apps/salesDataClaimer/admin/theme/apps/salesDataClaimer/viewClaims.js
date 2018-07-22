@@ -15,6 +15,7 @@
             initUpdateMapping();
             initSettingForm();
             initAddClaim();
+            initEditClaim();
         }
     });
 
@@ -70,6 +71,137 @@
                     modal.modal('hide');
                 });
             }
+        });
+    }
+
+    function initEditClaim() {
+        var modal = $('#modal-edit-claim');
+        var form = modal.find('form');
+        var soldBySearch = form.find('#soldBySearch');
+        var soldBy = form.find('[name=soldBy]');
+        var soldById = form.find('[name=soldById]');
+
+        modal.on('hidden.bs.modal', function () {
+            // Reset the modal
+            form.trigger('reset');
+            form.find('.claim-items-body').empty();
+            form.find('[data-action="add-claim-item"]').click();
+        });
+
+        soldBySearch.entityFinder({
+            type: 'profile',
+            onSelectSuggestion: function (elem, userName, actualId, type) {
+                soldBy.val(userName);
+                soldById.val(actualId);
+            }
+        });
+
+        form.forms({
+            onSuccess: function (resp) {
+                reloadClaimsList(function () {
+                    modal.modal('hide');
+                });
+            }
+        });
+
+        $('body').on('click', '.btn-edit-claim', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var id = btn.data('id');
+            
+            var url = location.pathname + id + '/';
+
+            $.ajax({
+                url: url,
+                type: 'get',
+                dataType: 'json',
+                success: function (resp) {
+                    if (resp && resp.status) {
+                        // We also need to get the claim items :-/
+                        $.ajax({
+                            url: url + '?claimItems',
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (itemsResp) {
+                                if (itemsResp && itemsResp.status) {
+                                    form.attr('action', url);
+                                    modal.find('.modal-action').attr('name', 'updateClaim');
+                                    var addBtn = modal.find('.claim-items [data-action="add-claim-item"]');
+
+                                    // Empty Modal items first
+                                    modal.find('.claim-items-body').empty();
+                                    modal.find('[name="claimItemsLength"]').val(0);
+
+                                    // Populate items
+                                    $.each(itemsResp.data.hits.hits, function (_, item) {
+                                        var index = _;
+                                        var claimItem = item.fields;
+
+                                        console.log('Items', index, claimItem);
+
+                                        var itemElem = modal.find('.claim-item-' + index);
+                                        if (itemElem.length < 1) {
+                                            addBtn.click();
+                                            itemElem = modal.find('.claim-item-' + index);
+                                        }
+
+                                        itemElem.append('<input type="hidden" name="claimid.' + index + '" value="' + claimItem.recordId[0] + '"/>');
+
+                                        if (claimItem.amount && claimItem.amount.length > 0) {
+                                            itemElem.find('[name="amount.' + index + '"]').val(claimItem.amount[0]);
+                                        }
+
+                                        if (claimItem.soldDate && claimItem.soldDate.length > 0) {
+                                            // soldDate
+                                            var soldDate = moment(claimItem.soldDate[0]).format('DD/MM/YYYY HH:mm');
+                                            itemElem.find('[name="soldDate.' + index + '"]').val(soldDate);
+                                        }
+
+                                        if (claimItem.productSku && claimItem.productSku.length > 0) {
+                                            itemElem.find('[name="productSku.' + index + '"]').val(claimItem.productSku[0]);
+                                        }
+                                    });
+
+                                    $.each(resp.data, function (key, value) {
+                                        var newValue = value;
+                                        if (key === 'soldDate') {
+                                            newValue = moment(value).format('DD/MM/YYYY HH:mm');
+                                        } else if (key === 'soldBy') {
+                                            soldBySearch.val(newValue);
+                                            soldBySearch.prev('.search-input').val(newValue);
+                                            soldBySearch.prev('.search-input').data('current-value', newValue);
+                                            console.log('soldBySearch', soldBySearch, newValue);
+                                        }
+
+                                        modal.find('[name=' + key + ']').val(newValue);
+                                    });
+
+                                    if (resp.data.receipt) {
+                                        modal.find('.thumbnail img').attr('src', resp.data.receipt);
+                                        modal.find('.btn-upload-receipt span').html('Upload other receipt');
+                                        modal.find('.btn-upload-receipt i').attr('class', 'fa fa-check');
+                                    }
+
+                                    modal.find('.thumbnail img').attr('src');
+
+                                    modal.modal('show');
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                alert('Error in getting claim items data: ' + errorThrown + '. Please contact your administrators to resolve this issue.');
+                                flog('Error in getting claim items data', jqXHR, textStatus, errorThrown);
+                            }
+                        });
+                    } else {
+                        alert('Error in getting claim data. Please contact your administrators to resolve this issue.');
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Error in getting claim data: ' + errorThrown + '. Please contact your administrators to resolve this issue.');
+                    flog('Error in getting claim data', jqXHR, textStatus, errorThrown);
+                }
+            });
         });
     }
 

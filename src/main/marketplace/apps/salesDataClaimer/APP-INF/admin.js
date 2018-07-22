@@ -44,7 +44,9 @@ controllerMappings
 controllerMappings
         .adminController()
         .path('/manageSaleDataClaimer/(?<claimId>[^/]*)/')
+        .addMethod('GET', 'getClaimItems', 'claimItems')
         .addMethod('GET', 'getClaim')
+        .addMethod('POST', 'updateClaim', 'updateClaim')
         .enabled(true)
         .build();
 
