@@ -244,29 +244,18 @@
             </div>
             <form class="form-horizontal">
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label class="control-label col-md-4">Amount</label>
-
-                        <div class="col-md-8">
-                            <p class="form-control-static amount"></p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-4">Date</label>
-
-                        <div class="col-md-8">
-                            <p class="form-control-static soldDate"></p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-4">Product SKU</label>
-
-                        <div class="col-md-8">
-                            <p class="form-control-static productSku"></p>
-                        </div>
-                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Product Sku</th>
+                            </tr>
+                        </thead>
+                        <tbody id="view-claim-tbody">
+                            
+                        </tbody>
+                    </table>
 
                     #foreach($xf in $app.call("getSalesDataExtreFields", $page))
                     <div class="form-group">
