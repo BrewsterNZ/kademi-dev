@@ -155,7 +155,7 @@ function changeClaimsStatus(status, page, params, callback) {
     try {
         var db = getDB(page);
         var ids = params.ids;
-        ids = ids.split(',');
+        ids = formatter.split(ids);
 
         for (var i = 0; i < ids.length; i++) {
             (function (id) {
@@ -195,7 +195,7 @@ function approveClaims(page, params) {
         try {
             var db = getDB(page);
             var ids = params.ids;
-            ids = ids.split(',');
+            ids = formatter.split(ids);
 
             var settings = getAppSettings(page);
             var selectedDataSeries = settings.get('dataSeries');
@@ -287,7 +287,7 @@ function deleteClaims(page, params) {
     try {
         var db = getDB(page);
         var ids = params.ids;
-        
+
         ids = formatter.split(ids);
         for (var i = 0; i < ids.length; i++) {
             var id = ids[i];
@@ -340,7 +340,7 @@ function createImageClaimTagging(page, params, files) {
 
     var response = [];
 
-    var salesDataIds = params.salesDataIds.split(',');
+    var salesDataIds = formatter.split(params.salesDataIds);
 
 //    log.info("params.salesDataIds: {}", params.salesDataIds);
 
