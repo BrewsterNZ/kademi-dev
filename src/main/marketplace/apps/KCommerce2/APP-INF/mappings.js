@@ -5,7 +5,7 @@ var productInStoreMapping = controllerMappings
         .enabled(true)
         .isPublic(true)
         .title(function (page) {
-            return "TODO";
+            return page.attributes.productInStore.product.title;
         })
         // .seoContent('_genDealSeoContent')
         .defaultView(views.templateView('/theme/apps/KCommerce2/viewProduct.html'))
@@ -18,7 +18,7 @@ var categoryMapping = controllerMappings
         .enabled(true)
         .isPublic(true)
         .title(function (page) {
-            return "TODO";
+            return page.attributes.category.title;
         })
         // .seoContent('_genDealSeoContent')
         //.defaultView(views.templateView('/theme/apps/KCommerce2/viewCategory.html'))
