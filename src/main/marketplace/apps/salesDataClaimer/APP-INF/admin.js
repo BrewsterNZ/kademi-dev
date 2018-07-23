@@ -287,8 +287,8 @@ function deleteClaims(page, params) {
     try {
         var db = getDB(page);
         var ids = params.ids;
-        ids = ids.split(',');
-
+        
+        ids = formatter.split(ids);
         for (var i = 0; i < ids.length; i++) {
             var id = ids[i];
 
