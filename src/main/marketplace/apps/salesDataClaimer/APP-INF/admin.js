@@ -101,13 +101,13 @@ function getSearchClaimItemsResult(page, params) {
         var modifiedDate = "";
         var productSku = "";
 
-        if(hitsList[counter].getField('soldDate') !== null){
+        if (hitsList[counter].getField('soldDate') !== null) {
             soldDate = hitsList[counter].getField('soldDate').value;
         }
-        if(hitsList[counter].getField('modifiedDate') !== null){
+        if (hitsList[counter].getField('modifiedDate') !== null) {
             modifiedDate = hitsList[counter].getField('modifiedDate').value;
         }
-        if(hitsList[counter].getField('productSku') !== null){
+        if (hitsList[counter].getField('productSku') !== null) {
             productSku = hitsList[counter].getField('productSku').value;
         }
 
@@ -165,11 +165,13 @@ function changeClaimsStatus(status, page, params, callback) {
                     claim.jsonObject.status = status;
                     claim.save();
 
-//                    var enteredUser = applications.userApp.findUserResourceById(claim.jsonObject.soldById);
-//                    var custProfileBean = enteredUser.extProfileBean;
-
-//                    eventManager.goalAchieved('claimProcessedGoal', {'claim': id, 'status': status});
-
+                    var enteredUser = applications.userApp.findUserResourceById(claim.jsonObject.soldById);
+                    if (isNotNull(enteredUser)) {
+                        var custProfileBean = enteredUser.extProfileBean;
+                        eventManager.goalAchieved('claimProcessedGoal', custProfileBean, {'claim': id, 'status': status});
+                    } else {
+                        eventManager.goalAchieved('claimProcessedGoal', {'claim': id, 'status': status});
+                    }
                 }
             })(ids[i]);
         }
@@ -183,7 +185,7 @@ function changeClaimsStatus(status, page, params, callback) {
         result.messages = ['Error in ' + action + ': ' + e];
     }
 
-    return views.jsonObjectView(JSON.stringify(result))
+    return views.jsonObjectView(JSON.stringify(result));
 }
 
 function approveClaims(page, params) {
@@ -295,7 +297,7 @@ function deleteClaims(page, params) {
             if (claim !== null) {
                 claim.delete();
             }
-            
+
             // Delete any claim items as well
             var resp = db.search(JSON.stringify({
                 'stored_fields': ['recordId', 'claimRecordId'],
@@ -308,14 +310,14 @@ function deleteClaims(page, params) {
                     }
                 }
             }));
-            
+
             var respJson = JSON.parse(resp.toString());
-            for(var i = 0; i < respJson.hits.hits.length; i++){
+            for (var i = 0; i < respJson.hits.hits.length; i++) {
                 var hit = respJson.hits.hits[i];
                 var claimItemId = hit.fields.recordId;
-                
+
                 var claimItem = db.child(claimItemId);
-                if(claimItem !== null){
+                if (claimItem !== null) {
                     claimItem.delete();
                 }
             }
@@ -391,32 +393,32 @@ function saveImageClaims(page, params, files) {
 
     if (params.action == "approve") {
         log.info("processImageClaims: approve");
-        
+
         var dataManager = services.dataSeriesManager;
         var settings = getAppSettings(page);
         var selectedDataSeries = settings.get('dataSeries');
         var dataSeries = dataManager.dataSeries(selectedDataSeries);
-        
+
         for (var rows_counter = 0; rows_counter < rows.length; rows_counter++) {
             var row = rows[rows_counter];
             var dp = dataManager.newDataPoint();
             dp.series = dataSeries;
             dp.saleDate = formatter.now;
-            dp.attributedTo = securityManager.currentUser.thisProfile;            
+            dp.attributedTo = securityManager.currentUser.thisProfile;
             dp.fields = formatter.newMap();
-            
+
             log.info("cells.. {}", row['cells'].length);
             for (var cells_counter = 0; cells_counter < row['cells'].length; cells_counter++) {
                 var key = rows[rows_counter]['cells'][cells_counter]['column'];
                 var val = formatter.toString(rows[rows_counter]['cells'][cells_counter]['value']).trim();
-                log.info("processing key={} val={}", key, val);                
-                if( key == "productSku") {
+                log.info("processing key={} val={}", key, val);
+                if (key == "productSku") {
                     dp.productSku = val;
-                } else if( key == "attributedTo") {
+                } else if (key == "attributedTo") {
                     dp.attributedTo = findParticipant(val, dp.series);
-                } else if( key == "amount") {
+                } else if (key == "amount") {
                     dp.amount = formatter.toBigDecimal(val);
-                } else if( key == "periodFrom") {
+                } else if (key == "periodFrom") {
                     dp.periodFrom = formatter.toDate(val);
                 } else {
                     dp.fields.put(key, val);
@@ -482,12 +484,12 @@ function saveImageClaims(page, params, files) {
 function findParticipant(entityName, series) {
     var st = series.salesType;
     log.info("findParticipant {} {}", entityName, st);
-   
-    if( st == null || st == "SALES_PROFILE") {
+
+    if (st == null || st == "SALES_PROFILE") {
         var mr = services.userManager.newProfileMatchRequest();
         mr.email(entityName).or().userName(entityName);
         var profileBeans = services.userManager.findMatching(mr);
-        if( profileBeans.size() == 0 ) {
+        if (profileBeans.size() == 0) {
             return null;
         } else {
             return profileBeans.get(0).entityObject(); // convert bean to Profile
@@ -495,5 +497,5 @@ function findParticipant(entityName, series) {
     } else {
         // TODO
     }
-    
+
 }
