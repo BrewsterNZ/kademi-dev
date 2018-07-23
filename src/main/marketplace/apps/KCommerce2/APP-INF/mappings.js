@@ -25,8 +25,10 @@ var categoryMapping = controllerMappings
         .addMethod('GET', 'doEcomSearch', 'q')
         .addMethod('GET', 'doSuggestionList', 'suggestions')
         .addMethod('GET', 'doEcomList')
-
         .pathSegmentResolver('category', 'resolveCategory');
+
+// BM: cats needs to be recursive
+categoryMapping.child(categoryMapping);
 
 var cartMapping = controllerMappings
         .websiteController()

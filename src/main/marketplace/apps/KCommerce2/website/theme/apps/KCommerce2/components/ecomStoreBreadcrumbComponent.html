@@ -1,15 +1,12 @@
 #if ($page)
-
     <ol class="breadcrumb">
         <li><a href="/">Home</a></li>
-        <li><a href="/$store.name/">$!store.name</a></li>
+        <li><a href="/$page.attributes.store.name/">$page.attributes.store.title</a></li>
 #foreach( $pic in $page.attributes.productInStore.product.productInCategorys )
         #renderCat( $pic.category, $page.attributes.store )
 #end
         <li class="active">$!page.name</li>
     </ol>
-
-
 
 #else
 <ol class="breadcrumb">
