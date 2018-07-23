@@ -5,7 +5,7 @@ var productInStoreMapping = controllerMappings
         .enabled(true)
         .isPublic(true)
         .title(function (page) {
-            return "TODO";
+            return page.attributes.productInStore.product.title;
         })
         // .seoContent('_genDealSeoContent')
         .defaultView(views.templateView('/theme/apps/KCommerce2/viewProduct.html'))
@@ -18,15 +18,17 @@ var categoryMapping = controllerMappings
         .enabled(true)
         .isPublic(true)
         .title(function (page) {
-            return "TODO";
+            return page.attributes.category.title;
         })
         // .seoContent('_genDealSeoContent')
         //.defaultView(views.templateView('/theme/apps/KCommerce2/viewCategory.html'))
         .addMethod('GET', 'doEcomSearch', 'q')
         .addMethod('GET', 'doSuggestionList', 'suggestions')
         .addMethod('GET', 'doEcomList')
-
         .pathSegmentResolver('category', 'resolveCategory');
+
+// BM: cats needs to be recursive
+categoryMapping.child(categoryMapping);
 
 var cartMapping = controllerMappings
         .websiteController()

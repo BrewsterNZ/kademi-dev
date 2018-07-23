@@ -1,35 +1,30 @@
 #if ($page)
-    #set ($ecommerceApp = $applications.ecommerce)
-    #if ($ptype == 'ecomStoreDashboard')
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li><a href="/$page.attributes.store.name/">$page.attributes.store.title</a></li>
+#foreach( $pic in $page.attributes.productInStore.product.productInCategorys )
+        #renderCat( $pic.category, $page.attributes.store )
+#end
+        <li class="active">$!page.name</li>
+    </ol>
 
-        #if($page.is('category'))
-            #set($store = $page.parent)
-            <ol class="breadcrumb">
-                <li><a href="/">Home</a></li>
-                <li><a href="/$store.name">$!store.name</a></li>
-                <li class="active">$!page.name</li>
-            </ol>
-        #else
-            <ol class="breadcrumb">
-                <li><a href="/">Home</a></li>
-                <li class="active">$!page.name</a></li>
-            ##            <li><a href="$cate.href">$cate.title</a></li>
-            </ol>
-        #end
-
-    #elseif ($ptype == 'ecomStoreProduct')
-        #set ($cate = $page.parent)
-        #set ($store = $cate.parent)
-        <ol class="breadcrumb">
-            <li><a href="/">Home</a></li>
-            <li><a href="$store.href">$store.title</a></li>
-            <li><a href="$cate.href">$cate.title</a></li>
-            <li class="active">$page.title</li>
-        </ol>
-    #end
 #else
 <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li class="active">Sample breadcrumb</li>
 </ol>
+#end
+
+#macro( renderCat $cat $store )
+    #if( $cat.parentCategory )
+    #renderCat( $cat.parentCategory, $store )
+    #end
+    <li><a href="/${store.name}#renderCatHref($cat)/">$cat.title</a></li>
+#end
+
+#macro( renderCatHref $cat )
+#if( $cat.parentCategory )
+#renderCatHref( $cat.parentCategory )
+#end
+/$cat.name
 #end
