@@ -282,7 +282,9 @@
             #else
             <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View</button>
             #end
-            <button type="button" class="btn btn-sm btn-link btn-process-claim" data-id="$hit.fields.recordId.value" data-ocrFileHash="$hit.fields.ocrFileHash.value"><i class="fa fa-spinner"></i> Process</button>
+            #if($hit.fields.ocrFileHash.value)
+            <button type="button" class="btn btn-sm btn-link btn-process-claim" data-id="$hit.fields.recordId.value" data-ocrFileHash="$!hit.fields.ocrFileHash.value" data-receipt="$!hit.fields.receipt.value"><i class="fa fa-spinner"></i> Process</button>
+            #end
         </td>
         <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
     </tr>
@@ -400,12 +402,9 @@
 
                         <div class="row">
                             <div id="scanned-image-section" class="col-sm-4">
-                                <!--<img src="http://moudatest.admin.kademi-ci.co/_hashes/files/65bcb80709c2dd68f11096190691958a28b05d03" alt="OCR File Hash" name="ocrFileHash">-->
-                                <!--<img src="http://moudatest.admin.kademi-ci.co/assets/2a0766a3-1344-4d2d-bbf2-396da618349a" alt="OCR File Hash" name="ocrFileHash">-->
-
                                 <span class='zoom' id='ocrFile'>
                                     <span>Click to Zoom</span>
-                                    <img src="http://moudatest.admin.kademi-ci.co/assets/2a0766a3-1344-4d2d-bbf2-396da618349a" alt="OCR File Hash" name="ocrFileHash"/>
+                                    <img src="" alt="OCR File Hash" name="ocrFileHash"/>
                                 </span>
                             </div>
 
@@ -550,61 +549,59 @@
         </div>
     </div>
 
-    <script>
-        (function ($) {
-            var highConfidenceFrom = '$!page.attributes.settings.highConfidenceFrom';
-            var highConfidenceTo = '$!page.attributes.settings.highConfidenceTo';
+<script>
+        var highConfidenceFrom = '$!page.attributes.settings.highConfidenceFrom';
+        var highConfidenceTo = '$!page.attributes.settings.highConfidenceTo';
 
-            var mediumConfidenceFrom = '$!page.attributes.settings.mediumConfidenceFrom';
-            var mediumConfidenceTo = '$!page.attributes.settings.mediumConfidenceTo';
+        var mediumConfidenceFrom = '$!page.attributes.settings.mediumConfidenceFrom';
+        var mediumConfidenceTo = '$!page.attributes.settings.mediumConfidenceTo';
 
-            var lowConfidenceFrom = '$!page.attributes.settings.lowConfidenceFrom';
-            var lowConfidenceTo = '$!page.attributes.settings.lowConfidenceTo';
+        var lowConfidenceFrom = '$!page.attributes.settings.lowConfidenceFrom';
+        var lowConfidenceTo = '$!page.attributes.settings.lowConfidenceTo';
 
-            #if ($page.attributes.settings.defaultColumns)
-            var defaultColumns = $page.attributes.settings.defaultColumns;
-                    # else
-            var defaultColumns = [
-                    "amount",
-                    "entered",
-                    "productSku",
-                    "attributedTo",
-                    "periodFrom",
-                    "id",
-                    "tags"
-            ];
+        #if ($page.attributes.settings.defaultColumns)
+        var defaultColumns = $page.attributes.settings.defaultColumns;
+                # else
+        var defaultColumns = [
+                "amount",
+                "entered",
+                "productSku",
+                "attributedTo",
+                "periodFrom",
+                "id",
+                "tags"
+        ];
+                #end
+
+        var options = [
+            {value: "", title: "[Do not import]"},
+            {value: "amount", title: "Amount"},
+            {value: "entered", title: "Entered Date"},
+            {value: "productSku", title: "Product Sku"},
+            {value: "attributedTo", title: "Sale attributed to"},
+            {value: "periodFrom", title: "Sale date"},
+            {value: "id", title: "Sales Data Id"},
+            {value: "tags", title: "tags"},
+
+            #foreach($xf in $applications.salesData.getDataSeriesExtraFields($page.attributes.settings.dataSeries))
+                    {value: "$xf.name", title: "$xf.title"},
                     #end
+        ];
 
-            var options = [
-                {value: "", title: "[Do not import]"},
-                {value: "amount", title: "Amount"},
-                {value: "entered", title: "Entered Date"},
-                {value: "productSku", title: "Product Sku"},
-                {value: "attributedTo", title: "Sale attributed to"},
-                {value: "periodFrom", title: "Sale date"},
-                {value: "id", title: "Sales Data Id"},
-                {value: "tags", title: "tags"},
+        function initProcessClaim() {
+            $('#modal-process-claim').on('change', 'select', function () {
+                var index = $('#modal-process-claim').find('select').index(this);
+                defaultColumns[index] = $(this).val();
 
-                #foreach($xf in $applications.salesData.getDataSeriesExtraFields($page.attributes.settings.dataSeries))
-                        {value: "$xf.name", title: "$xf.title"},
-                        #end
-            ];
-
-            function initProcessClaim() {
-                $('#modal-process-claim').on('change', 'select', function () {
-                    var index = $('#modal-process-claim').find('select').index(this);
-                    defaultColumns[index] = $(this).val();
-
-                    $.post('/settingSaleDataClaimer', {defaultColumns: JSON.stringify(defaultColumns)}, function (response) {
-                    });
+                $.post('/settingSaleDataClaimer', {defaultColumns: JSON.stringify(defaultColumns)}, function (response) {
                 });
-            }
-
-            // Init
-            $(function () {
-                initProcessClaim();
             });
-        })(jQuery);
+        }
+
+        // Init
+        $(function () {
+            initProcessClaim();
+        });
     </script>
 </body>
 </html>
