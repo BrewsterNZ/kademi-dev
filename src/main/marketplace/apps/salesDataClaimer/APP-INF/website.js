@@ -802,6 +802,8 @@ function imageClaim(page, params, files) {
 
                 var claimObj = {
                     recordId: claimId,
+                    soldBy: custProfileBean.name,
+                    soldById: custProfileBean.userId,
                     enteredDate: now,
                     modifiedDate: now,
                     status: RECORD_STATUS.NEW,
