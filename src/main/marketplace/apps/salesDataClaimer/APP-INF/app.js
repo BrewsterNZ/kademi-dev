@@ -20,26 +20,26 @@ controllerMappings.addComponent("salesDataClaimer/components", "salesDataImageCl
 controllerMappings.addEventListener('ScanJobEvent', true, 'handleScanJobEvent');
 
 controllerMappings.addTableDef("tableOCRManagerRows", "OCR Manager Rows", "getRows")
-    .addHeader("Sales by")
-    .addHeader("Date")
-    .addHeader("Confidence")
-    .addHeader("Row")
-    .addHeader("Text");
+        .addHeader("Sales by")
+        .addHeader("Date")
+        .addHeader("Confidence")
+        .addHeader("Row")
+        .addHeader("Text");
 
 controllerMappings.addGoalNodeType("claimSubmittedGoal", "salesDataClaimer/claimSubmittedGoalNode.js", "checkSubmittedGoal");
 
 function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
     log.info('checkSubmittedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);
 
-    if(customSettings && customSettings.claimType && eventParams.claimType != customSettings.claimType){
+    if (customSettings && customSettings.claimType && eventParams.claimType != customSettings.claimType) {
         return false;
     }
 
-    if(eventParams.claimType){
+    if (eventParams.claimType) {
         attributes.put(CLAIM_TYPE, eventParams.claimType);
     }
 
-    if(eventParams.points){
+    if (eventParams.points) {
         attributes.put("points", eventParams.points);
     }
 
@@ -66,25 +66,46 @@ function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNod
 controllerMappings.addGoalNodeType("claimProcessedGoal", "salesDataClaimer/claimProcessedGoalNode.js", "checkProcessedGoal");
 
 function checkProcessedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
-    log.info('checkProcessedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);
+    log.info('checkProcessedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}, event.parameters={}', lead, funnel, eventParams, customNextNodes, customSettings, event, event.parameters);
     if (!lead) {
         return true;
     }
 
     var claimId = attributes.get(LEAD_CLAIM_ID);
-    var claimType = attributes.get(CLAIM_TYPE);
+    var claimStatus = event.parameters.status;
 
-    if(customSettings && customSettings.claimType && claimType != customSettings.claimType){
-        return false;
+    if (isNull(claimStatus)) {
+        claimStatus = RECORD_STATUS.APPROVED;
+    } else {
+        claimStatus = parseInt(claimStatus);
     }
+
+    var nextNode;
+
+    switch (claimStatus) {
+        case RECORD_STATUS.APPROVED: // Approved
+        case RECORD_STATUS.APPROVED + '':
+            nextNode = customNextNodes.nodeIdApproved || false;
+            break;
+        case RECORD_STATUS.REJECTED: // Rejected
+        case RECORD_STATUS.REJECTED + '':
+            nextNode = customNextNodes.nodeIdRejected || false;
+            break;
+        default:
+            nextNode = customNextNodes.nodeIdApproved || false;
+    }
+
+    log.info('checkProcessedGoal > status={}', claimStatus);
 
     if (isNotBlank(claimId)) {
         // Process only for this claim ID
-        return safeString(eventParams.claim) === safeString(claimId);
+        if (safeString(eventParams.claim) === safeString(claimId)) {
+            return nextNode;
+        }
     } else {
         attributes.put(LEAD_CLAIM_ID, eventParams.claim);
 
-        return true;
+        return nextNode;
     }
 
     return false;
@@ -104,13 +125,13 @@ function checkGroupSubmittedGoal(rootFolder, lead, funnel, eventParams, customNe
     //var submitted = false;
 
     /*if (isNotBlank(claimId)) {
-        // Process only for this claim ID
-        submitted = safeString(eventParams.claim) === safeString(claimId);
-    } else {
-        attributes.put(LEAD_CLAIM_GROUP_ID, eventParams.claim);
-
-        submitted = true;
-    }*/
+     // Process only for this claim ID
+     submitted = safeString(eventParams.claim) === safeString(claimId);
+     } else {
+     attributes.put(LEAD_CLAIM_GROUP_ID, eventParams.claim);
+     
+     submitted = true;
+     }*/
 
 
     log.info('checkGroupSubmittedGoal > Added claim group id {}', eventParams.claimGroup);
@@ -246,6 +267,10 @@ function saveSettings(page, params) {
         if (params.defaultColumns) {
             page.setAppSetting(APP_NAME, 'defaultColumns', params.defaultColumns);
         }
+
+        if (params.autoRejectThreshold) {
+            page.setAppSetting(APP_NAME, 'autoRejectThreshold', params.autoRejectThreshold);
+        }
     });
 
     return views.jsonResult(true);
@@ -283,6 +308,20 @@ function isAnonymousAllowed(page) {
     }
 
     return allowAnonymous;
+}
+
+function getAutoRejectThreshold(page) {
+    log.info('getAutoRejectThreshold > page={}', page);
+
+    var settings = getAppSettings(page);
+    if (isNotNull(settings)) {
+        var autoRejectThreshold = settings.autoRejectThreshold;
+        if (isNumber(autoRejectThreshold)) {
+            return parseFloat(autoRejectThreshold);
+        }
+    }
+
+    return 0;
 }
 
 function checkRedirect(page, params) {
@@ -338,10 +377,14 @@ function loadTableClaimsOverTime(start, maxRows, rowsResult, rootFolder) {
 
 function handleScanJobEvent(rf, event) {
     log.info('handleScanJobEvent(): {}', event);
+    var autoRejectThreshold = getAutoRejectThreshold(rf);
+    var totalConfidence = event.generatedOCRTable.getTotalConfidence();
+
+    var autoReject = totalConfidence < autoRejectThreshold;
 
     var XMLDocumentString = '<?xml version="1.0" encoding="UTF-8"?>\n';
 
-    XMLDocumentString += '<rows totalConfidence="' + event.generatedOCRTable.getTotalConfidence() + '">';
+    XMLDocumentString += '<rows totalConfidence="' + totalConfidence + '">';
 
     var rows = {
         index: 0,
@@ -394,21 +437,12 @@ function handleScanJobEvent(rf, event) {
         var claim = db.child(id);
 
         if (claim !== null) {
-            var obj = {
-                recordId: id,
-//                soldBy: claim.jsonObject.soldBy,
-//                soldById: claim.jsonObject.soldById,
-//                amount: claim.jsonObject.amount,
-//                soldDate: claim.jsonObject.soldDate,
-                enteredDate: claim.jsonObject.enteredDate,
-                modifiedDate: formatter.formatDateISO8601(formatter.now),
-//                productSku: claim.jsonObject.productSku,
-                status: claim.jsonObject.status,
-                receipt: claim.jsonObject.receipt,
-                ocrFileHash: XMLDocumentHash
-            };
+            var claimJson = JSON.parse(claim.json);
 
-            log.info("handleScanJobEvent: obj {} ocrFileHash {}", obj.recordId, obj.ocrFileHash);
+            claimJson.ocrFileHash = XMLDocumentHash;
+            claimJson.modifiedDate = formatter.formatDateISO8601(formatter.now);
+
+            log.info("handleScanJobEvent: obj {} ocrFileHash {}", claimJson.recordId, claimJson.ocrFileHash);
 
             // Parse extra fields
             var extraFields = getSalesDataExtreFields(page);
@@ -423,9 +457,22 @@ function handleScanJobEvent(rf, event) {
 
             securityManager.runAsUser(claim.modifiedBy, function () {
                 log.info("handleScanJobEvent.4");
-                claim.update(JSON.stringify(obj), TYPE_RECORD);
+                claim.update(JSON.stringify(claimJson), TYPE_RECORD);
             });
             log.info("handleScanJobEvent.5");
+
+            if (autoReject) {
+                claimJson.status = RECORD_STATUS.REJECTED;
+                claim.save(JSON.stringify(claimJson), TYPE_RECORD);
+
+                var enteredUser = applications.userApp.findUserResourceById(claim.jsonObject.soldById);
+                if (isNotNull(enteredUser)) {
+                    var custProfileBean = enteredUser.extProfileBean;
+                    eventManager.goalAchieved('claimProcessedGoal', custProfileBean, {'claim': id, 'status': RECORD_STATUS.REJECTED});
+                } else {
+                    eventManager.goalAchieved('claimProcessedGoal', {'claim': id, 'status': RECORD_STATUS.REJECTED});
+                }
+            }
         } else {
             log.error('This claim does not exist');
         }

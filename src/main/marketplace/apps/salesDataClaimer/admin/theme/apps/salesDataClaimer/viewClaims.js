@@ -14,6 +14,8 @@
             initClaimsTable();
             initUpdateMapping();
             initSettingForm();
+            initAddClaim();
+            initEditClaim();
         }
     });
 
@@ -38,6 +40,168 @@
                     form.trigger('submit');
                 });
             }
+        });
+    }
+
+    function initAddClaim() {
+        var modal = $('#modal-add-claim');
+        var form = modal.find('form');
+        var soldBySearch = form.find('#soldBySearch');
+        var soldBy = form.find('[name=soldBy]');
+        var soldById = form.find('[name=soldById]');
+
+        modal.on('hidden.bs.modal', function () {
+            // Reset the modal
+            form.trigger('reset');
+            form.find('.claim-items-body').empty();
+            form.find('[data-action="add-claim-item"]').click();
+        });
+
+        soldBySearch.entityFinder({
+            type: 'profile',
+            onSelectSuggestion: function (elem, userName, actualId, type) {
+                soldBy.val(userName);
+                soldById.val(actualId);
+            }
+        });
+
+        form.forms({
+            onSuccess: function (resp) {
+                reloadClaimsList(function () {
+                    modal.modal('hide');
+                });
+            }
+        });
+    }
+
+    function initEditClaim() {
+        var modal = $('#modal-edit-claim');
+        var form = modal.find('form');
+        var soldBySearch = form.find('#soldBySearch');
+        var soldBy = form.find('[name=soldBy]');
+        var soldById = form.find('[name=soldById]');
+
+        modal.on('hidden.bs.modal', function () {
+            // Reset the modal
+            form.trigger('reset');
+            form.find('.claim-items-body').empty();
+            form.find('[data-action="add-claim-item"]').click();
+        });
+
+        soldBySearch.entityFinder({
+            type: 'profile',
+            onSelectSuggestion: function (elem, userName, actualId, type) {
+                soldBy.val(userName);
+                soldById.val(actualId);
+            }
+        });
+
+        form.forms({
+            onSuccess: function (resp) {
+                reloadClaimsList(function () {
+                    modal.modal('hide');
+                });
+            }
+        });
+
+        $('body').on('click', '.btn-edit-claim', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var id = btn.data('id');
+            
+            var url = location.pathname + id + '/';
+
+            $.ajax({
+                url: url,
+                type: 'get',
+                dataType: 'json',
+                success: function (resp) {
+                    if (resp && resp.status) {
+                        // We also need to get the claim items :-/
+                        $.ajax({
+                            url: url + '?claimItems',
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (itemsResp) {
+                                if (itemsResp && itemsResp.status) {
+                                    form.attr('action', url);
+                                    modal.find('.modal-action').attr('name', 'updateClaim');
+                                    var addBtn = modal.find('.claim-items [data-action="add-claim-item"]');
+
+                                    // Empty Modal items first
+                                    modal.find('.claim-items-body').empty();
+                                    modal.find('[name="claimItemsLength"]').val(0);
+
+                                    // Populate items
+                                    $.each(itemsResp.data.hits.hits, function (_, item) {
+                                        var index = _;
+                                        var claimItem = item.fields;
+
+                                        console.log('Items', index, claimItem);
+
+                                        var itemElem = modal.find('.claim-item-' + index);
+                                        if (itemElem.length < 1) {
+                                            addBtn.click();
+                                            itemElem = modal.find('.claim-item-' + index);
+                                        }
+
+                                        itemElem.append('<input type="hidden" name="claimid.' + index + '" value="' + claimItem.recordId[0] + '"/>');
+
+                                        if (claimItem.amount && claimItem.amount.length > 0) {
+                                            itemElem.find('[name="amount.' + index + '"]').val(claimItem.amount[0]);
+                                        }
+
+                                        if (claimItem.soldDate && claimItem.soldDate.length > 0) {
+                                            // soldDate
+                                            var soldDate = moment(claimItem.soldDate[0]).format('DD/MM/YYYY HH:mm');
+                                            itemElem.find('[name="soldDate.' + index + '"]').val(soldDate);
+                                        }
+
+                                        if (claimItem.productSku && claimItem.productSku.length > 0) {
+                                            itemElem.find('[name="productSku.' + index + '"]').val(claimItem.productSku[0]);
+                                        }
+                                    });
+
+                                    $.each(resp.data, function (key, value) {
+                                        var newValue = value;
+                                        if (key === 'soldDate') {
+                                            newValue = moment(value).format('DD/MM/YYYY HH:mm');
+                                        } else if (key === 'soldBy') {
+                                            soldBySearch.val(newValue);
+                                            soldBySearch.prev('.search-input').val(newValue);
+                                            soldBySearch.prev('.search-input').data('current-value', newValue);
+                                            console.log('soldBySearch', soldBySearch, newValue);
+                                        }
+
+                                        modal.find('[name=' + key + ']').val(newValue);
+                                    });
+
+                                    if (resp.data.receipt) {
+                                        modal.find('.thumbnail img').attr('src', resp.data.receipt);
+                                        modal.find('.btn-upload-receipt span').html('Upload other receipt');
+                                        modal.find('.btn-upload-receipt i').attr('class', 'fa fa-check');
+                                    }
+
+                                    modal.find('.thumbnail img').attr('src');
+
+                                    modal.modal('show');
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                alert('Error in getting claim items data: ' + errorThrown + '. Please contact your administrators to resolve this issue.');
+                                flog('Error in getting claim items data', jqXHR, textStatus, errorThrown);
+                            }
+                        });
+                    } else {
+                        alert('Error in getting claim data. Please contact your administrators to resolve this issue.');
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Error in getting claim data: ' + errorThrown + '. Please contact your administrators to resolve this issue.');
+                    flog('Error in getting claim data', jqXHR, textStatus, errorThrown);
+                }
+            });
         });
     }
 
@@ -303,15 +467,15 @@
 
                         var columns_amount = $($($rows[0]).find("cell")).length;
 
-                        for(counter = 0; counter < $rows.length; counter++){
+                        for (counter = 0; counter < $rows.length; counter++) {
                             var row_columns_amount = $($($rows[counter]).find("cell")).length;
 
-                            if(row_columns_amount > columns_amount){
+                            if (row_columns_amount > columns_amount) {
                                 columns_amount = row_columns_amount;
                             }
                         }
 
-                        for(counter = 0; counter < columns_amount; counter++){
+                        for (counter = 0; counter < columns_amount; counter++) {
                             var column_select = '';
 
                             column_select += '<th>';
@@ -322,24 +486,24 @@
                         }
 
                         flog("rows", $rows.length);
-                        for(counter = 0; counter < $rows.length; counter++){
+                        for (counter = 0; counter < $rows.length; counter++) {
                             var row = '';
                             row += '<tr data-index="' + $($rows[counter]).attr('index') + '">';
                             row += '    <td><input type="checkbox" data-checkbox/></td>';
 
                             var $cells = $($rows[counter]).find("cell");
-                            for(cells_counter = 0; cells_counter < $cells.length; cells_counter++){
+                            for (cells_counter = 0; cells_counter < $cells.length; cells_counter++) {
                                 var $cell = $($cells[cells_counter]);
 
                                 var confidence = (Math.round(Number($cell.find('confidence').text()) * 100) / 100);
                                 var cell_background;
 
                                 flog("low", lowConfidenceFrom, "medium", mediumConfidenceFrom, "high", highConfidenceTo);
-                                if(confidence >= lowConfidenceFrom && confidence <= lowConfidenceTo){ //low
+                                if (confidence >= lowConfidenceFrom && confidence <= lowConfidenceTo) { //low
                                     cell_background = '#d2a0a0';
-                                }else if(confidence >= mediumConfidenceFrom && confidence <= mediumConfidenceTo){ //mid
+                                } else if (confidence >= mediumConfidenceFrom && confidence <= mediumConfidenceTo) { //mid
                                     cell_background = '#d2c8a0';
-                                }else if(confidence >= highConfidenceFrom && confidence <= highConfidenceTo) {
+                                } else if (confidence >= highConfidenceFrom && confidence <= highConfidenceTo) {
                                     cell_background = '#a0d2a2';
                                 } else {
                                     cell_background = '';
@@ -348,11 +512,11 @@
 
                                 row += '    <td style="background: ' + cell_background + ';">';
                                 row += '        <span>' + confidence + '</span>';
-                                row += '        <input type="text" value="' + $cell.find(':first-child').text()  + '" />';
+                                row += '        <input type="text" value="' + $cell.find(':first-child').text() + '" />';
                                 row += '    </td>';
                             }
 
-                            for(empty_cells_counter = 0; empty_cells_counter < (columns_amount - $cells.length); empty_cells_counter++){
+                            for (empty_cells_counter = 0; empty_cells_counter < (columns_amount - $cells.length); empty_cells_counter++) {
                                 row += '    <td>';
                                 row += '        <input type="text" value="" />';
                                 row += '    </td>';
@@ -365,12 +529,12 @@
                             $('#table-ocr-manager-body').append(row);
                         }
 
-                        $.each(options, function(){
+                        $.each(options, function () {
                             $('#modal-process-claim select').append('<option value="' + this.value + '">' + this.title + '</option>');
                         });
 
                         flog("defaultColumns", defaultColumns);
-                        $('#modal-process-claim select').each(function(){
+                        $('#modal-process-claim select').each(function () {
                             var index = $('#modal-process-claim').find('select').index(this);
                             $(this).val(defaultColumns[index]);
                             flog("col", defaultColumns[index]);
@@ -442,12 +606,12 @@
             }
         });
 
-        modalProcess.on('click', '[name="select-all"]', function(){
+        modalProcess.on('click', '[name="select-all"]', function () {
             $this = $(this);
 
-            if($this.prop('checked')){
+            if ($this.prop('checked')) {
                 $('#modal-process-claim tbody [data-checkbox]').prop('checked', true);
-            }else{
+            } else {
                 $('#modal-process-claim tbody [data-checkbox]').prop('checked', false);
             }
         });
@@ -455,10 +619,10 @@
         $('span#ocrFile').zoom({magnify: 3, on: 'grab'});
 
         modalProcess.on('focus', 'input[type="text"]', function () {
-           $(this).select();
+            $(this).select();
         });
 
-        modalProcess.on('click', '[data-dismiss="modal"]', function(){
+        modalProcess.on('click', '[data-dismiss="modal"]', function () {
             $.fullscreen.exit();
         });
 
@@ -468,14 +632,14 @@
             var $btn = $(this);
             var action;
 
-            if($btn.hasClass('btn-approve-image-claims')){
+            if ($btn.hasClass('btn-approve-image-claims')) {
                 action = 'approve';
             }
-            if($btn.hasClass('btn-save-image-claims')){
+            if ($btn.hasClass('btn-save-image-claims')) {
                 action = 'save';
             }
 
-            if(!confirm("Are you sure you want to " + action + " these claim records?")){
+            if (!confirm("Are you sure you want to " + action + " these claim records?")) {
                 return;
             }
 
@@ -483,12 +647,12 @@
             var columns = [];
             var $columns_select = modalProcess.find('th select');
             $columns_select.each(function () {
-                if(!continue_process){
+                if (!continue_process) {
                     return;
                 }
 
-                if(this.value === ""){
-                    if(!confirm("You have un selected columns which will be deleted, continue?")){
+                if (this.value === "") {
+                    if (!confirm("You have un selected columns which will be deleted, continue?")) {
                         continue_process = false;
                     }
                 }
@@ -496,7 +660,7 @@
                 columns.push(this.value);
             });
 
-            if(!continue_process){
+            if (!continue_process) {
                 return;
             }
 
@@ -515,13 +679,13 @@
                 };
 
                 flog("inputs", $inputs.length);
-                $inputs.each(function(i, n) {
+                $inputs.each(function (i, n) {
                     $input = $(this);
                     flog("process col", i, columns[i], $input.val());
-                    if(columns[i] === ""){
-                        
-                    } else {                       
-                        row.cells.push({column: columns[i], value: this.value, confidence: $.trim($input.closest('td').find('span').html())});                        
+                    if (columns[i] === "") {
+
+                    } else {
+                        row.cells.push({column: columns[i], value: this.value, confidence: $.trim($input.closest('td').find('span').html())});
                     }
                 });
 
@@ -532,7 +696,7 @@
 //             console.log(columns);
 //             return;
 
-            setTimeout(function(){
+            setTimeout(function () {
                 $.ajax({
                     url: MAIN_URL,
                     type: 'POST',
@@ -568,8 +732,8 @@
             }, 200);
         });
 
-        $('.btn-reject-image-claims').on('click', function(e){
-            if(!confirm('Are you that you want to reject the claim?')) {
+        $('.btn-reject-image-claims').on('click', function (e) {
+            if (!confirm('Are you that you want to reject the claim?')) {
                 return;
             }
 
@@ -598,20 +762,20 @@
             });
         });
 
-        table.on('click', '.btn-review-claim', function(){
+        table.on('click', '.btn-review-claim', function () {
             var $this = $(this);
 
             var $tableClaimItemsBody = $('#table-claim-items-body');
             $tableClaimItemsBody.html("");
 
-            $.get('/getSearchClaimItemsResult?claimRecordId=' + $this.data('id')).success(function(response){
+            $.get('/getSearchClaimItemsResult?claimRecordId=' + $this.data('id')).success(function (response) {
                 response = JSON.parse(response);
                 var html = '';
 
-                if(!response.data.length){
+                if (!response.data.length) {
                     html += '<td colspan="99">No claim found</td>';
-                }else{
-                    for(counter = 0; counter < response.data.length; counter++){
+                } else {
+                    for (counter = 0; counter < response.data.length; counter++) {
                         var record = response.data[counter];
 
                         html += '<tr>';

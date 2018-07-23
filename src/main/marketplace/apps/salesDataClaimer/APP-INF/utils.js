@@ -142,7 +142,11 @@ function isNotNull(val) {
  * @returns {Null|String}
  */
 function trimToNull(val) {
-    if (val !== null) {
+    if(val === null || typeof val === 'undefined'){
+        return null;
+    }
+    
+    if (val !== null && typeof val !== 'undefined') {
         val = val.toString().trim();
 
         if (val.length === 0) {

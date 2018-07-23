@@ -9,36 +9,40 @@ JBNodes['claimProcessedGoal'] = {
             title: 'When timeout',
             maxConnections: 1
         },
-        nextNodeId: {
+        nodeIdRejected: {
+            label: 'then',
+            title: 'When Rejected',
+            maxConnections: 1
+        },
+        nodeIdApproved: {
             label: 'then',
             title: 'When approved',
             maxConnections: 1
         }
     },
-    
+
     nodeTypeClass: 'customGoal',
-    
+
     settingEnabled: true,
-    
+
     initSettingForm: function (form) {
         form.append(JBApp.standardGoalSettingControls);
-        
+
         JBApp.initStandardGoalSettingControls(form);
-        
+
         form.forms({
             allowPostForm: false,
             onValid: function () {
                 JBApp.saveStandardGoalSetting(form);
-                
+
                 JBApp.saveFunnel('Funnel is saved');
                 JBApp.hideSettingPanel();
             }
         });
     },
-    
+
     showSettingForm: function (form, node) {
         JBApp.showStandardGoalSettingControls(form, node);
-        
         JBApp.showSettingPanel(node);
     }
 };

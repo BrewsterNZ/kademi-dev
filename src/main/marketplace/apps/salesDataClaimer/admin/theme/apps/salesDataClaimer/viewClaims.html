@@ -9,6 +9,7 @@
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.min.js"></script>
         <script type="text/javascript" src="/static/jquery.fullscreen/0.4.1/jquery.fullscreen-0.4.1.min.js">//</script>
+        <script type="text/javascript" src="/theme/apps/salesDataClaimer/claimForm.js">//</script>
     </head>
     <body>
         #set ($isAdmin = false)
@@ -19,18 +20,18 @@
         #set ($selectedDateSeries = $page.attributes.settings.dataSeries)
 
         #if (!$selectedDateSeries || $selectedDateSeries == "")
-            <form class="form-horizontal form-settings-claim" action="/settingSaleDataClaimer" method="post">
-                <div class="alert alert-warning">
-                    <p><i class="fa fa-exclamation-circle"></i> No data series selected. Please select data series
-                        <select name="dataSeries" class="save-on-change">
-                            <option value=""> - None -</option>
-                            #foreach ($dataSeries in $page.find("/sales").children)
-                                $formatter.option($dataSeries.name, $dataSeries.title, "")
-                            #end
-                        </select> for <b>Sales Claims</b>. You can create new data series at <a href="/sales/new/">here</a>.
-                    </p>
-                </div>
-            </form>
+        <form class="form-horizontal form-settings-claim" action="/settingSaleDataClaimer" method="post">
+            <div class="alert alert-warning">
+                <p><i class="fa fa-exclamation-circle"></i> No data series selected. Please select data series
+                    <select name="dataSeries" class="save-on-change">
+                        <option value=""> - None -</option>
+                        #foreach ($dataSeries in $page.find("/sales").children)
+                        $formatter.option($dataSeries.name, $dataSeries.title, "")
+                        #end
+                    </select> for <b>Sales Claims</b>. You can create new data series at <a href="/sales/new/">here</a>.
+                </p>
+            </div>
+        </form>
         #end
 
         <div class="tabbable">
@@ -69,6 +70,9 @@
                                 #if ($isAdmin)
                                 <p class="btn-group btn-group-sm">
                                     <button type="button" class="btn btn-info btn-update-mapping"><i class="fa fa-refresh"></i> Update mapping</button>
+                                </p>
+                                <p class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-success" data-target="#modal-add-claim" data-toggle="modal"><i class="fa fa-plus"></i> Add Claim</button>
                                 </p>
                                 #end
                                 <p class="btn-group btn-group-sm">
@@ -151,11 +155,11 @@
                             <tbody id="table-claims-group-body">
                                 #set ($searchResult = $page.attributes.searchClaimGroupsResult)
                                 #if ($searchResult.hits.hits.size() > 0)
-                                    #foreach($hit in $searchResult.hits.hits)
+                                #foreach($hit in $searchResult.hits.hits)
 
-                                        #renderClaimGroup($hit)
+                                #renderClaimGroup($hit)
 
-                                    #end
+                                #end
                                 #else
                                 <tr>
                                     <td colspan="99">No claim Groups found</td>
@@ -211,6 +215,15 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-3 control-label" for="salesDataClaimer-autoRejectThreshold">
+                                Auto Reject Threshold
+                                <small><i>If the total confidence falls below this value then it will automatically be rejected</i></small>
+                            </label>
+                            <div class="col-sm-3">
+                                <input type="number" class="form-control" name="autoRejectThreshold" id="salesDataClaimer-autoRejectThreshold" value="$!page.attributes.settings.autoRejectThreshold" />
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <div class="col-sm-3 col-sm-offset-3">
                                 <button type="submit" class="btn btn-sm btn-success">Save</button>
                             </div>
@@ -221,211 +234,337 @@
         </div>
 
         #macro (renderClaim $hit)
-        <tr>
-            <td class="fa-2x text-center">
-                #if ($hit.fields.status.value == 0)
-                <i class="fa fa-circle text-muted" title="New"></i>
-                #elseif ($hit.fields.status.value == 1)
-                <i class="fa fa-check-circle text-success" title="Approved"></i>
-                #elseif ($hit.fields.status.value == -1)
-                <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
-                #end
-            </td>
-            <td>
-                #if ($hit.fields.receipt.value)
-                <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail claim-receipt">
-                    <span style="background-image: url('$hit.fields.receipt.value');"></span>
-                </a>
-                #end
-            </td>
-            #* <td>$hit.fields.amount.value</td> *#
-            #* <td>
-                #set ($soldDate = $formatter.toDate($hit.fields.soldDate.value))
-                <abbr class="timeago" title="$formatter.formatDateISO8601($soldDate, $page.organisation.timezone)">
-                    $formatter.formatTimeLong($soldDate, $page.organisation.timezone)
-                </abbr>
-            </td> *#
-            #* <td><a href="/manageUsers/$!hit.fields.soldById.value/">$!hit.fields.soldBy.value</a></td> *#
-            <td>
-                #set ($enteredDate = $formatter.toDate($hit.fields.enteredDate.value))
-                <abbr class="timeago" title="$formatter.formatDateISO8601($enteredDate, $page.organisation.timezone)">
-                    $formatter.formatTimeLong($enteredDate, $page.organisation.timezone)
-                </abbr>
-            </td>
-            #* <td>$!hit.fields.productSku.value</td> *#
-            <td>#if ($formatter.isNull($hit.fields.claimGroupId.value))
-                -
+    <tr>
+        <td class="fa-2x text-center">
+            #if ($hit.fields.status.value == 0)
+            <i class="fa fa-circle text-muted" title="New"></i>
+            #elseif ($hit.fields.status.value == 1)
+            <i class="fa fa-check-circle text-success" title="Approved"></i>
+            #elseif ($hit.fields.status.value == -1)
+            <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
+            #end
+        </td>
+        <td>
+            #if ($hit.fields.receipt.value)
+            <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail claim-receipt">
+                <span style="background-image: url('$hit.fields.receipt.value');"></span>
+            </a>
+            #end
+        </td>
+        #* <td>$hit.fields.amount.value</td> *#
+        #* <td>
+            #set ($soldDate = $formatter.toDate($hit.fields.soldDate.value))
+            <abbr class="timeago" title="$formatter.formatDateISO8601($soldDate, $page.organisation.timezone)">
+                $formatter.formatTimeLong($soldDate, $page.organisation.timezone)
+            </abbr>
+        </td> *#
+        #* <td><a href="/manageUsers/$!hit.fields.soldById.value/">$!hit.fields.soldBy.value</a></td> *#
+        <td>
+            #set ($enteredDate = $formatter.toDate($hit.fields.enteredDate.value))
+            <abbr class="timeago" title="$formatter.formatDateISO8601($enteredDate, $page.organisation.timezone)">
+                $formatter.formatTimeLong($enteredDate, $page.organisation.timezone)
+            </abbr>
+        </td>
+        #* <td>$!hit.fields.productSku.value</td> *#
+        <td>#if ($formatter.isNull($hit.fields.claimGroupId.value))
+            -
             #else
-                <a href="/manageSaleDataClaimer/?claimGroup=$hit.fields.claimGroupId.value#claim-groups-tab">$hit.fields.claimGroupId.value</a>
+            <a href="/manageSaleDataClaimer/?claimGroup=$hit.fields.claimGroupId.value#claim-groups-tab">$hit.fields.claimGroupId.value</a>
             #end
-            <td>
-                #if ($hit.fields.status.value == 0)
-                <button type="button" class="btn btn-sm btn-link btn-review-claim" data-id="$hit.fields.recordId.value">
-                    <i class="fa fa-pencil-square-o"></i> Review
-                </button>
-                #else
-                <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View</button>
-                #end
-                <button type="button" class="btn btn-sm btn-link btn-process-claim" data-id="$hit.fields.recordId.value" data-ocrFileHash="$hit.fields.ocrFileHash.value"><i class="fa fa-spinner"></i> Process</button>
-            </td>
-            <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
-        </tr>
-        #end
-
-        #macro (renderClaimGroup $hit)
-            #if($formatter.isNotNull($hit.source.contactRequest))
-                #set( $contactPath = "/manageContacts/" + $hit.source.contactRequest )
-                #set( $contactRequest = $page.find($contactPath) )
-                <tr>
-                    <td>$hit.source.claimGroupId</td>
-                    <td>$contactRequest.contactRequest.firstName $contactRequest.contactRequest.surName</td>
-                    <td>$contactRequest.contactRequest.email</td>
-                    <td>$contactRequest.contactRequest.fieldValue('action-type')</td>
-                    <td>$contactRequest.contactRequest.fieldValue('purchase-date')</td>
-                    <td>$contactRequest.contactRequest.fieldValue('store-name')</td>
-                    <td><a href="/manageSaleDataClaimer/?claimGroup=$hit.source.claimGroupId#claims-list-tab">$contactRequest.contactRequest.fieldValue('claims-number')</a></td>
-                    <td><a href='/manageContacts/$contactRequest.contactRequest.id'>View</a></td>
-                    <td>#set($createDate = $formatter.parseDate($hit.source.enteredDate)) $formatter.formatDate($createDate, $page.organisation.timezone)</td>
-                </tr>
+        <td>
+            #if ($hit.fields.status.value == 0)
+            <button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.fields.recordId.value">
+                <i class="fa fa-pencil-square-o"></i> Edit
+            </button>
+            <button type="button" class="btn btn-sm btn-link btn-review-claim" data-id="$hit.fields.recordId.value">
+                <i class="fa fa-eye"></i> Review
+            </button>
+            #else
+            <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View</button>
             #end
-        #end
+            <button type="button" class="btn btn-sm btn-link btn-process-claim" data-id="$hit.fields.recordId.value" data-ocrFileHash="$hit.fields.ocrFileHash.value"><i class="fa fa-spinner"></i> Process</button>
+        </td>
+        <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
+    </tr>
+    #end
 
-        <div class="modal fade" id="modal-review-claim">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h3 class="modal-title">Review claim</h3>
+    #macro (renderClaimGroup $hit)
+    #if($formatter.isNotNull($hit.source.contactRequest))
+    #set( $contactPath = "/manageContacts/" + $hit.source.contactRequest )
+    #set( $contactRequest = $page.find($contactPath) )
+    <tr>
+        <td>$hit.source.claimGroupId</td>
+        <td>$contactRequest.contactRequest.firstName $contactRequest.contactRequest.surName</td>
+        <td>$contactRequest.contactRequest.email</td>
+        <td>$contactRequest.contactRequest.fieldValue('action-type')</td>
+        <td>$contactRequest.contactRequest.fieldValue('purchase-date')</td>
+        <td>$contactRequest.contactRequest.fieldValue('store-name')</td>
+        <td><a href="/manageSaleDataClaimer/?claimGroup=$hit.source.claimGroupId#claims-list-tab">$contactRequest.contactRequest.fieldValue('claims-number')</a></td>
+        <td><a href='/manageContacts/$contactRequest.contactRequest.id'>View</a></td>
+        <td>#set($createDate = $formatter.parseDate($hit.source.enteredDate)) $formatter.formatDate($createDate, $page.organisation.timezone)</td>
+    </tr>
+    #end
+    #end
+
+    <div class="modal fade" id="modal-review-claim">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Review claim</h3>
+                </div>
+                <form class="form-horizontal form-new-claim" action="/manageSaleDataClaimer/" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="form-message alert alert-danger" style="display: none;"></div>
+                        <input type="hidden" name="createClaim" value="true" class="modal-action" />
+                        <input type="hidden" name="ids" value="" class="" />
+
+                        #*
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Amount</label>
+
+                            <div class="col-md-8">
+                                <p class="form-control-static amount"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Date</label>
+
+                            <div class="col-md-8">
+                                <p class="form-control-static soldDate"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Product SKU</label>
+
+                            <div class="col-md-8">
+                                <p class="form-control-static productSku"></p>
+                            </div>
+                        </div>
+
+                        #foreach($xf in $app.call("getSalesDataExtreFields", $page))
+                        <div class="form-group">
+                            <label class="control-label col-md-4">$formatter.firstNotNull($xf.title, $xf.name)</label>
+
+                            <div class="col-md-8">
+                                <p class="form-control-static field_${xf.name}"></p>
+                            </div>
+                        </div>
+                        #end
+
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Receipt</label>
+
+                            <div class="col-md-8">
+                                <p class="thumbnail">
+                                    <img src="" class="img-responsive" />
+                                </p>
+                            </div>
+                        </div>
+                        *#
+
+
+                        <table class="table table-hover table-striped" id="table-claims">
+                            <thead>
+                                <tr>
+                                    <th>Amount</th>
+                                    <th>Product SKU</th>
+                                    <th>Sold Date</th>
+                                    <th>Sold By</th>
+                                    <th>Modification Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-claim-items-body"></tbody>
+                        </table>
+
                     </div>
-                    <form class="form-horizontal form-new-claim" action="/manageSaleDataClaimer/" method="post" enctype="multipart/form-data">
-                        <div class="modal-body">
-                            <div class="form-message alert alert-danger" style="display: none;"></div>
-                            <input type="hidden" name="createClaim" value="true" class="modal-action" />
-                            <input type="hidden" name="ids" value="" class="" />
-
-                            #*
-                            <div class="form-group">
-                                <label class="control-label col-md-4">Amount</label>
-
-                                <div class="col-md-8">
-                                    <p class="form-control-static amount"></p>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-4">Date</label>
-
-                                <div class="col-md-8">
-                                    <p class="form-control-static soldDate"></p>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-4">Product SKU</label>
-
-                                <div class="col-md-8">
-                                    <p class="form-control-static productSku"></p>
-                                </div>
-                            </div>
-
-                            #foreach($xf in $app.call("getSalesDataExtreFields", $page))
-                            <div class="form-group">
-                                <label class="control-label col-md-4">$formatter.firstNotNull($xf.title, $xf.name)</label>
-
-                                <div class="col-md-8">
-                                    <p class="form-control-static field_${xf.name}"></p>
-                                </div>
-                            </div>
-                            #end
-
-                            <div class="form-group">
-                                <label class="control-label col-md-4">Receipt</label>
-
-                                <div class="col-md-8">
-                                    <p class="thumbnail">
-                                        <img src="" class="img-responsive" />
-                                    </p>
-                                </div>
-                            </div>
-                            *#
-
-
-                            <table class="table table-hover table-striped" id="table-claims">
-                                <thead>
-                                    <tr>
-                                        <th>Amount</th>
-                                        <th>Product SKU</th>
-                                        <th>Sold Date</th>
-                                        <th>Sold By</th>
-                                        <th>Modification Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="table-claim-items-body"></tbody>
-                            </table>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button class="btn btn-success btn-approve-claim" type="button">Approve</button>
-                            <button class="btn btn-danger btn-reject-claim" type="button">Reject</button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button class="btn btn-success btn-approve-claim" type="button">Approve</button>
+                        <button class="btn btn-danger btn-reject-claim" type="button">Reject</button>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
 
-        <div class="modal modal-full fade" id="modal-process-claim">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form class="form-horizontal form-new-claim" action="/manageSaleDataClaimer/" method="post" enctype="multipart/form-data">
-                        <div class="modal-body">
-                            <code class="pull-right totalConfidence">Total Confidence: <span></span></code>
-                            <div class="form-message alert alert-danger" style="display: none;"></div>
+    <div class="modal modal-full fade" id="modal-process-claim">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form class="form-horizontal form-new-claim" action="/manageSaleDataClaimer/" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <code class="pull-right totalConfidence">Total Confidence: <span></span></code>
+                        <div class="form-message alert alert-danger" style="display: none;"></div>
 
-                            <div class="row">
-                                <div id="scanned-image-section" class="col-sm-4">
-                                    <!--<img src="http://moudatest.admin.kademi-ci.co/_hashes/files/65bcb80709c2dd68f11096190691958a28b05d03" alt="OCR File Hash" name="ocrFileHash">-->
-                                    <!--<img src="http://moudatest.admin.kademi-ci.co/assets/2a0766a3-1344-4d2d-bbf2-396da618349a" alt="OCR File Hash" name="ocrFileHash">-->
+                        <div class="row">
+                            <div id="scanned-image-section" class="col-sm-4">
+                                <!--<img src="http://moudatest.admin.kademi-ci.co/_hashes/files/65bcb80709c2dd68f11096190691958a28b05d03" alt="OCR File Hash" name="ocrFileHash">-->
+                                <!--<img src="http://moudatest.admin.kademi-ci.co/assets/2a0766a3-1344-4d2d-bbf2-396da618349a" alt="OCR File Hash" name="ocrFileHash">-->
 
-                                    <span class='zoom' id='ocrFile'>
-                                        <span>Click to Zoom</span>
-                                        <img src="http://moudatest.admin.kademi-ci.co/assets/2a0766a3-1344-4d2d-bbf2-396da618349a" alt="OCR File Hash" name="ocrFileHash"/>
-                                    </span>
-                                </div>
+                                <span class='zoom' id='ocrFile'>
+                                    <span>Click to Zoom</span>
+                                    <img src="http://moudatest.admin.kademi-ci.co/assets/2a0766a3-1344-4d2d-bbf2-396da618349a" alt="OCR File Hash" name="ocrFileHash"/>
+                                </span>
+                            </div>
 
-                                <div class="col-sm-8">
-                                    <table class="table table-striped table-hover table-condensed">
-                                        <thead><tr></tr></thead>
-                                        <tbody id="table-ocr-manager-body"></tbody>
-                                    </table>
-                                </div>
+                            <div class="col-sm-8">
+                                <table class="table table-striped table-hover table-condensed">
+                                    <thead><tr></tr></thead>
+                                    <tbody id="table-ocr-manager-body"></tbody>
+                                </table>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button class="btn btn-primary btn-save-image-claims" type="button">Save</button>
-                            <button class="btn btn-success btn-approve-image-claims" type="button">Approve</button>
-                            <button class="btn btn-danger btn-reject-image-claims" type="button">Reject</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button class="btn btn-primary btn-save-image-claims" type="button">Save</button>
+                        <button class="btn btn-success btn-approve-image-claims" type="button">Approve</button>
+                        <button class="btn btn-danger btn-reject-image-claims" type="button">Reject</button>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
 
-        <script>
-            var highConfidenceFrom = $page.attributes.settings.highConfidenceFrom;
-            var highConfidenceTo = $page.attributes.settings.highConfidenceTo;
+    <div class="modal fade" id="modal-add-claim">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Add claim</h3>
+                </div>
+                <form class="form-horizontal form-new-claim" action="/manageSaleDataClaimer/" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="form-message alert alert-danger" style="display: none;"></div>
+                        <input type="hidden" name="createClaim" value="true" />
+                        <input type="hidden" name="claimItemsLength" value="0" />
+                        <input name="soldBy" type="hidden"/>
+                        <input name="soldById" type="hidden"/>
 
-            var mediumConfidenceFrom = $page.attributes.settings.mediumConfidenceFrom;
-            var mediumConfidenceTo = $page.attributes.settings.mediumConfidenceTo;
+                        <div class="form-group">
+                            <label class="control-label col-lg-2">Sold By</label>
+                            <div class="col-lg-10">
+                                <input id="soldBySearch" type="text" class="form-control required" required="required" placeholder="Sold By"/>
+                            </div>
+                        </div>
 
-            var lowConfidenceFrom = $page.attributes.settings.lowConfidenceFrom;
-            var lowConfidenceTo = $page.attributes.settings.lowConfidenceTo;
+                        <div class="claim-items">
+                            <div class="claim-items-body"></div>
 
-            #if($page.attributes.settings.defaultColumns)
-              var defaultColumns = $page.attributes.settings.defaultColumns;
-            #else
-                var defaultColumns = [
+                            <button class="btn btn-primary btn-block" type="button" data-action="add-claim-item"><i class="fa fa-plus"></i> Add claim item</button>
+                        </div>
+
+                        #foreach($xf in $app.call("getSalesDataExtreFields", $page))
+                        <div class="form-group">
+                            <label for="field_${xf.name}" class="control-label sr-only">$formatter.firstNotNull($xf.title, $xf.name)</label>
+
+                            <div class="col-sm-12">
+                                $xf.html
+                            </div>
+                        </div>
+                        #end
+
+                        <div class="form-group">
+                            <label class="control-label sr-only">Receipt</label>
+
+                            <div class="col-sm-12">
+                                <p class="thumbnail">
+                                    <img src="/static/images/photo_holder.png" class="img-responsive" />
+                                </p>
+                                <button type="button" class="btn btn-sm btn-info btn-upload-receipt"><i class="fa fa-file-picture-o"></i> <span>Upload receipt</span></button>
+                                <span class="text-danger img-error" style="display: none;">Selected file is not image!</span>
+                                <input type="file" name="receiptImage" class="form-control" style="display: none !important;" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button class="btn btn-success" type="submit">Save claim</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-edit-claim">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Edit claim</h3>
+                </div>
+                <form class="form-horizontal form-new-claim" action="/manageSaleDataClaimer/" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="form-message alert alert-danger" style="display: none;"></div>
+                        <input type="hidden" name="updateClaim" value="true" />
+                        <input type="hidden" name="claimItemsLength" value="0" />
+                        <input name="soldBy" type="hidden"/>
+                        <input name="soldById" type="hidden"/>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-2">Sold By</label>
+                            <div class="col-lg-10">
+                                <input id="soldBySearch" type="text" class="form-control required" required="required" placeholder="Sold By"/>
+                            </div>
+                        </div>
+
+                        <div class="claim-items">
+                            <div class="claim-items-body"></div>
+
+                            <button class="btn btn-primary btn-block" type="button" data-action="add-claim-item"><i class="fa fa-plus"></i> Add claim item</button>
+                        </div>
+
+                        #foreach($xf in $app.call("getSalesDataExtreFields", $page))
+                        <div class="form-group">
+                            <label for="field_${xf.name}" class="control-label sr-only">$formatter.firstNotNull($xf.title, $xf.name)</label>
+
+                            <div class="col-sm-12">
+                                $xf.html
+                            </div>
+                        </div>
+                        #end
+
+                        <div class="form-group">
+                            <label class="control-label sr-only">Receipt</label>
+
+                            <div class="col-sm-12">
+                                <p class="thumbnail">
+                                    <img src="/static/images/photo_holder.png" class="img-responsive" />
+                                </p>
+                                <button type="button" class="btn btn-sm btn-info btn-upload-receipt"><i class="fa fa-file-picture-o"></i> <span>Upload receipt</span></button>
+                                <span class="text-danger img-error" style="display: none;">Selected file is not image!</span>
+                                <input type="file" name="receiptImage" class="form-control" style="display: none !important;" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button class="btn btn-success" type="submit">Save claim</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function ($) {
+            var highConfidenceFrom = '$!page.attributes.settings.highConfidenceFrom';
+            var highConfidenceTo = '$!page.attributes.settings.highConfidenceTo';
+
+            var mediumConfidenceFrom = '$!page.attributes.settings.mediumConfidenceFrom';
+            var mediumConfidenceTo = '$!page.attributes.settings.mediumConfidenceTo';
+
+            var lowConfidenceFrom = '$!page.attributes.settings.lowConfidenceFrom';
+            var lowConfidenceTo = '$!page.attributes.settings.lowConfidenceTo';
+
+            #if ($page.attributes.settings.defaultColumns)
+            var defaultColumns = $page.attributes.settings.defaultColumns;
+                    # else
+            var defaultColumns = [
                     "amount",
                     "entered",
                     "productSku",
@@ -433,8 +572,8 @@
                     "periodFrom",
                     "id",
                     "tags"
-                ];
-            #end
+            ];
+                    #end
 
             var options = [
                 {value: "", title: "[Do not import]"},
@@ -447,18 +586,25 @@
                 {value: "tags", title: "tags"},
 
                 #foreach($xf in $applications.salesData.getDataSeriesExtraFields($page.attributes.settings.dataSeries))
-                    {value: "$xf.name", title: "$xf.title"},
-                #end
+                        {value: "$xf.name", title: "$xf.title"},
+                        #end
             ];
 
-            $('#modal-process-claim').on('change', 'select', function(){
-                var index = $('#modal-process-claim').find('select').index(this);
-                defaultColumns[index] = $(this).val();
+            function initProcessClaim() {
+                $('#modal-process-claim').on('change', 'select', function () {
+                    var index = $('#modal-process-claim').find('select').index(this);
+                    defaultColumns[index] = $(this).val();
 
-                $.post('/settingSaleDataClaimer', {defaultColumns: JSON.stringify(defaultColumns)}, function(response){
-
+                    $.post('/settingSaleDataClaimer', {defaultColumns: JSON.stringify(defaultColumns)}, function (response) {
+                    });
                 });
+            }
+
+            // Init
+            $(function () {
+                initProcessClaim();
             });
-        </script>
-    </body>
+        })(jQuery);
+    </script>
+</body>
 </html>
