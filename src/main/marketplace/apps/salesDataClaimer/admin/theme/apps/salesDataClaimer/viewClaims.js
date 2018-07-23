@@ -437,6 +437,8 @@
             var btn = $(this);
             var id = btn.attr('data-id');
             var url = MAIN_URL + 'ocrFile/' + id + '/?hash=' + btn.data('ocrfilehash');
+            
+            var receiptUrl = btn.data('receipt');
 
             $('.btn-save-image-claims').attr('data-ocrfilehash', btn.data('ocrfilehash'));
             $('.btn-save-image-claims').attr('data-id', btn.data('id'));
@@ -452,8 +454,8 @@
                 dataType: 'json',
                 success: function (resp) {
                     if (resp && resp.status) {
-                        // modalProcess.find('[name=ids]').val(id);
-                        // modalProcess.find('img[name="ocrFileHash"]').attr('src', '/_hashes/files/');
+                        modalProcess.find('[name=ids]').val(id);
+                        modalProcess.find('img[name="ocrFileHash"]').attr('src', receiptUrl);
 
                         var xmlDocument = $.parseXML(resp.OCRFileXML);
                         var $xml = $(xmlDocument);

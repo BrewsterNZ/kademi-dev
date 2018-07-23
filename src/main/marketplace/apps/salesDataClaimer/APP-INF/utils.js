@@ -329,3 +329,20 @@ function toCleanArray(arr) {
 
     return cleanArr;
 }
+
+function safeFloat(o) {
+    if (isNull(o)) {
+        return 0;
+    } else if (typeof o === 'number') {
+        return o;
+    } else {
+        var s = safeString(o);
+        var i = parseFloat(s, 10);
+        if (isNaN(i)) {
+            return 0;
+        } else {
+            return i;
+        }
+
+    }
+}

@@ -316,9 +316,7 @@ function getAutoRejectThreshold(page) {
     var settings = getAppSettings(page);
     if (isNotNull(settings)) {
         var autoRejectThreshold = settings.autoRejectThreshold;
-        if (isNumber(autoRejectThreshold)) {
-            return parseFloat(autoRejectThreshold);
-        }
+        return safeFloat(autoRejectThreshold);
     }
 
     return 0;
