@@ -26,7 +26,7 @@
 
                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-upload-remotehash">Set Remote Hash</button>
                 </p>
-            </div>            
+            </div>
         </div>
 
         #set( $locks = $page.locks )
@@ -75,7 +75,7 @@
                         <button class="btn btn-sm btn-info" type="button" data-toggle="collapse" data-target="#set-hash-container" aria-expanded="false" aria-controls="set-hash-container">
                             <i class="fa fa-cog"></i>
                             Set hash manually
-                        </button>        
+                        </button>
 
                     </div>
                     <div class="col-lg-7">
@@ -156,7 +156,7 @@
                                 <td>
                                     <a href="/repositories/$c.branch.repository.name/commit-$c.id/" class="btn btn-sm btn-info">
                                         <i class="fa fa-folder-o"></i>
-                                    </a>                                    
+                                    </a>
                                 </td>
                                 #if( $noBranch )
                                 <td>
@@ -173,14 +173,16 @@
                                         #else
                                         $c.editor.name
                                         #end
-                                    </a>                                    
+                                    </a>
                                 </td>
                                 <td>
                                     <abbr title="$formatter.formatDateISO8601($!c.createdDate)" class="info timeago">$!c.createdDate</abbr> @
                                     $formatter.formatTime($c.createdDate)
                                 </td>
                                 <td class="action">
-                                    <a href="/repositories/$c.branch.repository.name/" class="btn btn-sm btn-success btn-restore-repo" title="Restore this version" rel="$!c.commit.itemHash"><i class="fa fa-undo"></i></a>
+                                    <a href="/repositories/$c.branch.repository.name/" class="btn btn-sm btn-success btn-restore-repo" title="Restore this version" rel="$c.itemHash">
+                                        <i class="fa fa-undo"></i>
+                                    </a>
                                 </td>
                             </tr>
                             #end

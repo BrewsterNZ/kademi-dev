@@ -163,7 +163,7 @@ function revert(hash, tbody, config, href) {
     try {
         var pageHref = href;
 
-        flog("revert: ", pageHref);
+        flog("revert: ", pageHref, hash);
         $.ajax({
             type: "POST",
             url: pageHref,

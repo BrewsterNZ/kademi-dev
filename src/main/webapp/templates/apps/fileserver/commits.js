@@ -17,7 +17,7 @@ function doHistorySearch() {
 
     var link = window.location.pathname + "?" + $.param(data);
     flog("new link", link);
-    
+
     $.ajax({
         type: "GET",
         url: link,
@@ -43,6 +43,7 @@ function initEvents() {
         e.preventDefault();
         var node = $(e.target).closest("a");
         var hash = node.attr('rel');
+        flog("hash: ", hash);
         var revertHref = ".history";
         confirmRevert(hash, null, {
             getPageUrl: function () {
