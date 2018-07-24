@@ -12,6 +12,8 @@
         <script type="text/javascript" src="/theme/apps/salesDataClaimer/claimForm.js">//</script>
     </head>
     <body>
+        
+        #set ($app = $applications.salesDataClaimer)
         #set ($isAdmin = false)
         #if ($user.isInGroup("administrators") || $user.isInGroup("administrator") || $user.isInGroup("admin") || $user.hasRole("Administrator"))
         #set ($isAdmin = true)
