@@ -7,6 +7,12 @@
                 "cssMedia": "all",
                 "path": "/theme/apps/fontawesome-lib/css/all.css"
             }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/fontawesome-lib/css/v4-shims.min.css"
+            }
         }
     ]
 }
