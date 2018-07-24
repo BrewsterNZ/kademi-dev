@@ -1,8 +1,8 @@
 #if($page)
-    #if ($orientation == 'horizontal' && $page.horizontalImageHref)
-        #set($image = $page.horizontalImageHref)
-    #elseif ($orientation == 'vertical' && $page.verticalImageHref)
-        #set($image = $page.verticalImageHref)
+    #if ($orientation == 'horizontal' && $page.bestHorizontalImageHref)
+        #set($image = $page.bestHorizontalImageHref)
+    #elseif ($orientation == 'vertical' && $page.bestVerticalImageHref)
+        #set($image = $page.bestVerticalImageHref)
     #else
         #set($image = $page.bestDefaultImageHref)
     #end
