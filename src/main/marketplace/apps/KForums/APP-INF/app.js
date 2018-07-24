@@ -120,8 +120,8 @@ function deletePost(page, params, files, form) {
 
 function reportPost(page, params, files, form) {
     var postId = form.longParam("deletePostId");
-    var category = form.longParam("category");
-    var comment = form.longParam("comment");
+    var category = form.rawParam("category");
+    var comment = form.rawParam("comment");
 
     var postToReport = services.forumManager.findPost(postId);
     
