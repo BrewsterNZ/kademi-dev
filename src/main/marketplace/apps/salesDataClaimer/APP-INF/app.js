@@ -460,8 +460,11 @@ function handleScanJobEvent(rf, event) {
             log.info("handleScanJobEvent.5");
 
             if (autoReject) {
-                claimJson.status = RECORD_STATUS.REJECTED;
-                claim.save(JSON.stringify(claimJson), TYPE_RECORD);
+                securityManager.runAsUser(claim.modifiedBy, function () {
+                    log.info("handleScanJobEvent.4");
+                    claimJson.status = RECORD_STATUS.REJECTED;
+                    claim.update(JSON.stringify(claimJson));
+                });
 
                 var enteredUser = applications.userApp.findUserResourceById(claim.jsonObject.soldById);
                 if (isNotNull(enteredUser)) {

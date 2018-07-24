@@ -109,7 +109,7 @@
 
             var btn = $(this);
             var id = btn.data('id');
-            
+
             var url = location.pathname + id + '/';
 
             $.ajax({
@@ -396,22 +396,56 @@
                 dataType: 'json',
                 success: function (resp) {
                     if (resp && resp.status) {
-                        $.each(resp.data, function (key, value) {
-                            var newValue = value;
-                            if (key === 'soldDate') {
-                                newValue = '<abbr class="timeago" title="' + value + '">' + value + '</abbr>';
+                        // Get claim items
+                        $.ajax({
+                            url: url + '?claimItems',
+                            type: 'get',
+                            dataType: 'json',
+                            success: function (respItems) {
+                                if (respItems && respItems.status) {
+                                    var claimItemsBody = modalReview.find('#table-claim-items-body');
+
+                                    claimItemsBody.empty();
+                                    // Load Claim Items
+                                    $.each(respItems.data.hits.hits, function (_, item) {
+                                        var claimItem = item.fields;
+
+                                        var claimRow = '<tr>' +
+                                                '<td>' + (claimItem.amount && claimItem.amount.length > 0 ? claimItem.amount[0] : '') + '</td>' +
+                                                '<td>' + (claimItem.productSku && claimItem.productSku.length > 0 ? claimItem.productSku[0] : '') + '</td>' +
+                                                '<td>' + (claimItem.soldDate && claimItem.soldDate.length > 0 ? claimItem.soldDate[0] : '') + '</td>' +
+                                                '<td>' + (claimItem.soldBy && claimItem.soldBy.length > 0 ? claimItem.soldBy[0] : '') + '</td>' +
+                                                '<td>' + (claimItem.modifiedDate && claimItem.modifiedDate.length > 0 ? claimItem.modifiedDate[0] : '') + '</td>' +
+                                                '</tr>';
+
+                                        claimItemsBody.append(claimRow);
+                                    });
+
+                                    $.each(resp.data, function (key, value) {
+                                        var newValue = value;
+                                        if (key === 'soldDate') {
+                                            newValue = '<abbr class="timeago" title="' + value + '">' + value + '</abbr>';
+                                        }
+
+                                        modalReview.find('.' + key).html(newValue);
+                                    });
+
+                                    modalReview.find('.thumbnail img').attr('src', resp.data.receipt || '/static/images/photo_holder.png');
+
+                                    modalReview.find('.timeago').timeago();
+                                    modalReview.find('[name=ids]').val(id);
+                                    modalReview.find('.btn-approve-claim, .btn-reject-claim').css('display', isReview ? 'inline-block' : 'none');
+                                    modalReview.find('.modal-title').html(isReview ? 'Review claim' : 'View claim details');
+                                    modalReview.modal('show');
+                                } else {
+                                    alert('Error in getting claim item data. Please contact your administrators to resolve this issue.');
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                alert('Error in getting claim item data: ' + errorThrown + '. Please contact your administrators to resolve this issue.');
+                                flog('Error in getting claim item data', jqXHR, textStatus, errorThrown);
                             }
-
-                            modalReview.find('.' + key).html(newValue);
                         });
-
-                        modalReview.find('.thumbnail img').attr('src', resp.data.receipt || '/static/images/photo_holder.png');
-
-                        modalReview.find('.timeago').timeago();
-                        modalReview.find('[name=ids]').val(id);
-                        modalReview.find('.btn-approve-claim, .btn-reject-claim').css('display', isReview ? 'inline-block' : 'none');
-                        modalReview.find('.modal-title').html(isReview ? 'Review claim' : 'View claim details');
-                        modalReview.modal('show');
                     } else {
                         alert('Error in getting claim data. Please contact your administrators to resolve this issue.');
                     }
@@ -437,7 +471,7 @@
             var btn = $(this);
             var id = btn.attr('data-id');
             var url = MAIN_URL + 'ocrFile/' + id + '/?hash=' + btn.data('ocrfilehash');
-            
+
             var receiptUrl = btn.data('receipt');
 
             $('.btn-save-image-claims').attr('data-ocrfilehash', btn.data('ocrfilehash'));
@@ -445,6 +479,9 @@
 
             $('.btn-approve-image-claims').attr('data-ocrfilehash', btn.data('ocrfilehash'));
             $('.btn-approve-image-claims').attr('data-id', btn.data('id'));
+
+            $('.btn-process-image-claims').attr('data-ocrfilehash', btn.data('ocrfilehash'));
+            $('.btn-process-image-claims').attr('data-id', btn.data('id'));
 
             $('.btn-reject-image-claims').attr('data-id', btn.data('id'));
 
@@ -628,6 +665,40 @@
             $.fullscreen.exit();
         });
 
+        modalProcess.on('click', '.btn-process-image-claims', function (e) {
+            e.preventDefault();
+
+            var $btn = $(this);
+            var claimId = $btn.data('id');
+
+            if (confirm("Are you sure you want to process these claim records?")) {
+                // First we need to save it. Then we process it
+                var rows = getImageRows(modalProcess);
+
+                $.ajax({
+                    url: MAIN_URL,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        processImageClaim: true,
+                        id: claimId,
+                        rows: JSON.stringify(rows)
+                    },
+                    success: function (resp) {
+                        if (resp && resp.status) {
+                            Msg.success(resp.messages);
+                        } else {
+                            Msg.error(resp.messages || 'An unknown error processing the claims. Please contact your administrators to resolve this issue.');
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        Msg.error('Error in processing claims: ' + errorThrown + '. Please contact your administrators to resolve this issue.');
+                        flog('Error in processing claims', jqXHR, textStatus, errorThrown);
+                    }
+                });
+            }
+        });
+
         modalProcess.on('click', '.btn-approve-image-claims, .btn-save-image-claims', function (e) {
             e.preventDefault();
 
@@ -645,93 +716,11 @@
                 return;
             }
 
-            var continue_process = true;
-            var columns = [];
-            var $columns_select = modalProcess.find('th select');
-            $columns_select.each(function () {
-                if (!continue_process) {
-                    return;
+            saveImageDetails(modalProcess, $btn.data('ocrfilehash'), $btn.data('id'), function (status) {
+                if (status) {
+                    Msg.success("Claims save done successfully");
                 }
-
-                if (this.value === "") {
-                    if (!confirm("You have un selected columns which will be deleted, continue?")) {
-                        continue_process = false;
-                    }
-                }
-
-                columns.push(this.value);
             });
-
-            if (!continue_process) {
-                return;
-            }
-
-            modalProcess.find('select').attr('disabled', 'disabled');
-            modalProcess.find('input').attr('disabled', 'disabled');
-
-            var rows = [];
-            var checked = modalProcess.find('tbody [data-checkbox]:checkbox:checked');
-            checked.each(function () {
-                var $checkbox = $(this);
-                var $tr = $checkbox.closest('tr');
-                var $inputs = $tr.find('input[type="text"]');
-                var row = {
-                    'cells': [],
-                    'index': $tr.attr('data-index')
-                };
-
-                flog("inputs", $inputs.length);
-                $inputs.each(function (i, n) {
-                    $input = $(this);
-                    flog("process col", i, columns[i], $input.val());
-                    if (columns[i] === "") {
-
-                    } else {
-                        row.cells.push({column: columns[i], value: this.value, confidence: $.trim($input.closest('td').find('span').html())});
-                    }
-                });
-
-                rows.push(row);
-            });
-
-//             console.log(rows);
-//             console.log(columns);
-//             return;
-
-            setTimeout(function () {
-                $.ajax({
-                    url: MAIN_URL,
-                    type: 'POST',
-                    dataType: 'JSON',
-                    data: {
-                        processImageClaims: true,
-                        action: action,
-                        rows: JSON.stringify(rows),
-                        old_hash: $btn.data('ocrfilehash'),
-                        id: $btn.data('id'),
-                        totalConfidence: $('.totalConfidence span').html()
-                    },
-                    async: false,
-                    success: function (resp) {
-                        reloadClaimsList();
-
-                        flog('RESP ', resp);
-                        Msg.success("Claims " + action + " done successfully");
-                        modalProcess.modal('hide');
-
-                        modalProcess.find('[name="select-all"]').prop('checked', false);
-                        modalProcess.find('select').removeAttr('disabled');
-                        modalProcess.find('input').removeAttr('disabled');
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        flog('Error in checking address: ', jqXHR, textStatus, errorThrown);
-                        Msg.error("Something went wrong !");
-
-                        modalProcess.find('select').removeAttr('disabled');
-                        modalProcess.find('input').removeAttr('disabled');
-                    }
-                });
-            }, 200);
         });
 
         $('.btn-reject-image-claims').on('click', function (e) {
@@ -793,6 +782,134 @@
                 $tableClaimItemsBody.html(html).find('.timeago').timeago();
             });
         });
+    }
+
+    function getImageRows(modalProcess) {
+        var columns = [];
+        var $columns_select = modalProcess.find('th select');
+        $columns_select.each(function () {
+            columns.push(this.value);
+        });
+
+        var rows = [];
+        var checked = modalProcess.find('tbody [data-checkbox]:checkbox:checked');
+        checked.each(function () {
+            var $checkbox = $(this);
+            var $tr = $checkbox.closest('tr');
+            var $inputs = $tr.find('input[type="text"]');
+            var row = {
+                'cells': [],
+                'index': $tr.attr('data-index')
+            };
+
+            flog("inputs", $inputs.length);
+            $inputs.each(function (i, n) {
+                $input = $(this);
+                flog("process col", i, columns[i], $input.val());
+                if (columns[i] === "") {
+
+                } else {
+                    row.cells.push({column: columns[i], value: this.value, confidence: $.trim($input.closest('td').find('span').html())});
+                }
+            });
+
+            rows.push(row);
+        });
+
+        return rows;
+    }
+
+    function saveImageDetails(modalProcess, ocrfilehash, claimId, cb) {
+        var continue_process = true;
+        var columns = [];
+        var $columns_select = modalProcess.find('th select');
+        $columns_select.each(function () {
+            if (!continue_process) {
+                return;
+            }
+
+            if (this.value === "") {
+                if (!confirm("You have un selected columns which will be deleted, continue?")) {
+                    continue_process = false;
+                }
+            }
+
+            columns.push(this.value);
+        });
+
+        if (!continue_process) {
+            if (typeof cb === 'function') {
+                cb(false);
+            }
+            return;
+        }
+
+        var rows = [];
+        var checked = modalProcess.find('tbody [data-checkbox]:checkbox:checked');
+        checked.each(function () {
+            var $checkbox = $(this);
+            var $tr = $checkbox.closest('tr');
+            var $inputs = $tr.find('input[type="text"]');
+            var row = {
+                'cells': [],
+                'index': $tr.attr('data-index')
+            };
+
+            flog("inputs", $inputs.length);
+            $inputs.each(function (i, n) {
+                $input = $(this);
+                flog("process col", i, columns[i], $input.val());
+                if (columns[i] === "") {
+
+                } else {
+                    row.cells.push({column: columns[i], value: this.value, confidence: $.trim($input.closest('td').find('span').html())});
+                }
+            });
+
+            rows.push(row);
+        });
+
+        setTimeout(function () {
+            $.ajax({
+                url: MAIN_URL,
+                type: 'POST',
+                dataType: 'JSON',
+                data: {
+                    processImageClaims: true,
+                    action: 'save',
+                    rows: JSON.stringify(rows),
+                    old_hash: ocrfilehash,
+                    id: claimId,
+                    totalConfidence: modalProcess.find('.totalConfidence span').html()
+                },
+                async: false,
+                success: function (resp) {
+                    reloadClaimsList();
+
+                    flog('RESP ', resp);
+                    modalProcess.modal('hide');
+
+                    modalProcess.find('[name="select-all"]').prop('checked', false);
+                    modalProcess.find('select').removeAttr('disabled');
+                    modalProcess.find('input').removeAttr('disabled');
+
+                    if (typeof cb === 'function') {
+                        cb(true);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    flog('Error in checking address: ', jqXHR, textStatus, errorThrown);
+                    Msg.error("Something went wrong !");
+
+                    modalProcess.find('select').removeAttr('disabled');
+                    modalProcess.find('input').removeAttr('disabled');
+
+                    if (typeof cb === 'function') {
+                        cb(false);
+                    }
+                }
+            });
+        }, 200);
     }
 
     function reloadClaimsGroupList(callback) {

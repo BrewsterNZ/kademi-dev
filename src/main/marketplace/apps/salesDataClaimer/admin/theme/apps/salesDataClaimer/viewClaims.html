@@ -419,7 +419,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button class="btn btn-primary btn-save-image-claims" type="button">Save</button>
-                        <button class="btn btn-success btn-approve-image-claims" type="button">Approve</button>
+                        <button class="btn btn-success btn-process-image-claims" type="button">Process</button>
                         <button class="btn btn-danger btn-reject-image-claims" type="button">Reject</button>
                     </div>
                 </form>
@@ -561,7 +561,7 @@
 
         #if ($page.attributes.settings.defaultColumns)
         var defaultColumns = $page.attributes.settings.defaultColumns;
-                # else
+        #else
         var defaultColumns = [
                 "amount",
                 "entered",
@@ -571,7 +571,7 @@
                 "id",
                 "tags"
         ];
-                #end
+        #end
 
         var options = [
             {value: "", title: "[Do not import]"},

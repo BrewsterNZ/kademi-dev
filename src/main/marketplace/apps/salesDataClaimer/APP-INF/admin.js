@@ -29,6 +29,7 @@ controllerMappings
         .addMethod('POST', 'rejectClaims', 'rejectClaims')
         .addMethod('POST', 'deleteClaims', 'deleteClaims')
         .addMethod('POST', 'createClaim', 'createClaim')
+        .addMethod('POST', 'processImageClaim', 'processImageClaim')
         .addMethod('POST', 'saveImageClaims')
         .postPriviledge('READ_CONTENT')
         .enabled(true)
@@ -358,12 +359,104 @@ function createImageClaimTagging(page, params, files) {
     return views.jsonObjectView(response);
 }
 
+function processImageClaim(page, params, files) {
+    log.info('processImageClaim(): {} {}', page, files);
+
+    var result = {
+        status: true
+    };
+    try {
+        var db = getDB(page);
+        var claimId = params.id;
+
+        var claim = db.child(claimId);
+
+        if (claim !== null && typeof claim !== 'undefined') {
+            var claimJson = JSON.parse(claim.json);
+            var rows = params.rows;
+
+            if (isNotNull(rows)) {
+                var rowsJson = JSON.parse(rows);
+                if (rowsJson.length > 0) {
+                    var dataManager = services.dataSeriesManager;
+                    var settings = getAppSettings(page);
+                    var selectedDataSeries = settings.get('dataSeries');
+                    var dataSeries = dataManager.dataSeries(selectedDataSeries);
+
+                    var claimItems = [];
+
+                    for (var i = 0; i < rowsJson.length; i++) {
+                        var row = rowsJson[i];
+
+                        var claimItem = {};
+
+                        for (var o = 0; o < row.cells.length; o++) {
+                            var cell = row.cells[o];
+
+                            switch (cell.column) {
+                                case 'amount':
+                                    claimItem.amount = parseFloat(cell.value);
+                                    break;
+                                case 'productSku':
+                                    claimItem.productSku = cell.value;
+                                    break;
+                                case 'entered':
+                                    break;
+                                case 'attributedTo':
+                                    var participant = findParticipant(cell.value, dataSeries);
+                                    if (isNotNull(participant)) {
+                                        claimItem.soldBy = participant.name;
+                                        claimItem.soldById = participant.userId;
+                                    }
+                                    break;
+                                case 'periodFrom':
+                                    var periodFromDate = formatter.toDate(cell.value);
+                                    var formattedDate = formatter.formatDateISO8601(periodFromDate);
+                                    claimItem.soldDate = formattedDate;
+                                    break;
+                                case 'id':
+                                    break;
+                                case 'tags':
+                                    break;
+                            }
+                        }
+
+                        if (!claimItem.hasOwnProperty('soldDate')) {
+                            claimItem.soldDate = claimJson.enteredDate;
+                        }
+
+                        claimItems.push(claimItem);
+                    }
+
+                    createClaimItem(db, claimJson, claimItems);
+                } else {
+                    result.status = false;
+                    result.messages = ['No rows to process'];
+                }
+            } else {
+                result.status = false;
+                result.messages = ['No rows to process'];
+            }
+        } else {
+            result.status = false;
+            result.messages = ['This claim does not exist'];
+        }
+    } catch (e) {
+        log.error('Error when updating claim: ' + e, e);
+        result.status = false;
+        result.messages = ['Error when updating claim: ' + e];
+    }
+
+    return views.jsonObjectView(JSON.stringify(result));
+}
+
 function saveImageClaims(page, params, files) {
     log.info('saveImageClaims(): {} {}', page, files);
 
     var result = {
-        status: true
-    }
+        status: true,
+        messages: []
+    };
 
     var rows = JSON.parse(params.rows);
 
@@ -391,44 +484,6 @@ function saveImageClaims(page, params, files) {
 
     result.XMLDocumentHash = fileManager.upload(xml.getBytes());
 
-    if (params.action == "approve") {
-        log.info("processImageClaims: approve");
-
-        var dataManager = services.dataSeriesManager;
-        var settings = getAppSettings(page);
-        var selectedDataSeries = settings.get('dataSeries');
-        var dataSeries = dataManager.dataSeries(selectedDataSeries);
-
-        for (var rows_counter = 0; rows_counter < rows.length; rows_counter++) {
-            var row = rows[rows_counter];
-            var dp = dataManager.newDataPoint();
-            dp.series = dataSeries;
-            dp.saleDate = formatter.now;
-            dp.attributedTo = securityManager.currentUser.thisProfile;
-            dp.fields = formatter.newMap();
-
-            log.info("cells.. {}", row['cells'].length);
-            for (var cells_counter = 0; cells_counter < row['cells'].length; cells_counter++) {
-                var key = rows[rows_counter]['cells'][cells_counter]['column'];
-                var val = formatter.toString(rows[rows_counter]['cells'][cells_counter]['value']).trim();
-                log.info("processing key={} val={}", key, val);
-                if (key == "productSku") {
-                    dp.productSku = val;
-                } else if (key == "attributedTo") {
-                    dp.attributedTo = findParticipant(val, dp.series);
-                } else if (key == "amount") {
-                    dp.amount = formatter.toBigDecimal(val);
-                } else if (key == "periodFrom") {
-                    dp.periodFrom = formatter.toDate(val);
-                } else {
-                    dp.fields.put(key, val);
-                }
-            }
-
-            dataManager.insertDataPoint(dp);
-        }
-    }
-
     /**
      * Update Claim Status & New XML hash
      */
@@ -438,25 +493,10 @@ function saveImageClaims(page, params, files) {
         var claim = db.child(id);
 
         if (claim !== null) {
-            var obj = {
-                recordId: id,
-//                soldBy: claim.jsonObject.soldBy,
-//                soldById: claim.jsonObject.soldById,
-//                amount: claim.jsonObject.amount,
-//                soldDate: claim.jsonObject.soldDate,
-                enteredDate: claim.jsonObject.enteredDate,
-                modifiedDate: formatter.formatDateISO8601(formatter.now),
-//                productSku: claim.jsonObject.productSku,
-                status: claim.jsonObject.status,
-                receipt: claim.jsonObject.receipt,
-                ocrFileHash: result.XMLDocumentHash
-            };
+            var claimJson = JSON.parse(claim.json);
 
-            if (params.action == "approve") {
-                obj.status = RECORD_STATUS.APPROVED;
-            } else {
-                obj.status = claim.jsonObject.status;
-            }
+            claimJson.modifiedDate = formatter.formatDateISO8601(formatter.now);
+            claimJson.ocrFileHash = result.XMLDocumentHash;
 
             // Parse extra fields
             var extraFields = getSalesDataExtreFields(page);
@@ -464,10 +504,10 @@ function saveImageClaims(page, params, files) {
                 var ex = extraFields[i];
                 var fieldName = 'field_' + ex.name;
 
-                obj[fieldName] = params.get(fieldName) || '';
+                claimJson[fieldName] = params.get(fieldName) || '';
             }
 
-            claim.update(JSON.stringify(obj), TYPE_RECORD);
+            claim.update(JSON.stringify(claimJson), TYPE_RECORD);
         } else {
             result.status = false;
             result.messages = ['This claim does not exist'];
