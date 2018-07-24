@@ -859,6 +859,7 @@ function createClaimItem(db, claimObj, claimItems){
             claimItemObj.soldById = claimItem.soldById;
         }
 
-        db.createNew(claimItemObj.recordId, JSON.stringify(claimItemObj), TYPE_CLAIM_ITEM);
+        var doc = db.createNew(claimItemObj.recordId, JSON.stringify(claimItemObj), TYPE_CLAIM_ITEM);
+        log.info("createClaimItem: Created item {}", doc.name);
     }
 }
