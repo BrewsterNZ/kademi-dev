@@ -829,12 +829,13 @@ function imageClaim(page, params, files) {
 }
 
 function createClaimItem(db, claimObj, claimItems){
-    log.info('imageClaim(): claimId {}, createClaimItem()', claimObj.recordId);
+    log.info('createClaimItem() - {}', claimObj.recordId);
 
     var enteredUser = securityManager.currentUser;
     var soldBy = enteredUser.name;
     var soldById = enteredUser.userId;
 
+    log.info('createClaimItem(): claimItems.length={}', claimItems.length);
     for(counter = 0; counter < claimItems.length; counter++){
         var claimItem = claimItems[counter];
 

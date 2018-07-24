@@ -385,6 +385,7 @@ function processImageClaim(page, params, files) {
 
                     var claimItems = [];
 
+                    log.info("processImageClaim: rows={}", rowsJson.length);
                     for (var i = 0; i < rowsJson.length; i++) {
                         var row = rowsJson[i];
 
@@ -427,7 +428,7 @@ function processImageClaim(page, params, files) {
 
                         claimItems.push(claimItem);
                     }
-
+                    log.info("processImageClaim: claimItems={}", claimItems.length);
                     createClaimItem(db, claimJson, claimItems);
                 } else {
                     result.status = false;
