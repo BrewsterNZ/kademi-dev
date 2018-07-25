@@ -23,6 +23,14 @@
                         component.attr('data-topic', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('.select-is-feed').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-is-feed', $(this).prop("selected"));
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -31,7 +39,7 @@
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-topic').val(dataAttributes['data-topic']);
-
+            form.find('.select-is-feed').prop("selected", dataAttributes['data-is-feed'] == "true");
         }
     };
 
