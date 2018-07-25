@@ -190,25 +190,3 @@ var recordMapping = {
         }
     }
 };
-
-var claimGroupMapping = {
-    "properties": {
-        "claimGroupId": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
-        },
-        "enteredDate": {
-            "type": "date",
-            "store": true
-        },
-        "contactRequest": {
-            "type": "long",
-            "store": true
-        }
-    }
-};

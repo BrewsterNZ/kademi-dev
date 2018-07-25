@@ -1,3 +1,5 @@
+/* global controllerMappings */
+
 controllerMappings.addQuery("/APP-INF/queries/claimsOverTime.query.json", ["kongo-salesDataClaimer"], ["ReportsViewer"]);
 controllerMappings.addQuery("/APP-INF/queries/claimsTable.query.json", ["kongo-salesDataClaimer"], ["ReportsViewer"]);
 
@@ -109,38 +111,6 @@ function checkProcessedGoal(rootFolder, lead, funnel, eventParams, customNextNod
     }
 
     return false;
-}
-
-controllerMappings.addGoalNodeType("claimGroupSubmittedGoal", "salesDataClaimer/claimGroupSubmittedGoalNode.js", "checkGroupSubmittedGoal");
-
-function checkGroupSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
-    log.info('checkGroupSubmittedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);
-
-    if (!lead) {
-        log.info('checkGroupSubmittedGoal > No Lead Found');
-
-        return true;
-    }
-
-    //var submitted = false;
-
-    /*if (isNotBlank(claimId)) {
-     // Process only for this claim ID
-     submitted = safeString(eventParams.claim) === safeString(claimId);
-     } else {
-     attributes.put(LEAD_CLAIM_GROUP_ID, eventParams.claim);
-     
-     submitted = true;
-     }*/
-
-
-    log.info('checkGroupSubmittedGoal > Added claim group id {}', eventParams.claimGroup);
-
-    //if (submitted) {
-    lead.setFieldValue("claim_group_recordId", eventParams.claimGroup);
-    //}
-
-    return true;
 }
 
 function initSalesDataClaimerApp(orgRoot, webRoot, enabled) {
@@ -413,10 +383,6 @@ function handleScanJobEvent(rf, event) {
 
     XMLDocumentString += '</rows>';
     log.info("XMLDocumentString: {}", XMLDocumentString);
-
-//    Dummy XML with multi-columns
-//    XMLDocumentString = dummyXML();
-//    log.info("XMLDocumentString: {}", XMLDocumentString);
 
     var XMLDocumentHash = fileManager.upload(XMLDocumentString.getBytes());
 

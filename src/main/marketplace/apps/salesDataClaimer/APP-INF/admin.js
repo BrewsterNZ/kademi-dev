@@ -1,4 +1,4 @@
-/*global controllerMappings, views, log, formatter, applications, eventManager, RECORD_STATUS, TYPE_CLAIM_ITEM, services, fileManager, TYPE_RECORD, TYPE_CLAIM_GROUP*/
+/*global controllerMappings, views, log, formatter, applications, eventManager, RECORD_STATUS, TYPE_CLAIM_ITEM, services, fileManager, TYPE_RECORD*/
 
 controllerMappings
         .adminController()
@@ -80,7 +80,6 @@ function getAllClaims(page, params) {
         var db = getDB(page);
 
         page.attributes.claims = db.findByType(TYPE_RECORD);
-        page.attributes.claimGroups = db.findByType(TYPE_CLAIM_GROUP);
         page.attributes.settings = getAppSettings(page);
     }
 }
