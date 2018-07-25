@@ -209,64 +209,37 @@ function approveClaims(page, params) {
             var selectedDataSeries = settings.get('dataSeries');
             var dataSeries = applications.salesData.getSalesDataSeries(selectedDataSeries);
 
+            log.info("approveClaims: ids={}", ids.length);
             for (var i = 0; i < ids.length; i++) {
                 (function (id) {
                     var claim = db.child(id);
 
                     if (claim !== null) {
-                        var queryJson = {
-                            'stored_fields': [
-                                'recordId',
-                                'claimRecordId',
-                                'modifiedDate',
-                                'soldBy',
-                                'soldById',
-                                'amount',
-                                'productSku',
-                                'soldDate'
-                            ],
-                            'size': 10000,
-                            'sort': [
-                                {
-                                    'soldDate': 'desc'
-                                }
-                            ],
-                            'query': {
-                                'bool': {
-                                    'must': [
-                                        {'type': {'value': TYPE_CLAIM_ITEM}},
-                                        {'term': {'claimRecordId': claim.jsonObject.recordId}}
-                                    ]
-                                }
-                            }
-                        };
+                        log.info("approveClaims: found claim={}", claim.name);
 
-                        var claim_items = doDBSearch(page, queryJson);
-                        var hits = claim_items.hits;
-                        var hitsList = hits.getHits();
+                        var claimOb = claim.jsonObject;
+                        var claimsItems = claimOb.claimItems;
+                        log.info("approveClaims: found claim items={}", claimsItems.length);
 
-                        for (counter = 0; counter < hits.totalHits(); counter++) {
-                            var soldById = hitsList[counter].getField('soldById').value;
-                            var amount = hitsList[counter].getField('amount').value;
-                            var soldDate = hitsList[counter].getField('soldDate').value;
-                            var productSku = hitsList[counter].getField('productSku').value;
 
-                            amount = formatter.toBigDecimal(amount);
-                            soldDate = formatter.toDate(Date.parse(soldDate).toString());
-                            enteredDate = formatter.toDate(Date.parse(claim.jsonObject.enteredDate).toString());
 
-                            var obj = {
-                                soldById: soldById,
-                                amount: amount,
-                                soldDate: soldDate,
-                                enteredDate: enteredDate,
-                                productSku: productSku
-                            };
+                        log.info("approveClaims: claim items={}", claimOb.claimItems.length);
+                        for (var counter = 0; counter < claimOb.claimItems.length; counter++) {
+                            var claimItem = claimOb.claimItems[counter];
 
-                            var enteredUser = applications.userApp.findUserResourceById(obj.soldById);
-                            var custProfileBean = enteredUser.extProfileBean;
-                            applications.salesData.insertDataPoint(dataSeries, obj.amount, obj.soldDate, obj.soldDate, enteredUser.thisUser, enteredUser.thisUser, obj.enteredDate, obj.productSku);
+                            var enteredUser = services.userManager.findById(claimItem.soldById);
 
+                            var dp = services.dataSeriesManager.newDataPoint();
+                            dp.series = dataSeries;
+                            dp.amount = formatter.toBigDecimal(claimItem.amount);
+                            dp.periodFrom = formatter.toDate(Date.parse(claimItem.soldDate).toString());
+                            dp.attributedTo = enteredUser;
+                            dp.entered = dp.periodFrom; // should be claim date
+                            dp.productSku = claimItem.productSku;
+
+                            services.dataSeriesManager.insertDataPoint(dp);
+
+                            var custProfileBean = services.userManager.toProfileBean(enteredUser);
                             eventManager.goalAchieved('claimProcessedGoal', custProfileBean, {'claim': id, 'status': RECORD_STATUS.APPROVED});
                         }
                     }
