@@ -155,9 +155,9 @@
                                 </tr>
                             </thead>
                             <tbody id="table-claims-group-body">
-                                #set ($searchResult = $page.attributes.searchClaimGroupsResult)
-                                #if ($searchResult.hits.hits.size() > 0)
-                                #foreach($hit in $searchResult.hits.hits)
+                                #set ($searchResult = $page.attributes.claimGroups)
+                                #if ($searchResult.size() > 0)
+                                #foreach($hit in $searchResult)
 
                                 #renderClaimGroup($hit)
 
@@ -293,19 +293,19 @@
     #end
 
     #macro (renderClaimGroup $hit)
-    #if($formatter.isNotNull($hit.source.contactRequest))
-    #set( $contactPath = "/manageContacts/" + $hit.source.contactRequest )
+    #if($formatter.isNotNull($hit.contactRequest))
+    #set( $contactPath = "/manageContacts/" + $hit.contactRequest )
     #set( $contactRequest = $page.find($contactPath) )
     <tr>
-        <td>$hit.source.claimGroupId</td>
+        <td>$hit.claimGroupId</td>
         <td>$contactRequest.contactRequest.firstName $contactRequest.contactRequest.surName</td>
         <td>$contactRequest.contactRequest.email</td>
         <td>$contactRequest.contactRequest.fieldValue('action-type')</td>
         <td>$contactRequest.contactRequest.fieldValue('purchase-date')</td>
         <td>$contactRequest.contactRequest.fieldValue('store-name')</td>
-        <td><a href="/manageSaleDataClaimer/?claimGroup=$hit.source.claimGroupId#claims-list-tab">$contactRequest.contactRequest.fieldValue('claims-number')</a></td>
+        <td><a href="/manageSaleDataClaimer/?claimGroup=$hit.claimGroupId#claims-list-tab">$contactRequest.contactRequest.fieldValue('claims-number')</a></td>
         <td><a href='/manageContacts/$contactRequest.contactRequest.id'>View</a></td>
-        <td>#set($createDate = $formatter.parseDate($hit.source.enteredDate)) $formatter.formatDate($createDate, $page.organisation.timezone)</td>
+        <td>#set($createDate = $formatter.parseDate($hit.enteredDate)) $formatter.formatDate($createDate, $page.organisation.timezone)</td>
     </tr>
     #end
     #end
