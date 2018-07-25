@@ -66,13 +66,6 @@ controllerMappings
         .enabled(true)
         .build();
 
-//controllerMappings
-//        .adminController()
-//        .pathSegmentName('getSearchClaimItemsResult')
-//        .enabled(true)
-//        .addMethod('GET', 'getSearchClaimItemsResult')
-//        .build();
-
 controllerMappings
         .adminController()
         .path('/salesDataClaimsProducts/tagClaim')
@@ -84,12 +77,6 @@ function getAllClaims(page, params) {
     log.info('getAllClaims > page={}, params={}', page, params);
 
     if (!params.claimId) {
-        // WT: We shouldn't use ES for this, Just return the items!
-//        var results = searchClaims(page, params.status, undefined, params.claimGroup);
-//        var claimGroupsResult = searchClaimGroups(page, params.claimGroup);
-//        page.attributes.searchResult = results;
-//        page.attributes.searchClaimGroupsResult = claimGroupsResult;
-
         var db = getDB(page);
 
         page.attributes.claims = db.findByType(TYPE_RECORD);
@@ -97,50 +84,6 @@ function getAllClaims(page, params) {
         page.attributes.settings = getAppSettings(page);
     }
 }
-
-//function getSearchClaimItemsResult(page, params) {
-//    var searchClaimItemsResult = searchClaimItems(page, params.claimRecordId, null);
-//    var result = {"status": true, "data": []};
-//
-//    var hits = searchClaimItemsResult.hits;
-//    var hitsList = hits.getHits();
-//    for (counter = 0; counter < hits.totalHits(); counter++) {
-//        var soldDate = "";
-//        var modifiedDate = "";
-//        var productSku = "";
-//
-//        if (hitsList[counter].getField('soldDate') !== null) {
-//            soldDate = hitsList[counter].getField('soldDate').value;
-//        }
-//        if (hitsList[counter].getField('modifiedDate') !== null) {
-//            modifiedDate = hitsList[counter].getField('modifiedDate').value;
-//        }
-//        if (hitsList[counter].getField('productSku') !== null) {
-//            productSku = hitsList[counter].getField('productSku').value;
-//        }
-//
-//        var row = {
-//            "amount": hitsList[counter].getField('amount').value,
-//            "productSku": productSku,
-//            "soldDate": {
-//                "value": soldDate,
-//                "formatDateISO8601": formatter.toDate(soldDate),
-//                "formatTimeLong": formatter.formatTimeLong(soldDate, page.organisation.timezone)
-//            },
-//            "soldBy": hitsList[counter].getField('soldBy').value,
-//            "modifiedDate": {
-//                "value": modifiedDate,
-//                "formatDateISO8601": formatter.toDate(modifiedDate),
-//                "formatTimeLong": formatter.formatTimeLong(modifiedDate, page.organisation.timezone)
-//            },
-//            "soldById": hitsList[counter].getField('soldById').value
-//        };
-//
-//        result.data.push(row);
-//    }
-//
-//    return views.jsonObjectView(JSON.stringify(result));
-//}
 
 function changeClaimsStatus(status, page, params, callback) {
     log.info('changeClaimsStatus > status={}, page={}, params={}', status, page, params, callback);
@@ -220,8 +163,6 @@ function approveClaims(page, params) {
                         var claimOb = claim.jsonObject;
                         var claimsItems = claimOb.claimItems;
                         log.info("approveClaims: found claim items={}", claimsItems.length);
-
-
 
                         log.info("approveClaims: claim items={}", claimOb.claimItems.length);
                         for (var counter = 0; counter < claimOb.claimItems.length; counter++) {
