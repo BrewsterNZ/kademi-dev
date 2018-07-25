@@ -83,7 +83,7 @@
 
                             #if( $ms.renewal )
                             <span class="label label-success">Processed</span>
-                            #end                            
+                            #end
                         </td>
                         <td>
                             <abbr class="timeago" title="$formatter.formatDateISO8601($ms.expiryDate)">$!ms.expiryDate</abbr>
@@ -168,7 +168,7 @@
                     <tr>
                         <td>$cpd.website.name</td>
                         <td>$cpd.moduleStatus.moduleCode</td>
-                        <td>$cpd.numPoints</td>
+                        <td>$!cpd.numPoints</td>
                     </tr>
                 #end
             #end
