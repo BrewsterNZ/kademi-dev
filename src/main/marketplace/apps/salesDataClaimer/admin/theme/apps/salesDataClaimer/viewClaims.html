@@ -106,19 +106,19 @@
                                 </tr>
                             </thead>
                             <tbody id="table-claims-body">
+                                #set ($claims = $page.attributes.claims)
+                                #if ($claims.size() > 0)
+                                    #foreach($hit in $claims)
+                                        #if ($hit.jsonObject.status == 0)
+                                            #renderClaim($hit.jsonObject)
+                                        #end
+                                    #end
 
-                                #set ($searchResult = $page.attributes.searchResult)
-                                #if ($searchResult.hits.hits.size() > 0)
-                                #foreach($hit in $searchResult.hits.hits)
-                                #if ($hit.fields.status.value == 0)
-                                #renderClaim($hit)
-                                #end
-                                #end
-                                #foreach($hit in $searchResult.hits.hits)
-                                #if ($hit.fields.status.value != 0)
-                                #renderClaim($hit)
-                                #end
-                                #end
+                                    #foreach($hit in $claims)
+                                        #if ($hit.jsonObject.status != 0)
+                                            #renderClaim($hit.jsonObject)
+                                        #end
+                                    #end
                                 #else
                                 <tr>
                                     <td colspan="99">No claim found</td>
@@ -155,9 +155,9 @@
                                 </tr>
                             </thead>
                             <tbody id="table-claims-group-body">
-                                #set ($searchResult = $page.attributes.searchClaimGroupsResult)
-                                #if ($searchResult.hits.hits.size() > 0)
-                                #foreach($hit in $searchResult.hits.hits)
+                                #set ($searchResult = $page.attributes.claimGroups)
+                                #if ($searchResult.size() > 0)
+                                #foreach($hit in $searchResult)
 
                                 #renderClaimGroup($hit)
 
@@ -238,22 +238,22 @@
         #macro (renderClaim $hit)
     <tr>
         <td class="fa-2x text-center">
-            #if ($hit.fields.status.value == 0)
+            #if ($hit.status == 0)
             <i class="fa fa-circle text-muted" title="New"></i>
-            #elseif ($hit.fields.status.value == 1)
+            #elseif ($hit.status == 1)
             <i class="fa fa-check-circle text-success" title="Approved"></i>
-            #elseif ($hit.fields.status.value == -1)
+            #elseif ($hit.status == -1)
             <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
             #end
         </td>
         <td>
-            #if ($hit.fields.receipt.value)
-            <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail claim-receipt">
-                <span style="background-image: url('$hit.fields.receipt.value');"></span>
+            #if ($hit.receipt)
+            <a href="$hit.receipt" target="_blank" class="thumbnail claim-receipt">
+                <span style="background-image: url('$hit.receipt');"></span>
             </a>
             #end
         </td>
-        #* <td>$hit.fields.amount.value</td> *#
+        #* <td>$hit.amount</td> *#
         #* <td>
             #set ($soldDate = $formatter.toDate($hit.fields.soldDate.value))
             <abbr class="timeago" title="$formatter.formatDateISO8601($soldDate, $page.organisation.timezone)">
@@ -262,50 +262,50 @@
         </td> *#
         #* <td><a href="/manageUsers/$!hit.fields.soldById.value/">$!hit.fields.soldBy.value</a></td> *#
         <td>
-            #set ($enteredDate = $formatter.toDate($hit.fields.enteredDate.value))
+            #set ($enteredDate = $formatter.toDate($hit.enteredDate))
             <abbr class="timeago" title="$formatter.formatDateISO8601($enteredDate, $page.organisation.timezone)">
                 $formatter.formatTimeLong($enteredDate, $page.organisation.timezone)
             </abbr>
         </td>
         #* <td>$!hit.fields.productSku.value</td> *#
-        <td>#if ($formatter.isNull($hit.fields.claimGroupId.value))
+        <td>#if ($formatter.isNull($hit.claimGroupId))
             -
             #else
-            <a href="/manageSaleDataClaimer/?claimGroup=$hit.fields.claimGroupId.value#claim-groups-tab">$hit.fields.claimGroupId.value</a>
+            <a href="/manageSaleDataClaimer/?claimGroup=$hit.claimGroupId#claim-groups-tab">$hit.claimGroupId</a>
             #end
         <td>
-            #if ($hit.fields.status.value == 0)
-            <button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.fields.recordId.value">
+            #if ($hit.status == 0)
+            <button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.recordId">
                 <i class="fa fa-pencil-square-o"></i> Edit
             </button>
-            <button type="button" class="btn btn-sm btn-link btn-review-claim" data-id="$hit.fields.recordId.value">
+            <button type="button" class="btn btn-sm btn-link btn-review-claim" data-id="$hit.recordId">
                 <i class="fa fa-eye"></i> Review
             </button>
             #else
-            <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View</button>
+            <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.recordId"><i class="fa fa-eye"></i> View</button>
             #end
-            #if($hit.fields.ocrFileHash.value)
-            <button type="button" class="btn btn-sm btn-link btn-process-claim" data-id="$hit.fields.recordId.value" data-ocrFileHash="$!hit.fields.ocrFileHash.value" data-receipt="$!hit.fields.receipt.value"><i class="fa fa-spinner"></i> Process</button>
+            #if($hit.ocrFileHash && !$hit.processed)
+            <button type="button" class="btn btn-sm btn-link btn-process-claim" data-id="$hit.recordId" data-ocrFileHash="$!hit.ocrFileHash" data-receipt="$!hit.receipt"><i class="fa fa-spinner"></i> Process</button>
             #end
         </td>
-        <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
+        <td><input type="checkbox" value="$hit.recordId" /></td>
     </tr>
     #end
 
     #macro (renderClaimGroup $hit)
-    #if($formatter.isNotNull($hit.source.contactRequest))
-    #set( $contactPath = "/manageContacts/" + $hit.source.contactRequest )
+    #if($formatter.isNotNull($hit.contactRequest))
+    #set( $contactPath = "/manageContacts/" + $hit.contactRequest )
     #set( $contactRequest = $page.find($contactPath) )
     <tr>
-        <td>$hit.source.claimGroupId</td>
+        <td>$hit.claimGroupId</td>
         <td>$contactRequest.contactRequest.firstName $contactRequest.contactRequest.surName</td>
         <td>$contactRequest.contactRequest.email</td>
         <td>$contactRequest.contactRequest.fieldValue('action-type')</td>
         <td>$contactRequest.contactRequest.fieldValue('purchase-date')</td>
         <td>$contactRequest.contactRequest.fieldValue('store-name')</td>
-        <td><a href="/manageSaleDataClaimer/?claimGroup=$hit.source.claimGroupId#claims-list-tab">$contactRequest.contactRequest.fieldValue('claims-number')</a></td>
+        <td><a href="/manageSaleDataClaimer/?claimGroup=$hit.claimGroupId#claims-list-tab">$contactRequest.contactRequest.fieldValue('claims-number')</a></td>
         <td><a href='/manageContacts/$contactRequest.contactRequest.id'>View</a></td>
-        <td>#set($createDate = $formatter.parseDate($hit.source.enteredDate)) $formatter.formatDate($createDate, $page.organisation.timezone)</td>
+        <td>#set($createDate = $formatter.parseDate($hit.enteredDate)) $formatter.formatDate($createDate, $page.organisation.timezone)</td>
     </tr>
     #end
     #end
