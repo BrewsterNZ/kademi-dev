@@ -11,7 +11,7 @@ var CLAIM_TYPE = 'claim_type';
 var DB_MAPPINGS = {
     record: recordMapping,
     claim_group: claimGroupMapping,
-    claim_item: claimItemMapping
+    //claim_item: claimItemMapping
 };
 var RECORD_STATUS = {
     NEW: 0,
