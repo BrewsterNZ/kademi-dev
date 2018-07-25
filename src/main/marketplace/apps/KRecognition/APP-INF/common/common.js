@@ -41,9 +41,9 @@
      */
     g.resolveTopicId = function (page, groupName, groupValue) {
         var id = formatter.toLong(groupValue);
-        
+
         page.attributes.topicId = applications.userApp.recognitionService.getTopic(id);
-        
+
         return page.attributes.topicId;
     };
 
@@ -56,12 +56,14 @@
      */
     g.resolveBadgeId = function (page, groupName, groupValue) {
         var id = formatter.toLong(groupValue);
-        return page.attributes.topicId.getBadge(id);
+        var badge = page.attributes.topicId.getBadge(id);
+        log.info("resolveBadgeId: id={} badge={}", id, badge);
+        return badge;
     };
 
     /**
      * Redirect to an absolute URL
-     * 
+     *
      * @param {type} page
      * @param {type} params
      * @returns {unresolved}
