@@ -44,12 +44,12 @@
             #if ($searchResult.hits.hits.size() > 0)
             #foreach($hit in $searchResult.hits.hits)
             #if ($hit.fields.status.value == 0)
-                #renderClaim($hit $app.call('searchClaimItems', $page, $hit.fields.recordId.value, $profile))
+                #renderClaim($hit)
             #end
             #end
             #foreach($hit in $searchResult.hits.hits)
             #if ($hit.fields.status.value != 0)
-                #renderClaim($hit $app.call('searchClaimItems', $page, $hit.fields.recordId.value, $profile))
+                #renderClaim($hit)
             #end
             #end
             #else
@@ -114,35 +114,35 @@
     </table>
 </div>
 
-#macro (renderClaim $hit $claimItems)
-<tr data-id="$hit.fields.recordId.value">
+#macro (renderClaim $hit)
+<tr data-id="$hit.source.recordId">
     <td class="fa-2x text-center">
-        #if ($hit.fields.status.value == 0)
+        #if ($hit.source.status == 0)
         <i class="fa fa-circle text-muted" title="New"></i>
-        #elseif ($hit.fields.status.value == 1)
+        #elseif ($hit.source.status == 1)
         <i class="fa fa-check-circle text-success" title="Approved"></i>
-        #elseif ($hit.fields.status.value == -1)
+        #elseif ($hit.source.status == -1)
         <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
         #end
     </td>
     <td>
-        #if ($hit.fields.receipt.value)
-        <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail claim-receipt">
-            <span style="background-image: url('$hit.fields.receipt.value');"></span>
+        #if ($hit.source.receipt)
+        <a href="$hit.source.receipt" target="_blank" class="thumbnail claim-receipt">
+            <span style="background-image: url('$hit.source.receipt');"></span>
         </a>
         #end
     </td>
     <td>
-        #foreach($claimItem in $claimItems.hits.hits)
-            $claimItem.fields.amount.value
+        #foreach($claimItem in $hit.source.claimItems)
+            $claimItem.amount
             #if(!$foreach.isLast())
             <br/>
             #end
         #end
     </td>
     <td>
-        #foreach($claimItem in $claimItems.hits.hits)
-            #set ($soldDate = $formatter.toDate($claimItem.fields.soldDate.value))
+        #foreach($claimItem in $hit.source.claimItems)
+            #set ($soldDate = $formatter.toDate($claimItem.soldDate))
             <abbr class="timeago" title="$formatter.formatDateISO8601($soldDate, $page.organisation.timezone)">
                 $formatter.formatTimeLong($soldDate, $page.organisation.timezone)
             </abbr>
@@ -152,29 +152,29 @@
         #end
     </td>
     <td>
-        #foreach($claimItem in $claimItems.hits.hits)
-            $!claimItem.fields.productSku.value
+        #foreach($claimItem in $hit.source.claimItems)
+            $!claimItem.productSku
             #if(!$foreach.isLast())
             <br/>
             #end
         #end
     </td>
     <td>
-        #if ($hit.fields.status.value == 0)
-        <button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-edit"></i> Edit</button>
+        #if ($hit.source.status == 0)
+        <button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.source.recordId"><i class="fa fa-edit"></i> Edit</button>
         #else
-        <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View</button>
+        <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.source.recordId"><i class="fa fa-eye"></i> View</button>
         #end
     </td>
     <td>
-        #if ($hit.fields.status.value == 0)
-        <input type="checkbox" value="$hit.fields.recordId.value" />
+        #if ($hit.source.status == 0)
+        <input type="checkbox" value="$hit.source.recordId" />
         #else
         #set ($chkTitle = "This claim is already approved. You can't delete this.")
-        #if ($hit.fields.status.value == -1)
+        #if ($hit.source.status == -1)
         #set ($chkTitle = "This claim is already rejected. You can't delete this.")
         #end
-        <input type="checkbox" value="$hit.fields.recordId.value" disabled="disabled" title="$chkTitle" />
+        <input type="checkbox" value="$hit.source.recordId" disabled="disabled" title="$chkTitle" />
         #end
     </td>
 </tr>
