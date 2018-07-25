@@ -167,19 +167,24 @@ function approveClaims(page, params) {
                         for (var counter = 0; counter < claimOb.claimItems.length; counter++) {
                             var claimItem = claimOb.claimItems[counter];
 
-                            var enteredUser = services.userManager.findById(claimItem.soldById);
+                            var soldByUser = services.userManager.findById(claimItem.soldById);
 
                             var dp = services.dataSeriesManager.newDataPoint();
                             dp.series = dataSeries;
                             dp.amount = formatter.toBigDecimal(claimItem.amount);
                             dp.periodFrom = formatter.toDate(Date.parse(claimItem.soldDate).toString());
-                            dp.attributedTo = enteredUser;
+                            dp.attributedTo = soldByUser;
                             dp.entered = dp.periodFrom; // should be claim date
                             dp.productSku = claimItem.productSku;
 
+                            if (isNotNull(claimOb.enteredById)) {
+                                var enteredBy = services.userManager.findById(claimOb.enteredById);
+                                dp.enteredBy = enteredBy;
+                            }
+
                             services.dataSeriesManager.insertDataPoint(dp);
 
-                            var custProfileBean = services.userManager.toProfileBean(enteredUser);
+                            var custProfileBean = services.userManager.toProfileBean(soldByUser);
                             eventManager.goalAchieved('claimProcessedGoal', custProfileBean, {'claim': id, 'status': RECORD_STATUS.APPROVED});
                         }
                     }

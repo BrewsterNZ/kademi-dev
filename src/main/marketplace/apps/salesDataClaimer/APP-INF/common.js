@@ -230,11 +230,14 @@ function createClaim(page, params, files) {
         var db = getDB(page);
         var id = 'claim-' + generateRandomText(32);
 
+        var currentUser = securityManager.currentUser.profile;
+
         var obj = {
             recordId: id,
             soldBy: params.soldBy,
             soldById: params.soldById,
             enteredDate: now,
+            enteredUser: (isNotNull(currentUser) ? currentUser.userId : params.soldById),
             modifiedDate: now,
             status: RECORD_STATUS.NEW
         };

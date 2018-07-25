@@ -51,6 +51,10 @@ var recordMapping = {
             "type": "long",
             "store": true
         },
+        "enteredById": {
+            "type": "long",
+            "store": true
+        },
         "productSku": {
             "type": "keyword",
             "store": true,
