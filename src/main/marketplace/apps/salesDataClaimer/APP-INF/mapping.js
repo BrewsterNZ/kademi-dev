@@ -34,10 +34,6 @@ var recordMapping = {
             "type": "boolean",
             "store": true
         },
-//        "amount": {
-//            "type": "long",
-//            "store": true
-//        },
         "status": {
             "type": "long",
             "store": true
@@ -52,6 +48,10 @@ var recordMapping = {
             }
         },
         "soldById": {
+            "type": "long",
+            "store": true
+        },
+        "enteredById": {
             "type": "long",
             "store": true
         },
@@ -194,82 +194,3 @@ var recordMapping = {
         }
     }
 };
-
-var claimGroupMapping = {
-    "properties": {
-        "claimGroupId": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
-        },
-        "enteredDate": {
-            "type": "date",
-            "store": true
-        },
-        "contactRequest": {
-            "type": "long",
-            "store": true
-        }
-    }
-};
-
-//var claimItemMapping = {
-//    "properties": {
-//        "recordId": {
-//            "type": "keyword",
-//            "store": true,
-//            "fields": {
-//                "text": {
-//                    "type": "text"
-//                }
-//            }
-//        },
-//        "soldDate": {
-//            "store": true,
-//            "type": "date"
-//        },
-//        "modifiedDate": {
-//            "store": true,
-//            "type": "date"
-//        },
-//        "amount": {
-//            "type": "long",
-//            "store": true
-//        },
-//        "soldBy": {
-//            "type": "keyword",
-//            "store": true,
-//            "fields": {
-//                "text": {
-//                    "type": "text"
-//                }
-//            }
-//        },
-//        "soldById": {
-//            "type": "long",
-//            "store": true
-//        },
-//        "productSku": {
-//            "type": "keyword",
-//            "store": true,
-//            "fields": {
-//                "text": {
-//                    "type": "text"
-//                }
-//            }
-//        },
-//        "claimRecordId": {
-//            "type": "keyword",
-//            "store": true,
-//            "fields": {
-//                "text": {
-//                    "type": "text"
-//                }
-//            }
-//        }
-//    }
-//};

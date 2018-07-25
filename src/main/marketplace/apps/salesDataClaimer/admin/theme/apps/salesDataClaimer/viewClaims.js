@@ -348,29 +348,6 @@
             reloadClaimsList();
         });
 
-        $('.claim-group').on('change', function (e) {
-            uri.removeSearch('claimGroup');
-
-            if (this.value) {
-                uri.addSearch('claimGroup', this.value);
-            }
-
-            window.history.pushState('', document.title, uri.toString());
-            reloadClaimsList();
-        });
-
-        $('.claims-group-claim-group').on('change', function (e) {
-            uri.removeSearch('claimGroup');
-
-            if (this.value) {
-                uri.addSearch('claimGroup', this.value);
-            }
-
-            window.history.pushState('', document.title, uri.toString());
-
-            reloadClaimsGroupList();
-        });
-
         table.on('click', '.btn-view-claim, .btn-review-claim', function (e) {
             e.preventDefault();
 
@@ -516,7 +493,6 @@
                                 var confidence = (Math.round(Number($cell.find('confidence').text()) * 100) / 100);
                                 var cell_background;
 
-                                flog("low", lowConfidenceFrom, "medium", mediumConfidenceFrom, "high", highConfidenceTo);
                                 if (confidence >= lowConfidenceFrom && confidence <= lowConfidenceTo) { //low
                                     cell_background = '#d2a0a0';
                                 } else if (confidence >= mediumConfidenceFrom && confidence <= mediumConfidenceTo) { //mid
@@ -606,7 +582,7 @@
                             if (resp && resp.status) {
                                 reloadClaimsList(function () {
                                     Msg.success('Deleted');
-                                })
+                                });
                             } else {
                                 alert('Error in deleting. Please contact your administrators to resolve this issue.');
                             }
@@ -650,8 +626,7 @@
             var ocrfilehash = $btn.data('ocrfilehash');
             var claimId = $btn.data('id');
 
-            if (confirm("Are you sure you want to process these claim records?")) {
-                // First we need to save it. Then we process it
+            Kalert.confirm('You want to process these claim records', function () {
                 saveImageDetails(modalProcess, ocrfilehash, claimId, function (err, rows) {
                     if (!err && rows) {
                         $.ajax({
@@ -680,30 +655,25 @@
                         });
                     }
                 });
-            }
+            });
         });
 
-        modalProcess.on('click', '.btn-approve-image-claims, .btn-save-image-claims', function (e) {
+        modalProcess.on('click', '.btn-save-image-claims', function (e) {
             e.preventDefault();
 
             var $btn = $(this);
             var action;
 
-            if ($btn.hasClass('btn-approve-image-claims')) {
-                action = 'approve';
-            }
             if ($btn.hasClass('btn-save-image-claims')) {
                 action = 'save';
             }
 
-            if (!confirm("Are you sure you want to " + action + " these claim records?")) {
-                return;
-            }
-
-            saveImageDetails(modalProcess, $btn.data('ocrfilehash'), $btn.data('id'), function (err, rows) {
-                if (!err) {
-                    Msg.success("Claims save done successfully");
-                }
+            Kalert.confirm('You want to save this claim', function () {
+                saveImageDetails(modalProcess, $btn.data('ocrfilehash'), $btn.data('id'), function (err, rows) {
+                    if (!err) {
+                        Msg.success("Claims save done successfully");
+                    }
+                });
             });
         });
 
@@ -724,7 +694,7 @@
                     if (resp && resp.status) {
                         reloadClaimsList(function () {
                             Msg.success('Rejection succeed');
-                        })
+                        });
                         modalProcess.modal('hide');
                     } else {
                         alert('Error in rejecting claims. Please contact your administrators to resolve this issue.');
@@ -768,30 +738,22 @@
         });
     }
 
+    function isBlank(v) {
+        return (v === null || typeof v === 'undefined' || v.toString().trim().length < 1);
+    }
+
     function saveImageDetails(modalProcess, ocrfilehash, claimId, cb) {
-        var continue_process = true;
         var columns = [];
         var $columns_select = modalProcess.find('th select');
         $columns_select.each(function () {
-            if (!continue_process) {
-                return;
+            var thisVal = this.value;
+
+            if (isBlank(thisVal)) {
+                thisVal = 'doNotImport';
             }
 
-            if (this.value === "") {
-                if (!confirm("You have un selected columns which will be deleted, continue?")) {
-                    continue_process = false;
-                }
-            }
-
-            columns.push(this.value);
+            columns.push(thisVal);
         });
-
-        if (!continue_process) {
-            if (typeof cb === 'function') {
-                cb(true);
-            }
-            return;
-        }
 
         var rows = [];
         var tableRows = modalProcess.find('tbody > tr');
@@ -806,11 +768,7 @@
             inputs.each(function (i, n) {
                 var $input = $(this);
                 flog("process col", i, columns[i], $input.val());
-                if (columns[i] === "") {
-
-                } else {
-                    row.cells.push({column: columns[i], value: this.value, confidence: $.trim($input.closest('td').find('span').html())});
-                }
+                row.cells.push({column: columns[i], value: this.value, confidence: $.trim($input.closest('td').find('span').html())});
             });
 
             rows.push(row);
@@ -857,19 +815,6 @@
                 }
             });
         }, 200);
-    }
-
-    function reloadClaimsGroupList(callback) {
-        $('#table-claims-group-body').reloadFragment({
-            url: window.location.pathname + window.location.search,
-            whenComplete: function () {
-                $('.timeago').timeago();
-
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            }
-        });
     }
 
     function reloadClaimsList(callback) {
