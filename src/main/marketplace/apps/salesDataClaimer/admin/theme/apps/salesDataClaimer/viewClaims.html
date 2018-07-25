@@ -7,12 +7,12 @@
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js"></script>
         <script type="text/javascript" src="/theme/apps/salesDataClaimer/viewClaims.js"></script>
 
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.min.js">//</script>
         <script type="text/javascript" src="/static/jquery.fullscreen/0.4.1/jquery.fullscreen-0.4.1.min.js">//</script>
         <script type="text/javascript" src="/theme/apps/salesDataClaimer/claimForm.js">//</script>
     </head>
     <body>
-        
+
         #set ($app = $applications.salesDataClaimer)
         #set ($isAdmin = false)
         #if ($user.isInGroup("administrators") || $user.isInGroup("administrator") || $user.isInGroup("admin") || $user.hasRole("Administrator"))
@@ -40,7 +40,6 @@
             <!-- Nav tabs -->
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#claims-list" data-toggle="tab"><i class="fa fa-list"></i> Claims List</a></li>
-                <li><a href="#claim-groups" data-toggle="tab"><i class="fa fa-list-alt"></i> Claim Groups</a></li>
                 <li><a href="#claims-setting" data-toggle="tab"><i class="fa fa-cogs"></i> Settings</a></li>
             </ul>
 
@@ -60,12 +59,6 @@
                                         $formatter.option("1", "Approved", $params.status)
                                         $formatter.option("-1", "Rejected", $params.status)
                                     </select>
-                                </p>
-                            </div>
-                            <div class="col-sm-3">
-                                <p class="input-group input-group-sm">
-                                    <span class="input-group-addon">Claim Group Id</span>
-                                    <input type="text" class="form-control claim-group" placeholder="Please enter group id" value="$!params.claimGroup" />
                                 </p>
                             </div>
                             <div class="col-sm-6 text-right">
@@ -95,76 +88,28 @@
                                 <tr>
                                     <th width="50"></th>
                                     <th width="100">Receipt</th>
-                                    <!--<th>Amount</th>-->
-                                    <!--<th>Sold Date</th>-->
-                                    <!--<th>Entered By</th>-->
                                     <th>Enter Date</th>
-                                    <!--<th>SKU Entered</th>-->
-                                    <th>Claims Group</th>
                                     <th width="90"></th>
                                     <th width="30"><input type="checkbox" class="chk-all" /></th>
                                 </tr>
                             </thead>
                             <tbody id="table-claims-body">
+                                #set ($claims = $page.attributes.claims)
+                                #if ($claims.size() > 0)
+                                #foreach($hit in $claims)
+                                #if ($hit.jsonObject.status == 0)
+                                #renderClaim($hit.jsonObject)
+                                #end
+                                #end
 
-                                #set ($searchResult = $page.attributes.searchResult)
-                                #if ($searchResult.hits.hits.size() > 0)
-                                #foreach($hit in $searchResult.hits.hits)
-                                #if ($hit.fields.status.value == 0)
-                                #renderClaim($hit)
-                                #end
-                                #end
-                                #foreach($hit in $searchResult.hits.hits)
-                                #if ($hit.fields.status.value != 0)
-                                #renderClaim($hit)
+                                #foreach($hit in $claims)
+                                #if ($hit.jsonObject.status != 0)
+                                #renderClaim($hit.jsonObject)
                                 #end
                                 #end
                                 #else
                                 <tr>
                                     <td colspan="99">No claim found</td>
-                                </tr>
-                                #end
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="tab-pane" id="claim-groups">
-                    <div class="claim-groups-component">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="input-group input-group-sm">
-                                    <span class="input-group-addon">Claim Group Id</span>
-                                    <input type="text" class="form-control claims-group-claim-group" placeholder="Please enter group id" value="$!params.claimGroup" />
-                                </p>
-                            </div>
-                        </div>
-                        <br />
-                        <table class="table table-hover table-striped" id="table-claims">
-                            <thead>
-                                <tr>
-                                    <th>Claim Id</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Action Type</th>
-                                    <th>Purchased Date</th>
-                                    <th>Store Name</th>
-                                    <th>Claims Number</th>
-                                    <th>Contact Request</th>
-                                    <th>Created Date</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-claims-group-body">
-                                #set ($searchResult = $page.attributes.searchClaimGroupsResult)
-                                #if ($searchResult.hits.hits.size() > 0)
-                                #foreach($hit in $searchResult.hits.hits)
-
-                                #renderClaimGroup($hit)
-
-                                #end
-                                #else
-                                <tr>
-                                    <td colspan="99">No claim Groups found</td>
                                 </tr>
                                 #end
                             </tbody>
@@ -201,18 +146,18 @@
                             <div class="col-sm-7">
                                 <div style="margin-bottom: 10px;">
                                     <label>High:</label><br/>
-                                    <input type="number" name="highConfidenceFrom" value="$page.attributes.settings.highConfidenceFrom"/> to
-                                    <input type="number" name="highConfidenceTo" value="$page.attributes.settings.highConfidenceTo"/>
+                                    <input type="number" name="highConfidenceFrom" value="$!page.attributes.settings.highConfidenceFrom"/> to
+                                    <input type="number" name="highConfidenceTo" value="$!page.attributes.settings.highConfidenceTo"/>
                                 </div>
                                 <div style="margin-bottom: 10px;">
                                     <label>Medium:</label><br/>
-                                    <input type="number" name="mediumConfidenceFrom" value="$page.attributes.settings.mediumConfidenceFrom"/> to
-                                    <input type="number" name="mediumConfidenceTo" value="$page.attributes.settings.mediumConfidenceTo"/>
+                                    <input type="number" name="mediumConfidenceFrom" value="$!page.attributes.settings.mediumConfidenceFrom"/> to
+                                    <input type="number" name="mediumConfidenceTo" value="$!page.attributes.settings.mediumConfidenceTo"/>
                                 </div>
                                 <div style="margin-bottom: 10px;">
                                     <label>Low:</label><br/>
-                                    <input type="number" name="lowConfidenceFrom" value="$page.attributes.settings.lowConfidenceFrom"/> to
-                                    <input type="number" name="lowConfidenceTo" value="$page.attributes.settings.lowConfidenceTo"/>
+                                    <input type="number" name="lowConfidenceFrom" value="$!page.attributes.settings.lowConfidenceFrom"/> to
+                                    <input type="number" name="lowConfidenceTo" value="$!page.attributes.settings.lowConfidenceTo"/>
                                 </div>
                             </div>
                         </div>
@@ -238,74 +183,60 @@
         #macro (renderClaim $hit)
     <tr>
         <td class="fa-2x text-center">
-            #if ($hit.fields.status.value == 0)
+            #if ($hit.status == 0)
             <i class="fa fa-circle text-muted" title="New"></i>
-            #elseif ($hit.fields.status.value == 1)
+            #elseif ($hit.status == 1)
             <i class="fa fa-check-circle text-success" title="Approved"></i>
-            #elseif ($hit.fields.status.value == -1)
+            #elseif ($hit.status == -1)
             <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
             #end
         </td>
         <td>
-            #if ($hit.fields.receipt.value)
-            <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail claim-receipt">
-                <span style="background-image: url('$hit.fields.receipt.value');"></span>
+            #if ($hit.receipt)
+            <a href="$hit.receipt" target="_blank" class="thumbnail claim-receipt">
+                <span style="background-image: url('$hit.receipt');"></span>
             </a>
             #end
         </td>
-        #* <td>$hit.fields.amount.value</td> *#
-        #* <td>
-            #set ($soldDate = $formatter.toDate($hit.fields.soldDate.value))
-            <abbr class="timeago" title="$formatter.formatDateISO8601($soldDate, $page.organisation.timezone)">
-                $formatter.formatTimeLong($soldDate, $page.organisation.timezone)
-            </abbr>
-        </td> *#
-        #* <td><a href="/manageUsers/$!hit.fields.soldById.value/">$!hit.fields.soldBy.value</a></td> *#
         <td>
-            #set ($enteredDate = $formatter.toDate($hit.fields.enteredDate.value))
+            #set ($enteredDate = $formatter.toDate($hit.enteredDate))
             <abbr class="timeago" title="$formatter.formatDateISO8601($enteredDate, $page.organisation.timezone)">
                 $formatter.formatTimeLong($enteredDate, $page.organisation.timezone)
             </abbr>
         </td>
-        #* <td>$!hit.fields.productSku.value</td> *#
-        <td>#if ($formatter.isNull($hit.fields.claimGroupId.value))
-            -
-            #else
-            <a href="/manageSaleDataClaimer/?claimGroup=$hit.fields.claimGroupId.value#claim-groups-tab">$hit.fields.claimGroupId.value</a>
-            #end
         <td>
-            #if ($hit.fields.status.value == 0)
-            <button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.fields.recordId.value">
+            #if ($hit.status == 0)
+            <button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.recordId">
                 <i class="fa fa-pencil-square-o"></i> Edit
             </button>
-            <button type="button" class="btn btn-sm btn-link btn-review-claim" data-id="$hit.fields.recordId.value">
+            <button type="button" class="btn btn-sm btn-link btn-review-claim" data-id="$hit.recordId">
                 <i class="fa fa-eye"></i> Review
             </button>
             #else
-            <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View</button>
+            <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.recordId"><i class="fa fa-eye"></i> View</button>
             #end
-            #if($hit.fields.ocrFileHash.value)
-            <button type="button" class="btn btn-sm btn-link btn-process-claim" data-id="$hit.fields.recordId.value" data-ocrFileHash="$!hit.fields.ocrFileHash.value" data-receipt="$!hit.fields.receipt.value"><i class="fa fa-spinner"></i> Process</button>
+            #if($hit.ocrFileHash && !$hit.processed)
+            <button type="button" class="btn btn-sm btn-link btn-process-claim" data-id="$hit.recordId" data-ocrFileHash="$!hit.ocrFileHash" data-receipt="$!hit.receipt"><i class="fa fa-spinner"></i> Process</button>
             #end
         </td>
-        <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
+        <td><input type="checkbox" value="$hit.recordId" /></td>
     </tr>
     #end
 
     #macro (renderClaimGroup $hit)
-    #if($formatter.isNotNull($hit.source.contactRequest))
-    #set( $contactPath = "/manageContacts/" + $hit.source.contactRequest )
+    #if($formatter.isNotNull($hit.contactRequest))
+    #set( $contactPath = "/manageContacts/" + $hit.contactRequest )
     #set( $contactRequest = $page.find($contactPath) )
     <tr>
-        <td>$hit.source.claimGroupId</td>
+        <td>$hit.claimGroupId</td>
         <td>$contactRequest.contactRequest.firstName $contactRequest.contactRequest.surName</td>
         <td>$contactRequest.contactRequest.email</td>
         <td>$contactRequest.contactRequest.fieldValue('action-type')</td>
         <td>$contactRequest.contactRequest.fieldValue('purchase-date')</td>
         <td>$contactRequest.contactRequest.fieldValue('store-name')</td>
-        <td><a href="/manageSaleDataClaimer/?claimGroup=$hit.source.claimGroupId#claims-list-tab">$contactRequest.contactRequest.fieldValue('claims-number')</a></td>
+        <td><a href="/manageSaleDataClaimer/?claimGroup=$hit.claimGroupId#claims-list-tab">$contactRequest.contactRequest.fieldValue('claims-number')</a></td>
         <td><a href='/manageContacts/$contactRequest.contactRequest.id'>View</a></td>
-        <td>#set($createDate = $formatter.parseDate($hit.source.enteredDate)) $formatter.formatDate($createDate, $page.organisation.timezone)</td>
+        <td>#set($createDate = $formatter.parseDate($hit.enteredDate)) $formatter.formatDate($createDate, $page.organisation.timezone)</td>
     </tr>
     #end
     #end
@@ -322,53 +253,6 @@
                         <div class="form-message alert alert-danger" style="display: none;"></div>
                         <input type="hidden" name="createClaim" value="true" class="modal-action" />
                         <input type="hidden" name="ids" value="" class="" />
-
-                        #*
-                        <div class="form-group">
-                            <label class="control-label col-md-4">Amount</label>
-
-                            <div class="col-md-8">
-                                <p class="form-control-static amount"></p>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-4">Date</label>
-
-                            <div class="col-md-8">
-                                <p class="form-control-static soldDate"></p>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-4">Product SKU</label>
-
-                            <div class="col-md-8">
-                                <p class="form-control-static productSku"></p>
-                            </div>
-                        </div>
-
-                        #foreach($xf in $app.call("getSalesDataExtreFields", $page))
-                        <div class="form-group">
-                            <label class="control-label col-md-4">$formatter.firstNotNull($xf.title, $xf.name)</label>
-
-                            <div class="col-md-8">
-                                <p class="form-control-static field_${xf.name}"></p>
-                            </div>
-                        </div>
-                        #end
-
-                        <div class="form-group">
-                            <label class="control-label col-md-4">Receipt</label>
-
-                            <div class="col-md-8">
-                                <p class="thumbnail">
-                                    <img src="" class="img-responsive" />
-                                </p>
-                            </div>
-                        </div>
-                        *#
-
 
                         <table class="table table-hover table-striped" id="table-claims">
                             <thead>
@@ -551,7 +435,7 @@
         </div>
     </div>
 
-<script>
+    <script>
         var highConfidenceFrom = '$!page.attributes.settings.highConfidenceFrom';
         var highConfidenceTo = '$!page.attributes.settings.highConfidenceTo';
 

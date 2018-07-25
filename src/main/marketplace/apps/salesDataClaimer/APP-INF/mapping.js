@@ -22,16 +22,16 @@ var recordMapping = {
             "type": "date"
         },
         "ocrFileHash": {
-          "type": "keyword",
-          "store": true,
-          "fields": {
-            "text": {
-              "type": "text"
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
             }
-          }
         },
-        "amount": {
-            "type": "long",
+        "processed": {
+            "type": "boolean",
             "store": true
         },
         "status": {
@@ -48,6 +48,10 @@ var recordMapping = {
             }
         },
         "soldById": {
+            "type": "long",
+            "store": true
+        },
+        "enteredById": {
             "type": "long",
             "store": true
         },
@@ -77,7 +81,7 @@ var recordMapping = {
                     "type": "text"
                 }
             }
-        },        
+        },
         "claimType": {
             "type": "keyword",
             "store": true,
@@ -86,7 +90,7 @@ var recordMapping = {
                     "type": "text"
                 }
             }
-        },        
+        },
         "claimField1": {
             "type": "keyword",
             "store": true,
@@ -95,7 +99,7 @@ var recordMapping = {
                     "type": "text"
                 }
             }
-        },        
+        },
         "claimField2": {
             "type": "keyword",
             "store": true,
@@ -104,7 +108,7 @@ var recordMapping = {
                     "type": "text"
                 }
             }
-        },        
+        },
         "claimField3": {
             "type": "keyword",
             "store": true,
@@ -113,7 +117,7 @@ var recordMapping = {
                     "type": "text"
                 }
             }
-        },        
+        },
         "claimField4": {
             "type": "keyword",
             "store": true,
@@ -122,7 +126,7 @@ var recordMapping = {
                     "type": "text"
                 }
             }
-        },        
+        },
         "claimField5": {
             "type": "keyword",
             "store": true,
@@ -131,7 +135,7 @@ var recordMapping = {
                     "type": "text"
                 }
             }
-        },        
+        },
         "taggedFromSalesRecordId": {
             "type": "keyword",
             "store": true,
@@ -140,83 +144,51 @@ var recordMapping = {
                     "type": "text"
                 }
             }
-        }
-    }
-};
-
-var claimGroupMapping = {
-    "properties": {
-        "claimGroupId": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
         },
-        "enteredDate": {
-          "type": "date",
-          "store": true
-        },    
-        "contactRequest": {
-            "type": "long",
-            "store": true
-        }
-    }
-};
-
-var claimItemMapping = {
-    "properties": {
-        "recordId": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
-        },
-        "soldDate": {
-            "store": true,
-            "type": "date"
-        },
-        "modifiedDate": {
-            "store": true,
-            "type": "date"
-        },
-        "amount": {
-            "type": "long",
-            "store": true
-        },
-        "soldBy": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
-        },
-        "soldById": {
-            "type": "long",
-            "store": true
-        },
-        "productSku": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
-        },
-        "claimRecordId": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
+        "claimItems": {
+            "properties": {
+                "recordId": {
+                    "type": "keyword",
+                    "store": true,
+                    "fields": {
+                        "text": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "soldDate": {
+                    "store": true,
+                    "type": "date"
+                },
+                "modifiedDate": {
+                    "store": true,
+                    "type": "date"
+                },
+                "amount": {
+                    "type": "long",
+                    "store": true
+                },
+                "soldBy": {
+                    "type": "keyword",
+                    "store": true,
+                    "fields": {
+                        "text": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "soldById": {
+                    "type": "long",
+                    "store": true
+                },
+                "productSku": {
+                    "type": "keyword",
+                    "store": true,
+                    "fields": {
+                        "text": {
+                            "type": "text"
+                        }
+                    }
                 }
             }
         }

@@ -9,6 +9,8 @@ controllerMappings
         .addMethod('POST', 'vote', 'voteId')
         .addMethod('POST', 'replyToPost', 'replyToPostId')
         .addMethod('POST', 'deletePost', 'deletePostId')
+        .addMethod('POST', 'deleteVote', 'deleteVotePostId')
+        .addMethod('POST', 'reportPost', 'reportPostId')
         .enabled(true)
         .build();
 
@@ -77,7 +79,7 @@ function vote(page, params, files, form) {
 }
 
 function deleteVote(page, params, files, form) {
-    var postId = form.longParam("voteId");
+    var postId = form.longParam("deleteVotePostId");
     
     var post = services.forumManager.findPost(postId);
     var vote = services.forumManager.findVote(post);
@@ -131,13 +133,11 @@ function deletePost(page, params, files, form) {
 }
 
 function reportPost(page, params, files, form) {
-    var postId = form.longParam("deletePostId");
+    var postId = form.longParam("reportPostId");
     var category = form.rawParam("category");
     var comment = form.rawParam("comment");
 
     var postToReport = services.forumManager.findPost(postId);
-    
-    report(postToReport, category, page.href, comment);
     
     transactionManager.runInTransaction(function () {
         log.info("reportPost: postId={}", postId);

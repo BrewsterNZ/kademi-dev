@@ -1,3 +1,5 @@
+/* global log, fileManager, TYPE_CLAIM_GROUP, TYPE_RECORD, views, formatter, securityManager, applications, RECORD_STATUS, transactionManager, eventManager */
+
 function uploadFile(page, params, files) {
     log.info('uploadFile > page {} params {} files {}', page, params, files);
 
@@ -56,20 +58,7 @@ function getLastClaimGroupId(page) {
 
 function getSearchClaimsQuery(page, status, user, claimForm) {
     var queryJson = {
-        'stored_fields': [
-            'receipt',
-            'recordId',
-            'soldDate',
-            'soldBy',
-            'soldById',
-            'enteredDate',
-            'modifiedDate',
-            'amount',
-            'status',
-            'productSku',
-            'claimGroupId',
-            'ocrFileHash'
-        ],
+        '_source': true,
         'size': 10000,
         'sort': [
             {
@@ -106,48 +95,6 @@ function getSearchClaimsQuery(page, status, user, claimForm) {
     return queryJson;
 }
 
-function getSearchClaimItemsQuery(page, claimRecordId, user) {
-    var queryJson = {
-        'stored_fields': [
-            'recordId',
-            'claimRecordId',
-            'soldDate',
-            'soldBy',
-            'soldById',
-            'modifiedDate',
-            'amount',
-            'productSku'
-        ],
-        'size': 10000,
-        'sort': [
-            {
-                'soldDate': 'desc'
-            }
-        ],
-        'query': {
-            'bool': {
-                'must': [
-                    {'type': {'value': TYPE_CLAIM_ITEM}}
-                ]
-            }
-        }
-    };
-
-    if (claimRecordId) {
-        queryJson.query.bool.must.push({
-            'term': {'claimRecordId': claimRecordId}
-        });
-    }
-
-    if (user) {
-        queryJson.query.bool.must.push({
-            'term': {'soldBy': user.name}
-        });
-    }
-
-    return queryJson;
-}
-
 function getSearchClaimGroupsQuery(page, claimForm) {
     var queryJson = {
         'size': 10000,
@@ -173,11 +120,11 @@ function totalAmountOfClaims(page, status, user) {
     var searchResult = null;
 
     try {
-        var queryJson = getSearchClaimItemsQuery(page, null, user);
+        var queryJson = getSearchClaimsQuery(page, null, user);
         queryJson.aggregations = {
             "total": {
                 "sum": {
-                    "field": "amount"
+                    "field": "claimItems.amount"
                 }
             }
         };
@@ -207,51 +154,18 @@ function searchClaims(page, status, user, claimForm) {
     return searchResult;
 }
 
-function searchClaimItems(page, claimRecordId, user) {
-    var searchResult = null;
-
-    try {
-        var queryJson = getSearchClaimItemsQuery(page, claimRecordId, user);
-        searchResult = doDBSearch(page, queryJson);
-    } catch (e) {
-        log.error('ERROR in searchClaimItems: ' + e, e);
-    }
-    log.info("searchClaimItems {}", searchResult);
-    return searchResult;
-}
-
 function searchClaimGroups(page, claimGroup) {
     var searchResult = null;
 
     try {
         var queryJson = getSearchClaimGroupsQuery(page, claimGroup);
-        log.info(queryJson)
+        log.info(queryJson);
         searchResult = doDBSearch(page, queryJson);
     } catch (e) {
         log.error('ERROR in searchClaimGroups: ' + e, e);
     }
     log.info("searchClaimGroups {}", searchResult);
     return searchResult;
-}
-
-function getClaimItems(page, params) {
-    log.info('getClaimItems > page={}, params={}', page, params);
-
-    var result = {
-        status: true
-    };
-
-    try {
-        var queryJson = getSearchClaimItemsQuery(page, page.attributes.claimId);
-        var searchResult = doDBSearch(page, queryJson);
-
-        result.data = searchResult.toString();
-    } catch (e) {
-        result.status = false;
-        result.messages = ['Error when getting claim: ' + e];
-    }
-
-    return views.jsonObjectView(JSON.stringify(result));
 }
 
 function getClaim(page, params) {
@@ -312,8 +226,21 @@ function createClaim(page, params, files) {
         log.info('currentRoles={}', currentRoles);
 
         var enteredUser = null;
+        var now = formatter.formatDateISO8601(formatter.now, org.timezone);
         var db = getDB(page);
         var id = 'claim-' + generateRandomText(32);
+
+        var currentUser = securityManager.currentUser.profile;
+
+        var obj = {
+            recordId: id,
+            soldBy: params.soldBy,
+            soldById: params.soldById,
+            enteredDate: now,
+            enteredUser: (isNotNull(currentUser) ? currentUser.userId : params.soldById),
+            modifiedDate: now,
+            status: RECORD_STATUS.NEW
+        };
 
         if (params.email) {
             log.info('Anonymous with email={}, firstName={}', params.email, params.firstName);
@@ -335,17 +262,6 @@ function createClaim(page, params, files) {
         } else {
             enteredUser = securityManager.currentUser.profile;
         }
-
-        var now = formatter.formatDateISO8601(formatter.now, org.timezone);
-
-        var obj = {
-            recordId: id,
-            soldBy: params.soldBy,
-            soldById: params.soldById,
-            enteredDate: now,
-            modifiedDate: now,
-            status: RECORD_STATUS.NEW
-        };
 
         if (params.claimType) {
             obj["claimType"] = params.claimType;
@@ -386,7 +302,7 @@ function createClaim(page, params, files) {
             securityManager.runAsUser(enteredUser, function () {
                 log.info("Run as user: {}", params.claimItemsLength);
 
-                db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
+                var claim = db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
                 eventManager.goalAchieved("claimSubmittedGoal", {"claim": id, "claimType": params.claimType});
 
                 var claimItems = [];
@@ -413,7 +329,7 @@ function createClaim(page, params, files) {
                     claimItems.push({amount: amount, productSku: params_productSku, soldDate: soldDate, soldBy: params.soldBy, soldById: params.soldById});
                 }
 
-                createClaimItem(db, obj, claimItems);
+                createOrUpdateClaimItem(claim, obj, claimItems);
             });
         });
     } catch (e) {
@@ -504,31 +420,35 @@ function updateClaim(page, params, files) {
                 var soldDate = formatter.formatDateISO8601(soldDateTmp, org.timezone);
                 log.info('updateClaim > soldDate={}', soldDate);
 
-                var claimItem = db.child(params_claimid);
+                var claimItem = getClaimItem(claimJson, params_claimid);
 
                 log.info("ClaimItem: {} | {}", params_claimid, claimItem);
 
-                if (claimItem === null || typeof claimItem === 'undefined') {
+                if (isNull(claimItem)) {
                     log.info('Creating Item');
-                    // It's an existing record, Update it
-                    claimItems.push({amount: amount, productSku: params_productSku, soldDate: soldDate, soldBy: params.soldBy, soldById: params.soldById});
+                    claimItem = {
+                        amount: amount,
+                        productSku: params_productSku,
+                        soldDate: soldDate,
+                        soldBy: params.soldBy,
+                        soldById: params.soldById
+                    };
+
+                    claimItems.push(claimItem);
                 } else {
                     log.info('Updating Item: {}', params_claimid);
-                    // It's a new record so create it
-                    var claimItemJson = JSON.parse(claimItem.json);
+                    claimItem.amount = amount;
+                    claimItem.productSku = params_productSku;
+                    claimItem.soldDate = soldDate;
+                    claimItem.soldBy = params.soldBy;
+                    claimItem.soldById = params.soldById;
+                    claimItem.modifiedDate = now;
 
-                    claimItemJson.amount = amount;
-                    claimItemJson.productSku = params_productSku;
-                    claimItemJson.soldDate = soldDate;
-                    claimItemJson.soldBy = params.soldBy;
-                    claimItemJson.soldById = params.soldById;
-                    claimItemJson.modifiedDate = now;
-
-                    claimItem.update(JSON.stringify(claimItemJson), TYPE_CLAIM_ITEM);
+                    claimItems.push(claimItem);
                 }
             }
 
-            createClaimItem(db, claimJson, claimItems);
+            createOrUpdateClaimItem(claim, claimJson, claimItems);
         } else {
             result.status = false;
             result.messages = ['This claim does not exist'];
@@ -540,6 +460,22 @@ function updateClaim(page, params, files) {
     }
 
     return views.jsonObjectView(JSON.stringify(result));
+}
+
+function getClaimItem(claimJson, claimId) {
+    if (isNull(claimJson) || isNull(claimJson.claimItems) || isNull(claimId)) {
+        return null;
+    }
+
+    for (var i = 0; i < claimJson.claimItems.length; i++) {
+        var claimItem = claimJson.claimItems[i];
+
+        if (claimItem.recordId === claimId) {
+            return claimItem;
+        }
+    }
+
+    return null;
 }
 
 function deleteClaims(page, params) {
@@ -555,26 +491,26 @@ function deleteClaims(page, params) {
         ids = ids.split(',');
 
         for (var i = 0; i < ids.length; i++) {
-            (function (id) {
-                var claim = db.child(id);
+            var id = ids[i];
 
-                if (claim !== null && +claim.jsonObject.status === RECORD_STATUS.NEW) {
-                    claim.delete();
-                }
-            })(ids[i]);
+            var claim = db.child(id);
+
+            if (claim !== null && +claim.jsonObject.status === RECORD_STATUS.NEW) {
+                claim.delete();
+            }
         }
     } catch (e) {
         result.status = false;
         result.messages = ['Error in deleting: ' + e];
     }
 
-    return views.jsonObjectView(JSON.stringify(result))
+    return views.jsonObjectView(JSON.stringify(result));
 }
 
 function getSalesDataExtreFields(page) {
     var extraFields = [];
     var settings = getAppSettings(page);
-    if (settings != null) {
+    if (isNotNull(settings)) {
         var selectedDataSeries = settings.get('dataSeries');
 
         if (isNotNull(selectedDataSeries)) {
@@ -583,4 +519,57 @@ function getSalesDataExtreFields(page) {
     }
 
     return extraFields;
+}
+
+function createOrUpdateClaimItem(claimObj, claimJson, claimItems) {
+    log.info('createOrUpdateClaimItem() - {} - {}', claimObj.recordId, claimItems.length);
+
+    var enteredUser = securityManager.currentUser;
+    var soldBy = enteredUser.name;
+    var soldById = enteredUser.userId;
+
+    var existingClaimItems = [];
+    if (isNotNull(claimJson.claimItems)) {
+        existingClaimItems = claimJson.claimItems;
+    }
+
+    for (var i = 0; i < claimItems.length; i++) {
+        var claimItem = claimItems[i];
+
+        claimItem.modifiedDate = claimJson.modifiedDate;
+
+        if (isBlank(claimItem.recordId)) {
+            claimItem.recordId = 'claimItem-' + generateRandomText(32);
+        }
+
+        if (isBlank(claimItem.soldBy)) {
+            claimItem.soldBy = soldBy;
+        }
+
+        if (isNull(claimItem.soldById)) {
+            claimItem.soldById = soldById;
+        }
+
+        // Replace or add it to the claim
+        var found = false;
+        for (var a = 0; a < existingClaimItems.length; a++) {
+            var eci = existingClaimItems[a];
+            if (safeString(eci.recordId) === safeString(claimItem.recordId)) {
+                existingClaimItems[a] = claimItem;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            // We didn't find it, So add it to the list
+            existingClaimItems.push(claimItem);
+        }
+    }
+
+    // Set claim items
+    claimJson.claimItems = existingClaimItems;
+
+    // Update
+    log.info("createOrUpdateClaimItem > {}", JSON.stringify(claimJson));
+    claimObj.update(JSON.stringify(claimJson));
 }

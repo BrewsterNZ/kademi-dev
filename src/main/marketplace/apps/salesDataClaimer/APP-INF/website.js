@@ -1,3 +1,5 @@
+/* global controllerMappings, views, applications, log, formatter, securityManager, services, transactionManager, TYPE_RECORD, eventManager, TYPE_CLAIM_GROUP, RECORD_STATUS */
+
 controllerMappings
         .websiteController()
         .path('/salesDataClaims')
@@ -26,7 +28,6 @@ controllerMappings
 controllerMappings
         .websiteController()
         .path('/salesDataClaims/(?<claimId>[^/]*)/')
-        .addMethod('GET', 'getClaimItems', 'claimItems')
         .addMethod('GET', 'getClaim')
         .addMethod('POST', 'updateClaim', 'updateClaim')
         .postPriviledge('READ_CONTENT')
@@ -69,7 +70,7 @@ function trackClaimGroup(page, params) {
 
     var email = claimGroupContactRequest.hits.hits[0].source.email;
 
-    if (email == null) {
+    if (isNull(email)) {
         var result = {
             status: false
         };
@@ -83,7 +84,7 @@ function trackClaimGroup(page, params) {
 
     var selectedLead;
 
-    for (index in userLeads) {
+    for (var index in userLeads) {
         var lead = userLeads[index];
 
         if (lead.funnel.name === 'claim-form-tracking') {
@@ -91,7 +92,7 @@ function trackClaimGroup(page, params) {
         }
     }
 
-    if (selectedLead != null) {
+    if (isNotNull(selectedLead)) {
         var result = {
             status: true,
             data: {
@@ -114,29 +115,29 @@ function validateProductClaim(page, params, files) {
     var result = {
         status: true
     };
-    if(params.serialNumber){
+    if (params.serialNumber) {
         var serialNumber = params.serialNumber;
         var serialNumberArray = [serialNumber];
         var duplicateNumbers = contactRequestWithProductNumbersExists(page, serialNumberArray);
-        if(duplicateNumbers.length > 0){
+        if (duplicateNumbers.length > 0) {
             log.error('Product serial number already exist');
             result.status = false;
             result.messages = ['Product serial number already exist'];
         }
-        if( !checkIfProductNumberExists(serialNumber) ){
+        if (!checkIfProductNumberExists(serialNumber)) {
             log.error('Wrong product serial number');
             result.status = false;
             result.messages = ['Wrong product serial number'];
         }
 
-    }else if(params.address){
+    } else if (params.address) {
         var address = params.address;
-        if( contactRequestWithSameAddressExists(page, address) ){
+        if (contactRequestWithSameAddressExists(page, address)) {
             log.error('Address already exist');
             result.status = false;
             result.messages = ['Address already exist'];
         }
-    }else{
+    } else {
         log.error('neither serial numbers nor address sent: ' + e, e);
         result.status = false;
         result.messages = ['neither serial numbers nor address sent: ' + e];
@@ -149,7 +150,7 @@ function contactRequestWithSameAddressExists(page, address) {
     var requests = contactReuqests.contactRequests;
 
     for (var i = 0; i < requests.size(); i++) {
-        var request = requests[i].contactRequest
+        var request = requests[i].contactRequest;
 
         if (address == request.fields["address1"]) {
             return true;
@@ -159,7 +160,7 @@ function contactRequestWithSameAddressExists(page, address) {
     return false;
 }
 
-function checkIfProductNumberExists(productNumber){
+function checkIfProductNumberExists(productNumber) {
     var salesDataApp = applications.get("salesData");
     var salesDateSeries = salesDataApp.getSalesDataSeries('allowed-ac-models');
 
@@ -168,9 +169,9 @@ function checkIfProductNumberExists(productNumber){
 
     var salesDataRecord = salesDataApp.findDataPoint(salesDateSeries, null, null, salesDataExtraFields);
 
-    if(salesDataRecord == null){
+    if (isNull(salesDataRecord)) {
         return false;
-    }else{
+    } else {
         return true;
     }
 }
@@ -181,7 +182,7 @@ function contactRequestWithProductNumbersExists(page, numbers) {
     var duplicateNumbers = [];
 
     for (var i = 0; i < requests.size(); i++) {
-        var request = requests[i].contactRequest
+        var request = requests[i].contactRequest;
 
         for (var numberKey in numbers) {
             var number = numbers[numberKey];
@@ -220,7 +221,6 @@ function getPendingClaims(page) {
 function getTotalAmountOfClaims(page, params) {
     log.info('getPendingClaims > page={}, params={}', page, params);
     var searchResult = totalAmountOfClaims(page, null, null);
-    //log.info('getPendingClaims > searchResult={}', searchResult.aggregations.get("total"));
     if (searchResult.aggregations === undefined) {
         log.warn('getPendingClaims no aggregations > searchResult={}');
         return 0;
@@ -251,56 +251,22 @@ function saveProductClaim(page, params, files) {
         var contactFormService = services.contactFormService;
         log.info("contactFormService: {}", contactFormService);
 
-        var salesDataApp = applications.get("salesData");
-        var salesDateSeries = salesDataApp.getSalesDataSeries('allowed-ac-models');
         var productsNumber = params['claims-number'];
         var productsSKUs = [];
         var soldBy = "";
         var soldById = "";
 
-        // if(params['supplier-orgId']){
-        //     soldBy = params['supplier-orgId'];
-        // }else if (params['installer-orgId']){
-        //     soldBy = params['installer-orgId'];
-        // }else{
-        //     log.error('Please select Supplier/Installer name');
-        //     result.status = false;
-        //     result.messages = ['Please select Supplier/Installer name'];
-        //     return views.jsonObjectView(JSON.stringify(result));
-        // }
-
-        // if(page.parent.orgData.childOrg(soldBy)){
-        //     soldById = page.parent.orgData.childOrg(soldBy).id;
-        // }else{
-        //     log.error('Supplier/Installer id: ' + soldBy + 'is invalid');
-        //     result.status = false;
-        //     result.messages = ['Supplier/Installer name is invalid'];
-        //     return views.jsonObjectView(JSON.stringify(result));
-        // }
-
         var indoorSerialNumbersToCheck = [];
 
-        for( var i = 0; i < productsNumber; i++ ){
-            var productModelNumber = params["prod"+ (i+1) +"-model-number"];
-            //var productIndoorModelNumber = params["prod"+ (i+1) +"-indoor-model-number"];
-            var productIndoorSerialNumber = params["prod"+ (i+1) +"-indoor-serial-number"];
+        for (var i = 0; i < productsNumber; i++) {
+            var productModelNumber = params["prod" + (i + 1) + "-model-number"];
+            var productIndoorSerialNumber = params["prod" + (i + 1) + "-indoor-serial-number"];
 
             indoorSerialNumbersToCheck[indoorSerialNumbersToCheck.length] = productIndoorSerialNumber;
 
             var salesDataExtraFields = formatter.newMap();
             salesDataExtraFields.put("serial-no", productIndoorSerialNumber);
 
-            // var salesDataRecord = salesDataApp.findDataPoint(salesDateSeries, null, null, salesDataExtraFields);
-
-            // if(salesDataRecord == null){
-            //     log.error('Sales Data record with serial number: ' + productIndoorSerialNumber +' not found');
-            //     result.status = false;
-            //     result.messages = ['Invalid products indoor serial number: ' + productIndoorSerialNumber];
-
-            //     return views.jsonObjectView(JSON.stringify(result));
-            // }
-
-            //log.info("Claim Products data - input: {} - output: {} , {}", productIndoorSerialNumber, salesDataRecord.id, productModelNumber);
             productsSKUs.push(productModelNumber);
         }
 
@@ -330,7 +296,7 @@ function saveProductClaim(page, params, files) {
 
             claimGroupId = getLastClaimGroupId(page);
 
-            if (claimGroupId != null) {
+            if (isNotNull(claimGroupId)) {
                 var number = formatter.toString(formatter.toInteger(claimGroupId.substring(5)) + 1).replace(".0", "");
 
                 claimGroupId = 'MHI-W' + formatter.padWith('0', number, 5);
@@ -345,38 +311,34 @@ function saveProductClaim(page, params, files) {
             };
 
             var tempDateTime = params['purchase-date'];
-            var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
-            var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
             var soldDateTmp = formatter.parseDate(tempDateTime);
             var soldDate = formatter.formatDateISO8601(soldDateTmp, org.timezone);
 
             log.info('createClaim > soldDate={}', soldDate);
 
-            for(var i = 0; i < productsSKUs.length; i++) {
+            for (var i = 0; i < productsSKUs.length; i++) {
                 var claimId = 'claim-' + generateRandomText(32);
                 var claimObj = {
                     recordId: claimId,
                     enteredDate: now,
                     modifiedDate: now,
                     receipt: cr.attachments.length > 0 ? ('/_hashes/files/' + cr.attachments[0].attachmentHash) : null,
-//                    amount: 1,
                     status: RECORD_STATUS.NEW,
-//                    productSku: productsSKUs[i],
-//                    soldDate: soldDate,
-//                    soldBy: soldBy,
-//                    soldById: soldById,
+                    soldDate: soldDate,
+                    soldBy: soldBy,
+                    soldById: soldById,
                     claimGroupId: claimGroupId
                 };
 
                 securityManager.runAsUser(enteredUser, function () {
-                    db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
+                    var claim = db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
                     eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});
 
                     var claimItems = [
                         {amount: 1, productSku: productsSKUs[i], soldDate: soldDate, soldBy: soldBy, soldById: soldById}
                     ];
 
-                    createClaimItem(db, claimObj, claimItems);
+                    createOrUpdateClaimItem(claim, claimObj, claimItems);
                 });
             }
 
@@ -398,44 +360,44 @@ function saveProductClaim(page, params, files) {
     return views.jsonObjectView(JSON.stringify(result));
 }
 
-function getClaimSalesById(salesDataId){
+function getClaimSalesById(salesDataId) {
     var salesQuery = {
-            "stored_fields": [
-                "periodFrom",
-                "type",
-                "recordId",
-                "points"
-            ],
-            "query": {
-                        "bool": {
-                            "must": [
-                                {
-                                    "term": {
-                                        "recordId": salesDataId
-                                    }
-                                }
-                            ]
+        "stored_fields": [
+            "periodFrom",
+            "type",
+            "recordId",
+            "points"
+        ],
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "term": {
+                            "recordId": salesDataId
                         }
-                    },
-            "size": 1
-        };
+                    }
+                ]
+            }
+        },
+        "size": 1
+    };
 
     var sm = applications.search.searchManager;
     var salesDataResp = sm.search(JSON.stringify(salesQuery), 'dataseries');
 
     var record = {};
-    if(salesDataResp.hits.hits.length > 0){
+    if (salesDataResp.hits.hits.length > 0) {
         var hit = salesDataResp.hits.hits[0];
         record = {
             "periodFrom": hit.fields.periodFrom.value,
             "recordId": hit.fields.recordId.value
         };
 
-        if(hit.fields.type){
-            record['type'] = hit.fields.type.value
+        if (hit.fields.type) {
+            record['type'] = hit.fields.type.value;
         }
-        if(hit.fields.points){
-            record['points'] = hit.fields.points.value
+        if (hit.fields.points) {
+            record['points'] = hit.fields.points.value;
         }
 
     }
@@ -450,7 +412,7 @@ function createClaimTagging(page, params, files) {
     return views.jsonObjectView(JSON.stringify(result));
 }
 
-function createClaimTaggingInner(page, params, files){
+function createClaimTaggingInner(page, params, files) {
     var result = {
         status: true
     };
@@ -458,13 +420,10 @@ function createClaimTaggingInner(page, params, files){
     try {
         var org = page.organisation;
         var db = getDB(page);
-        var contactFormService = services.contactFormService;
         var salesDataId = params.salesDataId;
-        var salesDataRecord = getClaimSalesById(salesDataId)
+        var salesDataRecord = getClaimSalesById(salesDataId);
 
         transactionManager.runInTransaction(function () {
-//            var cr = contactFormService.processContactRequest(page, params, files);
-//            var enteredUser = applications.userApp.findUserResource(cr.profile);
             var enteredUser = securityManager.currentUser;
             var now = formatter.formatDateISO8601(formatter.now, org.timezone);
 
@@ -480,22 +439,20 @@ function createClaimTaggingInner(page, params, files){
                 recordId: claimId,
                 enteredDate: now,
                 modifiedDate: now,
-//                amount: 1,
                 status: RECORD_STATUS.APPROVED,
-//                soldBy: soldBy,
-//                soldById: soldById,
-//                soldDate: soldDate,
+                soldBy: soldBy,
+                soldById: soldById,
                 taggedFromSalesRecordId: salesDataId
             };
 
-            if(salesDataRecord.type){
-                claimObj['claimType'] = salesDataRecord.type
+            if (salesDataRecord.type) {
+                claimObj['claimType'] = salesDataRecord.type;
             }
 
             securityManager.runAsUser(enteredUser, function () {
-                db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
-                var nodeParams = {"claim": claimId, "claimType": salesDataRecord.type}
-                if(salesDataRecord.points){
+                var claim = db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
+                var nodeParams = {"claim": claimId, "claimType": salesDataRecord.type};
+                if (salesDataRecord.points) {
                     nodeParams["points"] = salesDataRecord.points;
                 }
                 eventManager.goalAchieved("claimSubmittedGoal", nodeParams);
@@ -505,7 +462,7 @@ function createClaimTaggingInner(page, params, files){
                     {amount: 1, productSku: null, soldDate: soldDate, soldBy: soldBy, soldById: soldById}
                 ];
 
-                createClaimItem(db, claimObj, claimItems);
+                createOrUpdateClaimItem(claim, claimObj, claimItems);
             });
 
             result.data = {};
@@ -529,16 +486,16 @@ function getClaimGroupContactRequest(rf, claimGroupId) {
     log.info("contact request ---=> {} ", claimGroup.contactRequest);
 
     var query = {
-        "query":{
-            "bool":{
-               "must":[
+        "query": {
+            "bool": {
+                "must": [
                     {
-                        "term":{
-                            "_type":"contactRequest"
+                        "term": {
+                            "_type": "contactRequest"
                         }
                     },
                     {
-                       "term":{
+                        "term": {
                             "contactRequest": claimGroup.contactRequest
                         }
                     }
@@ -559,30 +516,30 @@ function findClaimGroupById(rf, claimGroupId) {
     return claimGroup;
 }
 
-function getClaimedSales(rf, userId){
+function getClaimedSales(rf, userId) {
 
     var query = {
-               "query":{
-                  "bool":{
-                     "must":[
-                        {
-                           "exists":{
-                              "field":"taggedFromSalesRecordId"
-                           }
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "exists": {
+                            "field": "taggedFromSalesRecordId"
                         }
-                     ]
-                  }
-               }
+                    }
+                ]
             }
+        }
+    };
 
-    if(userId){
+    if (userId) {
         query.query.bool.must.push(
-            {
-                "term": {
-                    "soldById": userId
+                {
+                    "term": {
+                        "soldById": userId
+                    }
                 }
-            }
-        )
+        );
     }
 
     var db = getDB(rf);
@@ -594,74 +551,66 @@ function getClaimedSales(rf, userId){
         var hit = queryResults.hits.hits[index];
         var ClaimSalesId = hit.source.taggedFromSalesRecordId;
 
-        claimedSalesIds.push(ClaimSalesId );
+        claimedSalesIds.push(ClaimSalesId);
     }
 
-    return claimedSalesIds
+    return claimedSalesIds;
 }
 
 function getUnclaimedSales(rf, dataSeriesName, extraFields, filteringParams, allowMultipleClaims) {
-    var claimedSalesIds = []
-    if(allowMultipleClaims){
+    var claimedSalesIds = [];
+    if (allowMultipleClaims) {
         var cr = services.contactFormService.processContactRequest(rf, {}, {});
         var enteredUser = applications.userApp.findUserResource(cr.profile);
         var userId = enteredUser.userId;
         claimedSalesIds = getClaimedSales(rf, userId);
 
-    }else{
+    } else {
         claimedSalesIds = getClaimedSales(rf, null);
     }
 
-    var primaryMemberShipsIds = []
-    var primaryMemberShips = securityManager.currentUser.primaryMemberships
-    for(var i=0; i < primaryMemberShips.length; i++){
-        primaryMemberShipsIds.push(primaryMemberShips[i].org.id)
+    var primaryMemberShipsIds = [];
+    var primaryMemberShips = securityManager.currentUser.primaryMemberships;
+    for (var i = 0; i < primaryMemberShips.length; i++) {
+        primaryMemberShipsIds.push(primaryMemberShips[i].org.id);
     }
 
     var salesQuery = {
-            "stored_fields": [
-                "periodFrom",
-                "recordId"
-            ],
-            "query": {
-                        "bool": {
-                            "must": [
-                                {
-                                    "term": {
-                                        "dataSeriesName": dataSeriesName
-                                    }
-                                },
-                                {
-                                    "terms": {
-                                        "assignedToOrg": primaryMemberShipsIds
-                                    }
-                                }
-                            ],
-                            "must_not": [
-                                {
-                                    "terms": {
-                                        "recordId": claimedSalesIds
-                                    }
-                                }
-                            ]
+        "stored_fields": [
+            "periodFrom",
+            "recordId"
+        ],
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "term": {
+                            "dataSeriesName": dataSeriesName
                         }
                     },
-            "size": 10000
-        };
+                    {
+                        "terms": {
+                            "assignedToOrg": primaryMemberShipsIds
+                        }
+                    }
+                ],
+                "must_not": [
+                    {
+                        "terms": {
+                            "recordId": claimedSalesIds
+                        }
+                    }
+                ]
+            }
+        },
+        "size": 10000
+    };
 
-    if (extraFields != null) {
+    if (isNotNull(extraFields)) {
         for (var fieldIndex in extraFields) {
             salesQuery.stored_fields.push(extraFields[fieldIndex]);
         }
     }
-
-    /*if (filteringParams != null) {
-        for (var filterIndex in filteringParams) {
-            var filter = filteringParams[filterIndex];
-
-            salesQuery.query.bool.must.push(filter);
-        }
-    } */
 
     var sm = applications.search.searchManager;
     var salesDataResp = sm.search(JSON.stringify(salesQuery), 'dataseries');
@@ -675,9 +624,9 @@ function getUnclaimedSales(rf, dataSeriesName, extraFields, filteringParams, all
             "recordId": hit.fields.recordId.value.toString()
         };
 
-        if (extraFields != null) {
+        if (isNotNull(extraFields)) {
             for (var fieldIndex in extraFields) {
-                if(hit.fields[extraFields[fieldIndex]]){
+                if (hit.fields[extraFields[fieldIndex]]) {
                     record[extraFields[fieldIndex]] = hit.fields[extraFields[fieldIndex]].value;
                 }
             }
@@ -690,66 +639,49 @@ function getUnclaimedSales(rf, dataSeriesName, extraFields, filteringParams, all
 }
 
 function getclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
-    var userId = securityManager.currentUser.userId
+    var userId = securityManager.currentUser.userId;
     var claimedSalesIds = getClaimedSales(rf, userId);
 
-    var primaryMemberShipsIds = []
-    var primaryMemberShips = securityManager.currentUser.primaryMemberships
-    for(var i=0; i < primaryMemberShips.length; i++){
-        primaryMemberShipsIds.push(primaryMemberShips[i].org.id)
+    var primaryMemberShipsIds = [];
+    var primaryMemberShips = securityManager.currentUser.primaryMemberships;
+    for (var i = 0; i < primaryMemberShips.length; i++) {
+        primaryMemberShipsIds.push(primaryMemberShips[i].org.id);
     }
 
     var salesQuery = {
-            "stored_fields": [
-                "periodFrom",
-                "recordId"
-            ],
-            "query": {
-                        "bool": {
-                            "must": [
-                                {
-                                    "term": {
-                                        "dataSeriesName": dataSeriesName
-                                    }
-                                },
-                                {
-                                    "terms": {
-                                        "recordId": claimedSalesIds
-                                    }
-                                },
-                                {
-                                    "terms": {
-                                        "assignedToOrg": primaryMemberShipsIds
-                                    }
-                                }/*,
-                                {
-                                    "range": {
-                                        "periodFrom": {
-                                            "gte": formatter.formatDate(queryManager.commonStartDate),
-                                            "lte": formatter.formatDate(queryManager.commonFinishDate),
-                                            "format":"dd/MM/yyyy"
-                                        }
-                                    }
-                                }*/
-                            ]
+        "stored_fields": [
+            "periodFrom",
+            "recordId"
+        ],
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "term": {
+                            "dataSeriesName": dataSeriesName
                         }
                     },
-            "size": 10000
-        };
+                    {
+                        "terms": {
+                            "recordId": claimedSalesIds
+                        }
+                    },
+                    {
+                        "terms": {
+                            "assignedToOrg": primaryMemberShipsIds
+                        }
+                    }
+                ]
+            }
+        },
+        "size": 10000
+    };
 
-    if (extraFields != null) {
+    if (isNotNull(extraFields)) {
         for (var fieldIndex in extraFields) {
             salesQuery.stored_fields.push(extraFields[fieldIndex]);
         }
     }
-
-    /*if (filteringParams != null) {
-        for (var filterIndex in filteringParams) {
-            var filter = filteringParams[filterIndex];
-
-            salesQuery.query.bool.must.push(filter);
-        }
-    } */
 
     var sm = applications.search.searchManager;
     var salesDataResp = sm.search(JSON.stringify(salesQuery), 'dataseries');
@@ -763,7 +695,7 @@ function getclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
             "recordId": hit.fields.recordId.value.toString()
         };
 
-        if (extraFields != null) {
+        if (isNotNull(extraFields)) {
             for (var fieldIndex in extraFields) {
                 record[extraFields[fieldIndex]] = hit.fields[extraFields[fieldIndex]].value;
             }
@@ -811,14 +743,9 @@ function imageClaim(page, params, files) {
                 };
 
                 db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
+
                 eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});
                 eventManager.goalAchieved("claimProcessedGoal", custProfileBean, {"claim": claimId, 'status': RECORD_STATUS.NEW});
-
-                var claimItems = [
-                    {amount: 1, productSku: null, soldDate: null}
-                ];
-
-                createClaimItem(db, claimObj, claimItems);
             });
         } catch (e) {
             log.error('imageClaim(): Error when saving claim: ' + e, e);
@@ -826,40 +753,4 @@ function imageClaim(page, params, files) {
         }
     }
     return views.jsonResult(true, "Submitted job ID " + scanJobId);
-}
-
-function createClaimItem(db, claimObj, claimItems){
-    log.info('createClaimItem() - {}', claimObj.recordId);
-
-    var enteredUser = securityManager.currentUser;
-    var soldBy = enteredUser.name;
-    var soldById = enteredUser.userId;
-
-    log.info('createClaimItem(): claimItems.length={}', claimItems.length);
-    for(counter = 0; counter < claimItems.length; counter++){
-        var claimItem = claimItems[counter];
-
-        var claimItemObj = {};
-
-        claimItemObj.recordId = 'claimItem-' + generateRandomText(32);
-        claimItemObj.claimRecordId = claimObj.recordId;
-
-        claimItemObj.modifiedDate = claimObj.modifiedDate;
-        claimItemObj.soldBy = soldBy;
-        claimItemObj.soldById = soldById;
-
-        claimItemObj.amount = claimItem.amount;
-        claimItemObj.productSku = claimItem.productSku;
-        claimItemObj.soldDate = claimItem.soldDate;
-
-        if(claimItem.hasOwnProperty('soldBy')){
-            claimItemObj.soldBy = claimItem.soldBy;
-        }
-        if(claimItem.hasOwnProperty('soldById')){
-            claimItemObj.soldById = claimItem.soldById;
-        }
-
-        var doc = db.createNew(claimItemObj.recordId, JSON.stringify(claimItemObj), TYPE_CLAIM_ITEM);
-        log.info("createClaimItem: Created item {}", doc.name);
-    }
 }

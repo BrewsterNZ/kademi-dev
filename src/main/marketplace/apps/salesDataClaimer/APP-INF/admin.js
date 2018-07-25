@@ -1,3 +1,5 @@
+/*global controllerMappings, views, log, formatter, applications, eventManager, RECORD_STATUS, TYPE_CLAIM_ITEM, services, fileManager, TYPE_RECORD*/
+
 controllerMappings
         .adminController()
         .path('/manageSaleDataClaimer')
@@ -45,7 +47,6 @@ controllerMappings
 controllerMappings
         .adminController()
         .path('/manageSaleDataClaimer/(?<claimId>[^/]*)/')
-        .addMethod('GET', 'getClaimItems', 'claimItems')
         .addMethod('GET', 'getClaim')
         .addMethod('POST', 'updateClaim', 'updateClaim')
         .enabled(true)
@@ -67,13 +68,6 @@ controllerMappings
 
 controllerMappings
         .adminController()
-        .pathSegmentName('getSearchClaimItemsResult')
-        .enabled(true)
-        .addMethod('GET', 'getSearchClaimItemsResult')
-        .build();
-
-controllerMappings
-        .adminController()
         .path('/salesDataClaimsProducts/tagClaim')
         .addMethod('POST', 'createImageClaimTagging')
         .enabled(true)
@@ -83,56 +77,11 @@ function getAllClaims(page, params) {
     log.info('getAllClaims > page={}, params={}', page, params);
 
     if (!params.claimId) {
-        var results = searchClaims(page, params.status, undefined, params.claimGroup);
-        var claimGroupsResult = searchClaimGroups(page, params.claimGroup);
-        page.attributes.searchResult = results;
-        page.attributes.searchClaimGroupsResult = claimGroupsResult;
+        var db = getDB(page);
+
+        page.attributes.claims = db.findByType(TYPE_RECORD);
         page.attributes.settings = getAppSettings(page);
     }
-}
-
-function getSearchClaimItemsResult(page, params) {
-    var searchClaimItemsResult = searchClaimItems(page, params.claimRecordId, null);
-    var result = {"status": true, "data": []};
-
-    var hits = searchClaimItemsResult.hits;
-    var hitsList = hits.getHits();
-    for (counter = 0; counter < hits.totalHits(); counter++) {
-        var soldDate = "";
-        var modifiedDate = "";
-        var productSku = "";
-
-        if (hitsList[counter].getField('soldDate') !== null) {
-            soldDate = hitsList[counter].getField('soldDate').value;
-        }
-        if (hitsList[counter].getField('modifiedDate') !== null) {
-            modifiedDate = hitsList[counter].getField('modifiedDate').value;
-        }
-        if (hitsList[counter].getField('productSku') !== null) {
-            productSku = hitsList[counter].getField('productSku').value;
-        }
-
-        var row = {
-            "amount": hitsList[counter].getField('amount').value,
-            "productSku": productSku,
-            "soldDate": {
-                "value": soldDate,
-                "formatDateISO8601": formatter.toDate(soldDate),
-                "formatTimeLong": formatter.formatTimeLong(soldDate, page.organisation.timezone)
-            },
-            "soldBy": hitsList[counter].getField('soldBy').value,
-            "modifiedDate": {
-                "value": modifiedDate,
-                "formatDateISO8601": formatter.toDate(modifiedDate),
-                "formatTimeLong": formatter.formatTimeLong(modifiedDate, page.organisation.timezone)
-            },
-            "soldById": hitsList[counter].getField('soldById').value
-        };
-
-        result.data.push(row);
-    }
-
-    return views.jsonObjectView(JSON.stringify(result));
 }
 
 function changeClaimsStatus(status, page, params, callback) {
@@ -202,64 +151,40 @@ function approveClaims(page, params) {
             var selectedDataSeries = settings.get('dataSeries');
             var dataSeries = applications.salesData.getSalesDataSeries(selectedDataSeries);
 
+            log.info("approveClaims: ids={}", ids.length);
             for (var i = 0; i < ids.length; i++) {
                 (function (id) {
                     var claim = db.child(id);
 
                     if (claim !== null) {
-                        var queryJson = {
-                            'stored_fields': [
-                                'recordId',
-                                'claimRecordId',
-                                'modifiedDate',
-                                'soldBy',
-                                'soldById',
-                                'amount',
-                                'productSku',
-                                'soldDate'
-                            ],
-                            'size': 10000,
-                            'sort': [
-                                {
-                                    'soldDate': 'desc'
-                                }
-                            ],
-                            'query': {
-                                'bool': {
-                                    'must': [
-                                        {'type': {'value': TYPE_CLAIM_ITEM}},
-                                        {'term': {'claimRecordId': claim.jsonObject.recordId}}
-                                    ]
-                                }
+                        log.info("approveClaims: found claim={}", claim.name);
+
+                        var claimOb = claim.jsonObject;
+                        var claimsItems = claimOb.claimItems;
+                        log.info("approveClaims: found claim items={}", claimsItems.length);
+
+                        log.info("approveClaims: claim items={}", claimOb.claimItems.length);
+                        for (var counter = 0; counter < claimOb.claimItems.length; counter++) {
+                            var claimItem = claimOb.claimItems[counter];
+
+                            var soldByUser = services.userManager.findById(claimItem.soldById);
+
+                            var dp = services.dataSeriesManager.newDataPoint();
+                            dp.series = dataSeries;
+                            dp.amount = formatter.toBigDecimal(claimItem.amount);
+                            dp.periodFrom = formatter.toDate(Date.parse(claimItem.soldDate).toString());
+                            dp.attributedTo = soldByUser;
+                            dp.entered = dp.periodFrom; // should be claim date
+                            dp.productSku = claimItem.productSku;
+
+                            if (isNotNull(claimOb.enteredById)) {
+                                var enteredBy = services.userManager.findById(claimOb.enteredById);
+                                dp.enteredBy = enteredBy;
                             }
-                        };
 
-                        var claim_items = doDBSearch(page, queryJson);
-                        var hits = claim_items.hits;
-                        var hitsList = hits.getHits();
+                            services.dataSeriesManager.insertDataPoint(dp);
 
-                        for (counter = 0; counter < hits.totalHits(); counter++) {
-                            var soldById = hitsList[counter].getField('soldById').value;
-                            var amount = hitsList[counter].getField('amount').value;
-                            var soldDate = hitsList[counter].getField('soldDate').value;
-                            var productSku = hitsList[counter].getField('productSku').value;
-
-                            amount = formatter.toBigDecimal(amount);
-                            soldDate = formatter.toDate(Date.parse(soldDate).toString());
-                            enteredDate = formatter.toDate(Date.parse(claim.jsonObject.enteredDate).toString());
-
-                            var obj = {
-                                soldById: soldById,
-                                amount: amount,
-                                soldDate: soldDate,
-                                enteredDate: enteredDate,
-                                productSku: productSku
-                            };
-
-                            var enteredUser = applications.userApp.findUserResourceById(obj.soldById);
-                            var custProfileBean = enteredUser.extProfileBean;
-                            applications.salesData.insertDataPoint(dataSeries, obj.amount, obj.soldDate, obj.soldDate, enteredUser.thisUser, enteredUser.thisUser, obj.enteredDate, obj.productSku);
-
+                            var custProfileBean = services.userManager.toProfileBean(soldByUser);
                             eventManager.goalAchieved('claimProcessedGoal', custProfileBean, {'claim': id, 'status': RECORD_STATUS.APPROVED});
                         }
                     }
@@ -297,30 +222,6 @@ function deleteClaims(page, params) {
 
             if (claim !== null) {
                 claim.delete();
-            }
-
-            // Delete any claim items as well
-            var resp = db.search(JSON.stringify({
-                'stored_fields': ['recordId', 'claimRecordId'],
-                'query': {
-                    'bool': {
-                        'must': [
-                            {'type': {'value': TYPE_CLAIM_ITEM}},
-                            {'term': {'claimRecordId': id}}
-                        ]
-                    }
-                }
-            }));
-
-            var respJson = JSON.parse(resp.toString());
-            for (var i = 0; i < respJson.hits.hits.length; i++) {
-                var hit = respJson.hits.hits[i];
-                var claimItemId = hit.fields.recordId;
-
-                var claimItem = db.child(claimItemId);
-                if (claimItem !== null) {
-                    claimItem.delete();
-                }
             }
         }
 
@@ -429,7 +330,11 @@ function processImageClaim(page, params, files) {
                         claimItems.push(claimItem);
                     }
                     log.info("processImageClaim: claimItems={}", claimItems.length);
-                    createClaimItem(db, claimJson, claimItems);
+                    claimJson.processed = true;
+                    createOrUpdateClaimItem(claim, claimJson, claimItems);
+
+                    result.status = true;
+                    result.messages = ['Successfully Processed'];
                 } else {
                     result.status = false;
                     result.messages = ['No rows to process'];
@@ -526,11 +431,11 @@ function findParticipant(entityName, series) {
     var st = series.salesType;
     log.info("findParticipant {} {}", entityName, st);
 
-    if (st == null || st == "SALES_PROFILE") {
+    if (isNull(st) || st === "SALES_PROFILE") {
         var mr = services.userManager.newProfileMatchRequest();
         mr.email(entityName).or().userName(entityName);
         var profileBeans = services.userManager.findMatching(mr);
-        if (profileBeans.size() == 0) {
+        if (profileBeans.size() === 0) {
             return null;
         } else {
             return profileBeans.get(0).entityObject(); // convert bean to Profile

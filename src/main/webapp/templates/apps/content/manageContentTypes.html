@@ -3,6 +3,17 @@
         <title>Audit Records</title>
     </head>
     <body>
+
+        #if( $page.contentTypesConfig.loadError || $page.contentTypesConfig.assetTypeErrors  )
+        <div class="alert alert-danger">
+            <h3>Error loading content types</h3>
+            $!page.contentTypesConfig.loadError
+            #foreach( $err in $page.contentTypesConfig.assetTypeErrors )
+            <p>$err</p>
+            #end
+        </div>
+        #end
+
         <div class="btn-group" role="group">
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
