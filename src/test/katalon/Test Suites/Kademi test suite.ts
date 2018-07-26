@@ -14,19 +14,19 @@
    <testCaseLink>
       <guid>17b7dee2-442c-4fb5-b7b0-8ab0dd4bc7a7</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>false</isRun>
+      <isRun>true</isRun>
       <testCaseId>Test Cases/Auto1-Create-user</testCaseId>
    </testCaseLink>
    <testCaseLink>
       <guid>04929fb2-85a6-41e1-915b-43c802a162eb</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>false</isRun>
+      <isRun>true</isRun>
       <testCaseId>Test Cases/Auto2-Keditor-Simple-Test</testCaseId>
    </testCaseLink>
    <testCaseLink>
       <guid>e5209d4c-9a85-46d0-8ab0-c1727d0395cb</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>false</isRun>
+      <isRun>true</isRun>
       <testCaseId>Test Cases/Auto3-new-acc-creation-apps-install</testCaseId>
    </testCaseLink>
    <testCaseLink>
