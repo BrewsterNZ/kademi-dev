@@ -43,7 +43,9 @@ function initLeadManEvents() {
     initChangeLeadAvatar();
     initHideModalAndGoLinks();
     initStatsSummaryComponents();
-    initLeadCompanies();
+    initLeadContactsTable();
+    initLeadCompaniesTable();
+    initLeadTasksTable();
     // init the login form
     $(".login").user({});
 
@@ -1961,10 +1963,10 @@ function initClipboard() {
     });
 }
 
-function initLeadCompanies() {
-    if ($('#leadCompaniesTable').length){
+function initLeadTasksTable() {
+    if ($('#leadTasksTable').length){
         var editor = new $.fn.dataTable.Editor({
-            table: '#leadCompaniesTable',
+            table: '#leadTasksTable',
             ajax: {
                 url: '/leads/_leadId_/_id_/'
             },
@@ -1994,7 +1996,7 @@ function initLeadCompanies() {
                 }
             ]
         });
-        var dataTable = $('#leadCompaniesTable').DataTable({
+        var dataTable = $('#leadTasksTable').DataTable({
             paging: false,
             searching: false,
             destroy: true,
@@ -2149,7 +2151,7 @@ function initLeadCompanies() {
             if (!taskId){
                 return false;
             }
-            var a = $('#leadCompaniesTable').find('[data-taskid='+taskId+']');
+            var a = $('#leadTasksTable').find('[data-taskid='+taskId+']');
             var leadId = a.attr('data-leadId');
             if (!leadId){
                 return false;
@@ -2158,15 +2160,35 @@ function initLeadCompanies() {
         });
 
         editor.on('submitComplete', function (e, json, data) {
-            $('#leadCompaniesTable').find('.editable.editing').removeClass('editing');
+            $('#leadTasksTable').find('.editable.editing').removeClass('editing');
             Msg.success('Updated');
         });
 
         dataTable.draw();
-        $('#leadCompaniesTable').on( 'draw.dt', function () {
-            $('#leadCompaniesTable').closest('.row').siblings('.row').remove();
+        $('#leadTasksTable').on( 'draw.dt', function () {
+            $('#leadTasksTable').closest('.row').siblings('.row').remove();
         } );
+    }
+}
 
+function initLeadCompaniesTable() {
+    if ($('#leadCompaniesTable').length){
+        var dataTable = $('#leadCompaniesTable').DataTable({
+            paging: false,
+            searching: false,
+            destroy: true,
+            info: false,
+        });
+    }
+}
 
+function initLeadContactsTable() {
+    if ($('#leadContactsTable').length){
+        var dataTable = $('#leadContactsTable').DataTable({
+            paging: false,
+            searching: false,
+            destroy: true,
+            info: false,
+        });
     }
 }
