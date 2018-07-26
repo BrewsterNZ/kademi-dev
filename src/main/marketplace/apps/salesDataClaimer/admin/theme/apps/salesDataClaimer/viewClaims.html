@@ -9,7 +9,6 @@
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.min.js">//</script>
         <script type="text/javascript" src="/static/jquery.fullscreen/0.4.1/jquery.fullscreen-0.4.1.min.js">//</script>
-        <script type="text/javascript" src="/theme/apps/salesDataClaimer/claimForm.js">//</script>
     </head>
     <body>
 
@@ -386,18 +385,22 @@
                         <div class="form-message alert alert-danger" style="display: none;"></div>
                         <input type="hidden" name="updateClaim" value="true" />
                         <input type="hidden" name="claimItemsLength" value="0" />
-                        <input name="soldBy" type="hidden"/>
-                        <input name="soldById" type="hidden"/>
-
-                        <div class="form-group">
-                            <label class="control-label col-lg-2">Sold By</label>
-                            <div class="col-lg-10">
-                                <input id="soldBySearch" type="text" class="form-control required" required="required" placeholder="Sold By"/>
-                            </div>
-                        </div>
 
                         <div class="claim-items">
-                            <div class="claim-items-body"></div>
+                            <div class="claim-items-wrapper">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Sold Date</th>
+                                            <th>Sold By</th>
+                                            <th>Product Sku</th>
+                                            <th>Amount</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="claim-items-tbody"></tbody>
+                                </table>
+                            </div>
 
                             <button class="btn btn-primary btn-block" type="button" data-action="add-claim-item"><i class="fa fa-plus"></i> Add claim item</button>
                         </div>
@@ -447,7 +450,7 @@
 
         #if ($page.attributes.settings.defaultColumns)
         var defaultColumns = $page.attributes.settings.defaultColumns;
-        #else
+                #else
         var defaultColumns = [
                 "amount",
                 "entered",
@@ -457,7 +460,7 @@
                 "id",
                 "tags"
         ];
-        #end
+                #end
 
         var options = [
             {value: "", title: "[Do not import]"},

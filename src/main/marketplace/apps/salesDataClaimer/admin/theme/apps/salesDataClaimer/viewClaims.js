@@ -78,23 +78,14 @@
     function initEditClaim() {
         var modal = $('#modal-edit-claim');
         var form = modal.find('form');
-        var soldBySearch = form.find('#soldBySearch');
-        var soldBy = form.find('[name=soldBy]');
-        var soldById = form.find('[name=soldById]');
+        form.salesDataClaimForm({});
 
         modal.on('hidden.bs.modal', function () {
+            // Reset form data
+            form.salesDataClaimForm('reset');
+
             // Reset the modal
             form.trigger('reset');
-            form.find('.claim-items-body').empty();
-            form.find('[data-action="add-claim-item"]').click();
-        });
-
-        soldBySearch.entityFinder({
-            type: 'profile',
-            onSelectSuggestion: function (elem, userName, actualId, type) {
-                soldBy.val(userName);
-                soldById.val(actualId);
-            }
         });
 
         form.forms({
@@ -120,66 +111,8 @@
                 success: function (resp) {
                     if (resp && resp.status) {
                         form.attr('action', url);
-                        modal.find('.modal-action').attr('name', 'updateClaim');
-                        var addBtn = modal.find('.claim-items [data-action="add-claim-item"]');
 
-                        // Empty Modal items first
-                        modal.find('.claim-items-body').empty();
-                        modal.find('[name="claimItemsLength"]').val(0);
-
-                        // Populate items
-                        if (resp.data.claimItems) {
-                            $.each(resp.data.claimItems, function (_, item) {
-                                var index = _;
-                                var claimItem = item;
-
-                                console.log('Items', index, claimItem);
-
-                                var itemElem = modal.find('.claim-item-' + index);
-                                if (itemElem.length < 1) {
-                                    addBtn.click();
-                                    itemElem = modal.find('.claim-item-' + index);
-                                }
-
-                                itemElem.append('<input type="hidden" name="claimid.' + index + '" value="' + claimItem.recordId + '"/>');
-
-                                if (claimItem.amount) {
-                                    itemElem.find('[name="amount.' + index + '"]').val(claimItem.amount);
-                                }
-
-                                if (claimItem.soldDate && claimItem.soldDate.length > 0) {
-                                    // soldDate
-                                    var soldDate = moment(claimItem.soldDate).format('DD/MM/YYYY HH:mm');
-                                    itemElem.find('[name="soldDate.' + index + '"]').val(soldDate);
-                                }
-
-                                if (claimItem.productSku && claimItem.productSku.length > 0) {
-                                    itemElem.find('[name="productSku.' + index + '"]').val(claimItem.productSku);
-                                }
-                            });
-                        }
-
-                        $.each(resp.data, function (key, value) {
-                            var newValue = value;
-                            if (key === 'soldDate') {
-                                newValue = moment(value).format('DD/MM/YYYY HH:mm');
-                            } else if (key === 'soldBy') {
-                                soldBySearch.val(newValue);
-                                soldBySearch.prev('.search-input').val(newValue);
-                                soldBySearch.prev('.search-input').data('current-value', newValue);
-                                console.log('soldBySearch', soldBySearch, newValue);
-                            }
-
-                            modal.find('[name=' + key + ']').val(newValue);
-                        });
-
-                        if (resp.data.receipt) {
-                            modal.find('.thumbnail img').attr('src', resp.data.receipt);
-                            modal.find('.btn-upload-receipt span').html('Upload other receipt');
-                            modal.find('.btn-upload-receipt i').attr('class', 'fa fa-check');
-                        }
-
-                        modal.find('.thumbnail img').attr('src');
+                        form.salesDataClaimForm('populate', resp.data);
 
                         modal.modal('show');
                     } else {

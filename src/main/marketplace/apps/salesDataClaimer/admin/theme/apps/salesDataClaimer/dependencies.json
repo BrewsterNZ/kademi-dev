@@ -1,0 +1,20 @@
+{
+    "appDependencies": [
+        {
+            "appId": "moment-lib",
+            "branch": "2.18.3"
+        },
+        {
+            "appId": "KongoDB",
+            "branch": ""
+        }
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesDataClaimer/jquery.adminClaimForm.js"
+            }
+        }
+    ]
+}
