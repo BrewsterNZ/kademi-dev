@@ -124,7 +124,7 @@
 
             btn.upcropImage({
                 buttonContinueText: 'Save',
-                url: window.location.pathname + '?uploadBadgeImage&badgeid=' + badgeid,
+                url: window.location.pathname + 'badges/'+badgeid+'/?uploadBadgeImage',
                 fieldName: 'badgeImg',
                 onCropComplete: function (resp) {
                     flog('onCropComplete:', resp, resp.nextHref);
@@ -170,6 +170,7 @@
                 $.ajax({
                     type: 'POST',
                     dataType: 'JSON',
+                    url: window.location.pathname + 'badges/'+badgeid+'/',
                     data: {
                         removeBadgeImage: badgeid
                     },

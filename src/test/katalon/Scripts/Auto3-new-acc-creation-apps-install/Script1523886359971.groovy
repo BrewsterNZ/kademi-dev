@@ -30,7 +30,7 @@ def regousername = WebUI.concatenate(((['regoqa', randomdigit]) as String[]))
 
 def contactusername = WebUI.concatenate(((['contact', randomdigit]) as String[]))
 
-WebUI.openBrowser('http://katalontestacc2.admin.kademi-ci.co')
+WebUI.openBrowser('http://katalontestacc3.admin.kademi-ci.co')
 
 not_run: WebUI.maximizeWindow()
 
