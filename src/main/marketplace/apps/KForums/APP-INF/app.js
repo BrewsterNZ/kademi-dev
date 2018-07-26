@@ -44,14 +44,26 @@ function post(page, params, files, form) {
         var newPost = form.cleanedParam("newPost");
         var teamOrgId = form.longParam("teamOrgId"); // nullable, long
         var teamOrg;
+        
         if (teamOrgId == null) {
             var currentUser = securityManager.currentUser;
             teamOrg = findTeamOrg(currentUser.thisProfile);
         } else {
             teamOrg = page.find("/").childOrg(teamOrgId);
         }
-        services.forumManager.post(teamOrg, newPost);
-
+        
+        var createdPost = services.forumManager.post(teamOrg, newPost);
+        
+        var taggedProfiles = form.listLongsParam("taggedProfiles");
+        
+        for (var profileIdIndex in taggedProfiles) {
+            var profileId = taggedProfiles[profileIdIndex];
+            var userResource = applications.userApp.findUserResourceById(profileId);
+            
+            if (userResource != null) {
+                services.forumManager.tag(createdPost, userResource.thisProfile, null);
+            }
+        }
     });
     return views.jsonView(true, "Posted");
 }

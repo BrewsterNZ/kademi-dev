@@ -9,9 +9,11 @@
     <p>&nbsp;</p>
 </div>
 
-
-
-#set( $postsResp = $applications.KForums.call("doWallSearch", $page.attributes.teamOrgId.id, 0, 100) )
+#if ( $isFeed)
+    #set( $postsResp = $applications.KForums.call("doPostsFeedSearch", null, 0, 100) )
+#else
+    #set( $postsResp = $applications.KForums.call("doWallSearch", $page.attributes.teamOrgId.id, 0, 100) )
+#end
 
 
 <div class="well social-wall" id="social-wall" data-team-org="$!page.attributes.teamOrgId.id">
@@ -24,6 +26,11 @@
     #foreach($postHit in $postsResp.hits.hits)
     <div class="panel panel-default post-item" data-post-id="$postHit.fields.postId.value" id="post-$postHit.fields.postId.value">
         #set( $post = $services.forumManager.findPost($postHit.fields.postId.value) )
+        #set( $postTags = $services.forumManager.findPostTags($post) )
+        #set( $tags = $formatter.newArrayList() )
+        #foreach( $postTag in $postTags )
+            #set( $temp = $tags.add($postTag.taggedProfile.formattedName) )
+        #end
         <div class="panel-heading">
             <div class="questionAvatar pull-left" style="width: 20px; height: 20px; background-image: url($formatter.profilePicHref($post.poster)); background-size: cover"></div>
             <h4>$post.poster.formattedName</h4>
@@ -33,6 +40,9 @@
                 &nbsp;
                 <i class="fa fa-comments-o"></i>
                 <strong>$postHit.fields.numInteractions.value</strong> reactions
+                &nbsp;
+                <i class="fa fa-user-o"></i>
+                <a href="#" title="$tags">$postTags.size()</a> people tagged
             </small>
         </div>
 

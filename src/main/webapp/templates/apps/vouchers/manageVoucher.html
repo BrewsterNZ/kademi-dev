@@ -76,7 +76,10 @@
                         </tr>
                         <tr>
                             <th>Expiry date</th>
-                            <td>$formatter.formatDate($page.expiryDate)</td>
+                            <td>
+                                $formatter.formatDate($page.expiryDate)
+                                <a href="#changeExpiryModal" data-toggle="modal">Change</a>
+                            </td>
                         </tr>
                         <tr>
                             <th>Type</th>
@@ -197,11 +200,42 @@
             </form>
         </div>
 
+        <div class="modal fade" id="changeExpiryModal" tabindex="-1" role="dialog" aria-labelledby="changeStatusModal" aria-hidden="true">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Change expiry date</h4>
+            </div>
+            <form class="form-horizontal" method="POST" action="$page.href" id="redeemVoucherForm">
+                <div class="modal-body">
+
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
+
+                    <div class="form-group">
+                        <label for="expiryDate" class="col-sm-3 control-label">New expiry date:</label>
+                        <div class="col-sm-8">
+                            <input class="form-control date required" id="expiryDate" name="expiryDate" type="text">
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-success" type="submit">Change</button>
+                </div>
+            </form>
+        </div>
+
 
 
         <script type="text/javascript">
             $(function () {
                 $('abbr.timeago').timeago();
+                initDateTimePicker
+
                 var redeemModal = $("#redeemVoucherModal");
                 $("#redeemVoucherForm").forms({
                     onSuccess: function (e) {
@@ -229,13 +263,35 @@
                     }
                 });
 
+                $("#changeExpiryModal").on('show.bs.modal', function () {
+                    initDateTimePicker()
+                });
+
+                $("#changeExpiryModal form").forms({
+                    onSuccess: function (e) {
+                        Msg.info("Changed expiry ok");
+                        reloadVouchers();
+                        closeFuseModal(changeStatusModal);
+                    }
+                });
             });
+
             function reloadVouchers() {
                 $("#voucherContent").reloadFragment({
                     whenComplete: function () {
                         $('abbr.timeago').timeago();
                     }
                 });
+            }
+
+
+            function initDateTimePicker() {
+                var opts = {
+                    format: "DD/MM/YYYY",
+                    minDate: moment().tz(window.KademiTimeZone),
+                    timeZone: window.KademiTimeZone
+                };
+                $('#expiryDate').datetimepicker(opts);
             }
         </script>
     </body>
