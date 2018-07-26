@@ -734,9 +734,8 @@ function imageClaim(page, params, files) {
 
                 var claimObj = {
                     recordId: claimId,
-                    soldBy: custProfileBean.name,
-                    soldById: custProfileBean.userId,
                     enteredDate: now,
+                    enteredUser: (isNotNull(custProfileBean) ? custProfileBean.userId : params.soldById),
                     modifiedDate: now,
                     status: RECORD_STATUS.NEW,
                     receipt: '/_hashes/files/' + uploadedFiles[0].hash

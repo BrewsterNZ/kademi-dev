@@ -76,40 +76,13 @@ function getSearchClaimsQuery(page, status, user, claimForm) {
 
     if (user) {
         queryJson.query.bool.must.push({
-            'term': {'soldBy': user.name}
+            'term': {'claimItems.soldBy': user.name}
         });
     }
 
     if (isNotBlank(status) && !isNaN(status)) {
         queryJson.query.bool.must.push({
             'term': {'status': +status}
-        });
-    }
-
-    if (isNotBlank(claimForm)) {
-        queryJson.query.bool.must.push({
-            'term': {'claimGroupId': claimForm}
-        });
-    }
-
-    return queryJson;
-}
-
-function getSearchClaimGroupsQuery(page, claimForm) {
-    var queryJson = {
-        'size': 10000,
-        'query': {
-            'bool': {
-                'must': [
-                    {'type': {'value': TYPE_CLAIM_GROUP}}
-                ]
-            }
-        }
-    };
-
-    if (isNotBlank(claimForm)) {
-        queryJson.query.bool.must.push({
-            'term': {'claimGroupId': claimForm}
         });
     }
 
@@ -151,20 +124,6 @@ function searchClaims(page, status, user, claimForm) {
         }
     }
     log.info("searchClaims {}", searchResult);
-    return searchResult;
-}
-
-function searchClaimGroups(page, claimGroup) {
-    var searchResult = null;
-
-    try {
-        var queryJson = getSearchClaimGroupsQuery(page, claimGroup);
-        log.info(queryJson);
-        searchResult = doDBSearch(page, queryJson);
-    } catch (e) {
-        log.error('ERROR in searchClaimGroups: ' + e, e);
-    }
-    log.info("searchClaimGroups {}", searchResult);
     return searchResult;
 }
 
@@ -225,7 +184,6 @@ function createClaim(page, params, files) {
         var currentRoles = securityManager.getRoles();
         log.info('currentRoles={}', currentRoles);
 
-        var enteredUser = null;
         var now = formatter.formatDateISO8601(formatter.now, org.timezone);
         var db = getDB(page);
         var id = 'claim-' + generateRandomText(32);
@@ -234,33 +192,35 @@ function createClaim(page, params, files) {
 
         var obj = {
             recordId: id,
-            soldBy: params.soldBy,
-            soldById: params.soldById,
             enteredDate: now,
             enteredUser: (isNotNull(currentUser) ? currentUser.userId : params.soldById),
             modifiedDate: now,
             status: RECORD_STATUS.NEW
         };
 
+        var anonUser = null;
+
         if (params.email) {
             log.info('Anonymous with email={}, firstName={}', params.email, params.firstName);
-            enteredUser = applications.userApp.findUserResource(params.email);
+            anonUser = applications.userApp.findUserResource(params.email);
 
-            if (isNull(enteredUser)) {
+            if (isNull(anonUser)) {
                 log.info('Create new user with email={}, firstName={}', params.email, params.firstName);
-                enteredUser = securityManager.createProfile(page.organisation, params.email, null, null);
-                enteredUser = applications.userApp.findUserResource(enteredUser);
-                log.info('Created user: {}', enteredUser);
-                page.parent.orgData.updateProfile(enteredUser.profile, params.firstName, enteredUser.surName, enteredUser.phone);
+                anonUser = securityManager.createProfile(page.organisation, params.email, null, null);
+                anonUser = applications.userApp.findUserResource(anonUser);
+                log.info('Created user: {}', anonUser);
+                page.parent.orgData.updateProfile(anonUser.profile, params.firstName, anonUser.surName, anonUser.phone);
             } else {
-                log.info('Found existing user for anonymous: {}', enteredUser);
+                log.info('Found existing user for anonymous: {}', anonUser);
             }
 
-            log.info('Profile for anonymous: userName={}, userId={}', enteredUser.name, enteredUser.userId);
-            obj.soldBy = enteredUser.name;
-            obj.soldById = enteredUser.userId;
-        } else {
-            enteredUser = securityManager.currentUser.profile;
+            if (isNotNull(anonUser)) {
+                log.info('Profile for anonymous: userName={}, userId={}', anonUser.name, anonUser.userId);
+                if (isNull(obj.enteredUser)) {
+                    obj.enteredUser = anonUser.userId;
+                }
+            }
+
         }
 
         if (params.claimType) {
@@ -299,11 +259,30 @@ function createClaim(page, params, files) {
         }
 
         transactionManager.runInTransaction(function () {
-            securityManager.runAsUser(enteredUser, function () {
+            securityManager.runAsUser(anonUser || currentUser, function () {
                 log.info("Run as user: {}", params.claimItemsLength);
 
                 var claim = db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
                 eventManager.goalAchieved("claimSubmittedGoal", {"claim": id, "claimType": params.claimType});
+
+                var soldBy, soldById = null;
+
+                if (isNotBlank(params.soldBy)) {
+                    soldBy = params.soldBy;
+                }
+                if (isNotBlank(params.soldById)) {
+                    soldById = params.soldById;
+                }
+
+                if (isBlank(soldBy) || isBlank(soldById)) {
+                    if (isNotNull(anonUser)) {
+                        soldBy = anonUser.name;
+                        soldById = anonUser.userId;
+                    } else if (isNotNull(currentUser)) {
+                        soldBy = currentUser.name;
+                        soldById = currentUser.userId;
+                    }
+                }
 
                 var claimItems = [];
 
@@ -326,7 +305,7 @@ function createClaim(page, params, files) {
                     var soldDate = formatter.formatDateISO8601(soldDateTmp, org.timezone);
                     log.info('createClaim > soldDate={}', soldDate);
 
-                    claimItems.push({amount: amount, productSku: params_productSku, soldDate: soldDate, soldBy: params.soldBy, soldById: params.soldById});
+                    claimItems.push({amount: amount, productSku: params_productSku, soldDate: soldDate, soldBy: soldBy, soldById: soldById});
                 }
 
                 createOrUpdateClaimItem(claim, obj, claimItems);
@@ -447,6 +426,9 @@ function updateClaim(page, params, files) {
                     claimItems.push(claimItem);
                 }
             }
+            // Empty the list so just the sent items are saved
+            claimJson.claimItems = [];
+
 
             createOrUpdateClaimItem(claim, claimJson, claimItems);
         } else {
@@ -570,6 +552,5 @@ function createOrUpdateClaimItem(claimObj, claimJson, claimItems) {
     claimJson.claimItems = existingClaimItems;
 
     // Update
-    log.info("createOrUpdateClaimItem > {}", JSON.stringify(claimJson));
     claimObj.update(JSON.stringify(claimJson));
 }
