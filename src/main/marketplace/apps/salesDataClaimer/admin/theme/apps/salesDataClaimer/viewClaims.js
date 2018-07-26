@@ -46,24 +46,25 @@
     function initAddClaim() {
         var modal = $('#modal-add-claim');
         var form = modal.find('form');
-        var soldBySearch = form.find('#soldBySearch');
-        var soldBy = form.find('[name=soldBy]');
-        var soldById = form.find('[name=soldById]');
+        
+        // Init form
+        form.salesDataClaimForm({});
+        
+        // Reset
+        form.salesDataClaimForm('reset');
+        
+        // Add an empty row
+        form.salesDataClaimForm('addEmptyRow');
 
         modal.on('hidden.bs.modal', function () {
+            // Reset form data
+            form.salesDataClaimForm('reset');
+
             // Reset the modal
             form.trigger('reset');
-            form.find('[name=claimItemsLength]').val(0);
-            form.find('.claim-items-body').empty();
-            form.find('[data-action="add-claim-item"]').click();
-        });
 
-        soldBySearch.entityFinder({
-            type: 'profile',
-            onSelectSuggestion: function (elem, userName, actualId, type) {
-                soldBy.val(userName);
-                soldById.val(actualId);
-            }
+            // Add a blank row
+            form.salesDataClaimForm('addEmptyRow');
         });
 
         form.forms({

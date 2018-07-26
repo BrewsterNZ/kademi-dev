@@ -8,13 +8,16 @@
     });
 
     var ROW_TEMPLATE = '<tr {{#if recordId}} data-id="{{recordId}}" {{/if}}">' +
-            '<td><input value="{{format_claim_date soldDate}}" type="text" name="soldDate.{{_currentCount}}" placeholder="Purchase date" data-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker required" /></td>' +
+            '<td>' +
+            '  <input type="hidden" name="claimid.{{_currentCount}}" value="{{recordId}}"/>' +
+            '  <input value="{{format_claim_date soldDate}}" type="text" name="soldDate.{{_currentCount}}" placeholder="Purchase date" data-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker required" />' +
+            '</td>' +
             '<td>' +
             '  <input value="{{soldById}}" class="soldById" type="hidden" name="soldById.{{_currentCount}}"/>' +
             '  <input value="{{soldBy}}" data-text="{{soldBy}}" type="text" class="form-control searchProfile required soldBy" name="soldBy.{{_currentCount}}" placeholder="Sold By" />' +
             '</td>' +
             '<td><input value="{{productSku}}" type="text" class="form-control required" name="productSku.{{_currentCount}}" placeholder="Product Sku" /></td>' +
-            '<td><input value="{{amount}}" type="number" class="form-control required" name="amount.{{_currentCount}}" placeholder="Sale amount" /></td>' +
+            '<td><input step="0.001" value="{{amount}}" type="number" class="form-control required" name="amount.{{_currentCount}}" placeholder="Sale amount" /></td>' +
             '<td><button type="button" class="btn btn-sm btn-danger btn-delete-row" title="Delete Row"><i class="fa fa-trash"></i></button></td>' +
             '</tr>';
 
@@ -47,6 +50,7 @@
                 $this.$elem.find('tbody tr').each(function (i, item) {
                     var claimRow = $(item);
 
+                    claimRow.find('[name^="claimid."]').attr('name', 'claimid.' + i);
                     claimRow.find('[name^="soldDate."]').attr('name', 'soldDate.' + i);
                     claimRow.find('[name^="soldById."]').attr('name', 'soldById.' + i);
                     claimRow.find('[name^="soldBy."]').attr('name', 'soldBy.' + i);
