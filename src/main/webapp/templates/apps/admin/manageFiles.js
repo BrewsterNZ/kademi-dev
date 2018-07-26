@@ -154,6 +154,21 @@ function initCRUDFiles() {
         $('#modal-upload-zip').modal('show');
     });
 
+    container.on('click', '.btn-set-dir-hash', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var newHash = prompt("Plese enter the new hash");
+        if( newHash ) {
+            if (confirm("Are you sure you want to change the contents of this directory to the hash you provided?")) {
+                setDirHash(window.location.pathname, newHash);
+            } else {
+                // guess not
+            }
+        }
+
+    });
+
     container.on('click', '.btn-new-text-file', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -244,6 +259,8 @@ function initFiles() {
         });
     });
 
+
+
     // Call history stuff directly, so we can reload
     var config = {
         'pageUrl': null,
@@ -306,6 +323,30 @@ function showImportFromUrl() {
             }
         });
     }
+}
+
+function setDirHash(dirHref, newHash) {
+
+        $.ajax({
+            type: 'POST',
+            url: dirHref,
+            dataType: 'json',
+            data: {
+                setNewHash : newHash
+            },
+            success: function (data) {
+                if (data.status) {
+                    Msg.success('Hash set successfully, reloading');
+                    window.location.reload();
+                } else {
+                    Msg.error("An error occured setting the new hash " + data.messages);
+                }
+            },
+            error: function (resp) {
+                flog('error', resp);
+                Msg.error('err');
+            }
+        });
 }
 
 function putEmptyFile(name) {

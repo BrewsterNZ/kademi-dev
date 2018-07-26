@@ -81,29 +81,45 @@
                         <li><a href="$p.href" class="pjax">$p.name</a></li>
                         #end
                         #end
+                        <li class="pull-right text-muted">Hash: $page.hash</li>
                     </ol>
                 </div>
                 <div>
                     <div class="pull-right">
                         <div class="btn-group">
+                            <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-plus-circle"></i>
+                                New
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a class="btn-upload-file" href=""><i class="fa fa-cloud-upload"></i> Upload files</a></li>
+                                <li></li>
+                                <li><a class="btn-create-folder" href=""><i class="clip-folder-plus"></i> New folder</a></li>
+                                <li><a class="btn-new-text-file" href=""><i class="fa fa-file-text-o"></i> New text file</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-cog"></i>
+                                Tools
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a class="btn-upload-zip" href=""><i class="fa fa-upload"></i> Upload and extract zip file</a></li>
+                                <li><a class="btn-set-dir-hash" href=""><i class="fa fa-lightbulb-o"></i> Set directory hash</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="btn-group">
                             <a title="Delete selected files" class="btn btn-danger btn-sm btn-delete-list" href=""><i class="fa fa-times-circle"></i></a>
-                            <a title="Copy selected files" class="btn btn-info btn-sm btn-sm btn-copy-list" href=""><i class="fa fa-copy"></i></a>
                             <a title="Paste copied/cut files" href="$page.href" class="btn btn-success btn-sm btn-paste requires-clipboard hide" data-clipboard="default" href="$page.href"><i class="fa fa-paste"></i></a>
+                            <a title="Copy selected files" class="btn btn-info btn-sm btn-sm btn-copy-list" href=""><i class="fa fa-copy"></i></a>
                         </div>
                     </div>
 
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-cog"></i> <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="btn-upload-file" href=""><i class="fa fa-cloud-upload"></i> Upload files</a></li>
-                            <li></li>
-                            <li><a class="btn-create-folder" href=""><i class="clip-folder-plus"></i> New folder</a></li>
-                            <li><a class="btn-new-text-file" href=""><i class="fa fa-file-text-o"></i> New text file</a></li>
-                            <li><a class="btn-upload-zip" href=""><i class="fa fa-upload"></i> Upload and extract zip file</a></li>
-                        </ul>
-                    </div>
+                    <div class="clearfix"></div>
 
                     <table id="table-files" class="table table-striped table-hover">
                         <colgroup>
