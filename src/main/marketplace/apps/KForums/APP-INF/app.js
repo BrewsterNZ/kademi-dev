@@ -107,8 +107,20 @@ function replyToPost(page, params, files, form) {
         log.info("replyToPost postId={}", postId);
         var text = form.cleanedParam("replyText");
 
-        services.forumManager.replyToPost(postId, text);
+        var createdPost = services.forumManager.replyToPost(postId, text);
+        
+        var taggedProfiles = form.listLongsParam("taggedProfiles");
+        
+        for (var profileIdIndex in taggedProfiles) {
+            var profileId = taggedProfiles[profileIdIndex];
+            var userResource = applications.userApp.findUserResourceById(profileId);
+            
+            if (userResource != null) {
+                services.forumManager.tag(createdPost, userResource.thisProfile, null);
+            }
+        }
     });
+    
     return views.jsonView(true, "Commented");
 }
 
