@@ -182,9 +182,10 @@ table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:af
 /* add pencil icon to editable cell */
 
 .dataTable td.editable:after{
-    content: "\f040";
+    content: "\f303";
     float: right;
-    font-family: FontAwesome;
+    font-family: "Font Awesome\ 5 Free";
+    font-weight: 900;
 }
 
 .dataTable td.editable.editing:after{

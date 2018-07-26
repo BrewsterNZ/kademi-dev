@@ -14,21 +14,21 @@
             .path('/recognition/(?<topicId>[^/]*)/badges/(?<badgeId>[^/]*)/')
             .addPathResolver('topicId', 'resolveTopicId')
             .addPathResolver('badgeId', 'resolveBadgeId')
-    
+
             /* Badge */
             .addMethod('POST', '_updateBadge', 'updateBadge')
             .addMethod('POST', '_uploadBadgeImage', 'uploadBadgeImage')
             .addMethod('POST', '_removeBadgeImage', 'removeBadgeImage')
             .addMethod('POST', '_applyImage', 'applyImage')
-    
+
             /* Badge Assets */
             .addMethod('POST', '_createAssetForRecognition', 'createAssetType')
             .defaultView(views.templateView('/theme/apps/KRecognition/manageBadge.html'))
             .build();
-    
+
     /**
      * API for updating a badge
-     * 
+     *
      * @param {type} page
      * @param {type} params
      * @returns {undefined}
@@ -55,7 +55,7 @@
 
         return page.jsonResult(true, 'Success');
     };
-    
+
     /**
      * API to delete an award
      *
@@ -66,21 +66,21 @@
     g._createAssetForRecognition = function (page, params) {
         var assetTypeToCreate = Utils.safeString(params.createAssetType);
         var topic = page.attributes.topicId;
-        
+
         var contentType = services.assetManager.assetTypeManager.getContentType(assetTypeToCreate);
-        
+
         var badge = page.attributes.badgeId;
-        
+
         transactionManager.runInTransaction(function () {
             services.catalogManager.createAssetForRecognition(badge, contentType);
         });
 
         return page.jsonResult(true, 'Success');
     };
-    
+
     /**
      * API for uploading badge images
-     * 
+     *
      * @param {type} page
      * @param {type} params
      * @param {type} files
@@ -88,6 +88,7 @@
      */
     g._uploadBadgeImage = function (page, params, files) {
         var badge = page.attributes.badgeId;
+        log.info("_uploadBadgeImage Badge={}", badge);
 
         if (params.containsKey('overwrite')) {
             var file = files.get('badgeImg');
@@ -120,7 +121,7 @@
 
     /**
      * API for removing an image fron a badge
-     * 
+     *
      * @param {type} page
      * @param {type} params
      * @returns {unresolved}
@@ -141,7 +142,7 @@
 
     /**
      * Used with the image cropper
-     * 
+     *
      * @param {type} page
      * @returns {unresolved}
      */

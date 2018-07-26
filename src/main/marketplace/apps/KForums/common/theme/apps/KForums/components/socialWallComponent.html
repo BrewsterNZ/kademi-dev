@@ -46,13 +46,12 @@
             </small>
         </div>
 
-        #set( $relatedAppName = $postHit.fields.relatedAppName.value )
         #set( $relatedId = $postHit.fields.relatedId.value )
         #set( $forumManager = $services.forumManager )
 
         <div class="panel-body">
-            #if( $relatedAppName )
-            $forumManager.renderSharedItem( $rootFolder, $relatedAppName, $relatedId, $postHit )
+            #if( $postHit.fields.relatedAppName.value )
+            $forumManager.renderSharedItem( $rootFolder, $postHit.fields.relatedAppName.value, $relatedId, $postHit )
             #else
             $postHit.fields.content.value
             #end

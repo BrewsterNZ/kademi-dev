@@ -10,6 +10,7 @@ controllerMappings.addComponent("leadman/components", "leadDetailTabContent", "h
 controllerMappings.addComponent("leadman/components", "leadDetailCompanyTabContent", "html", "Displays lead profile content which loads via pjax (NEW) ", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadDetailContactTabContent", "html", "Displays lead profile content which loads via pjax (NEW) ", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadDetailActivities", "html", "Displays lead profile content which loads via pjax (NEW) ", "Leadman App component");
+controllerMappings.addComponent("leadman/components", "leadDashTasks", "html", "Displays tasks as list on dashboard (NEW)", "Leadman App component");
 
 controllerMappings.addComponent("leadman/components", "leadAnalyticsNewLeadsCreated", "html", "Display new leads created", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadAnalyticsLeadsLost", "html", "Display the leads lost", "Leadman App component");
