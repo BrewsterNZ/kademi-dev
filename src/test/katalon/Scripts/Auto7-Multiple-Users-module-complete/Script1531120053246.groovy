@@ -30,7 +30,7 @@ def acctestname = WebUI.concatenate(((['tstacc', randomdigit]) as String[]))
 
 WebUI.openBrowser('http://katalontestacc3.admin.kademi-ci.co')
 
-WebUI.maximizeWindow()
+WebUI.setViewPortSize(1920, 1080)
 
 WebUI.setText(findTestObject('kademi-vladtest/input_email'), GlobalVariable.admin)
 
