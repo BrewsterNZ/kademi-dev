@@ -1,12 +1,11 @@
 function initProfile() {
-    flog('initProfile - boostrap320');
-    $('#maincontentContainer form').not('.form-unsubscribe').forms({
+    $('#maincontentContainer form.profile-panel').not('.form-unsubscribe').forms({
         onSuccess: function (resp, form) {
             flog('done');
             Msg.info('Saved ok');
         }
     });
-    
+
     $('.form-unsubscribe').forms({
         validate: function () {
             return confirm('Are you sure you want to unsubscribe? You will no longer be able to access this site');
@@ -17,13 +16,13 @@ function initProfile() {
         },
         confirmMessage: 'You have been unsubscribed'
     });
-    
+
     $('#myModal button.btn-save').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         $(e.target).closest('.modal').find('form').trigger('submit');
     });
-    
+
     $('.membership-remove').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -37,16 +36,16 @@ function initProfile() {
         var li = target.closest('li');
         flog('deleteMembership', target);
         deleteMembership(li, target.attr('href'));
-        
+
     });
-    
+
     $('label.optin input').change(function (e) {
         e.preventDefault();
         e.stopPropagation();
         var target = $(e.target);
         updateOptin(target.is(':checked'), target.attr('value'));
     });
-    
+
     $('#btn-change-ava').upcropImage({
         url: window.location.pathname, // this is actually the default value anyway
         onCropComplete: function (resp) {
@@ -127,7 +126,7 @@ function updateOptin(on, group) {
 function initUserPanel() {
     $('.panel-user-wrapper .profile-avatar, .panel-user-wrapper .profile-welcome-name').on('click', function (e) {
         e.preventDefault();
-        
+
         window.location.pathname = '/profile';
     })
 }
