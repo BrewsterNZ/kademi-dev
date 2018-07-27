@@ -539,14 +539,14 @@ function initNewLeadForm() {
         }
     });
 
-    $('.dropdown-menu li:not(.nav-menuLeadFromEmail-wrapper) > [class*="nav-menuAddLead"]').click(function (e) {
+    $(document).on('click', '.dropdown-menu li:not(.nav-menuLeadFromEmail-wrapper) > [class*="nav-menuAddLead"]', function (e) {
         e.preventDefault();
         var funnelName = $(e.target).closest("a").attr("href");
         flog("initNewLeadForm - click. funnelName=", funnelName, e.target);
-        modal.find("select[name=funnel]").val(funnelName).change();
+        modal.find("select[name=funnel]").val(funnelName).trigger('change');
     });
 
-    $('select[name=funnel]', modal).on('change', function (e) {
+    $(document).on('change', '#newLeadModal select[name=funnel]', function (e) {
         var s = $(this);
         flog("funnel change", s.val(), s);
         modal.reloadFragment({
@@ -556,6 +556,7 @@ function initNewLeadForm() {
                 initOrgSearch();
                 initProfileSearchTable();
                 initLeadForm();
+                initTagsInput();
                 modal.find('.selectpicker').selectpicker({
                     maxOptions: 5,
                     liveSearch: true,
@@ -2176,6 +2177,10 @@ function initLeadCompaniesTable() {
             destroy: true,
             info: false,
         });
+        dataTable.draw();
+        $('#leadCompaniesTable').on( 'draw.dt', function () {
+            $('#leadCompaniesTable').closest('.row').siblings('.row').remove();
+        });
     }
 }
 
@@ -2186,6 +2191,10 @@ function initLeadContactsTable() {
             searching: false,
             destroy: true,
             info: false,
+        });
+        dataTable.draw();
+        $('#leadContactsTable').on( 'draw.dt', function () {
+            $('#leadContactsTable').closest('.row').siblings('.row').remove();
         });
     }
 }

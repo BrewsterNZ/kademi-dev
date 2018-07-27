@@ -66,6 +66,16 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                #foreach($field in $page.extraFields)
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">$field.title:</label>
+                        <input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>
+                    </div>
+                </div>
+                #end
+            </div>
         </div>
     </div>
 </div>

@@ -2,7 +2,7 @@
 #set( $leads = $leadsPage.myVisibleLeads )
 <div class="panel panel-default panel-kcrm-light">
     <div class="panel-body">
-        <h3>Leads <span class="label label-danger pull-right"><small>$leads.size()</small></span></h3>
+        <h3>Leads <span class="label label-primary pull-right"><small>$leads.size()</small></span></h3>
         <br>
         <ul class="media-list leadsDashList">
             #foreach($leadRanked in $leadsPage.leadsRanked(0, 10))

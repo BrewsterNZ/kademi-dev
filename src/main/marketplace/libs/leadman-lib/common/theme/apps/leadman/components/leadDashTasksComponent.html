@@ -7,13 +7,15 @@
     #if ($taskType == "unassignedTasks")
         #set( $tasks = $leadsPage.unassignedTasks )
         #set ($headerTitle = "Incoming tasks")
+        #set ($labelClass = "label-info")
     #elseif ($taskType == "dueTasks")
         #set ($tasks = $leadsPage.myDueTasks)
         #set ($headerTitle = "My due tasks in 7 days")
+        #set ($labelClass = "label-danger")
     #end
     <div class="panel panel-default panel-kcrm-light">
         <div class="panel-body">
-            <h3>$!headerTitle <span class="label label-danger pull-right"><small>$tasks.size()</small></span></h3>
+            <h3>$!headerTitle <span class="label $!labelClass pull-right"><small>$tasks.size()</small></span></h3>
             <br>
             <div class="tasksDashList">
                 #foreach ($task in $tasks)
