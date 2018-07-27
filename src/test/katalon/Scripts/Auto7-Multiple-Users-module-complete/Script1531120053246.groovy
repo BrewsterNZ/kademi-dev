@@ -150,6 +150,22 @@ WebUI.delay(10)
 
 WebUI.click(findTestObject('kademi-vladtest/span_Dashboard'))
 
+WebUI.delay(1)
+
+WebUI.click(findTestObject('kademi-vladtest/span_Website Manager'))
+
+WebUI.delay(1)
+
+WebUI.click(findTestObject('kademi-vladtest/span_Apps'))
+
+WebUI.delay(3)
+
+WebUI.click(findTestObject('kademi-vladtest/button_Update all_Apps_dependencies'))
+
+WebUI.delay(20)
+
+WebUI.click(findTestObject('kademi-vladtest/span_Dashboard'))
+
 WebUI.click(findTestObject('kademi-vladtest/span_E-Learning'))
 
 WebUI.click(findTestObject('kademi-vladtest/span_Courses'))
