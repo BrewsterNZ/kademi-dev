@@ -12,146 +12,126 @@
             </div>
             <form method="post" action="/leads/" class="form-horizontal">
                 <div class="modal-body">
-                    <ul class="nav nav-tabs">
-                        <li role="presentation" class="active"><a href="#lead-info-tab" data-toggle="tab">Lead Details</a></li>
-                        <li role="presentation"><a href="#lead-fields-tab" data-toggle="tab">Extra Fields</a></li>
-                    </ul>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="newUserFirstName">Source</label>
+                        <div class="col-md-4">
+                            <select data-placeholder="Select a source" name="source" class="form-control selectpicker">
+                                <option value="">[None]</option>
+                                #foreach( $source in $page.find("/leads/").funnels.get($request.params.leadName).sources )
+                                $formatter.option($source, $source, $page.source)
+                                #end
+                            </select>
+                        </div>
+                        <label class="control-label col-md-2" for="newUserNickName">Lead type</label>
+                        <div class="col-md-4">
 
-                    <div class="tab-content">
-                        <div id="lead-info-tab" class="tab-pane active">
-                            <div class="form-group">
-                                <label class="control-label col-md-2" for="newUserFirstName">Source</label>
-                                <div id="select-frm-div" class="col-md-4">
-                                    <select id="source-frm" data-placeholder="Select a source" name="source" class="form-control select2" style="width: 100%">
-                                        <option value="">[None]</option>
-                                        #foreach( $source in $page.find("/leads/").funnels.get($request.params.leadName).sources )
-                                        $formatter.option($source, $source, $page.source)
-                                        #end
-                                    </select>
-                                </div>
-                                <label class="control-label col-md-2" for="newUserNickName">Lead type</label>
-                                <div class="col-md-4">
+                            <select name="funnel" class="form-control">
+                                #foreach($entry in $leadsPage.funnels.entrySet())
+                                <option value="$entry.key">$formatter.firstNotNull($entry.value.title, $entry.value.name)</option>
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="newLeadStage">Stage</label>
+                        <div id="select-frm-div" class="col-md-4">
+                            <select id="newLeadStage" data-placeholder="Select a stage" name="stage" class="form-control selectpicker">
+                                <option value="">[None]</option>
+                                #set ($stages = $page.find("/leads/").funnels.get($request.params.leadName).stages)
+                                #foreach( $stage in $stages )
+                                #set($a = $formatter.ifNull($stage.desc, $stage.name))
+                                $formatter.option($stage.name, $a, $stages[0].name)
+                                #end
+                            </select>
+                        </div>
+                        <label class="control-label col-md-2" for="newOrgTitle">Company</label>
+                        <div class="col-md-4 org-field">
+                            <input type="hidden" name="newOrgId" />
+                            <input autocomplete="nope" type="text" name="newOrgTitle" id="newOrgTitle" class="form-control" placeholder="Title" />
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="newUserFirstName">Name</label>
+                        <div class="col-md-5">
+                            <input autocomplete="nope1" type="text" name="firstName" id="newUserFirstName" class="form-control contact-finder" placeholder="First name" />
+                        </div>
+                        <div class="col-md-5">
+                            <input autocomplete="nope2" type="text" name="surName" id="newUserSurName" class="form-control contact-finder" placeholder="Surname" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="newUserEmail">Contact</label>
+                        <div class="col-md-5">
+                            <input autocomplete="nope3" type="text" name="email" id="newUserEmail" class="form-control contact-finder" placeholder="Email" />
+                        </div>
+                        <div class="col-md-5">
+                            <input autocomplete="nope4" type="text" name="phone" id="phone" class="form-control contact-finder" placeholder="Phone" />
+                        </div>
+                    </div>
+                    <div class="form-group" id="table-result">
+                        <div class="col-sm-10 col-sm-offset-2">
+                            <div class="table-responsive">
+                                <table class="table table-condensed table-hover hide">
+                                    <tbody>
 
-                                    <select name="funnel" class="form-control">
-                                        #foreach($entry in $leadsPage.funnels.entrySet())
-                                        <option value="$entry.key">$formatter.firstNotNull($entry.value.title, $entry.value.name)</option>
-                                        #end
-                                    </select>
-                                </div>
+                                    </tbody>
+                                </table>
                             </div>
+                        </div>
+                    </div>
+                    <hr>
+                    #foreach($entry in $leadsPage.funnels.entrySet())
+                    #set( $funnel = $entry.value )
+                    #if ($funnel.extraFields && $entry.key == $params.leadName)
+                    <div class="form-group">
+                        #foreach($field in $funnel.extraFields)
+                        <label class="control-label col-md-2" for="newUserEmail">$field.title</label>
+                        <div class="col-md-4">
+                            $field.html(null, '', 'extraField_')
+                        </div>
+                        #end
+                    </div>
+                    #end
+                    #end
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="tags">Tags</label>
+                        <div class="col-md-10">
+                            <input type="text" name="tags" id="tags" class="form-control tag-finder" placeholder="Start typing Tags" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="newUserNickName">Notes</label>
+                        <div class="col-md-10">
+                            <textarea name="notes" class="form-control" style="height: 90px"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-md-2" for="datetimepickerFollowup">Follow-up</label>
+                        <div class="col-md-4">
                             <div class="form-group">
-                                <label class="control-label col-md-2" for="newLeadStage">Stage</label>
-                                <div id="select-frm-div" class="col-md-4">
-                                    <select id="newLeadStage" data-placeholder="Select a stage" name="stage" class="form-control" style="width: 100%">
-                                        <option value="">[None]</option>
-                                        #set ($stages = $page.find("/leads/").funnels.get($request.params.leadName).stages)
-                                        #foreach( $stage in $stages )
-                                        #set($a = $formatter.ifNull($stage.desc, $stage.name))
-                                        $formatter.option($stage.name, $a, $stages[0].name)
-                                        #end
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group org-field">
-                                <label class="control-label col-md-2" for="newOrgTitle">Company</label>
-                                <div class="col-md-5">
-                                    <input type="hidden" name="newOrgId" />
-                                    <input type="text" name="newOrgTitle" id="newOrgTitle" class="form-control" placeholder="Title" />
-                                </div>
-                            </div>
-
-
-                            <div class="form-group">
-                                <label class="control-label col-md-2" for="newUserFirstName">Name</label>
-                                <div class="col-md-5">
-                                    <input type="text" name="firstName" id="newUserFirstName" class="form-control contact-finder" placeholder="First name" />
-                                </div>
-                                <div class="col-md-5">
-                                    <input type="text" name="surName" id="newUserSurName" class="form-control contact-finder" placeholder="Surname" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-2" for="newUserEmail">Contact</label>
-                                <div class="col-md-5">
-                                    <input type="text" name="email" id="newUserEmail" class="form-control contact-finder" placeholder="Email" />
-                                </div>
-                                <div class="col-md-5">
-                                    <input type="text" name="phone" id="phone" class="form-control contact-finder" placeholder="Phone" />
-                                </div>
-
-                            </div>
-                            <div class="form-group" id="table-result">
-                                <div class="col-sm-10 col-sm-offset-2">
-                                    <div class="table-responsive">
-                                        <table class="table table-condensed table-hover hide">
-                                            <tbody>
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-2" for="tags">Tags</label>
-                                <div class="col-md-10">
-                                    <input type="text" name="tags" id="tags" class="form-control tag-finder" placeholder="Start typing Tags" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-2" for="newUserNickName">Notes</label>
-                                <div class="col-md-10">
-                                    <textarea name="notes" class="form-control" style="height: 90px"></textarea>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <label class="control-label col-md-2" for="datetimepickerFollowup">Follow-up</label>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <div id="dueDate" class="input-group">
-                                                <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDate($formatter.now) 08:00">
-                                                <span class="input-group-addon">
+                                <div class="col-sm-12">
+                                    <div id="dueDate" class="input-group">
+                                        <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDate($formatter.now) 08:00">
+                                        <span class="input-group-addon">
                                                     <span class="fa fa-calendar"></span>
                                                 </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br />
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <input type="text" name="title" id="newLeadTaskTitle" class="form-control" placeholder="Task" />
-                                        </div>
                                     </div>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <textarea name="taskDescription" class="form-control" style="height: 95px" placeholder="Follow-up task details"></textarea>
-                                        </div>
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <input type="text" name="title" id="newLeadTaskTitle" class="form-control" placeholder="Task" />
                                 </div>
                             </div>
                         </div>
-                        <div id="lead-fields-tab" class="tab-pane">
-                            #foreach($entry in $leadsPage.funnels.entrySet())
-                            #set( $funnel = $entry.value )
-                            #if ($funnel.extraFields && $entry.key == $request.params.leadName)
-                            <div class="row">
-                                <div style="padding: 15px">
-                                    #foreach($field in $funnel.extraFields)
-                                    <div class="col-sm-12 col-md-12 col-lg-6">
-                                        <div class="form-group" style="padding-right: 15px">
-                                            <label>$field.title:</label>
-                                            $field.html(null, '', 'extraField_')
-                                            <!--<input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>-->
-                                        </div>
-                                    </div>
-                                    #end
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <textarea name="taskDescription" class="form-control" style="height: 95px" placeholder="Follow-up task details"></textarea>
                                 </div>
                             </div>
-                            #end
-                            #end
                         </div>
                     </div>
                 </div>

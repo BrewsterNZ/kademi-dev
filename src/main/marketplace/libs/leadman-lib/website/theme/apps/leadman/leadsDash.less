@@ -58,3 +58,48 @@
 .lead-detail-inline{
     margin-right: 10px !important;
 }
+
+.taskDashItem, .leadDashItem{
+    border-radius: @border-radius-base;
+    padding: 15px 15px 15px 25px;
+    position: relative;
+    .itemTitle{
+        width: 80%;
+        -ms-text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    &+.taskDashItem{
+        margin-top: 15px;
+    }
+
+    &:before{
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 10px;
+        height: 100%;
+        .bg-variant(@brand-warning);
+        border-bottom-left-radius: @border-radius-base;
+        border-top-left-radius: @border-radius-base;
+    }
+    &.overdue:before{
+        .bg-variant(@brand-danger);
+    }
+}
+
+.leadDashItem{
+    &:before{
+        .bg-variant(@brand-primary);
+    }
+    .leadScore{
+        font-size: 1em;
+    }
+}
+.leadsDashList{
+    .media, .media-body{
+        overflow: inherit !important;
+    }
+}
