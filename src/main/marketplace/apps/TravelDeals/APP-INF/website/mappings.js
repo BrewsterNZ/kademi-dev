@@ -23,6 +23,7 @@
             .enabled(true)
             .isPublic(false)
             .pathSegmentName('contenteditor')
+            .addType("editor")
             .defaultView(views.contentEditorView())
             .addMethod('GET', '_editTravelDeal')
             .addMethod('POST', '_saveDescription')

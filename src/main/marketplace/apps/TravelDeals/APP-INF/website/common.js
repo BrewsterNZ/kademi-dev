@@ -10,7 +10,7 @@
             .build();
 
     g._genWebsiteMenus = function (rootFolder, parent) {
-        var app = applications.get('travelDeals');
+        var app = applications.get('TravelDeals');
 
         var val = app.getSetting('rootPath') || g._config.DEFAULT_PATHS['rootPath'];
         var title = app.getSetting('rootMenuTitle') || g._config.DEFAULT_MENU_TITLE;
