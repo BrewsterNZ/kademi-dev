@@ -85,7 +85,6 @@
 
             doc.off('click', '.btnAddAccordionItem').on('click', '.btnAddAccordionItem', function (e) {
                 e.preventDefault();
-                debugger;
                 var clone = componentContent.find('.panel').first().clone();
                 var itemId = keditor.generateId('heading');
                 var panelCollapseId = keditor.generateId('collapse');
