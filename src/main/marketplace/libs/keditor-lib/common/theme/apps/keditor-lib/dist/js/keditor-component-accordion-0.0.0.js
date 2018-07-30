@@ -15,6 +15,7 @@
 
         init: function (contentArea, container, component, keditor) {
             var options = keditor.options;
+            var doc = options.iframeMode ? keditor.iframeDoc : $(document);
             var id = keditor.generateId('accordion');
             var componentContent = component.children('.keditor-component-content');
             componentContent.find('.accordionWrap .panel-group').attr('id', id);
@@ -68,7 +69,8 @@
                 }
             });
 
-            $(document).off('click', '.btnDeleteAccordionItem').on('click', '.btnDeleteAccordionItem', function (e) {
+
+            doc.off('click', '.btnDeleteAccordionItem').on('click', '.btnDeleteAccordionItem', function (e) {
                 e.preventDefault();
 
                 if (confirm('Are you sure you want to delete this item?')) {
@@ -81,8 +83,9 @@
                 }
             });
 
-            $(document).off('click', '.btnAddAccordionItem').on('click', '.btnAddAccordionItem', function (e) {
+            doc.off('click', '.btnAddAccordionItem').on('click', '.btnAddAccordionItem', function (e) {
                 e.preventDefault();
+                debugger;
                 var clone = componentContent.find('.panel').first().clone();
                 var itemId = keditor.generateId('heading');
                 var panelCollapseId = keditor.generateId('collapse');
