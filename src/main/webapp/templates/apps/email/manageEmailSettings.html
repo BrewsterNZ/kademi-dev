@@ -9,49 +9,72 @@
 
         <hr/>
 
-        <div class="form-group">
-            <label for="autoEmailLimit" class="col-sm-5 control-label">Automation Email Limit</label>
-            <div class="col-sm-6">
-                <input min="0" type="number" class="form-control" name="autoEmailLimit" value="$!page.autoEmailLimit" />
+        <form id="updateForm" class="form-horizontal" method="POST" action="$page.href">
+            <input type="hidden" name="updateSettings" value="true"/>
+            <div class="form-group">
+                <label for="autoEmailLimit" class="col-sm-5 control-label">Automation Email Limit</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="autoEmailLimit" value="$!page.autoEmailLimit" />
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label for="groupEmailLimit" class="col-sm-5 control-label">Group Email Limit</label>
-            <div class="col-sm-6">
-                <input min="0" type="number" class="form-control" name="groupEmailLimit" value="$!page.groupEmailLimit" />
+            <div class="form-group">
+                <label for="groupEmailLimit" class="col-sm-5 control-label">Group Email Limit</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="groupEmailLimit" value="$!page.groupEmailLimit" />
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label for="captureProfile" class="col-sm-5 control-label">Forward Emails to Profiles<small>Send an incoming email to a user</small></label>
-            <div class="col-sm-6">
-                $formatter.checkbox("captureProfile", $page.captureProfile)
+            <div class="form-group">
+                <label for="captureProfile" class="col-sm-5 control-label">Forward Emails to Profiles<small>Send an incoming email to a user</small></label>
+                <div class="col-sm-6">
+                    $formatter.checkbox("captureProfile", $page.captureProfile)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label for="captureGroup" class="col-sm-5 control-label">Forward Emails to Groups<small>Send incoming emails to a group</small></label>
-            <div class="col-sm-6">
-                $formatter.checkbox("captureGroup", $page.captureGroup)
+            <div class="form-group">
+                <label for="captureGroup" class="col-sm-5 control-label">Forward Emails to Groups<small>Send incoming emails to a group</small></label>
+                <div class="col-sm-6">
+                    $formatter.checkbox("captureGroup", $page.captureGroup)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label for="groupEmailLimit" class="col-sm-5 control-label">Ignored email addresses</label>
-            <div class="col-sm-6">
-                <textarea class="form-control" name="ignoreAddresses">$!page.ignoreAddresses</textarea>
-                <p>Enter full or partial addresses seperated by commas. Eg @fake.com,fiona.apple@pop.com</p>
+            <div class="form-group">
+                <label for="groupEmailLimit" class="col-sm-5 control-label">Ignored email addresses</label>
+                <div class="col-sm-6">
+                    <textarea class="form-control" name="ignoreAddresses">$!page.ignoreAddresses</textarea>
+                    <p>Enter full or partial addresses seperated by commas. Eg @fake.com,fiona.apple@pop.com</p>
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label for="indexEmailContent" class="col-sm-5 control-label">Index email content</label>
-            <div class="col-sm-6">
-                $formatter.checkbox("indexEmailContent", $page.indexEmailContent)
+            <div class="form-group">
+                <label for="indexEmailContent" class="col-sm-5 control-label">Index email content</label>
+                <div class="col-sm-6">
+                    $formatter.checkbox("indexEmailContent", $page.indexEmailContent)
+                </div>
             </div>
-        </div>
-
+            <div class="form-group">
+                <div class="col-md-offset-4 col-md-4">
+                    <button class="btn btn-sm btn-info" type="submit">
+                        <span class="fa fa-save"></span>
+                        Save
+                    </button>
+                </div>
+            </div>            
+        </form>
+        <script type="text/javascript">
+            $(function () {
+                $("#updateForm").forms({
+                    onSuccess : function(resp) {
+                        if( resp.status) {
+                            Msg.info("Updated ok");
+                        } else {
+                            Msg.error("Eeek " + resp.messages);
+                        }
+                    }
+                });
+            });
+        </script>
 
     </body>
 </html>
