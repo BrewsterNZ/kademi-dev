@@ -22,7 +22,9 @@
                 var panelCollapseId = keditor.generateId('collapse' + index);
                 p.find('.panel-heading').attr('id', itemId);
                 p.find('.panel-collapse').attr('aria-labelledby', itemId).attr('id', panelCollapseId);
-                p.find('a[data-toggle]').attr('href', '#' + panelCollapseId).attr('aria-controls', '#' + panelCollapseId);
+                p.find('a[data-toggle]').attr('href', '#' + panelCollapseId).attr('aria-controls', '#' + panelCollapseId).on('click', function (e) {
+                    e.preventDefault();
+                });
 
                 // backward compatibility
                 if (!p.find('a[data-toggle]').find('.accHeadingText').length){
@@ -52,15 +54,25 @@
                     options.onContentChanged.call(keditor, e, contentArea);
                 }
             });
+            componentContent.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').each(function () {
+                var editor = $(this).ckeditor(options.ckeditorOptions).editor;
+                editor.on('instanceReady', function (e) {
+                    flog('CKEditor is ready', component);
 
-            var editor = componentContent.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
-            editor.on('instanceReady', function () {
-                flog('CKEditor is ready', component);
+                    if (typeof options.onComponentReady === 'function') {
+                        options.onComponentReady.call(contentArea, component, editor);
+                    }
 
-                if (typeof options.onComponentReady === 'function') {
-                    options.onComponentReady.call(contentArea, component, editor);
-                }
-            });
+                    if (options.iframeMode){
+                        e.editor.on('focus', function (e) {
+                            setTimeout(function () {
+                                $('#'+e.editor.id + '_top').parents('.'+e.editor.id).css('top', 0).css('position', 'fixed');
+                            }, 0);
+                        });
+                    }
+                });
+            })
+
 
 
             doc.off('click', '.btnDeleteAccordionItem').on('click', '.btnDeleteAccordionItem', function (e) {
@@ -84,15 +96,27 @@
                 var panelCollapseId = keditor.generateId('collapse');
                 clone.find('.panel-heading').attr('id', itemId);
                 clone.find('.panel-collapse').attr('aria-labelledby', itemId).attr('id', panelCollapseId);
-                clone.find('a[data-toggle]').attr('href', '#' + panelCollapseId);
+                clone.find('a[data-toggle]').attr('href', '#' + panelCollapseId).on('click', function (e) {
+                    e.preventDefault();
+                });
                 componentContentNow.find('.accordionWrap .panel-group').append(clone);
-                var editor = clone.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
-                editor.on('instanceReady', function () {
-                    flog('CKEditor is ready', component);
+                clone.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').each(function () {
+                    var editor = $(this).ckeditor(options.ckeditorOptions).editor;
+                    editor.on('instanceReady', function (e) {
+                        flog('CKEditor is ready', component);
 
-                    if (typeof options.onComponentReady === 'function') {
-                        options.onComponentReady.call(contentArea, component, editor);
-                    }
+                        if (typeof options.onComponentReady === 'function') {
+                            options.onComponentReady.call(contentArea, component, editor);
+                        }
+
+                        if (options.iframeMode){
+                            e.editor.on('focus', function (e) {
+                                setTimeout(function () {
+                                    $('#'+e.editor.id + '_top').parents('.'+e.editor.id).css('top', 0).css('position', 'fixed');
+                                }, 0);
+                            });
+                        }
+                    });
                 });
             });
         },
