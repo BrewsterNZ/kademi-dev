@@ -72,9 +72,9 @@
 
             doc.off('click', '.btnDeleteAccordionItem').on('click', '.btnDeleteAccordionItem', function (e) {
                 e.preventDefault();
-
+                var componentContentNow = $(this).closest('.keditor-component-content');
                 if (confirm('Are you sure you want to delete this item?')) {
-                    var panelsCount = componentContent.find('.panel').length;
+                    var panelsCount = componentContentNow.find('.panel').length;
                     if (panelsCount > 1) {
                         $(this).parents('.panel').remove();
                     } else {
@@ -85,13 +85,14 @@
 
             doc.off('click', '.btnAddAccordionItem').on('click', '.btnAddAccordionItem', function (e) {
                 e.preventDefault();
-                var clone = componentContent.find('.panel').first().clone();
+                var componentContentNow = $(this).closest('.keditor-component-content');
+                var clone = componentContentNow.find('.panel').first().clone();
                 var itemId = keditor.generateId('heading');
                 var panelCollapseId = keditor.generateId('collapse');
                 clone.find('.panel-heading').attr('id', itemId);
                 clone.find('.panel-collapse').attr('aria-labelledby', itemId).attr('id', panelCollapseId);
                 clone.find('a[data-toggle]').attr('href', '#' + panelCollapseId);
-                componentContent.find('.accordionWrap .panel-group').append(clone);
+                componentContentNow.find('.accordionWrap .panel-group').append(clone);
                 var editor = clone.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
                 editor.on('instanceReady', function () {
                     flog('CKEditor is ready', component);
