@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>Auto7-Multiple-Users-module-complete</name>
+   <tag></tag>
+   <comment></comment>
+   <testCaseGuid>932675c3-dd4c-4dbc-b389-1e22b32b1ed5</testCaseGuid>
+   <variable>
+      <defaultValue>'admin'</defaultValue>
+      <description></description>
+      <id>e5d63c4f-6800-42de-8a05-fd5b45b4e9ee</id>
+      <masked>false</masked>
+      <name>varUsername</name>
+   </variable>
+   <variable>
+      <defaultValue>'123456'</defaultValue>
+      <description></description>
+      <id>ffd243aa-d692-4ed1-bef5-90e0b23a02d5</id>
+      <masked>false</masked>
+      <name>varPassword</name>
+   </variable>
+</TestCaseEntity>

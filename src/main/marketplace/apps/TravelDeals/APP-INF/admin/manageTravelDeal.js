@@ -534,7 +534,7 @@
             var currentUser = securityManager.currentUser.profile;
             var loginToken = securityManager.generateLoginToken(record.jsonObject.website, true, currentUser);
 
-            var app = applications.get("travelDeals");
+            var app = applications.get("TravelDeals");
             var rootPath = app.getSetting('rootPath');
             if (Utils.isStringBlank(rootPath)) {
                 rootPath = 'ourDeals';

@@ -1,7 +1,47 @@
-<div class="panel panel-default">
-    <div class="panel-body">
-        <div class="panel-heading">
-            <h3>Task overdue</h3>
+#set($leadsPage = $page.find('/leads'))
+#if ($formatter.isNull($taskType))
+#set ($taskType = "dueTasks")
+#end
+#if($userResource.hasRole('TakeLead'))
+#set ($tasks = $formatter.newArrayList())
+    #if ($taskType == "unassignedTasks")
+        #set( $tasks = $leadsPage.unassignedTasks )
+        #set ($headerTitle = "Incoming tasks")
+        #set ($labelClass = "label-info")
+    #elseif ($taskType == "dueTasks")
+        #set ($tasks = $leadsPage.myDueTasks)
+        #set ($headerTitle = "My due tasks in 7 days")
+        #set ($labelClass = "label-danger")
+    #end
+    <div class="panel panel-default panel-kcrm-light">
+        <div class="panel-body">
+            <h3>$!headerTitle <span class="label $!labelClass pull-right"><small>$tasks.size()</small></span></h3>
+            <br>
+            <div class="tasksDashList">
+                #foreach ($task in $tasks)
+                <div class="taskDashItem panel-kcrm">
+                    <h5 class="clearfix">
+                        <div class="pull-left itemTitle" title="lorem8">$!task.title</div>
+                        <div class="pull-right">
+                            #if ($taskType == "unassignedTasks")
+                            <a href="/tasks/${task.id}" title="Take this task" class="timeline-btn takeTask"><i role="button" class="fa fa-plus-circle text-primary"></i></a>
+                            #elseif ($taskType == "dueTasks")
+                                <a href="/tasks/$task.id/ .taskViewModal" data-target="#modalEditTask" data-toggle="modal" title="Complete this task" class="timeline-btn"><i role="button" class="fa fa-check text-success"></i></a>
+                            #end
+                            <div class="btn-group timeline-btn">
+                                <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <!--<li><a class="timeline-edit-task" href="/tasks/$task.id/ .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-pencil"></i> Edit</a></li>-->
+                                    <li><a class="btnCancelTask" href="/tasks/$task.id/"><i class="fa fa-ban"></i> Cancel</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </h5>
+                    <p class="small"><i class="fa fa-calendar-o"></i> Due <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr></p>
+                    <p class="small">$!task.taskDescription</p>
+                </div>
+                #end
+            </div>
         </div>
     </div>
-</div>
+#end

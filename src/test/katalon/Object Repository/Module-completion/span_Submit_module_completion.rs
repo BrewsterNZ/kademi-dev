@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebElementEntity>
+   <description></description>
+   <name>span_Submit_module_completion</name>
+   <tag></tag>
+   <elementGuidId>ab1181ab-010c-489c-9500-ea9ab7f774ca</elementGuidId>
+   <selectorMethod>BASIC</selectorMethod>
+   <useRalativeImagePath>false</useRalativeImagePath>
+   <webElementProperties>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>tag</name>
+      <type>Main</type>
+      <value>span</value>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>text</name>
+      <type>Main</type>
+      <value>Submit</value>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath</name>
+      <type>Main</type>
+      <value>id(&quot;default-modulePageToolbar&quot;)/div[@class=&quot;panel panel-default panel-module-page-toolbar&quot;]/div[@class=&quot;panel-heading text-right&quot;]/div[@class=&quot;btn-group pages&quot;]/a[@class=&quot;nextBtn btn enabled quizSubmit&quot;]/span[1]</value>
+   </webElementProperties>
+</WebElementEntity>

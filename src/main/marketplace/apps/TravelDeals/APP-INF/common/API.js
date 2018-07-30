@@ -118,7 +118,7 @@
     };
 
     g.bannerImageDimensions = function () {
-        var app = applications.get('travelDeals');
+        var app = applications.get('TravelDeals');
 
         var bannerImageDimensions = app.getSetting('bannerImageDimensions');
 
@@ -130,7 +130,7 @@
     };
 
     g.previewImageDimensions = function () {
-        var app = applications.get('travelDeals');
+        var app = applications.get('TravelDeals');
 
         var previewImageDimensions = app.getSetting('previewImageDimensions');
 

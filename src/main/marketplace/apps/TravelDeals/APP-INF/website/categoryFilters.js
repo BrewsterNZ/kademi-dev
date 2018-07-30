@@ -31,7 +31,7 @@
     };
 
     g._redirectCategory = function () {
-        var app = applications.get('travelDeals');
+        var app = applications.get('TravelDeals');
 
         var val = app.getSetting('rootPath') || g._config.DEFAULT_PATHS['rootPath'];
         return views.redirectView('/' + val + '/');

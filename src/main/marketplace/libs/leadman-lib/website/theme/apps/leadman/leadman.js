@@ -46,6 +46,7 @@ function initLeadManEvents() {
     initLeadContactsTable();
     initLeadCompaniesTable();
     initLeadTasksTable();
+    initReloadLeadTasksTable();
     // init the login form
     $(".login").user({});
 
@@ -242,6 +243,7 @@ function initCancelTaskModal() {
             Msg.info('Task cancelled');
             reloadTasks();
             cancelTaskModal.modal("hide");
+            $(document).trigger('taskChanged');
         }
     });
 
@@ -515,7 +517,7 @@ function initTakeTasks() {
     $(document.body).on("click", ".takeTask", function (e) {
         flog("click");
         e.preventDefault();
-        var href = $(e.target).attr("href");
+        var href = $(this).attr("href");
         takeTask(href);
     });
 }
@@ -523,136 +525,128 @@ function initTakeTasks() {
 function initNewLeadForm() {
     flog("initNewLeadForm");
     var modal = $('#newLeadModal');
-    var form = modal.find('form');
 
     modal.on('hidden.bs.modal', function () {
-        form.trigger('reset');
-        $('input[name=newOrgId]', form).val('');
-        $('#source-frm').val('').trigger("change");
+        modal.find('form').trigger('reset');
+        $('input[name=newOrgId]', modal).val('');
     });
 
-    $('#newOrgTitle', form).on('change', function () {
+    $('#newOrgTitle', modal).on('change', function () {
         var inp = $(this);
 
         if (inp.val().length < 1) {
-            $('input[name=newOrgId]', form).val('');
+            $('input[name=newOrgId]', modal).val('');
         }
     });
 
-    $('.dropdown-menu li:not(.nav-menuLeadFromEmail-wrapper) > [class*="nav-menuAddLead"]').click(function (e) {
+    $(document).on('click', '.dropdown-menu li:not(.nav-menuLeadFromEmail-wrapper) > [class*="nav-menuAddLead"]', function (e) {
         e.preventDefault();
         var funnelName = $(e.target).closest("a").attr("href");
         flog("initNewLeadForm - click. funnelName=", funnelName, e.target);
-        $('#source-frm').val('').trigger("change");
-        form.find("select[name=funnel]").val(funnelName).change();
-        modal.modal("show");
+        modal.find("select[name=funnel]").val(funnelName).trigger('change');
     });
 
-    $('select[name=funnel]', form).on('change', function (e) {
+    $(document).on('change', '#newLeadModal select[name=funnel]', function (e) {
         var s = $(this);
         flog("funnel change", s.val(), s);
-        $('#source-frm').reloadFragment({
+        modal.reloadFragment({
             url: window.location.pathname + '?leadName=' + s.val(),
             whenComplete: function () {
-
-            }
-        });
-
-        $('#newLeadStage').reloadFragment({
-            url: window.location.pathname + '?leadName=' + s.val(),
-        });
-
-        $('#lead-fields-tab').reloadFragment({
-            url: window.location.pathname + '?leadName=' + s.val(),
-            whenComplete: function () {
-                $('#lead-fields-tab').find('[required]').addClass('required').removeAttr('required');
+                modal.modal("show");
+                initOrgSearch();
+                initProfileSearchTable();
+                initLeadForm();
+                initTagsInput();
+                modal.find('.selectpicker').selectpicker({
+                    maxOptions: 5,
+                    liveSearch: true,
+                    liveSearchNormalize: true
+                });
             }
         });
     });
 
-    $('#source-frm', form).select2({
-        tags: "true"
-    });
+    function initLeadForm() {
+        var form = modal.find('form');
+        form.forms({
+            validate: function (form, config) {
+                flog('validating ... ', form);
+                var ret = {
+                    error: 0,
+                    errorFields: [],
+                    errorMessages: []
+                };
 
-    form.forms({
-        validate: function (form, config) {
-            flog('validating ... ', form);
-            var ret = {
-                error: 0,
-                errorFields: [],
-                errorMessages: []
-            };
-
-             // https://github.com/Kademi/kademi-dev/issues/3565
-            var taskDescription = form.find('textarea[name=taskDescription]').val();
-            if (taskDescription && taskDescription.length > 0 ) {
-                var title = form.find("#newLeadTaskTitle").val();
-                if (!title) {
-                    ret.error ++;
-                    ret.errorFields.push(form.find("#newLeadTaskTitle"));
-                    ret.errorMessages.push("Please complete the task title.");
+                // https://github.com/Kademi/kademi-dev/issues/3565
+                var taskDescription = form.find('textarea[name=taskDescription]').val();
+                if (taskDescription && taskDescription.length > 0 ) {
+                    var title = form.find("#newLeadTaskTitle").val();
+                    if (!title) {
+                        ret.error ++;
+                        ret.errorFields.push(form.find("#newLeadTaskTitle"));
+                        ret.errorMessages.push("Please complete the task title.");
+                    }
                 }
-            }
 
-            flog("ret ok ", ret);
-            return ret;
-        },
-        beforePostForm: function (form, config, data) {
-            flog('beforePost', data);
-            data += '&assignedToOrgId=' + $.cookie('org');
-            flog('beforePost', data);
-            return data;
-        },
-        onSuccess: function (resp, form, config, event) {
-            flog('done new lead', resp, event);
-            var btn = form.find(".clicked");
-            //flog("btn", btn, btn.hasClass("btnCreateAndClose"));
+                flog("ret ok ", ret);
+                return ret;
+            },
+            beforePostForm: function (form, config, data) {
+                flog('beforePost', data);
+                data += '&assignedToOrgId=' + $.cookie('org');
+                flog('beforePost', data);
+                return data;
+            },
+            onSuccess: function (resp, form, config, event) {
+                flog('done new lead', resp, event);
+                var btn = form.find(".clicked");
 
-            if (btn.hasClass("btnCreateAndClose")) {
-                Msg.info('Saved new lead');
-                modal.modal("hide");
+                if (btn.hasClass("btnCreateAndClose")) {
+                    Msg.info('Saved new lead');
+                    modal.modal("hide");
 
-                $('#source-frm').val('').trigger("change");
-                $('#newLeadStage').val('').trigger("change");
-                form.trigger('reset');
+                    $('#source-frm').val('').trigger("change");
+                    $('#newLeadStage').val('').trigger("change");
+                    form.trigger('reset');
 
-                if ($('#all_contacts').length) {
-                    $('#all_contacts').html('');
-                    initLeadsDashLoading();
-                }
-                var leadContacts = $('.lead-contacts-wrap');
-                if (leadContacts.length) {
-                    leadContacts.reloadFragment({
-                        whenComplete: function () {
+                    if ($('#all_contacts').length) {
+                        $('#all_contacts').html('');
+                        initLeadsDashLoading();
+                    }
+                    var leadContacts = $('.lead-contacts-wrap');
+                    if (leadContacts.length) {
+                        leadContacts.reloadFragment({
+                            whenComplete: function () {
+                            }
+                        });
+                    }
+
+                    if ($('#leadTable').length) {
+                        if (typeof doSearchLeadmanPage === 'function') {
+                            doSearchLeadmanPage();
                         }
-                    });
+                    }
+
+                    if ($('#leadAnalyticsPage').length) {
+                        if (typeof loadFunnel === 'function') {
+                            loadFunnel();
+                        }
+                    }
+                } else {
+                    Msg.info('Saved, going to the new lead');
+                    if (resp.nextHref) {
+                        window.location.href = resp.nextHref;
+                    }
+                    modal.modal("hide");
                 }
 
-                if ($('#leadTable').length) {
-                    if (typeof doSearchLeadmanPage === 'function') {
-                        doSearchLeadmanPage();
-                    }
-                }
-
-                if ($('#leadAnalyticsPage').length) {
-                    if (typeof loadFunnel === 'function') {
-                        loadFunnel();
-                    }
-                }
-            } else {
-                Msg.info('Saved, going to the new lead');
-                if (resp.nextHref) {
-                    window.location.href = resp.nextHref;
-                }
-                modal.modal("hide");
             }
-
-        }
-    });
-    form.find("button").click(function (e) {
-        form.find(".clicked").removeClass("clicked");
-        $(e.target).closest("a, button").addClass("clicked");
-    });
+        });
+        form.find("button").click(function (e) {
+            form.find(".clicked").removeClass("clicked");
+            $(e.target).closest("a, button").addClass("clicked");
+        });
+    }
 }
 
 function initNewQuickLeadForm() {
@@ -1249,21 +1243,27 @@ function initNewNoteForm() {
 function reloadTasks() {
     if ($('#lead-tasks-page').length) {
         setTimeout(function () {
-            $('#leadTaskTablePanel').reloadFragment({
-
-            });
-        }, 1000);
-    } else {
+            $(document).trigger('taskChanged');
+        }, 500);
+    } else if ($("#tasksList").length){
         $("#tasksList").reloadFragment({
             whenComplete: function (doc) {
-                flog("doc", doc);
                 var newLeads = doc.find("#dashLeadsList");
-                flog("newLeads", newLeads);
                 $("#dashLeadsList").html(newLeads.html());
-                flog("Done", $("#dashLeadsList"));
                 $('abbr.timeago').timeago();
             }
         });
+    } else if ($(".tasksDashList").length){
+        $(".tasksDashList").first().reloadFragment({
+            whenComplete: function (doc) {
+                var tasksDashList = doc.find('.tasksDashList');
+                $(".tasksDashList").each(function (index) {
+                    $(this).replaceWith(tasksDashList[index]);
+                });
+
+                $('.timeago').timeago();
+            }
+        })
     }
 
     reloadTimeline();
@@ -1612,6 +1612,8 @@ function initOrgSearch() {
 
         form.find('input[name=newOrgId]').val(sug.orgId);
     });
+
+    $('#newOrgTitle').attr('autocomplete', 'nopeorg'); // Chrome will disable autocomplete
 }
 
 function initProfileSearchTable() {
@@ -1968,12 +1970,9 @@ function initLeadTasksTable() {
         var editor = new $.fn.dataTable.Editor({
             table: '#leadTasksTable',
             ajax: {
-                url: '/leads/_leadId_/_id_/'
+                url: '/tasks/_id_/'
             },
             idSrc: 'id',
-            idExtraSrc: {
-                '_leadId_': 'leadId'
-            },
             fields: [
                 {
                     label: "Due date",
@@ -2009,6 +2008,7 @@ function initLeadTasksTable() {
                         if (data){
                             return '<a href="/companies/'+full.relatedLead.leadOrgLongId+'">'+data+'</a>'
                         }
+                        return '';
                     }
                 },
                 {
@@ -2017,6 +2017,7 @@ function initLeadTasksTable() {
                         if (data){
                             return '<a href="/leads/'+full.relatedLead.id+'">'+data+'</a>'
                         }
+                        return '';
                     }
                 },
                 {
@@ -2079,12 +2080,8 @@ function initLeadTasksTable() {
                     orderable: false,
                     className: 'text-center',
                     render: function (data, type, full, meta) {
-                        var lead = full.relatedLead;
-                        if (lead && !full.cancelled && !full.completedDate){
-                            return '<a data-leadid="'+lead.id+'" data-taskid="'+data+'" href="/leads/'+lead.id+'/'+data+' .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-2x fa-check-circle text-success"></i></a>\n' +
-                            '<a href="/leads/'+lead.id+'/'+data+' .taskViewModal" class="btnCancelTask"><i class="fa fa-2x fa-times-circle text-danger"></i></a>';
-                        }
-                        return '';
+                        return '<a class="btn-task-complete" href="/tasks/'+data+' .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-2x fa-check-circle text-success"></i></a>\n' +
+                            '<a href="/tasks/'+data+'" class="btnCancelTask"><i class="fa fa-2x fa-times-circle text-danger"></i></a>';
                     }
                 },
             ]
@@ -2102,13 +2099,11 @@ function initLeadTasksTable() {
                         var hit = hits.hits[i];
                         var _source = hit._source;
                         _source.dueDate = moment(_source.dueDate).format('DD/MM/YYYY');
-                        _source.taskPath = [_source.relatedLead.id, _source.id].join('/');
                         dataTable.row.add(_source);
                     }
                 }
 
                 dataTable.draw();
-
             },
             error: function () {
                 Msg.error('Could not load data');
@@ -2128,7 +2123,7 @@ function initLeadTasksTable() {
             }
         });
 
-        $('#leadCompaniesTable')
+        $('#leadTasksTable')
             .off('click', 'tbody td.editable')
             .on('click', 'tbody td.editable', function (e) {
                 e.preventDefault();
@@ -2148,15 +2143,6 @@ function initLeadTasksTable() {
                     json[j] = obj[j];
                 }
             }
-            if (!taskId){
-                return false;
-            }
-            var a = $('#leadTasksTable').find('[data-taskid='+taskId+']');
-            var leadId = a.attr('data-leadId');
-            if (!leadId){
-                return false;
-            }
-            json['leadId'] = leadId;
         });
 
         editor.on('submitComplete', function (e, json, data) {
@@ -2165,10 +2151,22 @@ function initLeadTasksTable() {
         });
 
         dataTable.draw();
+
         $('#leadTasksTable').on( 'draw.dt', function () {
             $('#leadTasksTable').closest('.row').siblings('.row').remove();
-        } );
+        });
     }
+}
+
+function initReloadLeadTasksTable() {
+    $(document).on('taskChanged', function () {
+        $("#default-leadTasksTable").reloadFragment({
+            url: window.location.href,
+            whenComplete: function () {
+                initLeadTasksTable();
+            }
+        });
+    })
 }
 
 function initLeadCompaniesTable() {
@@ -2178,6 +2176,10 @@ function initLeadCompaniesTable() {
             searching: false,
             destroy: true,
             info: false,
+        });
+        dataTable.draw();
+        $('#leadCompaniesTable').on( 'draw.dt', function () {
+            $('#leadCompaniesTable').closest('.row').siblings('.row').remove();
         });
     }
 }
@@ -2189,6 +2191,10 @@ function initLeadContactsTable() {
             searching: false,
             destroy: true,
             info: false,
+        });
+        dataTable.draw();
+        $('#leadContactsTable').on( 'draw.dt', function () {
+            $('#leadContactsTable').closest('.row').siblings('.row').remove();
         });
     }
 }

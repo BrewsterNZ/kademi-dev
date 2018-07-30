@@ -4,6 +4,13 @@
         var leadTaskTablePanel = $('#leadTaskTablePanel');
         var modal = $('#modalEditTask');
         var leadDetailActivities = $('#leadDetailActivities');
+        var tasksDashList = $('.tasksDashList');
+
+        if (tasksDashList.length){
+            tasksDashList.on('click', '.timeline-edit-task', function () {
+                modal.addClass('editingTask');
+            });
+        }
         if (leadDetailActivities.length){
             leadDetailActivities.on('click', '.timeline-edit-task', function () {
                 modal.addClass('editingTask');

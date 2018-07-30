@@ -1,128 +1,49 @@
-#parse('/theme/apps/leadman/leadManMacros.html')
-#if($userResource.hasRole('Sales'))
-<div class="">
-    <div role="tabpanel" id="all_contacts" class="tab-pane animation-fade active">
-        <p class="text-center">
-            <button type="button" class="btn btn-default btn-load-more-lead" disabled="disabled">Loading...</button>
-        </p>
+#set( $leadsPage = $page.find("/leads") )
+#set( $leads = $leadsPage.myVisibleLeads )
+<div class="panel panel-default panel-kcrm-light">
+    <div class="panel-body">
+        <h3>Leads <span class="label label-primary pull-right"><small>$leads.size()</small></span></h3>
+        <br>
+        <ul class="media-list leadsDashList">
+            #foreach($leadRanked in $leadsPage.leadsRanked(0, 10))
+                <li class="media">
+                    <div class="leadDashItem panel-kcrm">
+                        <div class="media-left">
+                            <a href="/leads/$leadRanked.lead.id">
+                                #set ($ava = "/theme/apps/leadman/user-placeholder.png")
+                                #if ($leadRanked.lead.profile.photoHash && $leadRanked.lead.profile.photoHash != "/templates/apps/user/profile.png")
+                                #set ($ava = "/_hashes/files/" + $leadRanked.lead.profile.photoHash)
+                                #end
+                                <img width="50" class="media-object img-circle" src="$ava" alt="Lead Avatar">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h5 class="media-heading">
+                                <a href="/leads/$leadRanked.lead.id">$leadRanked.lead.profile.formattedName</a>
+                                <div class="pull-right">
+                                    <div class="btn-group timeline-btn">
+                                        <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            <li><a class="closeLead" href="/leads/$leadRanked.lead.id/" ><i class="fa fa-check"></i> Sold, close the deal</a></li>
+                                            <li><a class="" href="/leads/$leadRanked.lead.id/?cancel" title="Deal cancelled" data-target="#modalCancelLead" data-toggle="modal"><i class="fa fa-ban"></i> Cancel</a></li>
+                                            <li><a class="createNote" title="Create note" href="/leads/$leadRanked.lead.id/" ><i class="fa fa-pencil"></i> Create note</a></li>
+                                            <li><a href="mailto:$!leadRanked.lead.profile.email?bcc=to-lead-$!leadRanked.lead.id@${page.find('/').domainName}" title="Send email">
+                                                <i class="fa fa-envelope-o"></i> Send email
+                                            </a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </h5>
+                            <p>$!leadRanked.lead.title</p>
+                            <div>
+                                <div class="label label-warning leadScore"><i class="fa fa-dollar"></i> $formatter.ifNull($leadRanked.lead.dealAmount, "N/A")</div>
+                                <div class="label label-primary leadScore"><i class="fa fas fa-chart-line"></i> $!leadRanked.score</div>
+                            </div>
+                            <p>&nbsp;</p>
+                        </div>
+                    </div>
+                </li>
+            #end
+        </ul>
     </div>
 </div>
-#end
-#if (!$page)
-<div role="tabpanel" id="all_contacts" class="tab-pane animation-fade active">
-    <ul class="list-group leadsList" id="dashLeadsList">
-        <li class="list-group-item">
-            <div class="media" id="18">
-                <div class="media-left hidden-xs">
-                    <div class="avatar avatar-away">
-                        <img alt="..." src="/theme/apps/leadman/user-placeholder.png" class="img img-circle"
-                             style="width: 100px">
-                        <i class="avatar avatar-busy"></i>
-                    </div>
-                    <br>
-                    <p class="text-center">
-                        SCORE: 3.0
-                    </p>
-                </div>
-                <div class="media-body" style="padding-left: 20px; position: relative">
-                    <h3 class="media-heading">
-                        <a class="text-success" href="/leads/18/">
-                            Candy
-                            (Google)
-                        </a>
-                        <small class="pull-right">
-                            Lead created:
-                            <abbr title="2017-11-28 11:24:09.569" data-iso="2017-11-28T11:24:09.569+07:00"
-                                  class="timeago">10 days ago</abbr> for Journey Email Campaign
-                        </small>
-                    </h3>
-                    <p>
-                        <i aria-hidden="true" class="fa fa-envelope"></i>
-                        candy@mailinator.com
-                    </p>
-                    <div class="leadActions">
-                        <ul class="list-inline" style="right: 0">
-                            <li>
-                                <a href="/leads/18" class="btn btn-success closeLead" title="Sold, close the deal">
-                                    <span class="fa fa-check"></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/leads/18?cancel" class="btn btn-danger" title="Deal cancelled"
-                                   data-target="#modalCancelLead" data-toggle="modal">
-                                    <span class="fa fa-remove"></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/leads/18/" class="btn btn-info createNote" title="Add note">
-                                    <span class="fa fa-pencil"></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="mailto:candy@mailinator.com?bcc=to-lead-18@kcrm-rootorg.loopbackdns.com"
-                                   class="btn btn-warning" title="Send email">
-                                    <span class="fa fa-envelope-o"></span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item">
-            <div class="media" id="19">
-                <div class="media-left hidden-xs">
-                    <div class="avatar avatar-away">
-                        <img alt="..." src="/theme/apps/leadman/user-placeholder.png" class="img img-circle"
-                             style="width: 100px">
-                        <i class="avatar avatar-busy"></i>
-                    </div>
-                    <br>
-                    <p class="text-center">
-                        SCORE: 3.0
-                    </p>
-                </div>
-                <div class="media-body" style="padding-left: 20px; position: relative">
-                    <h3 class="media-heading">
-                        <a class="text-success" href="/leads/19/">
-                            Andy
-                            (Apple)
-                        </a>
-                        <small class="pull-right">
-                            Lead created:
-                            <abbr title="2017-11-28 11:25:05.068" data-iso="2017-11-28T11:25:05.068+07:00"
-                                  class="timeago">10 days ago</abbr> for Journey Email Campaign
-                        </small>
-                    </h3>
-                    <div class="leadActions">
-                        <ul class="list-inline" style="right: 0">
-                            <li>
-                                <a href="/leads/19" class="btn btn-success closeLead" title="Sold, close the deal">
-                                    <span class="fa fa-check"></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/leads/19?cancel" class="btn btn-danger" title="Deal cancelled"
-                                   data-target="#modalCancelLead" data-toggle="modal">
-                                    <span class="fa fa-remove"></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/leads/19/" class="btn btn-info createNote" title="Add note">
-                                    <span class="fa fa-pencil"></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="mailto:?bcc=to-lead-19@kcrm-rootorg.loopbackdns.com" class="btn btn-warning"
-                                   title="Send email">
-                                    <span class="fa fa-envelope-o"></span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </li>
-    </ul>
-</div>
-#end

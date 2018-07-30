@@ -146,7 +146,7 @@
     };
 
     g._resolveDynamicUrl = function (rf, groupName, groupVal) {
-        var app = applications.get('travelDeals');
+        var app = applications.get('TravelDeals');
 
         var val = app.getSetting(groupName) || g._config.DEFAULT_PATHS[groupName];
 
