@@ -15,6 +15,7 @@
 
         init: function (contentArea, container, component, keditor) {
             var options = keditor.options;
+            var doc = options.iframeMode ? keditor.iframeDoc : $(document);
             var id = keditor.generateId('accordion');
             var componentContent = component.children('.keditor-component-content');
             componentContent.find('.accordionWrap .panel-group').attr('id', id);
@@ -28,7 +29,9 @@
                 var panelCollapseId = keditor.generateId('collapse' + index);
                 p.find('.panel-heading').attr('id', itemId);
                 p.find('.panel-collapse').attr('aria-labelledby', itemId).attr('id', panelCollapseId);
-                p.find('a[data-toggle]').attr('href', '#' + panelCollapseId).attr('aria-controls', '#' + panelCollapseId);
+                p.find('a[data-toggle]').attr('href', '#' + panelCollapseId).attr('aria-controls', '#' + panelCollapseId).on('click', function (e) {
+                    e.preventDefault();
+                });
 
                 // backward compatibility
                 if (!p.find('a[data-toggle]').find('.accHeadingText').length){
@@ -58,21 +61,32 @@
                     options.onContentChanged.call(keditor, e, contentArea);
                 }
             });
+            componentContent.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').each(function () {
+                var editor = $(this).ckeditor(options.ckeditorOptions).editor;
+                editor.on('instanceReady', function (e) {
+                    flog('CKEditor is ready', component);
 
-            var editor = componentContent.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
-            editor.on('instanceReady', function () {
-                flog('CKEditor is ready', component);
+                    if (typeof options.onComponentReady === 'function') {
+                        options.onComponentReady.call(contentArea, component, editor);
+                    }
 
-                if (typeof options.onComponentReady === 'function') {
-                    options.onComponentReady.call(contentArea, component, editor);
-                }
-            });
+                    if (options.iframeMode){
+                        e.editor.on('focus', function (e) {
+                            setTimeout(function () {
+                                $('#'+e.editor.id + '_top').parents('.'+e.editor.id).css('top', 0).css('position', 'fixed');
+                            }, 0);
+                        });
+                    }
+                });
+            })
 
-            $(document).off('click', '.btnDeleteAccordionItem').on('click', '.btnDeleteAccordionItem', function (e) {
+
+
+            doc.off('click', '.btnDeleteAccordionItem').on('click', '.btnDeleteAccordionItem', function (e) {
                 e.preventDefault();
-
+                var componentContentNow = $(this).closest('.keditor-component-content');
                 if (confirm('Are you sure you want to delete this item?')) {
-                    var panelsCount = componentContent.find('.panel').length;
+                    var panelsCount = componentContentNow.find('.panel').length;
                     if (panelsCount > 1) {
                         $(this).parents('.panel').remove();
                     } else {
@@ -81,22 +95,35 @@
                 }
             });
 
-            $(document).off('click', '.btnAddAccordionItem').on('click', '.btnAddAccordionItem', function (e) {
+            doc.off('click', '.btnAddAccordionItem').on('click', '.btnAddAccordionItem', function (e) {
                 e.preventDefault();
-                var clone = componentContent.find('.panel').first().clone();
+                var componentContentNow = $(this).closest('.keditor-component-content');
+                var clone = componentContentNow.find('.panel').first().clone();
                 var itemId = keditor.generateId('heading');
                 var panelCollapseId = keditor.generateId('collapse');
                 clone.find('.panel-heading').attr('id', itemId);
                 clone.find('.panel-collapse').attr('aria-labelledby', itemId).attr('id', panelCollapseId);
-                clone.find('a[data-toggle]').attr('href', '#' + panelCollapseId);
-                componentContent.find('.accordionWrap .panel-group').append(clone);
-                var editor = clone.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
-                editor.on('instanceReady', function () {
-                    flog('CKEditor is ready', component);
+                clone.find('a[data-toggle]').attr('href', '#' + panelCollapseId).on('click', function (e) {
+                    e.preventDefault();
+                });
+                componentContentNow.find('.accordionWrap .panel-group').append(clone);
+                clone.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').each(function () {
+                    var editor = $(this).ckeditor(options.ckeditorOptions).editor;
+                    editor.on('instanceReady', function (e) {
+                        flog('CKEditor is ready', component);
 
-                    if (typeof options.onComponentReady === 'function') {
-                        options.onComponentReady.call(contentArea, component, editor);
-                    }
+                        if (typeof options.onComponentReady === 'function') {
+                            options.onComponentReady.call(contentArea, component, editor);
+                        }
+
+                        if (options.iframeMode){
+                            e.editor.on('focus', function (e) {
+                                setTimeout(function () {
+                                    $('#'+e.editor.id + '_top').parents('.'+e.editor.id).css('top', 0).css('position', 'fixed');
+                                }, 0);
+                            });
+                        }
+                    });
                 });
             });
         },
