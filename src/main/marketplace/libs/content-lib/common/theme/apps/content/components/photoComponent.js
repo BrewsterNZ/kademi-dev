@@ -5,7 +5,7 @@
     KEditor.components['photo'] = {
         init: function (contentArea, container, component, keditor) {
             flog('init "photo" component', component);
-            
+
             var componentContent = component.children('.keditor-component-content');
             var dynamicElement = componentContent.find('[data-dynamic-href]');
             
@@ -217,6 +217,37 @@
                             keditor.initDynamicContent(dynamicElement);
                         });
                     });
+
+                    // =================================================================================
+                    // Padding, Margin
+                    // =================================================================================
+                    form.find('.txt-padding, .txt-margin').on('change', function () {
+                        var txt = $(this);
+                        var styleName = txt.attr('data-style-name');
+
+                        var paddingValue = this.value || '';
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        if (paddingValue.trim() === '') {
+                            component.attr('data-'+styleName, '') ;
+                        } else {
+                            if (isNaN(paddingValue)) {
+                                paddingValue = 0;
+                                this.value = paddingValue;
+                            }
+                            component.attr('data-'+styleName, paddingValue + 'px');
+                        }
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find('#photo-alt-format').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-photo-alt-format', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -248,6 +279,15 @@
                     'data-ratio': this.width / this.height
                 });
             });
+
+            form.find('.txt-padding, .txt-margin').each(function () {
+                var txt = $(this);
+                var styleName = txt.attr('data-style-name');
+
+                txt.val((dataAttributes['data-'+styleName] || '').replace('px', ''));
+            });
+
+            form.find('#photo-alt-format').val(dataAttributes['data-photo-alt-format'] || '');
         }
     };
     

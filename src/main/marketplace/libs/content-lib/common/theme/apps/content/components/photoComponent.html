@@ -1,6 +1,32 @@
 #if ($formatter.isNull($photoResponsive))
 #set ($photoResponsive = "true")
 #end
+
+#if (!$formatter.isNull($paddingLeft))
+#set ($paddingLeftS = "padding-left: $!paddingLeft;")
+#end
+#if (!$formatter.isNull($paddingRight))
+#set ($paddingRightS = "padding-right: $!paddingRight;")
+#end
+#if (!$formatter.isNull($paddingBottom))
+#set ($paddingBottomS = "padding-bottom: $!paddingBottom;")
+#end
+#if (!$formatter.isNull($paddingTop))
+#set ($paddingTopS = "padding-top: $!paddingTop;")
+#end
+
+#if (!$formatter.isNull($marginLeft))
+#set ($marginLeftS = "margin-left: $!marginLeft;")
+#end
+#if (!$formatter.isNull($marginRight))
+#set ($marginRightS = "margin-right: $!marginRight;")
+#end
+#if (!$formatter.isNull($marginBottom))
+#set ($marginBottomS = "margin-bottom: $!marginBottom;")
+#end
+#if (!$formatter.isNull($marginTop))
+#set ($marginTopS = "margin-top: $!marginTop;")
+#end
 <div class="photo-panel" style="text-align: $!photoAlign;">
     #if ($photoLinkable == "true")
     <a href="$!photoLink" target="$!photoLinkTarget">
@@ -14,7 +40,7 @@
         #end
 
 
-        <img src="$!imageHref" style="display: inline-block; vertical-align: $!photoValign;" alt="$!photoAlt" width="$!photoWidth" height="$!photoHeight" class="$!photoStyle #if ($photoResponsive == "true") img-responsive #end trans-lookup" />
+        <img src="$!{imageHref}$!{photoAltFormat}" style="display: inline-block; vertical-align: $!photoValign; $!paddingLeftS $!paddingRightS $!paddingTopS $!paddingBottomS $!marginLeftS $!marginRightS $!marginTopS $!marginBottomS" alt="$!photoAlt" width="$!photoWidth" height="$!photoHeight" class="$!photoStyle #if ($photoResponsive == "true") img-responsive #end trans-lookup" />
 
     #if ($photoLinkable == "true")
     </a>
