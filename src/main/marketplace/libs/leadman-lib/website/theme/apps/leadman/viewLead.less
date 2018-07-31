@@ -167,6 +167,54 @@
     .bg-variant(@white);
 }
 
+.panel-header-danger, .panel-header-info, .panel-header-primary, .panel-header-success{
+    position: relative;
+    &:before{
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 10px;
+        border-top-left-radius: @panel-border-radius;
+        border-top-right-radius: @panel-border-radius;
+    }
+}
+.panel-header-primary{
+    &:before{.bg-variant(@brand-primary);}
+    .taskDashItem:before {
+        .bg-variant(@brand-warning);
+    }
+}
+.panel-header-success{
+    &:before{.bg-variant(@brand-success); }
+    .taskDashItem:before {
+        .bg-variant(@brand-success);
+    }
+}
+.panel-header-info{
+    &:before{.bg-variant(@brand-info);}
+    .taskDashItem:before {
+        .bg-variant(@brand-info);
+    }
+}
+.panel-header-warning{
+    &:before {
+        .bg-variant(@brand-warning);
+    }
+    .taskDashItem:before {
+        .bg-variant(@brand-warning);
+    }
+}
+.panel-header-danger {
+    &:before {
+        .bg-variant(@brand-danger);
+    }
+    .taskDashItem:before {
+        .bg-variant(@brand-danger);
+    }
+}
+
 #assignedTags, #companyAssignedTags{
     a{
         margin-bottom: 10px;
