@@ -809,6 +809,21 @@
         })
     }
 
+    function initPjax() {
+        $('#pjax-container').length &&
+        $(document).pjax2('#pjax-container', {
+            selector: 'a.pjax',
+            fragment: '#pjax-container',
+            success: function (doc) {
+                flog('Pjax success!', arguments);
+                initBodyForm();
+                initOrgSearchTab();
+                $('#leadDetailTabs').html($(doc).find('#leadDetailTabs').html());
+            },
+            debug: true
+        });
+    }
+
     // Run init functions
     $(function () {
         initViewLeadsPage();
@@ -836,5 +851,6 @@
         initDeleteFile();
         initLeadDetailTags();
         initSendEmail();
+        initPjax();
     }
 })();

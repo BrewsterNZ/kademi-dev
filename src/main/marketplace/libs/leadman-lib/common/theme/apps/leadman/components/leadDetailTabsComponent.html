@@ -2,11 +2,11 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-sm-8">
-                <ul class="nav nav-pills">
-                    <li role="presentation" #if (!$params.view || $params.view == 'detail') class="active" #end><a href="?view=detail" class="text-center"><i class="fa fa-dollar fa-2x"></i><br>Lead</a></li>
-                    <li role="presentation" #if ($params.view == 'company') class="active" #end><a href="?view=company" class="text-center"><i class="fa fa-building fa-2x"></i><br>Company</a></li>
-                    <li role="presentation" #if ($params.view == 'contact') class="active" #end><a href="?view=contact" class="text-center"><i class="fa fa-user fa-2x"></i><br>Contact</a></li>
-                    <li role="presentation" #if ($params.view == 'activities') class="active" #end><a href="?view=activities" class="text-center"><i class="fa fa-tasks fa-2x"></i><br>Activities</a></li>
+                <ul class="nav nav-pills" id="leadDetailTabs">
+                    <li role="presentation" #if (!$params.view || $params.view == 'detail') class="active" #end><a href="?view=detail" class="text-center pjax"><i class="fa fa-dollar fa-2x"></i><br>Lead</a></li>
+                    <li role="presentation" #if ($params.view == 'company') class="active" #end><a href="?view=company" class="text-center pjax"><i class="fa fa-building fa-2x"></i><br>Company</a></li>
+                    <li role="presentation" #if ($params.view == 'contact') class="active" #end><a href="?view=contact" class="text-center pjax"><i class="fa fa-user fa-2x"></i><br>Contact</a></li>
+                    <li role="presentation" #if ($params.view == 'activities') class="active" #end><a href="?view=activities" class="text-center pjax"><i class="fa fa-tasks fa-2x"></i><br>Activities</a></li>
                 </ul>
             </div>
 

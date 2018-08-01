@@ -182,19 +182,19 @@
 }
 .panel-header-primary{
     &:before{.bg-variant(@brand-primary);}
-    .taskDashItem:before {
-        .bg-variant(@brand-warning);
+    .taskDashItem:before, .leadDashItem:before {
+        .bg-variant(@brand-primary);
     }
 }
 .panel-header-success{
     &:before{.bg-variant(@brand-success); }
-    .taskDashItem:before {
+    .taskDashItem:before, .leadDashItem:before {
         .bg-variant(@brand-success);
     }
 }
 .panel-header-info{
     &:before{.bg-variant(@brand-info);}
-    .taskDashItem:before {
+    .taskDashItem:before, .leadDashItem:before {
         .bg-variant(@brand-info);
     }
 }
@@ -202,7 +202,7 @@
     &:before {
         .bg-variant(@brand-warning);
     }
-    .taskDashItem:before {
+    .taskDashItem:before, .leadDashItem:before {
         .bg-variant(@brand-warning);
     }
 }
@@ -210,7 +210,7 @@
     &:before {
         .bg-variant(@brand-danger);
     }
-    .taskDashItem:before {
+    .taskDashItem:before, .leadDashItem:before {
         .bg-variant(@brand-danger);
     }
 }
