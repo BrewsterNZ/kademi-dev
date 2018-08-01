@@ -8,12 +8,14 @@
         #set( $tasks = $leadsPage.unassignedTasks )
         #set ($headerTitle = "Incoming tasks")
         #set ($labelClass = "label-info")
+        #set ($panelClass = "panel-header-info")
     #elseif ($taskType == "dueTasks")
         #set ($tasks = $leadsPage.myDueTasks)
         #set ($headerTitle = "My due tasks in 7 days")
         #set ($labelClass = "label-danger")
+        #set ($panelClass = "panel-header-danger")
     #end
-    <div class="panel panel-default panel-kcrm-light">
+    <div class="panel panel-default panel-kcrm-light $!panelClass">
         <div class="panel-body">
             <h3>$!headerTitle <span class="label $!labelClass pull-right"><small>$tasks.size()</small></span></h3>
             <br>
@@ -21,7 +23,7 @@
                 #foreach ($task in $tasks)
                 <div class="taskDashItem panel-kcrm">
                     <h5 class="clearfix">
-                        <div class="pull-left itemTitle" title="lorem8">$!task.title</div>
+                        <div class="pull-left itemTitle" title="$!task.title">$!task.title</div>
                         <div class="pull-right">
                             #if ($taskType == "unassignedTasks")
                             <a href="/tasks/${task.id}" title="Take this task" class="timeline-btn takeTask"><i role="button" class="fa fa-plus-circle text-primary"></i></a>
@@ -31,7 +33,7 @@
                             <div class="btn-group timeline-btn">
                                 <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                                 <ul class="dropdown-menu dropdown-menu-right">
-                                    <!--<li><a class="timeline-edit-task" href="/tasks/$task.id/ .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-pencil"></i> Edit</a></li>-->
+                                    <li><a class="timeline-edit-task" href="/tasks/$task.id/ .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-pencil"></i> Edit</a></li>
                                     <li><a class="btnCancelTask" href="/tasks/$task.id/"><i class="fa fa-ban"></i> Cancel</a></li>
                                 </ul>
                             </div>
@@ -41,6 +43,13 @@
                     <p class="small">$!task.taskDescription</p>
                 </div>
                 #end
+            </div>
+            <br>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h2 class="text-center"><a href="javascript:void (0)" class="text-primary btnCreateTaskDash"><i class="fa fa-plus-circle"></i> Create task</a></h2>
+                    <h2 class="text-center"><a href="/tasks" class="text-primary"><i class="fa fa-list"></i> View tasks</a></h2>
+                </div>
             </div>
         </div>
     </div>

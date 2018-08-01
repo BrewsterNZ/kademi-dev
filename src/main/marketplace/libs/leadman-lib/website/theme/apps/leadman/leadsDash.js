@@ -67,6 +67,15 @@
         });
     }
 
+    function initLeadDash(){
+        $(document).on('click', '.btnCreateDashLead', function () {
+            $('.nav-menuAddLeadjourney1').first().trigger('click');
+        });
+
+        $(document).on('click', '.btnCreateTaskDash', function () {
+            $('.nav-menuAddTask').first().trigger('click');
+        });
+    }
     $(function(){
 
         if($('.lead-dash-page').length > 0) {
@@ -90,5 +99,7 @@
             flog('onLeadDashUpdate');
             leadDashUpdate();
         })
+
+        initLeadDash();
     });
 })(jQuery);
