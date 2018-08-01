@@ -115,13 +115,8 @@ function changeClaimsStatus(status, page, params, callback) {
                     claim.jsonObject.status = status;
                     claim.save();
 
-                    var enteredUser = applications.userApp.findUserResourceById(claim.jsonObject.soldById);
-                    if (isNotNull(enteredUser)) {
-                        var custProfileBean = enteredUser.extProfileBean;
-                        eventManager.goalAchieved('claimProcessedGoal', custProfileBean, {'claim': id, 'status': status});
-                    } else {
-                        eventManager.goalAchieved('claimProcessedGoal', {'claim': id, 'status': status});
-                    }
+                    // BM: Removed claim processed goal triggering which was causing an error
+                    // And goals should be based on items, not the claim as a whole
                 }
             })(ids[i]);
         }

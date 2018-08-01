@@ -453,8 +453,8 @@
         var lowConfidenceTo = '$!page.attributes.settings.lowConfidenceTo';
 
         #if ($page.attributes.settings.defaultColumns)
-        var defaultColumns = $page.attributes.settings.defaultColumns;
-                # else
+            var defaultColumns = $page.attributes.settings.defaultColumns;
+        #else
         var defaultColumns = [
                 "amount",
                 "entered",
