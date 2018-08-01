@@ -8,7 +8,7 @@ function initLeadManEvents() {
     window.Msg.iconMode = "fa";
     jQuery.timeago.settings.allowFuture = true;
 
-    initLeadsDashLoading();
+    // initLeadsDashLoading();
     initNewLeadForm();
     initNewLeadFromEmail();
     initNewQuickLeadForm();
@@ -45,8 +45,8 @@ function initLeadManEvents() {
     initStatsSummaryComponents();
     initLeadContactsTable();
     initLeadCompaniesTable();
-    initLeadTasksTable();
-    initReloadLeadTasksTable();
+    // initLeadTasksTable();
+    // initReloadLeadTasksTable();
     // init the login form
     $(".login").user({});
 
@@ -193,7 +193,7 @@ function initCloseDealModal() {
             }
             if ($('#all_contacts').length) {
                 $('#all_contacts').html('');
-                setTimeout(initLeadsDashLoading, 400);
+                // setTimeout(initLeadsDashLoading, 400);
             }
             // anh
             setTimeout(reloadDashboard, 400);
@@ -213,7 +213,7 @@ function initCancelLeadModal() {
                 reloadTasks();
                 if ($('#all_contacts').length) {
                     $('#all_contacts').html('');
-                    initLeadsDashLoading();
+                    // initLeadsDashLoading();
                 }
                 if ($('#lead-cover').length) {
                     $('#maincontentContainer').reloadFragment({
@@ -611,7 +611,7 @@ function initNewLeadForm() {
 
                     if ($('#all_contacts').length) {
                         $('#all_contacts').html('');
-                        initLeadsDashLoading();
+                        // initLeadsDashLoading();
                     }
                     var leadContacts = $('.lead-contacts-wrap');
                     if (leadContacts.length) {
@@ -1963,210 +1963,6 @@ function initClipboard() {
             return "<img class='img-responsive' src='" + nextHref + "'/>";
         }
     });
-}
-
-function initLeadTasksTable() {
-    if ($('#leadTasksTable').length){
-        var editor = new $.fn.dataTable.Editor({
-            table: '#leadTasksTable',
-            ajax: {
-                url: '/tasks/_id_/'
-            },
-            idSrc: 'id',
-            fields: [
-                {
-                    label: "Due date",
-                    name: "dueDate",
-                    type: "datetime",
-                    def:    function () { return new Date(); },
-                    format:    'DD/MM/YYYY',
-                },
-                {
-                    label: "Assigned to:",
-                    name: "assignToName",
-                    type: 'select',
-                    data: 'assignedToProfile',
-                    placeholder: 'Select an assignment',
-                    optionsPair: {
-                        label: 'name',
-                        value: 'userName'
-                    },
-                    def: 'NONE'
-                }
-            ]
-        });
-        var dataTable = $('#leadTasksTable').DataTable({
-            paging: false,
-            searching: false,
-            destroy: true,
-            info: false,
-            columns: [
-                { "data": "title" },
-                {
-                    data: "relatedLead.leadOrgTitle",
-                    render: function (data, type, full, meta) {
-                        if (data){
-                            return '<a href="/companies/'+full.relatedLead.leadOrgLongId+'">'+data+'</a>'
-                        }
-                        return '';
-                    }
-                },
-                {
-                    data: "relatedLead.title",
-                    render: function (data, type, full, meta) {
-                        if (data){
-                            return '<a href="/leads/'+full.relatedLead.id+'">'+data+'</a>'
-                        }
-                        return '';
-                    }
-                },
-                {
-                    data: 'createdDate',
-                    defaultContent: "",
-                    render: function (d) {
-                        if (d) {
-                            return moment(d).format('DD/MM/YYYY');
-                        }
-                        return '';
-                    }
-                },
-                {
-                    data: 'dueDate',
-                    className: 'editable',
-                    render: function (d) {
-                        if (typeof d === "object" && d.time) {
-                            return moment(d.time).format('DD/MM/YYYY');
-                        } else if (typeof d === "string"){
-                            return d;
-                        }
-                        return '';
-                    }
-                },
-                {
-                    data: 'assignedToProfile',
-                    defaultContent: "",
-                    className: 'editable',
-                    render: function (d, type) {
-                        flog('Render Profile', d, type);
-                        if (d) {
-                            switch (type) {
-                                case "type":
-                                case "sort":
-                                {
-                                    return d.userId;
-                                    break;
-                                }
-                                case "display":
-                                {
-                                    if (d.firstName && d.firstName.trim().length > 0) {
-                                        var f = d.firstName || '';
-                                        var s = d.surName || '';
-                                        return (f + ' ' + s).trim();
-                                    } else if (d.nickName) {
-                                        return d.nickName.trim();
-                                    }
-                                }
-                                default:
-                                    return d.name;
-                            }
-                        }
-                        return "";
-                    }
-                },
-
-
-                {
-                    data: 'id',
-                    orderable: false,
-                    className: 'text-center',
-                    render: function (data, type, full, meta) {
-                        return '<a class="btn-task-complete" href="/tasks/'+data+' .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-2x fa-check-circle text-success"></i></a>\n' +
-                            '<a href="/tasks/'+data+'" class="btnCancelTask"><i class="fa fa-2x fa-times-circle text-danger"></i></a>';
-                    }
-                },
-            ]
-        });
-
-        $.ajax({
-            url: window.location.href,
-            data: {asJson: true},
-            dataType: 'JSON',
-            success: function (resp, textStatus, jqXHR) {
-                var data = resp.data;
-                if (data && data.results){
-                    var hits = data.results.hits;
-                    for (var i = 0; i < hits.hits.length; i++) {
-                        var hit = hits.hits[i];
-                        var _source = hit._source;
-                        _source.dueDate = moment(_source.dueDate).format('DD/MM/YYYY');
-                        dataTable.row.add(_source);
-                    }
-                }
-
-                dataTable.draw();
-            },
-            error: function () {
-                Msg.error('Could not load data');
-            }
-        });
-
-        $.ajax({
-            url: '/leads/?teamUsers',
-            dataType: 'json'
-        }).done(function (data) {
-            if (data.status) {
-                data.data.push({
-                    name: "Clear assignment",
-                    userName: ''
-                });
-                editor.field('assignToName').update(data.data);
-            }
-        });
-
-        $('#leadTasksTable')
-            .off('click', 'tbody td.editable')
-            .on('click', 'tbody td.editable', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                $(this).addClass('editing');
-                editor.inline(this, {
-                    onBlur: 'submit'
-                });
-            });
-
-        editor.on('preSubmit', function (e, json, action) {
-            var taskId;
-            for (var key in json.data){
-                taskId = key;
-                var obj = json.data[key];
-                for (var j in obj){
-                    json[j] = obj[j];
-                }
-            }
-        });
-
-        editor.on('submitComplete', function (e, json, data) {
-            $('#leadTasksTable').find('.editable.editing').removeClass('editing');
-            Msg.success('Updated');
-        });
-
-        dataTable.draw();
-
-        $('#leadTasksTable').on( 'draw.dt', function () {
-            $('#leadTasksTable').closest('.row').siblings('.row').remove();
-        });
-    }
-}
-
-function initReloadLeadTasksTable() {
-    $(document).on('taskChanged', function () {
-        $("#default-leadTasksTable").reloadFragment({
-            url: window.location.href,
-            whenComplete: function () {
-                initLeadTasksTable();
-            }
-        });
-    })
 }
 
 function initLeadCompaniesTable() {
