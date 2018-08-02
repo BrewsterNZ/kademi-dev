@@ -32,6 +32,7 @@ controllerMappings
         .addMethod('POST', 'deleteClaims', 'deleteClaims')
         .addMethod('POST', 'createClaim', 'createClaim')
         .addMethod('POST', 'processImageClaim', 'processImageClaim')
+        .addMethod('POST', 'imageClaim', 'imageClaim')
         .addMethod('POST', 'saveImageClaims')
         .postPriviledge('READ_CONTENT')
         .enabled(true)

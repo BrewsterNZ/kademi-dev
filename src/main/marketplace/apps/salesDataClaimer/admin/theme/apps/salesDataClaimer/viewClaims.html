@@ -60,13 +60,16 @@
                                     </select>
                                 </p>
                             </div>
-                            <div class="col-sm-6 text-right">
+                            <div class="col-sm-6 text-right pull-right">
                                 #if ($isAdmin)
                                 <p class="btn-group btn-group-sm">
                                     <button type="button" class="btn btn-info btn-update-mapping"><i class="fa fa-refresh"></i> Update mapping</button>
                                 </p>
                                 <p class="btn-group btn-group-sm">
                                     <button type="button" class="btn btn-success" data-target="#modal-add-claim" data-toggle="modal"><i class="fa fa-plus"></i> Add Claim</button>
+                                </p>
+                                <p class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-success" data-target="#modal-upload-ocr-claim" data-toggle="modal"><i class="fa fa-plus"></i> Upload Image Claim</button>
                                 </p>
                                 #end
                                 <p class="btn-group btn-group-sm">
@@ -436,6 +439,41 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button class="btn btn-success" type="submit">Save claim</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="modal-upload-ocr-claim">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Upload claim</h3>
+                </div>
+                <form class="form-horizontal" action="/manageSaleDataClaimer/" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="form-message alert alert-danger" style="display: none;"></div>
+                        <input type="hidden" name="imageClaim" value="true" />
+
+                        <div class="form-group">
+                            <label class="control-label sr-only">File</label>
+
+                            <div class="col-sm-12">
+                                <p class="thumbnail">
+                                    <img src="/static/images/photo_holder.png" class="img-responsive" />
+                                </p>
+
+                                <button type="button" class="btn btn-sm btn-info btn-upload-image-claim btn-block"><i class="fa fa-file-picture-o"></i> <span>Upload Image Claim</span></button>
+                                <span class="text-danger img-error" style="display: none;">Selected file is not image!</span>
+                                <input type="file" name="claimImage" accept="image/*" class="form-control" style="display: none !important;" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button class="btn btn-success" type="submit">Upload claim</button>
                     </div>
                 </form>
             </div>
