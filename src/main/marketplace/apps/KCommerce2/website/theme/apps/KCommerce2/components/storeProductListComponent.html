@@ -72,7 +72,7 @@
             </h4>
             <p><label class="label label-success" style="font-size: 14px;">
                 #if ($hit.fields.finalCost.value)
-                $$!hit.fields.finalCost.value
+                $$!formatter.formatCurrency( $hit.fields.finalCost.value )
                 #else
                 N/A
                 #end</label></p>
