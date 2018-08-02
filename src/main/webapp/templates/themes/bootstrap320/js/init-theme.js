@@ -16,38 +16,38 @@ var themeCssFiles = new Array();
 
 function initTheme() {
     flog("initTheme-bootstrap320: init-theme.js");
-    
+
     // the login box in header is normally for logging in from a public page. So
     // in this case we want to navigate to the user's dashboard
     $(".header .Login").user({});
     // the login form appears in content when the requested page requires a login
     // so in this case we do not give a post-login url, we will just refresh the current page
     $("#content .Login").user();
-    
+
     initEdify();
     initActiveNav(".initActive");
     initHelp();
     initRotation();
     initPrintLink();
     initVideos();
-    
+
     flog("initTheme: run page init functions", pageInitFunctions.length);
     $.each(pageInitFunctions, function (i, f) {
         log("run function" + i);
         pageInitFunctions[i]();
         log("done run function", i);
-        
+
     });
-    
+
     flog("finished init-theme");
 }
 
 
 function initHelp() {
     $(".helpIcon").click(function (e) {
-        
+
         e.preventDefault();
-        
+
         var page = $(document).find("meta[name=templateName]").attr("value");
         var href = "http://docs.fuselms.com/ref/screens";
         href += page;
@@ -80,10 +80,10 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
     }
     flog("removePlugins", removePlugins);
     log("prepare html editors", elements);
-    
+
     elements.each(function (i, n) {
         var inp = $(n);
-        
+
         var inputClasses = inp.attr("class");
         var id = inp.attr("id");
         var toolbar = "Default";
@@ -98,10 +98,10 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
                 }
             }
         }
-        
+
         toolbar = "Default"; // HACK!!
         flog("using toolbar", toolbar, "=>", toolbarSets[toolbar]);
-        
+
         flog("themeCssFiles", themeCssFiles);
         flog("editorSkin", editorSkin);
         var currentFolder = getFolderPath(window.location.pathname);
@@ -128,7 +128,7 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
                 }
             }
         };
-        
+
         if (height) {
             config.height = height;
         } else {
@@ -137,14 +137,14 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
         if (width) {
             config.width = width;
         }
-        
+
         //config.stylesSet = 'myStyles:/theme/styles.js'; // TODO: needs to be configurable, based on theme
         config.stylesSet = "myStyles:" + stylesPath;
         flog("create editor", inp, config);
         var editor = inp.ckeditor(config).editor;
         //var editor = CKEDITOR.instances["body"];
         flog("editor instances", CKEDITOR.instances);
-        
+
     });
 }
 
@@ -158,14 +158,14 @@ function initRotation() {
         }
         try {
             var rotateDegrees = 0;
-            
+
             setInterval(function () {
                 if (rotateDegrees === 360) {
                     rotateDegrees = 0;
                 } else {
                     rotateDegrees += 2;
                 }
-                
+
                 $('.rotate.anticlockwise').rotate(-rotateDegrees);
                 $('.rotate.clockwise').rotate(rotateDegrees);
             }, 50);
@@ -200,19 +200,19 @@ function initPrintLink() {
  */
 function initComments(pageUrl, followBtn, unFollowBtn) {
     log("initComments", pageUrl);
-    
+
     var fBtn = $(followBtn);
     var unfBtn = $(unFollowBtn);
-    
+
     fBtn.on('click', function (e) {
         e.preventDefault();
-        
+
         var url = pageUrl;
         if (!url.endsWith('/')) {
             url += '/';
         }
         url += '_comments';
-        
+
         $.post(url, {follow: true}, function (resp) {
             if (resp.status) {
                 fBtn.hide();
@@ -222,16 +222,16 @@ function initComments(pageUrl, followBtn, unFollowBtn) {
             }
         }, 'json');
     });
-    
+
     unfBtn.on('click', function (e) {
         e.preventDefault();
-        
+
         var url = pageUrl;
         if (!url.endsWith('/')) {
             url += '/';
         }
         url += '_comments';
-        
+
         $.post(url, {unfollow: true}, function (resp) {
             if (resp.status) {
                 fBtn.show();
@@ -241,7 +241,7 @@ function initComments(pageUrl, followBtn, unFollowBtn) {
             }
         }, 'json');
     });
-    
+
     $(".hideBtn").click(function () {
         var oldCommentsHidden = $("#comments:visible").length == 0;
         log("store new comments hidden", oldCommentsHidden);
@@ -268,24 +268,24 @@ function initComments(pageUrl, followBtn, unFollowBtn) {
         $(".hideBtn a").text("Show comments");
         $(".hideBtn a").addClass("ishidden");
     }
-    
+
     $("body").on("click focus", ".commentContainer textarea", function (e) {
         $(e.target).closest("div").find(".commentControls").show();
     });
     $('.commentContainer textarea').css('overflow', 'hidden').autogrow()
-    
+
     var currentUser = {
         name: userName,
         href: userUrl,
         photoHref: "/profile/pic"
     };
-    
+
     // This is for deferred logins, ie someone logs in after going to a page with comments
     $('body').on('userLoggedIn', function (event, userUrl, userName) {
         currentUser.name = userName;
         currentUser.href = userUrl;
     });
-    
+
     var comments = $("#comments");
     if (comments.length > 0) {
         comments.comments({
@@ -318,7 +318,6 @@ function initSelectAll() {
  *  the image src, or from the data-video-src attribute if present
  */
 function initVideos() {
-    flog("initVideos");
     doInitVideos();
     $(document).on("pjaxComplete", function () {
         doInitVideos();
@@ -342,7 +341,7 @@ function replaceImagesWithJWPlayer(images) {
     // will not transform images which in /contenteditor page
     if ($(document.body).hasClass('content-editor-page'))
         return;
-    
+
     images.each(function (i, n) {
         var img = $(n);
         var src = img.attr("data-video-src");
@@ -365,9 +364,6 @@ function replaceImagesWithJWPlayer(images) {
 
 
 function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autostart, repeat, controls) {
-    flog("itemToReplace", itemToReplace);
-    
-    
     var h = itemToReplace.height();
     if (h < 100) {
         h = 360;
@@ -376,11 +372,11 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
     if (w < 100) {
         w = 640;
     }
-    
+
     if (!aspectratio) {
         aspectratio = w + ":" + h;
     }
-    
+
     var div = buildJWPlayerContainer(count);
     log("buildJWPlayer", src, "size=", h, w);
     itemToReplace.replaceWith(div);
@@ -416,7 +412,7 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
         var wrapper = $("#" + wrapperId);
         wrapper.addClass("jwplayer-wrapper");
     });
-    
+
 }
 
 function buildJWPlayerContainer(count) {
@@ -427,7 +423,7 @@ function buildJWPlayerContainer(count) {
 function buildJWAudioPlayer(count, src, autostart) {
     var playerInstance = jwplayer("kaudio-player-" + count);
     var isHash = src.indexOf('/_hashes/files/') === 0;
-    
+
     playerInstance.setup({
         file: src + (isHash ? '.mp3' : ''),
         width: '100%',
@@ -454,7 +450,6 @@ function doInitAudio() {
 }
 
 function initAudios() {
-    flog("initAudios");
     doInitAudio();
     $(document).on("pjaxComplete", function () {
         doInitAudio();
@@ -464,7 +459,7 @@ function replaceImagesWithAudio(images) {
     // will not transform images which in /contenteditor page
     if ($(document.body).hasClass('content-editor-page'))
         return;
-    
+
     images.each(function (i, n) {
         var img = $(n);
         var src = img.attr("data-kaudio");
@@ -487,7 +482,7 @@ function replaceImagesWithAudio(images) {
 }
 
 function initTablesForCkeditor() {
-    flog('checking tables for cellpadding or cellspacing since bootstrap doesnt support this');
+    //flog('checking tables for cellpadding or cellspacing since bootstrap doesnt support this');
     $('table').each(function () {
         var cellPadding = $(this).attr('cellpadding');
         var cellSpacing = $(this).attr('cellspacing');
