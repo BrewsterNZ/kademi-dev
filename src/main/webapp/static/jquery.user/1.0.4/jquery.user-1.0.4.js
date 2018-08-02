@@ -1,9 +1,9 @@
 /**
  *
  *  jquery.login.js
- *  
+ *
  *  Depends on user.js and common.js
- *  
+ *
  *  The target should be a div containing
  *  - a form
  *  - <p> with id validationMessage
@@ -12,7 +12,7 @@
  *
  * Config:
  * urlSuffix: is appended to the current page url to make the url to POST the login request to. Default /.ajax
- * afterLoginUrl: the page to redirect to after login. Default index.html.  3 possibilities 
+ * afterLoginUrl: the page to redirect to after login. Default index.html.  3 possibilities
  *      null = redirect to nextHref if provided from server, else do a location.reload()
  *      "reload" - literal value means always do location.reload()
  *      "none" - literal value "none" means no redirect
@@ -25,11 +25,11 @@
  *  userNameProperty: property name to use in sending request to server
  *  passwordProperty
  *  loginCallback: called after successful login
- * 
+ *
  */
 
 (function( $ ) {
-    $.fn.user = function(options) {   
+    $.fn.user = function(options) {
         initUser();
         var config = $.extend( {
             urlSuffix: "/.dologin",
@@ -46,24 +46,21 @@
             secondFactorValidationMessageText: "#validationMessage2FA",
             secondFactorValidationMessage: "The 2FA code is incorrect. Try again.",
             loginCallback: function() {
-                
+
             }
-        }, options);  
-  
+        }, options);
+
         $(config.logoutSelector).click(function() {
             doLogout();
         });
-        
+
         var getUserName = function(){ return $("input[name=email]", container).val();  }
         var getPassword = function(){ return $("input[name=password]", container).val(); }
         var getLogin2FA = function(){ return $("#login2FA", container).val();  }
-  
+
         var container = this;
         var form = $("form", this);
-        flog("init login plugin3", form);                
         form.submit(function() {
-            flog("login", window.location);
-            
             $("input", container).removeClass("errorField");
             $(config.valiationMessageSelector, this).hide(100);
             try {
@@ -80,11 +77,11 @@
                 doLogin(userName, password, login2FA, config, container);
             } catch(e) {
                 flog("exception doing login", e);
-            }            
+            }
             return false;
         });
-        
-            
+
+
         $(".login2FA").on("click", function(){
            flog("Doing login with 2FA");
            try{
@@ -92,14 +89,14 @@
                 var userName = getUserName();
                 var password = getPassword();
                 var login2FA = getLogin2FA();
-                
+
                 doLogin(userName, password, login2FA, config, container);
             } catch(e) {
                 flog("exception doing login with 2FA", e);
-            }            
+            }
             return false;
         });
-    };   
+    };
 })( jQuery );
 
 function showLoginFailedMessage(config, resp){
@@ -124,18 +121,18 @@ function doLogin(userName, password, login2FA, config, container) {
     } else {
         passwordProperty = "_loginPassword";
     }
-    
+
     var login2FAProperty;
     if( config.login2FAProperty ) {
         login2FAProperty = config.login2FAProperty;
     } else {
         login2FAProperty = "_login2FA";
     }
-    
+
     data[userNameProperty] = userName;
     data[passwordProperty] = password;
     data[login2FAProperty] = login2FA;
-    
+
     flog(data);
 
     $.ajax({
@@ -146,9 +143,9 @@ function doLogin(userName, password, login2FA, config, container) {
         acceptsMap: "application/x-javascript",
         success: function(resp) {
             console.log(resp);
-            
+
             flog("received login response", resp)
-            initUser();                
+            initUser();
             if( resp.status ) {
                 flog("login success", resp.status);
 
@@ -163,7 +160,7 @@ function doLogin(userName, password, login2FA, config, container) {
                     } else {
                         flog("login: no afterLoginUrl and no nextHref, so reload");
                         window.location.reload(true);
-                    }                    
+                    }
                 } else if( config.afterLoginUrl.startsWith("/")) {
                     // if config has an absolute path the redirect to it
                     flog("redirect to1: " + config.afterLoginUrl);
@@ -182,7 +179,7 @@ function doLogin(userName, password, login2FA, config, container) {
                         window.location = userUrl + config.afterLoginUrl;
                     }
                 }
-                
+
             } else {
                 flog("Login not successful", resp.status);
                 // null userurl, so login was not successful
@@ -195,20 +192,20 @@ function doLogin(userName, password, login2FA, config, container) {
         error: function(resp) {
             try {
                 if(resp.responseText !== undefined && resp.responseText !== ""){
-                    var response = JSON.parse(resp.responseText);    
+                    var response = JSON.parse(resp.responseText);
                     if(response.code2FA !== undefined){
-                        if( response.code2FA == "REQUIRED" || response.code2FA == "INVALID"){                        
+                        if( response.code2FA == "REQUIRED" || response.code2FA == "INVALID"){
                             if(response.code2FA == "REQUIRED"){
                                 flog("2FA is enabled and required");
-                                $(config.secondFactorModalSelector).modal("show");    
+                                $(config.secondFactorModalSelector).modal("show");
                             }else{
                                 flog("2FA code is invalid");
                                 $(config.secondFactorValidationMessageText).text(config.secondFactorValidationMessage);
-                                $(config.secondFactorValidationMessageText).show(300);                           
+                                $(config.secondFactorValidationMessageText).show(300);
                             }
                             return;
                         }
-                    }    
+                    }
                 }else{
                     showLoginFailedMessage(config, resp);
                 }
@@ -216,7 +213,7 @@ function doLogin(userName, password, login2FA, config, container) {
                 showLoginFailedMessage(config, resp);
             }
         }
-    });      
+    });
 }
 
 var userUrl = null;
@@ -225,17 +222,17 @@ var userName = null;
 /**
  * returns true if there is a valid user
  */
-function initUser() {	
+function initUser() {
     if( userUrl ) {
         return true; // already done
-    }    
+    }
     initUserCookie();
     flog("initUser");
     if( isEmpty(userUrl) ) {
         // no cookie, so authentication hasnt been performed.
         flog('initUser: no userUrl');
         $(".requiresuser").hide();
-        $(".sansuser").show();    
+        $(".sansuser").show();
         $("body").addClass("notLoggedIn");
         return false;
     } else {
@@ -246,7 +243,7 @@ function initUser() {
         userName = userName.substring(pos+6);
         $("#currentuser").attr("href", userUrl);
         $(".requiresuser").show();
-        $(".sansuser").hide();        
+        $(".sansuser").hide();
         $("a.relativeToUser").each(function(i, node) {
             var oldHref = $(node).attr("href");
             $(node).attr("href", userUrl + oldHref);
@@ -255,7 +252,7 @@ function initUser() {
     }
 }
 
-function initUserCookie() {    
+function initUserCookie() {
     userUrl = $.cookie('miltonUserUrl');
     if( userUrl && userUrl.length > 1 ) {
         if( userUrl.startsWith("b64")) { // milton will append b64 if the url is base64 encoded
@@ -293,7 +290,7 @@ function doLogout() {
             flog('There was a problem logging you out, a 400 error is expected', resp);
             window.location = "/";
         }
-    });    
+    });
 }
 
 
@@ -303,7 +300,7 @@ function dropQuotes(s) {
     }
     if( s.endsWith("\"") ) {
         s = s.substr(0, s.length-1);
-    }    
+    }
     return s;
 }
 
@@ -331,7 +328,7 @@ function showRegisterOrLoginModal(callbackOnLoggedIn) {
             dataType: "html",
             success: function(resp) {
                 var page = $(resp);
-                var r = page.find(".registerOrLoginCont");                        
+                var r = page.find(".registerOrLoginCont");
                 flog("content", page, "r", r);
                 modal.find(".modalContent").html(r);
                 flog("modal", modal);
@@ -348,19 +345,19 @@ function showRegisterOrLoginModal(callbackOnLoggedIn) {
                     flog("registered and logged in ok, process callback");
                     $('body').trigger('userLoggedIn', [userUrl, userName]);
                     callbackOnLoggedIn();
-                    $.tinybox.close();                    
+                    $.tinybox.close();
                 });
             },
             error: function(resp) {
                 flog('There was a problem logging you out', resp);
             }
-        });     
-        
+        });
+
     });
     $.tinybox.show(modal, {
         overlayClose: false,
         opacity: 0
-    });     
+    });
 }
-        
+
 /** End jquery.login.js */
