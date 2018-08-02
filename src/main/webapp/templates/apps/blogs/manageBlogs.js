@@ -14,6 +14,7 @@ function initCRUDBlog() {
             blogContainer.reloadFragment();
         }
     });
+    
 
     blogContainer.on('click', '.btn-rename-group', function (e) {
         e.preventDefault();
@@ -45,6 +46,26 @@ function initCRUDBlog() {
         copyBlogModal.find('form').attr('action', href);
         copyBlogModal.modal('show');
     });
+    blogContainer.on('click', '.dup-article', function (e) {
+        e.preventDefault();
+
+        var href = $(this).attr('href');
+        $.ajax({
+            url: window.location.pathname,
+            data: {
+                dupArticle: href
+            },
+            method: "POST",
+            datatype: "json"
+        }).done(function (data) {
+            flog('Done', data);
+            Msg.info('Submitted for approval');
+            window.location.reload();
+        });
+        
+    });
+    
+    dup-
 
     copyBlogModal.find('form').forms({
         onSuccess: function () {

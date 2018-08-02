@@ -9,109 +9,114 @@
         </p>
         <div id="blogs-container">
             #if( $page.children.isEmpty() )
-                <div class="well">
-                    <h2>Learn about blogging</h2>
+            <div class="well">
+                <h2>Learn about blogging</h2>
 
-                    <p>
-                        You have not created any blogs yet. Click the button above to setup
-                        your first blog, in which you can add blog articles.
+                <p>
+                    You have not created any blogs yet. Click the button above to setup
+                    your first blog, in which you can add blog articles.
 
-                    </p>
-                    <a class='btn btn-success' target="_blank" href='http://docs.kademi.co/ref/screens/theme/apps/blogs/manageBlogs.html'>Learn more about blogging</a>
-                </div>
+                </p>
+                <a class='btn btn-success' target="_blank" href='http://docs.kademi.co/ref/screens/theme/apps/blogs/manageBlogs.html'>Learn more about blogging</a>
+            </div>
             #else
-                #foreach($blog in $page.children)
-                    <div class="panel panel-default group">
-                        <div class="panel-heading">
-                            <i class="clip-users"></i>
-                            <span class="group-name">$blog.name - $blog.websiteName</span>
+            #foreach($blog in $page.children)
+            <div class="panel panel-default group">
+                <div class="panel-heading">
+                    <i class="clip-users"></i>
+                    <span class="group-name">$blog.name - $blog.websiteName</span>
 
-                            <div class="btn-group btn-group-xs">
-                                <button data-toggle="dropdown" class="btn btn-sm btn-default btn-squared dropdown-toggle" type="button">
-                                    <span class="caret"></span>
-                                </button>
-                                <ul role="menu" class="dropdown-menu">
-                                    <li><a href="$blog.href" data-name="$blog.name" class="btn-rename-group">Rename this blog</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="$blog.href" class="btn-delete-group">Delete this blog</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="$blog.href" class="btn-copy-blog">Copy to another website</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="panel-body">
-                            <p class="pull-right">
-                                <a class="btn btn-sm btn-info" href="$blog.name/">Manage blog</a>
-                                <a class="btn btn-sm btn-success btn-new-article" href="$blog.name/"><i class="fa fa-plus"></i> Create new article</a>
-                            </p>
-                            <h4>Recent articles</h4>
-                            <br class="clearfix" />
-
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover">
-                                    <colgroup>
-                                        <col style="width: 50px" />
-                                        <col />
-                                        <col style="width: 120px;" />
-                                    </colgroup>
-                                    <thead>
-                                        <tr>
-                                            <th>Status</th>
-                                            <th class="title" rel="asc">Title</th>
-                                            <th class="action"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        #if( $blog.recentArticles.isEmpty() )
-                                            <tr>
-                                                <td colspan="99">No articles have been created yet.</td>
-                                            </tr>
-
-                                        #else
-                                            #foreach($article in $blog.recentArticles)
-                                                <tr>
-                                                    <td>
-                                                        #if($article.publishedDate )
-                                                            <i class="fa fa-check-circle text-success"></i>
-                                                        #elseif( $article.submittedDate )
-                                                            <i class="glyphicon glyphicon-question-sign text-info"></i>
-                                                        #elseif( $article.rejectedAt )
-                                                            <i class="glyphicon glyphicon-remove text-danger"></i>
-                                                        #else
-                                                            <i class="glyphicon glyphicon-pencil text-muted"></i>
-                                                        #end
-                                                    </td>
-                                                    <td><a href="$blog.name/$article.name">$article.title</a></td>
-                                                    <td class="action">
-                                                        <div class="btn-group btn-group-sm">
-
-                                                            <a href="$blog.name/$article.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit</a>
-
-                                                            <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-                                                                <span class="caret"></span>
-                                                            </button>
-                                                            <ul class="dropdown-menu pull-right" role="menu">
-                                                                <li role="presentation">
-                                                                    <a role="menuitem" tabindex="-1" href="$blog.name/$article.name" class=""><i class="fa fa-edit"></i> Edit</a>
-                                                                </li>
-                                                                #if($article.publishedDate )
-                                                                #else
-                                                                    <li role="presentation">
-                                                                        <a role="menuitem" tabindex="-1" href="$blog.name/$article.name" class="btn-delete-article"><i class="fa fa-times"></i> Delete</a>
-                                                                    </li>
-                                                                #end
-                                                            </ul>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            #end
-                                        #end
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                    <div class="btn-group btn-group-xs">
+                        <button data-toggle="dropdown" class="btn btn-sm btn-default btn-squared dropdown-toggle" type="button">
+                            <span class="caret"></span>
+                        </button>
+                        <ul role="menu" class="dropdown-menu">
+                            <li><a href="$blog.href" data-name="$blog.name" class="btn-rename-group">Rename this blog</a></li>
+                            <li class="divider"></li>
+                            <li><a href="$blog.href" class="btn-delete-group">Delete this blog</a></li>
+                            <li class="divider"></li>
+                            <li><a href="$blog.href" class="btn-copy-blog">Copy to another website</a></li>
+                        </ul>
                     </div>
-                #end
+                </div>
+                <div class="panel-body">
+                    <p class="pull-right">
+                        <a class="btn btn-sm btn-info" href="$blog.name/">Manage blog</a>
+                        <a class="btn btn-sm btn-success btn-new-article" href="$blog.name/"><i class="fa fa-plus"></i> Create new article</a>
+                    </p>
+                    <h4>Recent articles</h4>
+                    <br class="clearfix" />
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <colgroup>
+                                <col style="width: 50px" />
+                                <col />
+                                <col style="width: 120px;" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th class="title" rel="asc">Title</th>
+                                    <th class="action"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #if( $blog.recentArticles.isEmpty() )
+                                <tr>
+                                    <td colspan="99">No articles have been created yet.</td>
+                                </tr>
+
+                                #else
+                                #foreach($article in $blog.recentArticles)
+                                <tr>
+                                    <td>
+                                        #if($article.publishedDate )
+                                        <i class="fa fa-check-circle text-success"></i>
+                                        #elseif( $article.submittedDate )
+                                        <i class="glyphicon glyphicon-question-sign text-info"></i>
+                                        #elseif( $article.rejectedAt )
+                                        <i class="glyphicon glyphicon-remove text-danger"></i>
+                                        #else
+                                        <i class="glyphicon glyphicon-pencil text-muted"></i>
+                                        #end
+                                    </td>
+                                    <td><a href="$blog.name/$article.name">$article.title</a></td>
+                                    <td class="action">
+                                        <div class="btn-group btn-group-sm">
+
+                                            <a href="$blog.name/$article.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit</a>
+
+                                            <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu pull-right" role="menu">
+                                                <li role="presentation">
+                                                    <a role="menuitem" tabindex="-1" href="$blog.name/$article.name" class=""><i class="fa fa-edit"></i> Edit</a>
+                                                </li>
+                                                <!--
+                                                <li role="presentation">
+                                                    <a role="menuitem" tabindex="-1" href="$blog.name/$article.name" class="dup-article"><i class="fa fa-copy"></i> Duplicate</a>
+                                                </li>
+                                                -->
+                                                #if($article.publishedDate )
+                                                #else
+                                                <li role="presentation">
+                                                    <a role="menuitem" tabindex="-1" href="$blog.name/$article.name" class="btn-delete-article"><i class="fa fa-times"></i> Delete</a>
+                                                </li>
+                                                #end
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                #end
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            #end
             #end
         </div>
 
@@ -131,7 +136,7 @@
                                     <div class="col-md-8">
                                         <select name="website" class="form-control">
                                             #foreach($website in $page.closest("organisation").child("websites").children)
-                                                <option>$website.name</option>
+                                            <option>$website.name</option>
                                             #end
                                         </select>
                                         <br />
@@ -226,7 +231,7 @@
                                     <div class="col-md-8">
                                         <select name="copyToWebsite" class="form-control">
                                             #foreach($website in $page.organisation.websites)
-                                                <option value="$website.name">$website.name</option>
+                                            <option value="$website.name">$website.name</option>
                                             #end
                                         </select>
                                     </div>
