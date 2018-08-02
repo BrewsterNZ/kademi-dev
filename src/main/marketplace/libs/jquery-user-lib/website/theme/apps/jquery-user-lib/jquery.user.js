@@ -77,7 +77,6 @@
             // End of DEPRECATED migration
             // ==============================================================================
 
-            flog('[jquery.user] Init logout links')
             $(config.logoutSelector).on('click', function (e) {
                 e.preventDefault();
                 doLogout();
@@ -86,7 +85,6 @@
             initUser();
 
             // Use a body class to ensure is only initialized once
-            flog('[jquery.user] Init requiresUser links');
             $(document.body).not('requiresUserDone').addClass('requiresUserDone').on('click', 'a.registerOrLogin, button.registerOrLogin', function (e) {
                 var btn = $(this);
                 flog('[jquery.user] Check required user', btn, userUrl);
@@ -124,7 +122,6 @@
 
                 var form = container.find('form');
 
-                flog('[jquery.user] Init form', form);
                 form.on('submit', function (e) {
                     flog('[jquery.user] On submit', form);
                     e.stopPropagation();
@@ -244,12 +241,9 @@ function initUser() {
 
     initUserCookie();
 
-    flog('[jquery.user] initUser');
-
     var body = $(document.body);
     if (isEmpty(userUrl)) {
         // no cookie, so authentication hasn't been performed.
-        flog('[jquery.user] initUser: no userUrl');
 
         $('.requiresUser').hide();
         $('.sansuser').show();
@@ -257,8 +251,6 @@ function initUser() {
 
         return false;
     } else {
-        flog('[jquery.user] userUrl: '+ userUrl);
-
         userName = userUrl.substr(0, userUrl.length - 1); // drop trailing slash
         var pos = userUrl.indexOf('users');
         userName = userName.substring(pos + 6);
@@ -284,7 +276,6 @@ function initUserCookie() {
     userUrl = $.cookie('miltonUserUrl');
 
     if (userUrl && userUrl.length > 1) {
-        flog('[jquery.user] initUserCookie', userUrl);
 
         if (userUrl.startsWith('b64')) {
             userUrl = userUrl.substring(3); // strip b64 ext
@@ -297,9 +288,7 @@ function initUserCookie() {
         var pos = userUrl.indexOf('users');
         userName = userName.substring(pos + 6);
 
-        flog('[jquery.user] initUserCookie: user:', userUrl, userName);
     } else {
-        flog('[jquery.user] initUserCookie: no user cookie');
         userName = null;
     }
 }
