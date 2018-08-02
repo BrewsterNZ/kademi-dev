@@ -279,7 +279,6 @@ function initTabbable() {
 }
 
 function initChkAll() {
-    flog('initChkAll');
 
     $(document.body).on('click', '.chk-all', function () {
         $(this).closest('table').find('tbody input:checkbox').prop('checked', this.checked);
@@ -287,8 +286,6 @@ function initChkAll() {
 }
 
 function initClearer() {
-    flog('initClearer');
-
     var body = $(document.body);
 
     body.on('click', '[data-type=clearer]', function (e) {
@@ -303,7 +300,6 @@ function initClearer() {
 }
 
 function initSwitch() {
-    flog("kademi.js: make switch");
     if ($(document).bootstrapSwitch) {
 
         $(".make-switch input[type=checkbox], input.make-switch").each(function () {
@@ -337,8 +333,6 @@ function validateFuseEmail(emailAddress) {
 }
 
 function initFuseModals() {
-    flog("initFuseModal");
-
     $(document.body).on('click', '[data-toggle=modal]', function (e) {
         e.preventDefault();
     });
@@ -373,8 +367,6 @@ function initFuseModals() {
 }
 
 function initFuseModal(modal, callback) {
-    flog('initFuseModal', modal, callback);
-
     modal.modal({
         show: false
     });
@@ -634,15 +626,11 @@ function initAjaxStatus() {
 }
 
 function initAdminTopNavSearch() {
-    flog('initAdminTopNavSearch');
-
     var txt = $('#top-nav-search-input');
     txt.omniSearch();
 }
 
 function drawPieChart(chart, options, padding, isFirstTime) {
-    flog('drawPieChart', chart, options, padding, isFirstTime);
-
     var wrapper = chart.closest('.col-sm-6');
     var canvas = chart.find('canvas');
     var sizeChart = wrapper.width() - padding;
@@ -694,8 +682,6 @@ function initPieChart(target, options, padding) {
 }
 
 function initPageDatePicker() {
-    flog('initPageDatePicker');
-
     var range = $('#commonControlsRange');
     if (range.length > 0) {
         var extraClass = range.attr('data-class') || '';
@@ -747,8 +733,6 @@ $(function () {
 });
 
 function initRepoSwitcher() {
-    flog('initRepoSwitcher');
-
     var switchers = $('.repo-switcher');
 
     if (switchers.length > 0) {
