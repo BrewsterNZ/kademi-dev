@@ -10,7 +10,6 @@ $(function () {
      *  the image src, or from the data-video-src attribute if present
      */
     function initVideos() {
-        flog("initVideos");
         doInitVideos();
         $(document).on("pjaxComplete", function () {
             doInitVideos();
