@@ -56,6 +56,9 @@
                                                             <a role="menuitem" tabindex="-1" href="$r.name" class=""><i class="fa fa-edit"></i> Edit</a>
                                                         </li>
                                                         <li role="presentation">
+                                                            <a role="menuitem" tabindex="-1" href="$r.name" class="dup-article"><i class="fa fa-copy"></i> Duplicate</a>
+                                                        </li>
+                                                        <li role="presentation">
                                                             <a role="menuitem" tabindex="-1" href="$r.name" class="delete-article"><i class="fa fa-times"></i> Delete</a>
                                                         </li>
                                                     </ul>
@@ -83,7 +86,7 @@
                             <form method="POST" action="$page.href" class="item-type-form">
                                 <button type="submit" class="btn btn-success pull-right">Save</button>
                                 <input type="text" id="itemType" class="form-control" name="itemType" value="$!page.itemType" style="width: 50%" placeholder="Top level category for search" />
-                            <form>
+                            </form>
                         </div>
                     </div>
                     <div class="panel panel-default">
@@ -112,25 +115,25 @@
                                         <tr>
                                             <td>$category</td>
                                             <td class="action">
-                                            #if ($velocityHasNext) 
+                                                #if ($velocityHasNext)
                                                 <div class="btn-group btn-group-sm">
-                                           #else
-                                                <div class="btn-group btn-group-sm dropup"> 
-                                           #end
-                                                    <a href="$category" class="cat-edit btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
-                                                    </a>
-                                                    <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu pull-right" role="menu">
-                                                        <li role="presentation">
-                                                            <a role="menuitem" tabindex="-1" href="$category" class="cat-edit"><i class="fa fa-edit"></i> Edit</a>
-                                                        </li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" tabindex="-1" href="$category" class="cat-delete"><i class="fa fa-times"></i> Delete</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                                    #else
+                                                    <div class="btn-group btn-group-sm dropup">
+                                                        #end
+                                                        <a href="$category" class="cat-edit btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
+                                                        </a>
+                                                        <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                            <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu pull-right" role="menu">
+                                                            <li role="presentation">
+                                                                <a role="menuitem" tabindex="-1" href="$category" class="cat-edit"><i class="fa fa-edit"></i> Edit</a>
+                                                            </li>
+                                                            <li role="presentation">
+                                                                <a role="menuitem" tabindex="-1" href="$category" class="cat-delete"><i class="fa fa-times"></i> Delete</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                             </td>
                                         </tr>
                                         #end
@@ -165,25 +168,25 @@
                                         <tr>
                                             <td>$tag</td>
                                             <td class="action">
-                                            #if ($velocityHasNext) 
+                                                #if ($velocityHasNext)
                                                 <div class="btn-group btn-group-sm">
-                                           #else
-                                                <div class="btn-group btn-group-sm dropup"> 
-                                           #end
-                                                    <a href="$tag" class="tag-edit btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
-                                                    </a>
-                                                    <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu pull-right" role="menu">
-                                                        <li role="presentation">
-                                                            <a role="menuitem" tabindex="-1" href="$tag" class="tag-edit"><i class="fa fa-edit"></i> Edit</a>
-                                                        </li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" tabindex="-1" href="$tag" class="tag-delete"><i class="fa fa-times"></i> Delete</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                                    #else
+                                                    <div class="btn-group btn-group-sm dropup">
+                                                        #end
+                                                        <a href="$tag" class="tag-edit btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
+                                                        </a>
+                                                        <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                            <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu pull-right" role="menu">
+                                                            <li role="presentation">
+                                                                <a role="menuitem" tabindex="-1" href="$tag" class="tag-edit"><i class="fa fa-edit"></i> Edit</a>
+                                                            </li>
+                                                            <li role="presentation">
+                                                                <a role="menuitem" tabindex="-1" href="$tag" class="tag-delete"><i class="fa fa-times"></i> Delete</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                             </td>
                                         </tr>
                                         #end
