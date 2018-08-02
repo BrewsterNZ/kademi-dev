@@ -12,52 +12,48 @@
 #set ($numberOfArticles = $formatter.toInteger($numberOfArticles))
 #set ($articles = $articles.truncate($numberOfArticles))
 
-#if ($layout == "grid")
-#set ($tableWidth = $width / $itemsPerRow)
-#set ($imageWidth = $tableWidth - 10 - 10)
-
-#set ($blogListId = $formatter.randomGuid)
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tbody>
-        <tr>
-            <td>
-                <!--[if (gte mso 9)|(IE)]>
-                <table cellspacing="0" cellpadding="0" width="100%" border="0">
-                <![endif]-->
+        #if ($layout == "grid")
+        #set ($tableWidth = $width / $itemsPerRow)
+        #set ($imageWidth = $tableWidth - 10 - 10)
+
+        #set ($blogListId = $formatter.randomGuid)
+                <tr>
+                    <td>
+                        <!--[if (gte mso 9)|(IE)]>
+                        <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                        <![endif]-->
+                        #if( $blogFolder )
+                            #foreach($article in $articles)
+                                #renderGridItem($article.href, $article.title, $article.brief, $article.bestSquareImageHref, $foreach.index, $foreach.count)
+                            #end
+                        #else
+                            #renderGridItem("#", "Example 1", "[Please select a blog]", false, 0, 1)
+                            #renderGridItem("#", "Example 2", "[Please select a blog]", false, 1, 2)
+                        #end
+                        <!--[if (gte mso 9)|(IE)]>
+                        </table>
+                        <![endif]-->
+                    </td>
+                </tr>
+        #else
+                #set ($leftWidth = $width / 3)
+                #set ($rightWidth = $width - $leftWidth)
+                #set ($imageWidth = $leftWidth - 15)
+
                 #if( $blogFolder )
-                    #foreach($article in $articles)
-                        #renderGridItem($article.href, $article.title, $article.brief, $article.bestSquareImageHref, $foreach.index, $foreach.count)
-                    #end
-                #else
-                    #renderGridItem("#", "Example 1", "[Please select a blog]", false, 0, 1)
-                    #renderGridItem("#", "Example 2", "[Please select a blog]", false, 1, 2)
+                #foreach($article in $articles)
+                #renderListItem($article.href, $article.title, $article.brief, $article.bestSquareImageHref)
                 #end
-                <!--[if (gte mso 9)|(IE)]>
-                </table>
-                <![endif]-->
-            </td>
-        </tr>
+                #else
+                #renderListItem("#", "Example 1", "[Please select a blog]", false)
+                #renderListItem("#", "Example 2", "[Please select a blog]", false)
+                #end
+
+        #end
     </tbody>
 </table>
-#else
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-    <tbody>
-        #set ($leftWidth = $width / 3)
-        #set ($rightWidth = $width - $leftWidth)
-        #set ($imageWidth = $leftWidth - 15)
-
-        #if( $blogFolder )
-        #foreach($article in $articles)
-        #renderListItem($article.href, $article.title, $article.brief, $article.bestSquareImageHref)
-        #end
-        #else
-        #renderListItem("#", "Example 1", "[Please select a blog]", false)
-        #renderListItem("#", "Example 2", "[Please select a blog]", false)
-        #end
-</tbody>
-</table>
-#end
-
 
 
 

@@ -37,12 +37,8 @@
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        if (selectedBlog) {
-                            component.attr('data-blog', selectedBlog);
-                            keditor.initDynamicContent(dynamicElement);
-                        } else {
-                            dynamicElement.html('<p>Please select Blog</p>');
-                        }
+                        component.attr('data-blog', selectedBlog);
+                        keditor.initDynamicContent(dynamicElement);
                     });
 
                     form.find('.select-layout').on('change', function () {
