@@ -172,6 +172,7 @@ $(function () {
     }
 
     function loadTasks(url) {
+        if (!$('#leadTasksTable').length) return;
         if (dataTable) {
             dataTable.clear(false);
         }
@@ -223,8 +224,6 @@ $(function () {
         if ($(e.target).is("input")) {
             return;
         }
-
-        flog("click");
 
         $(".outcome-options").slideUp(300).find(":input").prop("disabled", true).end().find(".required:input").each(function () {
             $(this).data("required", true).removeClass("required");
