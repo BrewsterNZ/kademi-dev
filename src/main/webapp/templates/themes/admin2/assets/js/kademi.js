@@ -1734,10 +1734,14 @@ function initImagePicker(target, basePath, pagePath) {
         }
 
         var btnEditText = target.attr('data-button-text') || 'Edit content';
-        var btnEdit = $('<button type="button" class="btn btn-sm btn-info fullscreen-editor-edit">' + btnEditText + '</button>');
+        var btnEdit = $('<button disabled="true" type="button" class="btn btn-sm btn-info fullscreen-editor-edit">' + btnEditText + '</button>');
         target.before(btnEdit);
         btnEdit.wrap('<p class="fullscreen-editor-actions"></p>');
-
+        $(window).on('load', function () {
+            $( document ).ajaxStop(function() {
+                btnEdit.prop('disabled', false);
+            });
+        });
         btnEdit.on('click', function (e) {
             e.preventDefault();
 

@@ -1,4 +1,5 @@
 $(function () {
+    Msg.singletonForCategory = true;
     initTable();
     initSelectPicker();
     initAddCategories();
