@@ -741,6 +741,8 @@ function imageClaim(page, params, files) {
                     receipt: '/_hashes/files/' + uploadedFiles[0].hash
                 };
 
+                appendSalesTeam(page, params, claimObj);
+
                 db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
 
                 eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});

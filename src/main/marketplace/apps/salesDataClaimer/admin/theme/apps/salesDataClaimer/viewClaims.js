@@ -266,6 +266,15 @@
         var inputImage = form.find('[name=claimImage]');
         var thumbImg = form.find('.thumbnail img');
         var btnUpload = form.find('.btn-upload-image-claim');
+        var salesTeamInput = form.find('[name="salesTeam"]');
+
+        // Init Entity finder :-)
+        salesTeamInput.entityFinder({
+            type: 'organisation',
+            onSelectSuggestion: function (elem, orgId, actualId, type) {
+                salesTeamInput.val(orgId);
+            }
+        });
 
         modal.on('hidden.bs.modal', function () {
             form.trigger('reset');
@@ -349,6 +358,14 @@
 
                         claimItemsBody.empty();
 
+                        if (resp.data.salesTeamOrgId && resp.data.salesTeamOrgId.length > 0) {
+                            modalReview.find('.sales-team').find('input').val(resp.data.salesTeamOrgId);
+                            modalReview.find('.sales-team').show();
+                        } else {
+                            modalReview.find('.sales-team').find('input').val('');
+                            modalReview.find('.sales-team').hide();
+                        }
+
                         // Load Claim Items
                         if (resp.data && resp.data.claimItems) {
                             $.each(resp.data.claimItems, function (_, item) {
@@ -397,6 +414,11 @@
             e.preventDefault();
 
             var tableBody = modalProcess.find('#table-ocr-manager-body');
+            var salesTeamDiv = modalProcess.find('.sales-team');
+            var salesTeamInput = salesTeamDiv.find('input');
+
+            salesTeamDiv.hide();
+            salesTeamInput.val('');
 
             tableBody.empty();
 
@@ -424,6 +446,25 @@
 
             $('.btn-reject-image-claims').attr('data-id', btn.data('id'));
 
+            // Get Claim Data
+            $.ajax({
+                url: MAIN_URL + id  + '/',
+                type: 'GET',
+                dataType: 'JSON',
+                success: function (resp) {
+                    flog('OCR data', resp);
+
+                    if (resp.status && resp.data && resp.data.salesTeamOrgId && resp.data.salesTeamOrgId.length > 0) {
+                        salesTeamInput.val(resp.data.salesTeamOrgId);
+                        salesTeamDiv.show();
+                    } else {
+                        salesTeamDiv.hide();
+                        salesTeamInput.val('');
+                    }
+                }
+            });
+
+            // Get OCR file
             $.ajax({
                 url: url,
                 type: 'get',
