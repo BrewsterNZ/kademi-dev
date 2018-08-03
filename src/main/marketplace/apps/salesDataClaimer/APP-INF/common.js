@@ -1,4 +1,4 @@
-/* global log, fileManager, TYPE_CLAIM_GROUP, TYPE_RECORD, views, formatter, securityManager, applications, RECORD_STATUS, transactionManager, eventManager */
+/* global log, fileManager, TYPE_CLAIM_GROUP, TYPE_RECORD, views, formatter, securityManager, applications, RECORD_STATUS, transactionManager, eventManager, services */
 
 function uploadFile(page, params, files) {
     log.info('uploadFile > page {} params {} files {}', page, params, files);
@@ -62,7 +62,7 @@ function getSearchClaimsQuery(page, status, user, claimForm) {
         'size': 10000,
         'sort': [
             {
-                'soldDate': 'desc'
+                'enteredDate': 'desc'
             }
         ],
         'query': {
@@ -197,6 +197,8 @@ function createClaim(page, params, files) {
             modifiedDate: now,
             status: RECORD_STATUS.NEW
         };
+
+        appendSalesTeam(page, params, obj);
 
         var anonUser = null;
 
@@ -336,6 +338,8 @@ function updateClaim(page, params, files) {
             var org = page.organisation;
             var now = formatter.formatDateISO8601(formatter.now);
             var claimJson = JSON.parse(claim.json);
+
+            appendSalesTeam(page, params, claimJson, true);
 
             claimJson.modifiedDate = now;
 
@@ -553,4 +557,31 @@ function createOrUpdateClaimItem(claimObj, claimJson, claimItems) {
 
     // Update
     claimObj.update(JSON.stringify(claimJson));
+}
+
+function getSalesTeam(page, params) {
+    // Check if it's a website
+    var website = page.closest('website');
+    var isWebsite = isNotNull(website);
+    var salesTeam = null;
+
+    if (isWebsite) {
+        salesTeam = services.queryManager.currentTeamOrg;
+    } else if (isNotBlank(params.salesTeam)) {
+        salesTeam = services.organisationManager.findOrg(params.salesTeam);
+    }
+
+    return salesTeam;
+}
+
+function appendSalesTeam(page, params, json, useNull) {
+    var salesTeam = getSalesTeam(page, params);
+
+    if (isNotNull(salesTeam)) {
+        json.salesTeamOrgId = salesTeam.orgId;
+    } else if (useNull) {
+        json.salesTeamOrgId = null;
+    }
+
+    return json;
 }
