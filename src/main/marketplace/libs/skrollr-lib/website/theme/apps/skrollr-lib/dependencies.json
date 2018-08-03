@@ -1,0 +1,18 @@
+{
+    "appDependencies": [
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/skrollr-lib/skrollr.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/skrollr-lib/init.js"
+            }
+        }
+    ]
+}
