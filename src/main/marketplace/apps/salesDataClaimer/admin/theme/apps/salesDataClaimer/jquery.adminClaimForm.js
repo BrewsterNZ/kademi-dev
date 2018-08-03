@@ -62,6 +62,19 @@
                 $this.$elem.find('[name=claimItemsLength]').val($this.$_currentCount);
             });
         });
+        
+        // Init Org Selector
+        var salesTeamDiv = $this.$elem.find('.sales-team');
+        $this.$salesTeamInput = salesTeamDiv.find('input[name="salesTeam"]');
+        
+        $this.$salesTeamInput.entityFinder({
+            type: 'organisation',
+            onSelectSuggestion: function (elem, orgId, actualId, type) {
+                $this.$salesTeamInput.val(orgId);
+            }
+        });
+        
+        $this.$salesTeamSearchInput = salesTeamDiv.find('.search-input');
     }
 
     salesDataClaimForm.prototype.addEmptyRow = function () {
@@ -102,16 +115,16 @@
 
         $this.$elem.data('claimid', data.recordId);
 
-        // Populate Sales Team
-        var salesTeamDiv = $this.$elem.find('.sales-team');
-        var salesTeamInput = salesTeamDiv.find('input');
-
         if (data.salesTeamOrgId && data.salesTeamOrgId.length > 0) {
-            salesTeamInput.val(data.salesTeamOrgId);
-            salesTeamDiv.show();
+            $this.$salesTeamInput.val(data.salesTeamOrgId);
+            $this.$salesTeamInput.data('text', data.salesTeamOrgId);
+            $this.$salesTeamSearchInput.data('current-value', data.salesTeamOrgId);
+            $this.$salesTeamSearchInput.val(data.salesTeamOrgId);
         } else {
-            salesTeamDiv.hide();
-            salesTeamInput.val('');
+            $this.$salesTeamInput.val('');
+            $this.$salesTeamInput.data('text', '');
+            $this.$salesTeamSearchInput.data('current-value', '');
+            $this.$salesTeamSearchInput.val('');
         }
 
         // Populate rows

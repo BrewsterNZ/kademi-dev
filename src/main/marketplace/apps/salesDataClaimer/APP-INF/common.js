@@ -339,6 +339,8 @@ function updateClaim(page, params, files) {
             var now = formatter.formatDateISO8601(formatter.now);
             var claimJson = JSON.parse(claim.json);
 
+            appendSalesTeam(page, params, claimJson, true);
+
             claimJson.modifiedDate = now;
 
             if (params.claimType) {
@@ -557,7 +559,7 @@ function createOrUpdateClaimItem(claimObj, claimJson, claimItems) {
     claimObj.update(JSON.stringify(claimJson));
 }
 
-function getSalesTeam(page) {
+function getSalesTeam(page, params) {
     // Check if it's a website
     var website = page.closest('website');
     var isWebsite = isNotNull(website);
@@ -565,13 +567,15 @@ function getSalesTeam(page) {
 
     if (isWebsite) {
         salesTeam = services.queryManager.currentTeamOrg;
+    } else if (isNotBlank(params.salesTeam)) {
+        salesTeam = services.organisationManager.findOrg(params.salesTeam);
     }
 
     return salesTeam;
 }
 
 function appendSalesTeam(page, params, json, useNull) {
-    var salesTeam = getSalesTeam(page);
+    var salesTeam = getSalesTeam(page, params);
 
     if (isNotNull(salesTeam)) {
         json.salesTeamOrgId = salesTeam.orgId;
