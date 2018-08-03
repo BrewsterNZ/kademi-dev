@@ -266,6 +266,15 @@
         var inputImage = form.find('[name=claimImage]');
         var thumbImg = form.find('.thumbnail img');
         var btnUpload = form.find('.btn-upload-image-claim');
+        var salesTeamInput = form.find('[name="salesTeam"]');
+
+        // Init Entity finder :-)
+        salesTeamInput.entityFinder({
+            type: 'organisation',
+            onSelectSuggestion: function (elem, orgId, actualId, type) {
+                salesTeamInput.val(orgId);
+            }
+        });
 
         modal.on('hidden.bs.modal', function () {
             form.trigger('reset');
@@ -439,7 +448,7 @@
 
             // Get Claim Data
             $.ajax({
-                url: MAIN_URL + 'claim-3824fcf5-e314-4045-8156-9754b866d45d/',
+                url: MAIN_URL + id  + '/',
                 type: 'GET',
                 dataType: 'JSON',
                 success: function (resp) {
