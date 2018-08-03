@@ -1,0 +1,77 @@
+#
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage Derived Field</title>
+    </head>
+    <body class="">
+
+        <form class="form-horizontal" action="$page.href" method="POST" id="form-edit">
+            <button type="submit" class="btn btn-success">Save</button>
+
+            <h2>Field $page.field.title, of type $page.field.type</h2>
+
+            <div class="form-group">
+                <label for="title" class="control-label col-md-2">Field title</label>
+
+                <div class="col-md-5">
+                    <input type="text" class="form-control" name="title" value="$!page.field.title" />
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="title" class="control-label col-md-2">Help text</label>
+
+                <div class="col-md-5">
+                    <input type="text" class="form-control" name="text" value="$!page.field.text" />
+                    <small>Additional text to display with this field in edit forms</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="required" class="control-label col-md-2">Required</label>
+
+                <div class="col-md-1">
+                    <input type="checkbox" class="form-control" value="true" $formatter.ifTrue($page.field.required, "checked", "" )   />
+                </div>
+            </div>
+
+
+            #if( $page.field.type == "text" )
+            <div class="form-group">
+                <label for="rows" class="control-label col-md-2">Rows</label>
+
+                <div class="col-md-2">
+                    <input type="text" class="form-control" name="rows" value="$!page.field.rows" />
+                    <small>For text area inputs only</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="required" class="control-label col-md-2">Options</label>
+
+                <div class="col-md-8">
+                    <textarea name="optionsText" class="form-control" rows="10">#foreach($entry in $fieldDef.options )
+        $entry.key,$entry.value
+    #end</textarea>
+                    <small>For text </small>
+                </div>
+            </div>
+            #end
+
+
+        </form>
+
+        <script>
+            $(function () {
+                $("#form-edit").forms({
+                    onSuccess: function (resp) {
+                        if (resp.status) {
+                            Msg.info("Saved ok");
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

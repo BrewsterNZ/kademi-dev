@@ -73,11 +73,11 @@
                     </tbody>
                 </table>
             </div>
-        </div>        
+        </div>
         #end
 
 
-        
+
 
 
         <div class="new-field-modals">
@@ -92,24 +92,28 @@
                             <input type="hidden" name="newFieldType" value="typedField" />
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <label for="name" class="control-label col-md-4">Name</label>
-
-                                    <div class="col-md-8">
-                                        <input type="text" class="form-control required" name="name" value="" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <label for="title" class="control-label col-md-4">Title</label>
 
                                     <div class="col-md-8">
                                         <input type="text" class="form-control required" name="title" value="" />
                                     </div>
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="text" class="control-label col-md-4">Text</label>
+                                    <label for="name" class="control-label col-md-4">ID</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="name" value="" />
+                                        <small>Identifier for this field, used internally</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="text" class="control-label col-md-4">Help text</label>
 
                                     <div class="col-md-8">
                                         <input type="text" class="form-control" name="text" value="" />
+                                        <small>Additional text to display with this field in edit forms</small>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -117,14 +121,15 @@
 
                                     <div class="col-md-8">
                                         <select name="type" class="form-control">
-                                            <option>date</option>
-                                            <option>datetime-local</option>
-                                            <option>text</option>
-                                            <option>integer</option>
-                                            <option>decimal</option>
+                                            <option value="text">Text</option>
+                                            <option value="integer">Integer</option>
+                                            <option value="decimal">Decimal</option>
+                                            <option value="date">Date</option>
+                                            <option value="datetime-local">Date and Time</option>
                                         </select>
                                     </div>
                                 </div>
+                                
                                 <div class="form-group">
                                     <label for="required" class="control-label col-md-4">Required</label>
 

@@ -1,13 +1,14 @@
-#if( $fieldDef.options.length() > 0 )
+#set( $displayVal = $renderer.formatValueForInput($fieldValue, $fieldDef) )
+#if( $fieldDef.options.size() > 0 )
 <select name="$fieldDef.name" class="form-control">
-
+    #foreach($entry in $fieldDef.options )
+        $formatter.option( $entry.key, $entry.value, $displayVal )
+    #end
 </select>
 #else
-
-#set( $displayVal = $renderer.formatValueForInput($fieldValue, $fieldDef) )
-<input name="$fieldDef.name" class="form-control" type="$fieldDef.type" placeholder="$!fieldDef.text" value="$!displayVal"
-    #if( $fieldDef.required)
-    required="true"
-    #end
-       />
+#if( $fieldDef.rows && $fieldDef.rows > 0 )
+<textarea name="$fieldDef.name" class="form-control" rows="$fieldDef.rows"  #if( $fieldDef.required) required="true" #end >$!displayVal</textarea>
+#else
+<input name="$fieldDef.name" class="form-control" type="$fieldDef.type" placeholder="$!fieldDef.text" value="$!displayVal" #if( $fieldDef.required) required="true" #end />
+#end
 #end
