@@ -7,28 +7,111 @@ controllerMappings.addComponent("salesdata/components", "onTrackAllKpis", "html"
 
 
 controllerMappings.addComponent("salesdata/components", "kpiLeaderboardEDM")
-    .addType("edm")
-    .desc("Shows a leaderboard that includes current participant, for a selected KPI")
-    .categories("Sales data")
-    .addDefaultAtt("header-bg-color", "#eeeeee")
-    .addDefaultAtt("body-bg-color", "#fafafa")
-    .addDefaultAtt("cell-padding", "5")
-    .build();
+        .addType("edm")
+        .desc("Shows a leaderboard that includes current participant, for a selected KPI")
+        .categories("Sales data")
+        .addDefaultAtt("header-bg-color", "#eeeeee")
+        .addDefaultAtt("body-bg-color", "#fafafa")
+        .addDefaultAtt("cell-padding", "5")
+        .build();
 
 controllerMappings
-    .websiteController()
-    .enabled(true)
-    .path('/getTopSkus')
-    .addMethod('GET', 'getTopSkus')
-    .build();
+        .websiteController()
+        .enabled(true)
+        .path('/getTopSkus')
+        .addMethod('GET', 'getTopSkus')
+        .build();
 
 controllerMappings
-    .websiteController()
-    .enabled(true)
-    .path('/topSkus.csv')
-    .addMethod('GET', 'getTopSkusCSV')
-    .defaultView(views.textTemplateView('/theme/apps/3mExtraComponents/csv.html', 'text/csv'))
-    .build();
+        .websiteController()
+        .enabled(true)
+        .path('/topSkus.csv')
+        .addMethod('GET', 'getTopSkusCSV')
+        .defaultView(views.textTemplateView('/theme/apps/3mExtraComponents/csv.html', 'text/csv'))
+        .build();
+
+controllerMappings
+        .adminController()
+        .enabled(true)
+        .path('/sales-incentives.csv')
+        .addMethod('GET', 'exportSalesIncentives')
+        .build();
+
+
+function exportSalesIncentives(page, params) {
+
+    var paginator = formatter.paginator(10).skipToStart(false); // todo change to 100
+    var query = buildSalesIncentQuery();
+    var totalRecs = formatter.safeGet(query.rowCount("count").execute(1), 0);
+    paginator.totalRecords(totalRecs);
+
+    query = buildSalesIncentQuery();
+
+    var recs = services.queryManager.newRowsResult();
+    var pages = paginator.allPageSearchProps;
+    for (var p = 0; p < pages.size(); p++) {
+        var searchProps = pages[p];
+        var allocs = query.execute(searchProps);
+
+        var mapOfSalesRecs = findSalesRecs(allocs);
+
+        for (var i = 0; i < allocs.size(); i++) {
+            var alloc = allocs[i];
+            recs.addRow();
+            recs.addCell(alloc.id);
+            recs.addCell(alloc.pointsAmount);
+
+            var ids = formatter.split(alloc.salesDataRecordIds);
+
+            var salesRecs = getSalesRecs(mapOfSalesRecs, ids);
+            for (var r = 0; r < salesRecs.size(); r++) {
+                var rec = salesRecs[r];
+            }
+            // sale amount
+
+            recs.flush();
+        }
+    }
+
+    return views.rowsResultCsvView(recs);
+}
+
+function getSalesRecs(mapOfSalesRecs, ids) {
+    var listOfSalesRecs = formatter.newArrayList();
+    for (var i = 0; i < ids.size(); i++) {
+        var id = ids[i];
+        var rec = mapOfSalesRecs.get(id);
+        listOfSalesRecs.add(rec);
+    }
+    return listOfSalesRecs;
+}
+
+/**
+ * Pre-load sales records by ID for performance
+ *
+ * @param {type} allocs
+ * @returns {undefined}
+ */
+function findSalesRecs(allocs) {
+    var listOfIds = formatter.newArrayList();
+    for (var i = 0; i < allocs.size(); i++) {
+        var alloc = allocs[i];
+        var ids = formatter.split(alloc.salesDataRecordIds);
+        listOfIds.addAll(ids);
+    }
+    var salesRecs = services.criteriaBuilders.get("salesDataRecord").in("id", listOfIds).execute(1000);
+    var map = formatter.newMap();
+    for (var r = 0; r < salesRecs.size(); r++) {
+        var rec = salesRecs[r];
+        map.put(rec.id, rec);
+    }
+    return map;
+}
+
+function buildSalesIncentQuery() {
+    var query = services.criteriaBuilders.get("pointsAllocation").ge("createdDate", services.queryManager.commonStartDate).lt("createdDate", services.queryManager.commonFinishDate);
+    return query;
+}
 
 function getTopSkusData(page, params) {
     log.info('getTopSkusData > page={}, params={}, queryService={}', page, params, queryService);
@@ -113,7 +196,6 @@ function getTopSkusData(page, params) {
                         "field": "amount"
                     }
                 },
-
                 "skuQuantity": {
                     "top_hits": {
                         "_source": {
