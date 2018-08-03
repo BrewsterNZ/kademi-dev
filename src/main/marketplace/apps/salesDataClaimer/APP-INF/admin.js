@@ -173,6 +173,12 @@ function approveClaims(page, params) {
                             dp.entered = dp.periodFrom; // should be claim date
                             dp.productSku = claimItem.productSku;
 
+                            // Add salesTeam - #5781
+                            var salesTeamOrgId = claimOb.salesTeamOrgId;
+                            if (isNotNull(salesTeamOrgId)) {
+                                dp.salesTeam = services.organisationManager.findOrg(salesTeamOrgId);
+                            }
+
                             if (isNotNull(claimOb.enteredById)) {
                                 var enteredBy = services.userManager.findById(claimOb.enteredById);
                                 dp.enteredBy = enteredBy;

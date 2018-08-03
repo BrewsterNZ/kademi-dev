@@ -38,6 +38,15 @@ var recordMapping = {
             "type": "long",
             "store": true
         },
+        "salesTeamOrgId": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
         "receipt": {
             "type": "keyword",
             "store": true,
