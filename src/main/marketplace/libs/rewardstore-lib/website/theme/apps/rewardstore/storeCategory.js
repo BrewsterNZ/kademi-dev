@@ -33,7 +33,7 @@
     
     function initProductSearch() {
         var timer;
-        $('#searchBoxInput[data-type=RewardProducts]').on('keydown', function () {
+        $('#omniSearchInput[data-type=RewardProducts]').on('input', function () {
             var input = $(this);
             
             clearTimeout(timer);
