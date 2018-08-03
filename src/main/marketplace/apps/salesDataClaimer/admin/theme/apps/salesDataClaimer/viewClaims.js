@@ -349,6 +349,14 @@
 
                         claimItemsBody.empty();
 
+                        if (resp.data.salesTeamOrgId && resp.data.salesTeamOrgId.length > 0) {
+                            modalReview.find('.sales-team').find('input').val(resp.data.salesTeamOrgId);
+                            modalReview.find('.sales-team').show();
+                        } else {
+                            modalReview.find('.sales-team').find('input').val('');
+                            modalReview.find('.sales-team').hide();
+                        }
+
                         // Load Claim Items
                         if (resp.data && resp.data.claimItems) {
                             $.each(resp.data.claimItems, function (_, item) {
@@ -397,6 +405,11 @@
             e.preventDefault();
 
             var tableBody = modalProcess.find('#table-ocr-manager-body');
+            var salesTeamDiv = modalProcess.find('.sales-team');
+            var salesTeamInput = salesTeamDiv.find('input');
+
+            salesTeamDiv.hide();
+            salesTeamInput.val('');
 
             tableBody.empty();
 
@@ -424,6 +437,25 @@
 
             $('.btn-reject-image-claims').attr('data-id', btn.data('id'));
 
+            // Get Claim Data
+            $.ajax({
+                url: MAIN_URL + 'claim-3824fcf5-e314-4045-8156-9754b866d45d/',
+                type: 'GET',
+                dataType: 'JSON',
+                success: function (resp) {
+                    flog('OCR data', resp);
+
+                    if (resp.status && resp.data && resp.data.salesTeamOrgId && resp.data.salesTeamOrgId.length > 0) {
+                        salesTeamInput.val(resp.data.salesTeamOrgId);
+                        salesTeamDiv.show();
+                    } else {
+                        salesTeamDiv.hide();
+                        salesTeamInput.val('');
+                    }
+                }
+            });
+
+            // Get OCR file
             $.ajax({
                 url: url,
                 type: 'get',

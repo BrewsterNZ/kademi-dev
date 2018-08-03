@@ -100,9 +100,19 @@
 
         $this.reset.call($this);
 
-        console.log('populate', data, arguments);
-
         $this.$elem.data('claimid', data.recordId);
+
+        // Populate Sales Team
+        var salesTeamDiv = $this.$elem.find('.sales-team');
+        var salesTeamInput = salesTeamDiv.find('input');
+
+        if (data.salesTeamOrgId && data.salesTeamOrgId.length > 0) {
+            salesTeamInput.val(data.salesTeamOrgId);
+            salesTeamDiv.show();
+        } else {
+            salesTeamDiv.hide();
+            salesTeamInput.val('');
+        }
 
         // Populate rows
         if (data.claimItems) {
