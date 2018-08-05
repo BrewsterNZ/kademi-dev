@@ -27,9 +27,18 @@ controllerMappings.addEventListenerForType('co.kademi.server.recognition.Shareab
 
 function onShareableItemEvent(rf, raae) {
     if (raae.isShareable()) {
-        var teamOrg = findTeamOrg(raae.sourceProfile);
-        var newItem = services.forumManager.newWallSharedItem(teamOrg, raae);
-        log.info("onShareableItemEvent: Created RAP ID={}", newItem.getId());
+        if (raae.contentIds != null && !raae.contentIds.isEmpty()) {
+            for (var contentIdIndex in raae.contentIds) {
+                var contentId = raae.contentIds[contentIdIndex];
+                
+                var newItem = services.forumManager.newWallSharedItem(contentId, raae);
+                log.info("onShareableItemEvent: Created RAP ID={}", newItem.getId());
+            }
+        } else {
+            var teamOrg = findTeamOrg(raae.sourceProfile);
+            var newItem = services.forumManager.newOrgWallSharedItem(teamOrg, raae);
+            log.info("onShareableItemEvent: Created RAP ID={}", newItem.getId());
+        }
     }
 }
 
@@ -42,17 +51,17 @@ function resolveTeam(page, groupName, teamOrgId) {
 function post(page, params, files, form) {
     transactionManager.runInTransaction(function () {
         var newPost = form.cleanedParam("newPost");
-        var teamOrgId = form.longParam("teamOrgId"); // nullable, long
-        var teamOrg;
+        var wallId = form.rawP("wallId"); // nullable, long
         
-        if (teamOrgId == null) {
+        if (wallId == null) {
             var currentUser = securityManager.currentUser;
-            teamOrg = findTeamOrg(currentUser.thisProfile);
-        } else {
-            teamOrg = page.find("/").childOrg(teamOrgId);
+            
+            var teamOrg = findTeamOrg(currentUser.thisProfile);
+            
+            wallId = "wall-" + teamOrg.id;
         }
         
-        var createdPost = services.forumManager.post(teamOrg, newPost);
+        var createdPost = services.forumManager.post(wallId, newPost);
         
         var taggedProfiles = form.listLongsParam("taggedProfiles");
         
