@@ -30,6 +30,7 @@
                             <td>
                                 <input type="hidden" name="appId" value="$app.id" />
                                 <input type="hidden" name="userId" value="$app.member.id" />
+                                <input type="hidden" name="userName" value="$app.member.name" />
                                 <div class="btn-group btn-group-sm">
                                     #if($app.member.firstName || $app.member.surName || $app.fields.nvPairs.size() > 0)
                                     <button type="button" class="btn btn-info btn-show-more" data-toggle="collapse" data-target="#det-div-$app.id" title="Show more details">
