@@ -91,7 +91,7 @@
                 <h4 class="modal-title">Post</h4>
             </div>
             <form method="POST" action="/kforums" class="form-horizontal forum-post-form" data-forum-id="$forum.id">
-                <input type="hidden" name="teamOrgId" value="$!page.attributes.teamOrgId.id" />
+                <input type="hidden" name="wallId" value="wall-$!page.attributes.teamOrgId.id" />
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="comment">Details</label>

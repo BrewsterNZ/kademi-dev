@@ -51,17 +51,17 @@ function resolveTeam(page, groupName, teamOrgId) {
 function post(page, params, files, form) {
     transactionManager.runInTransaction(function () {
         var newPost = form.cleanedParam("newPost");
-        var teamOrgId = form.longParam("teamOrgId"); // nullable, long
-        var teamOrg;
+        var wallId = form.longParam("wallId"); // nullable, long
         
-        if (teamOrgId == null) {
+        if (wallId == null) {
             var currentUser = securityManager.currentUser;
-            teamOrg = findTeamOrg(currentUser.thisProfile);
-        } else {
-            teamOrg = page.find("/").childOrg(teamOrgId);
+            
+            var teamOrg = findTeamOrg(currentUser.thisProfile);
+            
+            wallId = "wall-" + teamOrg.id;
         }
         
-        var createdPost = services.forumManager.post(teamOrg, newPost);
+        var createdPost = services.forumManager.post(wallId, newPost);
         
         var taggedProfiles = form.listLongsParam("taggedProfiles");
         
