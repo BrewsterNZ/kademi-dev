@@ -69,7 +69,6 @@ function exportSalesIncentives(page, params) {
         var mapOfSalesRecs = findSalesRecs(allocs);
 
         formatter.foreach(allocs, function (alloc) {
-            log.info("Process alloc id={}", alloc.id);
             recs.addRow();
             recs.addCell(alloc.id);
             recs.addCell(alloc.source.title);
@@ -81,7 +80,6 @@ function exportSalesIncentives(page, params) {
 
             var i = 0;
             formatter.foreach(salesRecs, function (rec) {
-                log.info("sales record id={}", rec.id);
                 if (i++ > 0) {
                     recs.addRow();
                     recs.addCell("");
