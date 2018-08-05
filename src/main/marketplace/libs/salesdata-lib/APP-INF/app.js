@@ -49,40 +49,77 @@ function exportSalesIncentives(page, params) {
 
     var recs = services.queryManager.newRowsResult();
     var pages = paginator.allPageSearchProps;
-    for (var p = 0; p < pages.size(); p++) {
-        var searchProps = pages[p];
+
+    recs.addRow();
+    recs.addCell("Allocation ID");
+    recs.addCell("Allocation source");
+    recs.addCell("Allocation date");
+    recs.addCell("Points");
+    recs.addCell("Sales amount");
+    recs.addCell("Sales by");
+    recs.addCell("Sales date");
+    recs.addCell("Sales series");
+    recs.addCell("Sales team");
+    recs.addCell("Sales territory");
+
+    formatter.foreach(pages, function (searchProps) {
+        log.info("Process page {}", searchProps);
         var allocs = query.execute(searchProps);
 
         var mapOfSalesRecs = findSalesRecs(allocs);
 
-        for (var i = 0; i < allocs.size(); i++) {
-            var alloc = allocs[i];
+        formatter.foreach(allocs, function (alloc) {
+            log.info("Process alloc id={}", alloc.id);
             recs.addRow();
             recs.addCell(alloc.id);
+            recs.addCell(alloc.source.title);
+            recs.addCell(alloc.createdDate);
             recs.addCell(alloc.pointsAmount);
 
-            var ids = formatter.split(alloc.salesDataRecordIds);
-
+            var ids = formatter.toList(formatter.split(alloc.salesDataRecordIds));
             var salesRecs = getSalesRecs(mapOfSalesRecs, ids);
-            for (var r = 0; r < salesRecs.size(); r++) {
-                var rec = salesRecs[r];
-            }
-            // sale amount
 
+            var i = 0;
+            formatter.foreach(salesRecs, function (rec) {
+                log.info("sales record id={}", rec.id);
+                if (i++ > 0) {
+                    recs.addRow();
+                    recs.addCell("");
+                    recs.addCell("");
+                    recs.addCell("");
+                    recs.addCell("");
+                }
+                recs.addCell(rec.amount);
+                recs.addCell(rec.salesBy.formattedName);
+                recs.addCell(rec.periodFrom);
+                recs.addCell(rec.series.title);
+                recs.addCell(rec.productSku);
+                if (rec.salesTeam != null) {
+                    recs.addCell(rec.salesTeam.formattedName);
+                    if (formatter.isBlank(rec.salesTeam.organisation.adminDomain)) {
+                        recs.addCell(rec.salesTeam.organisation.formattedName);
+                    }
+                }
+            });
             recs.flush();
-        }
-    }
+        });
+    });
 
     return views.rowsResultCsvView(recs);
 }
 
+
 function getSalesRecs(mapOfSalesRecs, ids) {
     var listOfSalesRecs = formatter.newArrayList();
-    for (var i = 0; i < ids.size(); i++) {
-        var id = ids[i];
+    formatter.foreach(ids, function (id) {
+        id = formatter.toLong(id);
         var rec = mapOfSalesRecs.get(id);
-        listOfSalesRecs.add(rec);
-    }
+        if (rec != null) {
+            listOfSalesRecs.add(rec);
+        } else {
+            log.info("getSalesRecs: record not found {} map size={}", id, mapOfSalesRecs.size());
+        }
+    });
     return listOfSalesRecs;
 }
 
@@ -96,13 +133,16 @@ function findSalesRecs(allocs) {
     var listOfIds = formatter.newArrayList();
     for (var i = 0; i < allocs.size(); i++) {
         var alloc = allocs[i];
-        var ids = formatter.split(alloc.salesDataRecordIds);
-        listOfIds.addAll(ids);
+        var ids = formatter.toList(formatter.split(alloc.salesDataRecordIds));
+        formatter.foreach(ids, function (id) {
+            listOfIds.add(formatter.toLong(id));
+        });
     }
     var salesRecs = services.criteriaBuilders.get("salesDataRecord").in("id", listOfIds).execute(1000);
     var map = formatter.newMap();
     for (var r = 0; r < salesRecs.size(); r++) {
         var rec = salesRecs[r];
+        log.info("Add item to map: {}", rec.id);
         map.put(rec.id, rec);
     }
     return map;
