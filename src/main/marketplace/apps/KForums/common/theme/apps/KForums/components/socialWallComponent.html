@@ -12,7 +12,7 @@
 #if ( $isFeed)
     #set( $postsResp = $applications.KForums.call("doPostsFeedSearch", null, 0, 100) )
 #else
-    #set( $postsResp = $applications.KForums.call("doWallSearch", $page.attributes.teamOrgId.id, 0, 100) )
+    #set( $postsResp = $applications.KForums.call("doOrgWallSearch", $page.attributes.teamOrgId.id, 0, 100) )
 #end
 
 
