@@ -40,7 +40,7 @@ controllerMappings
 
 function exportSalesIncentives(page, params) {
 
-    var paginator = formatter.paginator(10).skipToStart(false); // todo change to 100
+    var paginator = formatter.paginator(100).skipToStart(false); // todo change to 100
     var query = buildSalesIncentQuery();
     var totalRecs = formatter.safeGet(query.rowCount("count").execute(1), 0);
     paginator.totalRecords(totalRecs);
