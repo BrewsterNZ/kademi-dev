@@ -1,43 +1,47 @@
 <div class="well well-memberships">
-    <form action="$request.absolutePath" method="POST" class="form-inline memberships">
-        <img class='ajax-loader' src='/static/common/loading.gif'/>
-        <h4>Memberships</h4>
+    <h4>Memberships</h4>
 
 
-        <ul class='list-unstyled memberships'>
-            #foreach($membership in $profile.primaryMemberships())
-            <li>
-                Member of the <b>$membership.groupTitle</b> group 
-                #if( $membership.org.isAdminDomain() )
-                #else
-                in
-                <b>$membership.org.title</b>
-                #end
-
-            <acronym title='Remove this membership'>
-                <a href='$membership.id' class='membership-remove'><i class="fa fa-times"></i><span>Remove</span></a>
-            </acronym>
-            </li>
+    <ul class='list-unstyled memberships'>
+        #foreach($membership in $profile.primaryMemberships())
+        <li>
+            Member of the <b>$membership.groupTitle</b> group 
+            #if( $membership.org.isAdminDomain() )
+            #else
+            in
+            <b>$membership.org.title</b>
             #end
-        </ul>
-        
 
-        #set( $groups = $profile.primaryMemberships().toGroupsList() )
-        #foreach( $group in $groups )
-        <button>group - $group.name</button>
+        <acronym title='Remove this membership'>
+            <a href='$membership.id' class='membership-remove'><i class="fa fa-times"></i><span>Remove</span></a>
+        </acronym>
+        </li>
         #end
-    </form>
+    </ul>
+
+
+    #set( $groups = $profile.primaryMemberships().toGroupsList() )
+    #foreach( $group in $groups )
+    <button class="btn btn-primary" data-toggle="modal" data-target="#profile-add-org-$group.name">
+        <i class="fa fa-plus"></i>
+        Join $group.title
+    </button>
+    #end
 </div>
 
-<div id="myModal" class="modal profile-change-org" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+#set( $groups = $profile.primaryMemberships().toGroupsList() )
+#foreach( $group in $groups )
+<div id="profile-add-org-$group.name" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Change membership</h4>
+                <h4 class="modal-title">New $group.title membership</h4>
             </div>
             <div class="modal-body modal-overflow"  id="changeOrgModalBody">
-                <p></p>
+                <p>Please enter the organisation you want to join</p>
+                <input type="hidden" name="orgId" id="orgId" />
+                <input class="required form-control" type="text" name="orgName" id="orgName" autocomplete="off" placeholder="Choose your $orgType" />
             </div>
             <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -46,3 +50,5 @@
         </div>
     </div>
 </div>
+
+#end
