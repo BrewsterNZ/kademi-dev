@@ -2,22 +2,30 @@
     <form action="$request.absolutePath" method="POST" class="form-inline memberships">
         <img class='ajax-loader' src='/static/common/loading.gif'/>
         <h4>Memberships</h4>
+
+
         <ul class='list-unstyled memberships'>
-            #foreach($membership in $page.memberships)
+            #foreach($membership in $profile.primaryMemberships())
             <li>
-                Member of the <b>$membership.groupEntity.name</b> group in
-                #if( $membership.groupEntity.openGroup )
-                <a href="?changeMemberOrg=${membership.id} .change-org-modal-content" data-toggle="modal" data-target="#myModal">$membership.withinOrg.formattedName</a>
+                Member of the <b>$membership.groupTitle</b> group 
+                #if( $membership.org.isAdminDomain() )
                 #else
-                <b>$membership.withinOrg.formattedName</b>
+                in
+                <b>$membership.org.title</b>
                 #end
 
-            <acronym title='Remove this membership. If this is your last membership you will lose access to this site'>
+            <acronym title='Remove this membership'>
                 <a href='$membership.id' class='membership-remove'><i class="fa fa-times"></i><span>Remove</span></a>
             </acronym>
             </li>
             #end
         </ul>
+        
+
+        #set( $groups = $profile.primaryMemberships().toGroupsList() )
+        #foreach( $group in $groups )
+        <button>group - $group.name</button>
+        #end
     </form>
 </div>
 
