@@ -48,7 +48,7 @@ function initProfile() {
         }
     });
 
-    $('label.optin input').change(function (e) {
+    $('.well-opt-int input[name=optins][type=checkbox]').change(function (e) {
         e.preventDefault();
         e.stopPropagation();
         var target = $(e.target);

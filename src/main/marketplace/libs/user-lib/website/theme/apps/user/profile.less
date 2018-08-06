@@ -79,3 +79,30 @@ body.login-page, body.reset-password{
 .errorHandler.no-display{
     display: none;
 }
+
+.well-opt-int {
+    ul.memberships {
+        padding:0;
+        li {
+            border: none;
+            display: inline-block;
+            label {
+                position: relative;
+                margin: 0 5px 5px 0;
+                font-weight: 600;
+                padding: 8px 15px;
+                cursor: pointer;
+                border: 1px solid @brand-primary;
+
+            }
+            input[type="checkbox"] {
+                position: absolute;
+                opacity:0;
+                &:checked + label {
+                    color: white;
+                    background:@brand-primary;
+                }
+            }
+        }
+    }
+}
