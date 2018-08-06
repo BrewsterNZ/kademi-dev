@@ -8,7 +8,7 @@ function initProfile() {
 
     $('.profile-add-membership form').forms({
         onSuccess: function (resp, form) {
-            $('#profile-memberships').reloadFragment();
+            $('#profile-memberships, #profileMembershipApplications').reloadFragment();
         },
         confirmMessage: 'Submitted membership'
     });

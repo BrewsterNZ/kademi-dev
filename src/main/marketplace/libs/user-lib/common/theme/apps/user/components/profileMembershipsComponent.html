@@ -64,6 +64,7 @@
 </div>
 #end
 
+<div id="profileMembershipApplications">
 #set( $gmas = $services.userManager.findPendingMembershipApplications($user) )
 #if( $gmas.isEmpty() )
 #else
@@ -96,3 +97,4 @@
     </table>
 </div>
 #end
+</div>
