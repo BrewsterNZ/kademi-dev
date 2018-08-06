@@ -1,12 +1,15 @@
 #if($page)
-    #set($profiles = $page.find('/profile').getMailingLists())
-    #if( $profiles.size() gt 0 )
+    #set($profileOptinsSet = $page.find('/profile').getMailingLists())
+    #set ($optinsArrayList = $formatter.newArrayList())
+    #set ($add = $optinsArrayList.addAll($profileOptinsSet))
+    #set ($optinsArrayList = $formatter.sortByProperty($optinsArrayList, "id"))
+    #if( $optinsArrayList.size() gt 0 )
     <div class="well well-opt-int">
         <form action="." method="POST" class="form-inline optins profile-panel">
             <img class='ajax-loader' src='/static/common/loading.gif'/>
             <h2>Interests</h2>
             <ul class='list memberships'>
-                #foreach($optin in $profiles)
+                #foreach($optin in $optinsArrayList)
                 <li>
                     #set($id = "optins_" + $optin.optinGroup.name)
                     $formatter.checkbox($id, "optins", $user.isInGroup($optin.optinGroup) , $optin.optinGroup.name)
