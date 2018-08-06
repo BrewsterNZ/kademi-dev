@@ -6,6 +6,14 @@ function initProfile() {
         }
     });
 
+    $('.profile-add-membership form').forms({
+        onSuccess: function (resp, form) {
+
+        },
+        confirmMessage: 'Submitted membership'
+    });
+
+
     $('.form-unsubscribe').forms({
         validate: function () {
             return confirm('Are you sure you want to unsubscribe? You will no longer be able to access this site');
@@ -27,16 +35,17 @@ function initProfile() {
         e.preventDefault();
         e.stopPropagation();
         var target = $(e.target).closest('a');
-        flog('remove', $('form.memberships'));
+
         if ($('form.memberships li').length === 1) {
             if (!confirm('WARNING: If you delete this membership you will not be able to access this site. Are you sure you want to delete this membership?')) {
                 return;
             }
         }
         var li = target.closest('li');
-        flog('deleteMembership', target);
-        deleteMembership(li, target.attr('href'));
 
+        if( confirm('Are you sure you want to remove this membership?') ) {
+            deleteMembership(li, target.attr('href'));
+        }
     });
 
     $('label.optin input').change(function (e) {
