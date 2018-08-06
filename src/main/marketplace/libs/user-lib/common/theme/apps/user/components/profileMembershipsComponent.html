@@ -2,7 +2,7 @@
     <h4>Memberships</h4>
 
 
-    <ul class='list-unstyled memberships'>
+    <ul class='list-unstyled memberships' id="profile-memberships">
         #foreach($membership in $profile.primaryMemberships())
         <li>
             Member of the <b>$membership.groupTitle</b> group
@@ -47,9 +47,11 @@
             </div>
             <form method="POST" action="/profile-memberships">
                 <input type="hidden" name="groupName" value="$group.name" />
+                <input type="hidden" name="orgId" value="" />
                 <div class="modal-body modal-overflow"  id="changeOrgModalBody">
                     <p>Please enter the $orgType you want to join</p>
-                    <input class="required form-control" type="text" name="orgId" id="orgId" autocomplete="off" placeholder="Choose your $orgType" />
+                    <input class="required form-control" type="text" name="orgTitleSearch" autocomplete="off" placeholder="Choose your $orgType" />
+                    <br>
                 </div>
                 <div class="modal-footer">
                     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>

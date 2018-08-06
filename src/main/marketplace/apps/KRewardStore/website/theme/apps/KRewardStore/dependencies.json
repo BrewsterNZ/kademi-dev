@@ -30,7 +30,7 @@
         },
         {
             "appId": "user-lib",
-            "branch": "1.2.8"
+            "branch": "1.3.2"
         }
   ]
 }

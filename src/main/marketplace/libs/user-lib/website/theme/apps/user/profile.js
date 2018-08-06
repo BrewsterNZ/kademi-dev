@@ -8,7 +8,7 @@ function initProfile() {
 
     $('.profile-add-membership form').forms({
         onSuccess: function (resp, form) {
-
+            $('#profile-memberships').reloadFragment();
         },
         confirmMessage: 'Submitted membership'
     });
@@ -31,7 +31,7 @@ function initProfile() {
         $(e.target).closest('.modal').find('form').trigger('submit');
     });
 
-    $('.membership-remove').click(function (e) {
+    $(document).on('click', '.membership-remove', function (e) {
         e.preventDefault();
         e.stopPropagation();
         var target = $(e.target).closest('a');

@@ -17,8 +17,10 @@ controllerMappings.addComponent("user/components", "loginAsUser", ['lead', 'prof
 controllerMappings
         .websiteController()
         .enabled(true)
+        .isPublic(true)
         .path('/profile-memberships')
         .addMethod('POST', 'newMembership')
+        .postPriviledge("READ_CONTENT")
         .build();
 
 
