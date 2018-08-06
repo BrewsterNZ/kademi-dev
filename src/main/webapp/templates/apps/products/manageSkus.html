@@ -167,7 +167,19 @@
                             <a href="javascript:void(0)" title="Remove Image" class="btn btn-danger btn-remove-img" #if(!$foundSku) disabled="disabled" #end><i class="fa fa-times"></i></a>
                         </div>
                     </td>
-                    <td><a href="/products/$product.id">$product.title</a></td>
+                    <td>
+                        <a href="/products/$product.id">$product.title</a>
+                        <br/>
+                        #if( $variant.productSku.field1 )
+                        <span class="label label-info">$variant.productSku.field1</span>
+                        #end
+                        #if( $variant.productSku.field2 )
+                        <span class="label label-info">$variant.productSku.field2</span>
+                        #end
+                        #if( $variant.productSku.field3 )
+                        <span class="label label-info">$variant.productSku.field3</span>
+                        #end
+                    </td>
                     <td>
                         #foreach($opt in $variant.options)
                             <strong>$opt.productParameter.title:</strong> $opt.title
