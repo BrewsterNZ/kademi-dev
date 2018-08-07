@@ -111,6 +111,12 @@
                 "group": "main",
                 "path": "/theme/apps/rewardstore/pointsTransaction.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/rewardstore/pointsUserPanel.js"
+            }
         }
     ]
 }
