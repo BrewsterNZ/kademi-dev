@@ -22,22 +22,11 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
                         component.attr('data-sales-data-series', this.value);
                         keditor.initDynamicContent(dynamicElement);
-
-
-                        $.ajax({
-                            url: "/sales/" + this.value + "?kpis",
-                            type: 'GET',
-                            dataType: 'json',
-                            success: function (resp) {
-                                flog(resp);
-                                if (resp.status) {
-                                    $.each(resp.data, function () {
-                                        form.find(".select-kpis").append($("<option />").val(this.name).text(this.title));
-                                    });
-                                }
-                            }
-                        });
-
+                        form.find('.select-kpis').find('option').not('.none').addClass('hide');
+                        if (this.value){
+                            form.find('.select-kpis').find('option[data-series='+this.value+']').removeClass('hide');
+                        }
+                        form.find('.select-kpis').val('');
                     });
 
                     form.find('.select-kpis').on('change', function () {
@@ -113,25 +102,8 @@
             var salesDataSeries = dataAttributes['data-sales-data-series'];
             var kpi = dataAttributes['data-kpi'];
 
-            form.find('.select-sales-data-series').val(salesDataSeries);
-
-            if (salesDataSeries !== "") {
-
-                $.ajax({
-                    url: "/sales/" + salesDataSeries + "?kpis",
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (resp) {
-                        flog(resp);
-                        if (resp.status) {
-                            $.each(resp.data, function () {
-                                form.find(".select-kpis").append($("<option />").val(this.name).text(this.title));
-                            });
-                        }
-                        form.find('.select-kpis').val(kpi);
-                    }
-                });
-            }
+            form.find('.select-sales-data-series').val(salesDataSeries).trigger('change');
+            form.find('.select-kpis').val(kpi);
 
             form.find('input.select-period').val(dataAttributes['data-period']);
             form.find('input.num-users').val(dataAttributes['data-num-users'] || 5);

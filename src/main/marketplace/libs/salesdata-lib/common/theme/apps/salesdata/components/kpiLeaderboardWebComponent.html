@@ -7,17 +7,16 @@
 #end
 #set ($numUsers = $formatter.toInteger($numUsers))
 
-#set( $kpi = $services.dataSeriesManager.findKpi($salesDataSeries, $kpi)  )
-#set( $period = $kpi.findCurrentPeriodStart( $services.queryManager.commonStartDate )  )
-#set( $lb = $services.dataSeriesManager.kpiLeaderboard($kpi, $period))
+#set( $kpiObj = $services.dataSeriesManager.findKpi($salesDataSeries, $kpi)  )
+#set( $kpiPeriod = $kpi.findCurrentPeriodStart( $services.queryManager.commonStartDate )  )
+#set( $lb = $services.dataSeriesManager.kpiLeaderboard($kpiObj, $kpiPeriod))
 #set( $results = $lb.highestResults($numUsers) )
 
-
-<table cellpadding="0" cellspacing="0" width="100%" bgcolor="$!bodyBgColor">
+<table cellpadding="0" cellspacing="0" width="100%">
     <thead>
         <tr bgcolor="$!headerBgColor">
-            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Rank</strong></th>
-            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Participant</strong></th>
+            <th><strong>Rank</strong></th>
+            <th><strong>Participant</strong></th>
         </tr>
     </thead>
     <tbody id="leaderboardBody">
@@ -64,9 +63,9 @@
 
 
 #macro (renderLeaderboardRecord $rank $name)
-    <tr bgcolor="$!bodyBgColor">
-        <td height="$rowHeight" valign="top" style="$baseStyles; ${cellStyles}">$rank</td>
-        <td valign="top" style="$baseStyles; ${cellStyles}">
+    <tr>
+        <td valign="top">$rank</td>
+        <td valign="top">
             $name
         </td>
     </tr>

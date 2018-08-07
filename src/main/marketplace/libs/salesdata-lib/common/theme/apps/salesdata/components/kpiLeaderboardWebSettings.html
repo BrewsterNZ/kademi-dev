@@ -3,7 +3,7 @@
         <label class="col-sm-12">Sales Data Series:</label>
         <div class="col-sm-12">
             <select class="form-control select-sales-data-series">
-                <option value="" selected="selected">- None -</option>
+                <option class="none" value="" selected="selected">- None -</option>
                 #foreach($sds in $applications.salesData.allSalesDataSeries)
                 <option value="$sds.name">$sds.title</option>
                 #end
@@ -14,8 +14,12 @@
         <label class="col-sm-12">KPI:</label>
         <div class="col-sm-12">
             <select class="form-control select-kpis">
-                <option value="" selected="selected">- None -</option>
-
+                <option class="none" value="" selected="selected">- None -</option>
+                #foreach($sds in $applications.salesData.allSalesDataSeries)
+                #foreach ($kpi in $sds.kpis)
+                <option class="hide" data-series="$sds.name" value="$kpi.name">$kpi.title</option>
+                #end
+                #end
             </select>
         </div>
     </div>
