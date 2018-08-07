@@ -15,6 +15,12 @@ controllerMappings.addComponent("salesdata/components", "kpiLeaderboardEDM")
         .addDefaultAtt("cell-padding", "5")
         .build();
 
+controllerMappings.addComponent("salesdata/components", "kpiLeaderboardWeb")
+        .addType("html")
+        .desc("Shows a leaderboard that includes current participant, for a selected KPI")
+        .categories("Sales data")
+        .build();
+
 controllerMappings
         .websiteController()
         .enabled(true)
@@ -77,7 +83,7 @@ function exportSalesIncentives(page, params) {
             recs.addCell(alloc.createdDate);
             recs.addCell(alloc.pointsAmount);
             recs.addCell(alloc.salesDataRecordIds);
-            
+
             var ids = formatter.toList(formatter.split(alloc.salesDataRecordIds));
             var salesRecs = getSalesRecs(mapOfSalesRecs, ids);
 
