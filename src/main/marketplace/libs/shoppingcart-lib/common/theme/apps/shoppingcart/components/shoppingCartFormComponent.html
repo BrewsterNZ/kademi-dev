@@ -1,6 +1,5 @@
-#set( $orgCookie = $request.getCookie("selectedOrg") )
-#if( $orgCookie )
-#set( $selectedOrgId = $orgCookie.value )
+#if ($services.queryManager.currentTeamOrg)
+    #set( $selectedOrgId = $services.queryManager.currentTeamOrg.orgId)
 #end
 
 #if ($useOrgAddress && $useOrgAddress == 'true')
@@ -17,6 +16,8 @@
         #end
     #end
 
+    #set ($readOnly = 'readonly="true"')
+
     #if ($orgs.size() == 1)
         #set ($phone = $orgs[0].phone)
         #set ($addressLine1 = $orgs[0].address)
@@ -24,7 +25,6 @@
         #set ($postcode = $orgs[0].postcode)
         #set ($addressState = $orgs[0].addressState)
 
-        #set ($readOnly = 'readonly="true"')
     #else
         #if ($selectedOrgId)
             #set ($selectedMbs = $mbs.filterByOrg($selectedOrgId))
@@ -40,8 +40,6 @@
             #set ($postcode = $selectedOrg.postcode)
             #set ($addressState = $selectedOrg.addressState)
         #end
-
-        #set ($readOnly = '')
     #end
 
 #else
