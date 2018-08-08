@@ -101,6 +101,12 @@
                 "group": "main",
                 "path": "/theme/apps/content/countdown.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/simpleOrgSelector.js"
+            }
         }
     ]
 }

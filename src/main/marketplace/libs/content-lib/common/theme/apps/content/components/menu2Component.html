@@ -76,12 +76,30 @@
                     #showMenuItem( $item, false, '<i class="fa fa-angle-down"></i>' )
                 #end
 
-
-
                 #if ($showOrgSelector == true)
-                    <li class="navbar-org-selector">
-                        #parse("/theme/apps/reporting/orgSelectorComponent.html")
+                    #set ($orgArr = $formatter.newArrayList())
+                    #foreach($mb in $userResource.primaryMemberships)
+                        #if (!$orgArr.contains($mb.org.entityObject()))
+                            #set ($nothing = $orgArr.add($mb.org.entityObject()))
+                        #end
+                    #end
+                    #if ($orgArr.size() > 1)
+                    <li class="simple-navbar-org-selector">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Select org
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            #foreach($org in $orgArr)
+                            #if ($services.queryManager.currentTeamOrg && $services.queryManager.currentTeamOrg.orgId == $org.orgId)
+                            <li><a class="select-org" href="$org.orgId"><i class="fa fa-check text-success"></i> $org.title</a></li>
+                            #else
+                            <li><a class="select-org" href="$org.orgId"><i class="fa fa-check" style="visibility: hidden"></i> $org.title</a></li>
+                            #end
+                            #end
+                        </ul>
                     </li>
+                    #end
                 #end
 
                 #if ($showLangSelector == true)
