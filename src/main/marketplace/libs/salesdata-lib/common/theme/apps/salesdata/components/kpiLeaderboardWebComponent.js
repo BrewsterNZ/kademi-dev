@@ -97,7 +97,7 @@
             form.find('input.select-period').val(dataAttributes['data-period']);
             form.find('input.num-users').val(dataAttributes['data-num-users'] || 5);
             form.find('input.txt-height').val(dataAttributes['data-row-height'] || 25);
-            form.find('input.headingText').val(dataAttributes['data-heading-text'] || 25);
+            form.find('input.headingText').val(dataAttributes['data-heading-text'] || "Leaderboard");
             form.find('[name=tag]').val(dataAttributes['data-tag'] || 'h2')
             form.find('[name=panelStyle]').val(dataAttributes['data-panel-class'] || 'panel-default')
 
