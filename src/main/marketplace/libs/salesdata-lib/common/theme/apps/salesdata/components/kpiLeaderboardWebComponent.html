@@ -8,10 +8,9 @@
 #set ($numUsers = $formatter.toInteger($numUsers))
 
 #set( $kpiObj = $services.dataSeriesManager.findKpi($salesDataSeries, $kpi)  )
-#set( $kpiPeriod = $kpi.findCurrentPeriodStart( $services.queryManager.commonStartDate )  )
+#set( $kpiPeriod = $kpiObj.findCurrentPeriodStart( $services.queryManager.commonStartDate )  )
 #set( $lb = $services.dataSeriesManager.kpiLeaderboard($kpiObj, $kpiPeriod))
 #set( $results = $lb.highestResults($numUsers) )
-
 <table cellpadding="0" cellspacing="0" width="100%">
     <thead>
         <tr bgcolor="$!headerBgColor">
@@ -45,13 +44,13 @@
                     #set ($itemName = "NA")
                 #end
 
-                #if( !$foundUser )
                 #renderLeaderboardRecord($plusOne $itemName)
-                #end
             #end
 
             <!-- todo: only if not already shown -->
-            #renderLeaderboardRecord($thisUserRanking.rank $thisUserRanking.participant.formattedName() )
+            #if( !$foundUser && $thisUserRanking)
+                #renderLeaderboardRecord($thisUserRanking.rank $thisUserRanking.participant.formattedName() )
+            #end
         #else
             #renderLeaderboardRecord("1" "[Please select data series and KPI]")
             #renderLeaderboardRecord("2" "[Please select data series and KPI]")
