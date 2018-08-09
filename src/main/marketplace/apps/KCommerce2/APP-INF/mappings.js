@@ -91,6 +91,7 @@ function doEcomSearch(page, params) {
     var searchResults = productSearch(store, page.attributes.category, query, attributePairs, params.pageFrom, params.pageSize);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
+    page.attributes.brands = listBrands(store, searchResults);
     findAttributes(page, store, searchResults);
     return views.templateView("KCommerce2/searchResults");
 }
@@ -103,6 +104,8 @@ function doEcomList(page, params) {
     //log.info("searchResults: " + searchResults);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
+    page.attributes.brands = listBrands(store, searchResults);
+
     findAttributes(page, store, searchResults);
 
     if (page.attributes.category) {
@@ -110,6 +113,29 @@ function doEcomList(page, params) {
     } else {
         return views.templateView("KCommerce2/viewStore");
     }
+}
+
+/**
+ * For matched brands from search results, lookup the domain objects and return in a list
+ *
+ * @param {type} store
+ * @param {type} searchResults
+ * @returns {undefined}
+ */
+function listBrands(store, searchResults) {
+    var brandBuckets = searchResults.aggregations.asMap.brands.buckets;
+    var brandsList = formatter.newArrayList();
+    log.info("listBrands: brandBuckets={}", brandBuckets);
+    formatter.foreach(brandBuckets, function(brandBucket){
+        var brandId = brandBucket.key;
+        log.info("listBrands: brandId={}", brandId);
+        var brandCat = services.criteriaBuilders.getBuilder("category").get(brandId);
+        log.info("listBrands: brand={}", brandCat);
+        if( brandCat != null ) {
+            brandsList.add(brandCat);
+        }
+    });
+    return brandsList;
 }
 
 /**

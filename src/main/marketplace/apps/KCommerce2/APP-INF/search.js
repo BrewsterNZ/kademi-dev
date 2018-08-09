@@ -9,7 +9,7 @@
  * @returns {unresolved}
  */
 function productSearch(store, category, query, attributePairs, pageFrom, pageSize) {
-    
+
     // TODO: Pagination
     if (!pageFrom || isNaN(pageFrom)){
         pageFrom = 0;
@@ -38,6 +38,7 @@ function productSearch(store, category, query, attributePairs, pageFrom, pageSiz
             "maxPrice": {"max": {"field": "finalCost"}},
             "minPrice": {"min": {"field": "finalCost"}},
             "attNames": {"terms": {"field": "attributeNames"}},
+            "brands": {"terms": {"field": "brandId"}},
         }
     };
 
@@ -177,7 +178,7 @@ function productInCategorySearch(store, category, query) {
     //log.info("cat results {} - {}", results, results.class);
     // need to lookup cat id's to get titles
     var productsAgg = results.aggregations.asMap.prods;
- 
+
     // log.info("prods results {}", productsAgg.buckets);
     var catBuilder = services.criteriaBuilders.getBuilder("category");
     var prodBuilder = services.criteriaBuilders.getBuilder("product");
@@ -223,8 +224,16 @@ function appendCriteria(queryJson, store, category, query, attributePairs) {
     var must = [
         {"term": {"storeId": store.id}}
     ];
+    // category is also used in the brand attribute, so match on either
     if (category != null) {
-        must.push({"term": {"categoryIds": category.id}});
+        must.push({
+                "bool": {
+                    "should": [
+                        {"term": {"categoryIds": category.id}},
+                        {"term": {"brandId": category.id}}
+                    ]
+                }
+            });
     }
     queryJson.query = {
         "bool": {
