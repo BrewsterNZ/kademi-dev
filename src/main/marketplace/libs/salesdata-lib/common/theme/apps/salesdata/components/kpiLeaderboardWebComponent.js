@@ -1,6 +1,5 @@
 (function ($) {
     var KEditor = $.keditor;
-    var edmEditor = $.edmEditor;
     var flog = KEditor.log;
 
     KEditor.components['kpiLeaderboardWeb'] = {
@@ -59,34 +58,17 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('.txt-cell-padding').on('change', function () {
-                        var number = this.value;
-
-                        if (isNaN(number) || +number < 0) {
-                            number = 0;
-                            this.value = number;
-                        }
-
+                    form.find('[name=tag]').on('change', function (e) {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-cell-padding', number);
+                        component.attr('data-tag', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    edmEditor.initSimpleColorPicker(form.find('.txt-header-bg-color'), function (color) {
+                    form.find('[name=panelStyle]').on('change', function (e) {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-header-bg-color', color);
-                        keditor.initDynamicContent(dynamicElement);
-                    });
-
-                    edmEditor.initSimpleColorPicker(form.find('.txt-body-bg-color'), function (color) {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-body-bg-color', color);
+                        component.attr('data-panel-class', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
                 }
@@ -108,9 +90,8 @@
             form.find('input.select-period').val(dataAttributes['data-period']);
             form.find('input.num-users').val(dataAttributes['data-num-users'] || 5);
             form.find('input.txt-height').val(dataAttributes['data-row-height'] || 25);
-            form.find('.txt-cell-padding').val(dataAttributes['data-cell-padding']);
-            form.find('.txt-header-bg-color').val(dataAttributes['data-header-bg-color'] || '').trigger('update');
-            form.find('.txt-body-bg-color').val(dataAttributes['data-body-bg-color'] || '').trigger('update');
+            form.find('[name=tag]').val(dataAttributes['data-tag'] || 'h2')
+            form.find('[name=panelStyle]').val(dataAttributes['data-panel-class'] || 'panel-default')
 
         }
     };

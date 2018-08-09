@@ -7,57 +7,87 @@
 #end
 #set ($numUsers = $formatter.toInteger($numUsers))
 
+#if ($formatter.isNull($tag))
+#set ($tag = "h2")
+#end
+
+#if ($formatter.isNull($panelClass))
+#set ($panelClass = "panel-default")
+#end
+
+#if ($formatter.isNull($headingText))
+#set ($headingText = "$!kpi Leaderboard")
+#end
+
+#if ($formatter.isNull($period))
+#set ($period = "current")
+#end
+
 #set( $kpiObj = $services.dataSeriesManager.findKpi($salesDataSeries, $kpi)  )
-#set( $kpiPeriod = $kpiObj.findCurrentPeriodStart( $services.queryManager.commonStartDate )  )
+#if ($period == "current")
+    #set( $kpiPeriod = $kpiObj.findCurrentPeriodStart( $services.queryManager.commonStartDate )  )
+#else
+    #set( $kpiPeriod = $kpiObj.findPeriodsSince( $services.queryManager.commonStartDate )  )
+#end
 #set( $lb = $services.dataSeriesManager.kpiLeaderboard($kpiObj, $kpiPeriod))
 #set( $results = $lb.highestResults($numUsers) )
-<table cellpadding="0" cellspacing="0" width="100%">
-    <thead>
-        <tr bgcolor="$!headerBgColor">
-            <th><strong>Rank</strong></th>
-            <th><strong>Participant</strong></th>
-        </tr>
-    </thead>
-    <tbody id="leaderboardBody">
-        #if ($lb)
-            #set( $thisUserRanking = $lb.firstRankingForUser )
-            #set( $foundUser = false )
+<div class="panel $panelClass panel-kpiLeaderboardWeb">
+    <div class="panel-heading">
+        <$tag>$!headingText</$tag>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr bgcolor="$!headerBgColor">
+                        <th><strong>Rank</strong></th>
+                        <th><strong>Participant</strong></th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                    #if ($lb)
+                        #set( $thisUserRanking = $lb.firstRankingForUser )
+                        #set( $foundUser = false )
 
-            #foreach($item in $results )
-                #set( $plusOne = $item.rank + 1 )
-                #if($plusOne > $numUsers)
-                    #break
-                #end
+                        #foreach($item in $results )
+                            #set( $plusOne = $item.rank + 1 )
+                            #if($plusOne > $numUsers)
+                                #break
+                            #end
 
 
-                #if( $item.profile) <!-- is individual -->
-                    #set ($itemName = $item.profile.formattedName())
-                    #if( $item.profile.userId == $thisUserRanking.participant.userId )
-                        #set( $foundUser = true )
+                            #if( $item.profile) <!-- is individual -->
+                                #set ($itemName = $item.profile.formattedName())
+                                #if( $item.profile.userId == $thisUserRanking.participant.userId )
+                                    #set( $foundUser = true )
+                                #end
+                            #elseif( $item.org  )
+                                #set ($itemName = $item.org.title)
+                                #if( $item.org.id == $thisUserRanking.participant.id )
+                                    #set( $foundUser = true )
+                                #end
+                            #else
+                                #set ($itemName = "NA")
+                            #end
+
+                            #renderLeaderboardRecord($plusOne $itemName)
+                        #end
+
+                        <!-- todo: only if not already shown -->
+                        #if( !$foundUser && $thisUserRanking)
+                            #renderLeaderboardRecord($thisUserRanking.rank $thisUserRanking.participant.formattedName() )
+                        #end
+                    #else
+                        #renderLeaderboardRecord("1" "[Please select data series and KPI]")
+                        #renderLeaderboardRecord("2" "[Please select data series and KPI]")
+                        #renderLeaderboardRecord("3" "[Please select data series and KPI]")
                     #end
-                #elseif( $item.org  )
-                    #set ($itemName = $item.org.title)
-                    #if( $item.org.id == $thisUserRanking.participant.id )
-                        #set( $foundUser = true )
-                    #end
-                #else
-                    #set ($itemName = "NA")
-                #end
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-                #renderLeaderboardRecord($plusOne $itemName)
-            #end
-
-            <!-- todo: only if not already shown -->
-            #if( !$foundUser && $thisUserRanking)
-                #renderLeaderboardRecord($thisUserRanking.rank $thisUserRanking.participant.formattedName() )
-            #end
-        #else
-            #renderLeaderboardRecord("1" "[Please select data series and KPI]")
-            #renderLeaderboardRecord("2" "[Please select data series and KPI]")
-            #renderLeaderboardRecord("3" "[Please select data series and KPI]")
-        #end
-    </tbody>
-</table>
 
 
 
