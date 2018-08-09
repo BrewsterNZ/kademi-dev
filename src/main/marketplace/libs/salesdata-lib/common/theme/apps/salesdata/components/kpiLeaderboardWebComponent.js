@@ -94,7 +94,7 @@
             form.find('.select-sales-data-series').val(salesDataSeries).trigger('change');
             form.find('.select-kpis').val(kpi);
 
-            form.find('input.select-period').val(dataAttributes['data-period']);
+            form.find('.select-period').val(dataAttributes['data-period']);
             form.find('input.num-users').val(dataAttributes['data-num-users'] || 5);
             form.find('input.txt-height').val(dataAttributes['data-row-height'] || 25);
             form.find('input.headingText').val(dataAttributes['data-heading-text'] || "Leaderboard");
