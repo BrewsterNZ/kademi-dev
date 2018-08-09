@@ -23,6 +23,7 @@
                 #end
             </div>
 
+            #if( $page.attributes.brands.size() > 0 )
             <div class="list-group list-group-root ecomStoreCategoriesList">
                 <span href="#" class="list-group-item heading-item">Browse by brand</span>
 
@@ -39,6 +40,7 @@
 
                 #end
             </div>
+            #end
 
 
             #set ($dataRanges = $page.attributes.attributesSummary.aggregations.asMap.priceRanges.buckets)
