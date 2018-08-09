@@ -55,32 +55,35 @@
                                 #break
                             #end
 
+                            #set ($foundInLoop = false)
 
                             #if( $item.profile) <!-- is individual -->
                                 #set ($itemName = $item.profile.formattedName())
                                 #if( $item.profile.userId == $thisUserRanking.participant.userId )
                                     #set( $foundUser = true )
+                                    #set ($foundInLoop = true)
                                 #end
                             #elseif( $item.org  )
                                 #set ($itemName = $item.org.title)
                                 #if( $item.org.id == $thisUserRanking.participant.id )
                                     #set( $foundUser = true )
+                                    #set ($foundInLoop = true)
                                 #end
                             #else
                                 #set ($itemName = "NA")
                             #end
 
-                            #renderLeaderboardRecord($plusOne $itemName)
+                            #renderLeaderboardRecord($plusOne $itemName $foundInLoop)
                         #end
 
                         <!-- todo: only if not already shown -->
                         #if( !$foundUser && $thisUserRanking)
-                            #renderLeaderboardRecord($thisUserRanking.rank $thisUserRanking.participant.formattedName() )
+                            #renderLeaderboardRecord($thisUserRanking.rank $thisUserRanking.participant.formattedName() true)
                         #end
                     #else
-                        #renderLeaderboardRecord("1" "[Please select data series and KPI]")
-                        #renderLeaderboardRecord("2" "[Please select data series and KPI]")
-                        #renderLeaderboardRecord("3" "[Please select data series and KPI]")
+                        #renderLeaderboardRecord("1" "[Please select data series and KPI]" false)
+                        #renderLeaderboardRecord("2" "[Please select data series and KPI]" true)
+                        #renderLeaderboardRecord("3" "[Please select data series and KPI]" false)
                     #end
                 </tbody>
             </table>
@@ -91,10 +94,14 @@
 
 
 
-#macro (renderLeaderboardRecord $rank $name)
+#macro (renderLeaderboardRecord $rank $name $loggedInUser)
+    #set ($bold = "")
+    #if ($loggedInUser == "true")
+    #set ($bold = "font-weight: bold")
+    #end
     <tr>
-        <td valign="top">$rank</td>
-        <td valign="top">
+        <td valign="top" style="$!bold">$rank</td>
+        <td valign="top" style="$!bold">
             $name
         </td>
     </tr>
