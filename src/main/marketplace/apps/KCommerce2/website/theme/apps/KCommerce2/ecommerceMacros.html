@@ -42,6 +42,24 @@
             </div>
             #end
 
+            #if( $page.attributes.facetFields.size() > 0 )
+                #foreach( $facetField in $page.attributes.facetFields.values() )
+                    #set( $facetBucket = $page.attributes.searchResults.aggregations.asMap[$facetField.name] )
+            <div class="list-group list-group-root pointsRangeList">
+                <span href="#" class="list-group-item heading-item">Refine by $facetField.title</span>
+
+                #foreach( $attAgg in $facetBucket.buckets )
+                    #if( $attAgg.docCount > 0 )
+                    <a href="#" class="list-group-item" data-attname="$facetField.name" data-attvalue="$attAgg.key">
+                        $attAgg.key ($attAgg.docCount)
+                        <i class="fa fa-angle-right  pull-right"></i>
+                    </a>
+                    #end
+                #end
+
+            </div>
+                #end
+            #end
 
             #set ($dataRanges = $page.attributes.attributesSummary.aggregations.asMap.priceRanges.buckets)
             <div class="list-group list-group-root pointsRangeList">

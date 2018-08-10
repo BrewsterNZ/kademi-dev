@@ -8,7 +8,7 @@
  * @param {type} query
  * @returns {unresolved}
  */
-function productSearch(store, category, query, attributePairs, pageFrom, pageSize) {
+function productSearch(page, store, category, query, attributePairs, pageFrom, pageSize) {
 
     // TODO: Pagination
     if (!pageFrom || isNaN(pageFrom)){
@@ -37,10 +37,30 @@ function productSearch(store, category, query, attributePairs, pageFrom, pageSiz
         "aggregations": {
             "maxPrice": {"max": {"field": "finalCost"}},
             "minPrice": {"min": {"field": "finalCost"}},
-            "attNames": {"terms": {"field": "attributeNames"}},
+            "attNames" : {"terms": {"field": "attributeNames"}},
             "brands": {"terms": {"field": "brandId"}},
         }
     };
+
+    var atm = services.assetManager.assetTypeManager;
+    var cts = atm.contentTypes;
+    var facetFields = formatter.newMap();
+    page.attributes.facetFields = facetFields;
+    if( cts != null ) {
+        var aggs = queryJson.aggregations;
+        formatter.foreach(cts.assetTypes, function(at) {
+            if ( atm.is(at, "product") ) {
+                if( at.fields ) {
+                    formatter.foreach(at.fields, function(field) {
+                        if( field.facet ) {
+                            aggs[field.name] = {"terms": {"field": field.name}};
+                            facetFields[field.name] = field;
+                        }
+                    });
+                }
+            }
+        });
+    }
 
     appendCriteria(queryJson, store, category, query, attributePairs);
 
