@@ -16,41 +16,40 @@
 <div style="min-height: 200px">
     <div class="row">
         #if( $page.is("editor") && $queryResult.isEmpty() )
-        <div class="col-xs-6 col-md-3">
-            <a href="#" class="thumbnail">
-                Example asset
-            </a>
-        </div>
-        #else
-        #foreach( $asset in $queryResult )
-        <div class="col-xs-6 col-md-3">
-            #set( $assetRes = $assetsFolder.assetResource($asset ) )
-            #if( $useDefault )
-            <div class="caption">
-                <p>
-                    <a href="$assetRes.href">$assetRes.name</a>
-                </p>
-            </div>
-            #elseif( $tileProp )
-
-                $assetRes.data.get($tileField)
-
-            #else
-
-                #if( $thumbProp )
-                <a href="/assets/$asset.uniqueId" class="thumbnail">
-                    <img src="$assetRes.data.get($thumbProp).href" alt="$asset.name"/>
+            <div class="col-xs-6 col-md-3">
+                <a href="#" class="thumbnail">
+                    Example asset
                 </a>
-                #end
+            </div>
+        #else
+            #foreach( $asset in $queryResult )
+                #set( $assetRes = $assetsFolder.assetResource($asset ) )
+                #if( $useDefault )
+                    <div class="col-xs-6 col-md-3">
+                        <div class="caption">
+                            <p>
+                                <a href="$assetRes.href">$assetRes.name</a>
+                            </p>
+                        </div>
+                    </div>
+                #elseif( $tileProp )
+                        $assetRes.data.get($tileField)
+                #else
+                    <div class="col-xs-6 col-md-3">
+                        #if( $thumbProp )
+                        <a href="/assets/$asset.uniqueId" class="thumbnail">
+                            <img src="$assetRes.data.get($thumbProp).href" alt="$asset.name"/>
+                        </a>
+                        #end
 
-                #if( $captionProp )
-                <div class="caption">
-                    <h3>$assetRes.data.get($captionProp)</h3>
-                </div>
+                        #if( $captionProp )
+                        <div class="caption">
+                            <h3>$assetRes.data.get($captionProp)</h3>
+                        </div>
+                        #end
+                    </div>
                 #end
             #end
-        </div>
-        #end
         #end
     </div>
 </div>

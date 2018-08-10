@@ -1,6 +1,6 @@
 function initProductDetails(editorType) {
     initProductDetailsForm();
-    initProductContentsTab(editorType);
+
     toggleOrderInfo();
     $('#canOrderChk').change(function (event) {
         toggleOrderInfo();
@@ -10,6 +10,19 @@ function initProductDetails(editorType) {
     initProductVariantImgUpload();
     initProductVariantImgSelector();
     initCategoryManagment();
+    initBrands();
+    initSuplierOrgs();
+    var editorInitialized = false;
+    $('#myTab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        if(!editorInitialized && $(e.target).attr('href') == '#panel-content'){
+            initProductContentsTab(editorType);
+            editorInitialized = true;
+        }
+    });
+    if ($('#myTab li.active a').attr('href') == '#panel-content' && !editorInitialized){
+        initProductContentsTab(editorType);
+        editorInitialized = true;
+    }
 
     $(document).on('change', '#relatedAppIdSelect', function (e) {
         $('form.updateProduct').trigger('submit');
@@ -435,6 +448,48 @@ function doRemoveFromCategory(categoryName) {
         }
     })
 
+}
+
+function initBrands() {
+    var brandSelector = $("#brandSelector");
+    var brandSearch = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {
+            url: window.location.pathname + '?brands',
+            ttl: 0,
+            cache: false
+        }
+    });
+
+    brandSearch.initialize();
+
+    brandSelector.typeahead({
+        highlight: true
+    },{
+        displayKey: 'title',
+        source: brandSearch.ttAdapter(),
+        templates: {
+            empty: '<div class="text-danger" style="padding: 5px 10px;">No existing brands were found</div>',
+        }
+    });
+
+    brandSelector.bind('typeahead:select', function (ev, sug) {
+        $('input[name=brand]').val(sug.name);
+    });
+
+    brandSelector.attr('autocomplete', 'off');
+}
+
+function initSuplierOrgs() {
+    $("#suplierOrgs").entityFinder({
+        type: 'organisation',
+        useActualId: false,
+        onSelectSuggestion: function (suggestion) {
+            var orgId = $(suggestion).attr("data-id");
+            $("[name=supplier]").val(orgId);
+        }
+    });
 }
 
 function reloadCategories() {
