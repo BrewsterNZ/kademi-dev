@@ -1,7 +1,7 @@
 #
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Manage Derived Field</title>
+        <title>Manage Typed Field</title>
     </head>
     <body class="">
 
@@ -36,12 +36,38 @@
             </div>
 
             <div class="form-group">
-                <label for="required" class="control-label col-md-2">Required</label>
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        <label for="indexed">
+                            $formatter.checkbox("required", $page.field.required)
+                            Required
+                        </label>
+                    </div>            
 
-                <div class="col-md-1">
-                    <input type="checkbox" class="form-control" value="true" $formatter.ifTrue($page.field.required, "checked", "" )   />
                 </div>
             </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        <label for="indexed">
+                            $formatter.checkbox("indexed", $page.field.indexed)
+                            Indexed
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        <label for="indexed">
+                            $formatter.checkbox("facet", $page.field.facet)
+                            Faceted
+                        </label>
+                    </div>
+                </div>
+            </div>
+
 
 
             #if( $page.field.type == "text" )

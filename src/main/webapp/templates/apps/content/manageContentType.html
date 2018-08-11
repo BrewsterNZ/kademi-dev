@@ -43,7 +43,7 @@
                             <th>Name</th>
                             <th>Field type</th>
                             <th>Text</th>
-                            <th></th>
+                            <th>Properties</th>
                             <th><input type="checkbox" class="chk-all" /></th>
                         </tr>
                     </thead>
@@ -59,11 +59,21 @@
                             <td>$!field.text</td>
                             <td>
                                 #if( $field.editable )
-                                <span class="label label-info"><span class="fa fa-pencil"></span></span>
+                                <span class="label label-info" title="Editable"><span class="fa fa-pencil"></span></span>
                                 #end
                                 #if( $field.required )
-                                <span class="label label-warning"><span class="fa fa-exclamation"></span></span>
+                                <span class="label label-warning" title="Required"><span class="fa fa-exclamation"></span></span>
                                 #end
+                                #if( $field.indexed )
+                                <span class="label label-warning" title="Indexed"><span class="fa fa-search"></span></span>
+                                #end
+                                #if( $field.facet )
+                                <span class="label label-warning" title="Search facet"><span class="fa fa-search-plus"></span></span>
+                                #end
+                                #if( $field.rows )
+                                <span class="label label-info">$field.rows rows</span>
+                                #end
+                                
                             </td>
                             <td>
                                 <input type="checkbox" class="chk-field-name" value="$field.name" />
