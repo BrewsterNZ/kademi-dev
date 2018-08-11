@@ -45,9 +45,12 @@
             #if( $page.attributes.facetFields.size() > 0 )
                 #foreach( $facetField in $page.attributes.facetFields.values() )
                     #set( $facetBucket = $page.attributes.searchResults.aggregations.asMap[$facetField.name] )
+
+                    #if( $facetBucket.buckets.size() > 0 )
             <div class="list-group list-group-root pointsRangeList">
                 <span href="#" class="list-group-item heading-item">Refine by $facetField.title</span>
-
+                
+                
                 #foreach( $attAgg in $facetBucket.buckets )
                     #if( $attAgg.docCount > 0 )
                     <a href="#" class="list-group-item" data-attname="$facetField.name" data-attvalue="$attAgg.key">
@@ -56,8 +59,8 @@
                     </a>
                     #end
                 #end
-
             </div>
+                    #end
                 #end
             #end
 
