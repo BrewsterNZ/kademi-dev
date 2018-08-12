@@ -5,13 +5,13 @@ var startFrom = 12;
 var currentURI = new URI(window.location.href);
 
 $(function () {
-    function initPointsRanges() {
-        flog('initPointsRanges');
+    function initPriceRanges() {
+        flog('initPriceRanges');
 
         var uriSearch = currentURI.search(true);
         var startPrice = uriSearch.startPrice;
         var endPrice = uriSearch.endPrice;
-        var pointRangeItems = $('.pointsRangeList a.list-group-item');
+        var pointRangeItems = $('.facetSearchTerm a.list-group-item');
         pointRangeItems.filter('[data-startprice="' + startPrice + '"][data-endprice="' + endPrice + '"]').addClass('selected');
 
         pointRangeItems.on('click', function (e) {
@@ -25,35 +25,11 @@ $(function () {
                 // pointRangeItems.filter('.selected').removeClass('selected');
                 item.addClass('selected');
             }
-            
-            doProductSearch();
-            persistAttributes();
-        });
-    }
-    
-    function persistAttributes() {
-        var arr = [];
-        $('.pointsRangeList a.list-group-item').each(function () {
-            if ($(this).hasClass('selected')){
-                arr.push($(this).attr('data-attvalue'));
-            }
-        });
-        $.cookie('kcom2att', arr.join(','));
-    }
-
-    function loadPersistenceAttributes() {
-        var att = $.cookie('kcom2att');
-        if (att) {
-            var arr = att.split(',');
-            $('.pointsRangeList a.list-group-item').each(function () {
-                if (arr.indexOf($(this).attr('data-attvalue')) != -1){
-                    $(this).addClass('selected');
-                }
-            });
 
             doProductSearch();
-        }
+        });
     }
+
 
     function initCategories() {
         flog('initCategories');
@@ -79,17 +55,17 @@ $(function () {
 
 
     function doProductSearch() {
-        flog('doProductSearch')
+        flog('doProductSearch1')
         $(".products-list").html('');
         var inifiniteLoader = $('#inifiniteLoader');
         inifiniteLoader.show();
 
-        var newUrl = new URI(window.location.href);
+        var newUrl = new URI(window.location.pathname);
 
         var input = $(".ecom-search-input");
         newUrl.setSearch('q', input.val().trim());
 
-        $('.pointsRangeList a.list-group-item.selected').each(function(i, n) {
+        $('.facetSearchTerm a.list-group-item.selected').each(function(i, n) {
             var item = $(n);
             var price = item.data('startprice');
             if( !isEmpty(price)) {
@@ -109,7 +85,7 @@ $(function () {
         window.history.pushState("", document.title, newUrl.toString());
 
         flog("doing search1", window.location.href);
-        
+
         $.ajax({
             type: 'GET',
             url: window.location.href,
@@ -206,10 +182,9 @@ $(function () {
         var isReadyInitEvent = $ecomStoreCategoriesList.data('ready-init-event');
         if (!window.contentEditing && shouldInit && !isReadyInitEvent) {
             $ecomStoreCategoriesList.data('ready-init-event', true);
-            initPointsRanges();
+            initPriceRanges();
             initCategories();
             initSortBy();
-            loadPersistenceAttributes();
             if (!shouldLoadMore) {
                 $(window).scroll(function () {
                     if (!$('#inifiniteLoader').hasClass('limited') && $('#inifiniteLoader').is(':hidden') && $(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
