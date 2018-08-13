@@ -67,7 +67,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    #set($fields = $page.profileExtraFields)
+                    #set($counter = 0)
+                    #foreach($field in $fields.keySet())
+                    #if ($extraFields && $extraFields.contains($field.name))
+                    #else
 
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">$field.text</label>
+                            $field.html( $fields[$field], "", "extraField_" )
+                        </div>
+                    </div>
+                    #end
+                    #end
+                </div>
                 <div class="row hide">
                     <div class="col-sm-4">
                         <div class="form-group">
