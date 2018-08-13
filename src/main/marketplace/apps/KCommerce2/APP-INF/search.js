@@ -30,7 +30,13 @@ function productSearch(page, store, category, query, attributePairs, pageFrom, p
             "title",
             "webName",
             "primaryImageHref",
-            "content"
+            "content",
+            "product",
+            "brandId",
+            "brandName",
+            "brandTitle",
+            "supplerName",
+            "supplierOrgId"
         ],
         "from": pageFrom,
         "size": pageSize,
