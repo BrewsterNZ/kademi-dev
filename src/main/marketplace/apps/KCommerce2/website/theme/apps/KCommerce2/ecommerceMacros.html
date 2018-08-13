@@ -24,20 +24,13 @@
             </div>
 
             #if( $page.attributes.brands.size() > 0 )
-            <div class="list-group list-group-root ecomStoreCategoriesList">
+            <div class="list-group list-group-root facetSearchTerm">
                 <span href="#" class="list-group-item heading-item">Browse by brand</span>
 
                 #foreach($brand in $page.attributes.brands)
-                    #if ($brand.id == $page.attribute.brand.id)
-                        <a href="$brand.name/" class="list-group-item selected">
-                            $brand.title <i class="fa fa-angle-right  pull-right"></i>
-                        </a>
-                    #else
-                        <a href="$brand.name/" class="list-group-item">
-                            $brand.title <i class="fa fa-angle-right  pull-right"></i>
-                        </a>
-                    #end
-
+                <a href="#" class="list-group-item" data-attname="brandId" data-attvalue="$brand.id">
+                    $brand.title <i class="fa fa-angle-right  pull-right"></i>
+                </a>
                 #end
             </div>
             #end

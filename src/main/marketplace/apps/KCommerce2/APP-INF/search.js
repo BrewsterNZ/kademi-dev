@@ -8,7 +8,7 @@
  * @param {type} query
  * @returns {unresolved}
  */
-function productSearch(page, store, category, query, attributePairs, pageFrom, pageSize) {
+function productSearch(page, store, category, query, attributePairs, otherCats, brands, pageFrom, pageSize) {
     // Do aggregation search
     var aggsQuery = {
         "size": 0,
@@ -19,7 +19,29 @@ function productSearch(page, store, category, query, attributePairs, pageFrom, p
             "brands": {"terms": {"field": "brandId"}},
         }
     };
-    appendCriteria(aggsQuery, store, category, query, null);
+    var facetFields = formatter.newMap();
+    page.attributes.facetFields = facetFields;
+    var aggs = aggsQuery.aggregations;
+    if (aggs != null) {
+        var atm = services.assetManager.assetTypeManager;
+        var cts = atm.contentTypes;
+        if (cts != null) {
+            formatter.foreach(cts.assetTypes, function (at) {
+                if (atm.is(at, "product")) {
+                    if (at.fields) {
+                        formatter.foreach(at.fields, function (field) {
+                            if (field.facet) {
+                                aggs[field.name] = {"terms": {"field": field.name}};
+                                facetFields[field.name] = field;
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    }
+
+    appendCriteria(aggsQuery, store, category, query, null, null, null);
     var aggsQueryText = JSON.stringify(aggsQuery);
     var aggregationResults = services.searchManager.search(aggsQueryText, 'ecommercestore');
     page.attributes.searchAggs = aggregationResults;
@@ -57,29 +79,7 @@ function productSearch(page, store, category, query, attributePairs, pageFrom, p
         "size": pageSize
     };
 
-    var facetFields = formatter.newMap();
-    page.attributes.facetFields = facetFields;
-    var aggs = queryJson.aggregations;
-    if (aggs != null) {
-        var atm = services.assetManager.assetTypeManager;
-        var cts = atm.contentTypes;
-        if (cts != null) {
-            formatter.foreach(cts.assetTypes, function (at) {
-                if (atm.is(at, "product")) {
-                    if (at.fields) {
-                        formatter.foreach(at.fields, function (field) {
-                            if (field.facet) {
-                                aggs[field.name] = {"terms": {"field": field.name}};
-                                facetFields[field.name] = field;
-                            }
-                        });
-                    }
-                }
-            });
-        }
-    }
-
-    appendCriteria(queryJson, store, category, query, attributePairs);
+    appendCriteria(queryJson, store, category, query, attributePairs, otherCats, brands);
 
     var queryText = JSON.stringify(queryJson);
     var results = services.searchManager.search(queryText, 'ecommercestore');
@@ -255,7 +255,7 @@ function productInCategorySearch(store, category, query) {
 }
 
 
-function appendCriteria(queryJson, store, category, query, attributePairs) {
+function appendCriteria(queryJson, store, category, query, attributePairs, otherCategorys, brands) {
     // todo filter by store and category
     var must = [
         {"term": {"storeId": store.id}}
@@ -271,6 +271,26 @@ function appendCriteria(queryJson, store, category, query, attributePairs) {
             }
         });
     }
+
+    // this is a supplemental list of categories
+    if (otherCategorys != null ) {
+        formatter.foreach(otherCategorys, function (otherCat) {
+            must.push({
+                "term": {"categoryIds": otherCat.id}
+            });
+        });
+    }
+
+    if (brands != null && brands.size() > 0 )  {
+        var arrBrandIds = [];
+        formatter.foreach(brands, function (brandCat) {
+            arrBrandIds.push( brandCat.id );
+        });
+        must.push({
+            "terms" : { "brandId" : arrBrandIds}
+        });
+    }
+
     queryJson.query = {
         "bool": {
             "must": must
