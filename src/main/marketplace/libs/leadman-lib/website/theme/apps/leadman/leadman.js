@@ -1972,10 +1972,9 @@ function initLeadCompaniesTable() {
             searching: false,
             destroy: true,
             info: false,
-        });
-        dataTable.draw();
-        $('#leadCompaniesTable').on( 'draw.dt', function () {
-            $('#leadCompaniesTable').closest('.row').siblings('.row').remove();
+            initComplete: function(settings, json) {
+                $('#leadCompaniesTable').closest('.row').siblings('.row').remove();
+            }
         });
     }
 }
@@ -1987,10 +1986,9 @@ function initLeadContactsTable() {
             searching: false,
             destroy: true,
             info: false,
-        });
-        dataTable.draw();
-        $('#leadContactsTable').on( 'draw.dt', function () {
-            $('#leadContactsTable').closest('.row').siblings('.row').remove();
+            initComplete: function(settings, json) {
+                $('#leadContactsTable').closest('.row').siblings('.row').remove();
+            }
         });
     }
 }

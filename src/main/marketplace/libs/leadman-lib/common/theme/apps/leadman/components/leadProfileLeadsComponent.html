@@ -1,55 +1,51 @@
-<div class="panel">
-    <div class="panel-body">
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                <th>Journey</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Created</th>
-                <th>Amount</th>
-                <th>Assigned to</th>
-                </thead>
-                <tbody>
-                    #foreach($lead in $page.leads)
-                    <tr>
-                        <td>
-                            <a href="/leads/$lead.id/">
-                                $formatter.ifNull($lead.funnel.title, $lead.funnel.name)
-                            </a>
-                        </td>
-                        <td>
-                            $formatter.ifNull($!lead.description, '-')
-                        </td>
-                        <td>
-                            #if( $lead.cancelled )
-                            <span class="fa fa-remove text-danger"></span>
-                            Cancelled <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
-                            #elseif( $lead.closedDate )
-                            <span class="fa fa-check text-success"></span>
-                            Sale completed <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
-                            #else
-                            <span class="fa fa-clock-o text-muted"></span>
-                            In progress
-                            #end
-                        </td>
-                        <td>
-                            #if( $lead.createDate )
-                            <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr>
-                            #end
-                        </td>
-                        <td>$!lead.dealAmount</td>
-                        <td>
-                            #if( $lead.assignedToProfile )
-                            $lead.assignedToProfile.formattedName
-                            #else
-                            Not assigned
-                            #end
-                        </td>
-                    </tr>
-                    #end
-                </tbody>
-            </table>
-        </div>
-    </div>
+<div class="panel panel-default">
+    <table id="tableProfileLeads" class="table table-bordered table-striped table-hover kcrm-table">
+        <thead>
+        <th>Journey</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Created</th>
+        <th>Amount</th>
+        <th>Assigned to</th>
+        </thead>
+        <tbody>
+        #foreach($lead in $page.leads)
+        <tr>
+            <td>
+                <a href="/leads/$lead.id/">
+                    $formatter.ifNull($lead.funnel.title, $lead.funnel.name)
+                </a>
+            </td>
+            <td>
+                $formatter.ifNull($!lead.description, '-')
+            </td>
+            <td>
+                #if( $lead.cancelled )
+                <span class="fa fa-remove text-danger"></span>
+                Cancelled <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
+                #elseif( $lead.closedDate )
+                <span class="fa fa-check text-success"></span>
+                Sale completed <abbr title="$formatter.formatDateISO8601($lead.closedDate)" class="timeago">$lead.closedDate</abbr>
+                #else
+                <span class="fa fa-clock-o text-muted"></span>
+                In progress
+                #end
+            </td>
+            <td>
+                #if( $lead.createDate )
+                <abbr title="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr>
+                #end
+            </td>
+            <td>$!lead.dealAmount</td>
+            <td>
+                #if( $lead.assignedToProfile )
+                $lead.assignedToProfile.formattedName
+                #else
+                Not assigned
+                #end
+            </td>
+        </tr>
+        #end
+        </tbody>
+    </table>
 </div>
