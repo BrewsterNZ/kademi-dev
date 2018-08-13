@@ -618,11 +618,11 @@ function initAjaxStatus() {
         }
         if (depth == 0) {
             $('#mainSpinner').hide();
+            $(document).trigger('kademiAjaxComplete');
         }
 
         // Init time ago after Ajax is completed
         initTimeago();
-        $(document).trigger('kademiAjaxComplete');
     });
 }
 
