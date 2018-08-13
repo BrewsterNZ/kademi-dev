@@ -88,7 +88,8 @@ function doEcomSearch(page, params) {
     log.info("doEcomSearch: {} from {} size {}", query, params.pageFrom, params.pageSize);
     var store = page.attributes.store;
     var attributePairs = findAttsInParams(params);
-    var searchResults = productSearch(page, store, page.attributes.category, query, attributePairs, params.pageFrom, params.pageSize);
+    var otherCats = findOtherCatsInParams(params)
+    var searchResults = productSearch(page, store, page.attributes.category, query, attributePairs, otherCats, params.pageFrom, params.pageSize);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
     page.attributes.brands = listBrands(store, page.attributes.searchAggs);
@@ -100,7 +101,8 @@ function doEcomList(page, params) {
     log.info("doEcomList:");
     var store = page.attributes.store;
     var attributePairs = findAttsInParams(params);
-    var searchResults = productSearch(page, store, page.attributes.category, null, attributePairs, params.pageFrom, params.pageSize);
+    var otherCats = findOtherCatsInParams(params)
+    var searchResults = productSearch(page, store, page.attributes.category, null, attributePairs, otherCats, params.pageFrom, params.pageSize);
     //log.info("searchResults: " + searchResults);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
@@ -161,6 +163,22 @@ function findAttsInParams(params) {
         }
     }
     return atts;
+}
+
+
+function findOtherCatsInParams(params) {
+    var otherCats = formatter.newArrayList();
+    var idsList = formatter.toList(formatter.split(params.otherCatIds));
+    formatter.foreach(idsList, function(sId) {
+        var id = formatter.toLong(sId);
+        if( id != null ) {
+            var cat = services.criteriaBuilders.get("category").eq("id", id).executeSingle();
+            if( cat != null ) {
+                otherCats.add(cat);
+            }
+        }
+    });
+    return otherCats;
 }
 
 function findAttributes(page, store, searchResults) {
