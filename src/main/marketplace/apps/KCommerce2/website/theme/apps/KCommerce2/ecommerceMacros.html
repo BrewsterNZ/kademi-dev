@@ -44,7 +44,7 @@
 
             #if( $page.attributes.facetFields.size() > 0 )
                 #foreach( $facetField in $page.attributes.facetFields.values() )
-                    #set( $facetBucket = $page.attributes.searchResults.aggregations.asMap[$facetField.name] )
+                    #set( $facetBucket = $page.attributes.searchAggs.aggregations.asMap[$facetField.name] )
 
                     #if( $facetBucket.buckets.size() > 0 )
             <div class="list-group list-group-root facetSearchTerm">
@@ -76,7 +76,7 @@
 
             </div>
 
-            #foreach( $attNameBucket in $page.attributes.searchResults.aggregations.asMap.attNames.buckets)
+            #foreach( $attNameBucket in $page.attributes.searchAggs.aggregations.asMap.attNames.buckets)
             <div class="list-group list-group-root facetSearchTerm">
                 <span href="#" class="list-group-item heading-item">Refine by $services.catalogManager.attributeTitle($attNameBucket.key)</span>
 

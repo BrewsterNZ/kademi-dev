@@ -91,7 +91,7 @@ function doEcomSearch(page, params) {
     var searchResults = productSearch(page, store, page.attributes.category, query, attributePairs, params.pageFrom, params.pageSize);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
-    page.attributes.brands = listBrands(store, searchResults);
+    page.attributes.brands = listBrands(store, page.attributes.searchAggs);
     findAttributes(page, store, searchResults);
     return views.templateView("KCommerce2/searchResults");
 }
@@ -104,9 +104,9 @@ function doEcomList(page, params) {
     //log.info("searchResults: " + searchResults);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
-    page.attributes.brands = listBrands(store, searchResults);
+    page.attributes.brands = listBrands(store, page.attributes.searchAggs);
 
-    findAttributes(page, store, searchResults);
+    findAttributes(page, store, page.attributes.searchAggs);
 
     if (page.attributes.category) {
         return views.templateView("KCommerce2/viewCategory");

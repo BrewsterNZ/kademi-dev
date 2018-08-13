@@ -9,14 +9,29 @@
  * @returns {unresolved}
  */
 function productSearch(page, store, category, query, attributePairs, pageFrom, pageSize) {
+    // Do aggregation search
+    var aggsQuery = {
+        "size": 0,
+        "aggregations": {
+            "maxPrice": {"max": {"field": "finalCost"}},
+            "minPrice": {"min": {"field": "finalCost"}},
+            "attNames": {"terms": {"field": "attributeNames"}},
+            "brands": {"terms": {"field": "brandId"}},
+        }
+    };
+    appendCriteria(aggsQuery, store, category, query, null);
+    var aggsQueryText = JSON.stringify(aggsQuery);
+    var aggregationResults = services.searchManager.search(aggsQueryText, 'ecommercestore');
+    page.attributes.searchAggs = aggregationResults;
+
 
     // TODO: Pagination
-    if (!pageFrom || isNaN(pageFrom)){
+    if (!pageFrom || isNaN(pageFrom)) {
         pageFrom = 0;
     } else {
         pageFrom = parseInt(pageFrom);
     }
-    if (!pageSize || isNaN(pageSize)){
+    if (!pageSize || isNaN(pageSize)) {
         pageSize = 12;
     } else {
         pageSize = parseInt(pageSize);
@@ -39,39 +54,34 @@ function productSearch(page, store, category, query, attributePairs, pageFrom, p
             "supplierOrgId"
         ],
         "from": pageFrom,
-        "size": pageSize,
-        "aggregations": {
-            "maxPrice": {"max": {"field": "finalCost"}},
-            "minPrice": {"min": {"field": "finalCost"}},
-            "attNames" : {"terms": {"field": "attributeNames"}},
-            "brands": {"terms": {"field": "brandId"}},
-        }
+        "size": pageSize
     };
 
-    var atm = services.assetManager.assetTypeManager;
-    var cts = atm.contentTypes;
     var facetFields = formatter.newMap();
     page.attributes.facetFields = facetFields;
-    if( cts != null ) {
-        var aggs = queryJson.aggregations;
-        formatter.foreach(cts.assetTypes, function(at) {
-            if ( atm.is(at, "product") ) {
-                if( at.fields ) {
-                    formatter.foreach(at.fields, function(field) {
-                        if( field.facet ) {
-                            aggs[field.name] = {"terms": {"field": field.name}};
-                            facetFields[field.name] = field;
-                        }
-                    });
+    var aggs = queryJson.aggregations;
+    if (aggs != null) {
+        var atm = services.assetManager.assetTypeManager;
+        var cts = atm.contentTypes;
+        if (cts != null) {
+            formatter.foreach(cts.assetTypes, function (at) {
+                if (atm.is(at, "product")) {
+                    if (at.fields) {
+                        formatter.foreach(at.fields, function (field) {
+                            if (field.facet) {
+                                aggs[field.name] = {"terms": {"field": field.name}};
+                                facetFields[field.name] = field;
+                            }
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     appendCriteria(queryJson, store, category, query, attributePairs);
 
     var queryText = JSON.stringify(queryJson);
-    log.info("query: {}", queryText);
     var results = services.searchManager.search(queryText, 'ecommercestore');
 
     return results;
@@ -116,13 +126,13 @@ function findAttributesQuery(store, category, query, minPrice, maxPrice, numBuck
 //            }
     // Add an aggregation for each attribute name
     var aggs = queryJson.aggs;
-    for( var i=0; i<attNameBuckets.length; i++ ) {
+    for (var i = 0; i < attNameBuckets.length; i++) {
         var att = attNameBuckets[i].key;
         log.info("Add att {}", att);
         aggs[att + "Att"] = {
-                "terms" : {
-                    "field" : att
-                }
+            "terms": {
+                "field": att
+            }
         };
     }
 
@@ -253,13 +263,13 @@ function appendCriteria(queryJson, store, category, query, attributePairs) {
     // category is also used in the brand attribute, so match on either
     if (category != null) {
         must.push({
-                "bool": {
-                    "should": [
-                        {"term": {"categoryIds": category.id}},
-                        {"term": {"brandId": category.id}}
-                    ]
-                }
-            });
+            "bool": {
+                "should": [
+                    {"term": {"categoryIds": category.id}},
+                    {"term": {"brandId": category.id}}
+                ]
+            }
+        });
     }
     queryJson.query = {
         "bool": {
@@ -275,12 +285,12 @@ function appendCriteria(queryJson, store, category, query, attributePairs) {
             }
         });
     }
-    log.info("appendCriteria {}", attributePairs);
-    if( attributePairs != null ) {
-        log.info("appendCriteria {}", attributePairs.length);
-        for( var i=0; i<attributePairs.length; i++) {
+    //log.info("appendCriteria {}", attributePairs);
+    if (attributePairs != null) {
+        //log.info("appendCriteria {}", attributePairs.length);
+        for (var i = 0; i < attributePairs.length; i++) {
             var nvp = attributePairs[i];
-            log.info("appendCriteria {} {} {}", i, nvp.name, nvp.value);
+            //log.info("appendCriteria {} {} {}", i, nvp.name, nvp.value);
             var term = {};
             term[nvp.name] = nvp.value;
             must.push({"term": term});
