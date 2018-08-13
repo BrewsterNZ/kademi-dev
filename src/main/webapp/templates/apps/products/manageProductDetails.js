@@ -12,17 +12,7 @@ function initProductDetails(editorType) {
     initCategoryManagment();
     initBrands();
     initSuplierOrgs();
-    var editorInitialized = false;
-    $('#myTab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        if(!editorInitialized && $(e.target).attr('href') == '#panel-content'){
-            initProductContentsTab(editorType);
-            editorInitialized = true;
-        }
-    });
-    if ($('#myTab li.active a').attr('href') == '#panel-content' && !editorInitialized){
-        initProductContentsTab(editorType);
-        editorInitialized = true;
-    }
+    initProductContentsTab(editorType);
 
     $(document).on('change', '#relatedAppIdSelect', function (e) {
         $('form.updateProduct').trigger('submit');
