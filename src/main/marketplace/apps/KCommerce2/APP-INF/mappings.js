@@ -89,7 +89,8 @@ function doEcomSearch(page, params) {
     var store = page.attributes.store;
     var attributePairs = findAttsInParams(params);
     var otherCats = findOtherCatsInParams(params)
-    var searchResults = productSearch(page, store, page.attributes.category, query, attributePairs, otherCats, params.pageFrom, params.pageSize);
+    var brands = findBrandsInParams(params);
+    var searchResults = productSearch(page, store, page.attributes.category, query, attributePairs, otherCats, brands, params.pageFrom, params.pageSize);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
     page.attributes.brands = listBrands(store, page.attributes.searchAggs);
@@ -98,11 +99,12 @@ function doEcomSearch(page, params) {
 }
 
 function doEcomList(page, params) {
-    log.info("doEcomList:");
     var store = page.attributes.store;
     var attributePairs = findAttsInParams(params);
     var otherCats = findOtherCatsInParams(params)
-    var searchResults = productSearch(page, store, page.attributes.category, null, attributePairs, otherCats, params.pageFrom, params.pageSize);
+    var brands = findBrandsInParams(params);
+    log.info("doEcomList: brands={}", brands);
+    var searchResults = productSearch(page, store, page.attributes.category, null, attributePairs, otherCats, brands, params.pageFrom, params.pageSize);
     //log.info("searchResults: " + searchResults);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
@@ -165,6 +167,21 @@ function findAttsInParams(params) {
     return atts;
 }
 
+function findBrandsInParams(params) {
+    var brands = formatter.newArrayList();
+    var idsList = formatter.toList(formatter.split(params.brands));
+    formatter.foreach(idsList, function(sId) {
+        log.info("findBrandsInParams: id={}", sId);
+        var id = formatter.toLong(sId);
+        if( id != null ) {
+            var cat = services.criteriaBuilders.get("category").eq("id", id).executeSingle();
+            if( cat != null ) {
+                brands.add(cat);
+            }
+        }
+    });
+    return brands;
+}
 
 function findOtherCatsInParams(params) {
     var otherCats = formatter.newArrayList();

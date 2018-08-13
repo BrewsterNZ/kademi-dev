@@ -8,7 +8,7 @@
  * @param {type} query
  * @returns {unresolved}
  */
-function productSearch(page, store, category, query, attributePairs, otherCats, pageFrom, pageSize) {
+function productSearch(page, store, category, query, attributePairs, otherCats, brands, pageFrom, pageSize) {
     // Do aggregation search
     var aggsQuery = {
         "size": 0,
@@ -41,7 +41,7 @@ function productSearch(page, store, category, query, attributePairs, otherCats, 
         }
     }
 
-    appendCriteria(aggsQuery, store, category, query, null, null);
+    appendCriteria(aggsQuery, store, category, query, null, null, null);
     var aggsQueryText = JSON.stringify(aggsQuery);
     var aggregationResults = services.searchManager.search(aggsQueryText, 'ecommercestore');
     page.attributes.searchAggs = aggregationResults;
@@ -79,7 +79,7 @@ function productSearch(page, store, category, query, attributePairs, otherCats, 
         "size": pageSize
     };
 
-    appendCriteria(queryJson, store, category, query, attributePairs, otherCats);
+    appendCriteria(queryJson, store, category, query, attributePairs, otherCats, brands);
 
     var queryText = JSON.stringify(queryJson);
     var results = services.searchManager.search(queryText, 'ecommercestore');
@@ -255,7 +255,7 @@ function productInCategorySearch(store, category, query) {
 }
 
 
-function appendCriteria(queryJson, store, category, query, attributePairs, otherCategorys) {
+function appendCriteria(queryJson, store, category, query, attributePairs, otherCategorys, brands) {
     // todo filter by store and category
     var must = [
         {"term": {"storeId": store.id}}
@@ -280,6 +280,17 @@ function appendCriteria(queryJson, store, category, query, attributePairs, other
             });
         });
     }
+
+    if (brands != null && brands.size() > 0 )  {
+        var arrBrandIds = [];
+        formatter.foreach(brands, function (brandCat) {
+            arrBrandIds.push( brandCat.id );
+        });
+        must.push({
+            "terms" : { "brandId" : arrBrandIds}
+        });
+    }
+
     queryJson.query = {
         "bool": {
             "must": must
