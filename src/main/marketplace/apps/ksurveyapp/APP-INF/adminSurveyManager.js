@@ -126,9 +126,8 @@ function saveSurvey(page, params) {
                     survey.startTime = startTime;
                     survey.endTime = endTime;
                 }
-                if (image) {
-                    survey.image = image;
-                }
+                survey.image = image;
+                
                 returnObj = survey;
                 returnObj.surveyId = surveyId;
                 surveyRes.update(JSON.stringify(survey), RECORD_TYPES.SURVEY);

@@ -708,7 +708,7 @@ $(function () {
         return arr.join(',');
     }
     
-    function initٍSurveyImageUpload() {
+    function initSurveyImageUpload() {
         flog('initSurveyImageUpload');
         $('.btn-survey-img-upload').each(function (i, item) {
             var btn = $(this);
@@ -719,40 +719,15 @@ $(function () {
                 fieldName: 'image',
                 onCropComplete: function (resp) {
                     flog('onCropComplete:', resp, resp.nextHref);
-                    $('#survey-image').val(resp.result.nextHref);
-                    //reloadSurvey();
+                    $('#survey-image').val(resp.result.nextHref);   
+                    $('.survey-image').show()
+                    $('#img-survey').attr('src', resp.result.nextHref)
                 },
                 onContinue: function (resp) {
                     flog('onContinue:', resp, resp.result.nextHref);
                     $('#survey-image').val(resp.result.nextHref);
-                    
-//                    var form = $('#survey-form');
-//                    var data = form.serialize();
-//                    var surveyId = form.find('[name=surveyId]');
-                    
-//                    $.ajax({
-//                        url: window.location.pathname,
-//                        type: 'POST',
-//                        dataType: 'json',
-//                        data: data
-////                                {
-////                            uploadedHref: resp.result.nextHref,
-////                            applyImage: true
-////                        }
-//                        ,
-//                        success: function (resp) {
-//                            flog('success');
-//                            if (resp.status) {
-//                                Msg.info('Done');
-//                                //reloadSurvey();
-//                            } else {
-//                                Msg.error('An error occured processing the survey image.');
-//                            }
-//                        },
-//                        error: function () {
-//                            alert('An error occured processing the survey image.');
-//                        }
-//                    });
+                    $('.survey-image').show()
+                    $('#img-survey').attr('src', resp.result.nextHref)
                 }
             });
         });
@@ -763,29 +738,8 @@ $(function () {
             e.preventDefault();
 
             Kalert.confirm('You want to remove the survey image?', 'Ok', function () {
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'JSON',
-                    data: {
-                        removeSurveyImage: true
-                    },
-                    success: function (resp) {
-                        Kalert.close();
-
-                        if (resp.status) {
-                            reloadSurvey();
-                            Msg.success(resp.messages);
-                        } else {
-                            Msg.warning(resp.messages);
-                        }
-                    },
-                    error: function () {
-                        reloadSurvey();
-                        Kalert.close();
-
-                        Msg.error('Oh No! Something went wrong!');
-                    }
-                });
+                $('#survey-image').val(null); 
+                $('.survey-image').hide()
             });
         });
     }
@@ -806,7 +760,7 @@ $(function () {
     initToggleQuestions();
     initYesNoAnswers();
     
-    initٍSurveyImageUpload();
+    initSurveyImageUpload();
     initSurveyImageDelete();
     
 });
