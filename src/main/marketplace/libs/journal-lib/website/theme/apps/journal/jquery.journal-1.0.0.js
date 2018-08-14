@@ -174,7 +174,7 @@
         if (textarea.length === 0) {
             container.append(
                 '<div class="journal-entry">' +
-                '    <a href="' + name + '">' + name + '</a>' +
+                '    <a href="/' + name + '">' + name + '</a>' +
                 '    <textarea class="form-control" row="2" name="' + name + '"></textarea>' +
                 '</div>'
             );
