@@ -51,7 +51,7 @@ function resolveTeam(page, groupName, teamOrgId) {
 function post(page, params, files, form) {
     transactionManager.runInTransaction(function () {
         var newPost = form.cleanedParam("newPost");
-        var wallId = form.rawP("wallId"); // nullable, long
+        var wallId = form.rawParam("wallId"); 
         
         if (wallId == null) {
             var currentUser = securityManager.currentUser;
