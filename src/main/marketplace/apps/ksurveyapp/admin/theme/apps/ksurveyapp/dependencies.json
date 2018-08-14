@@ -10,6 +10,12 @@
         }
     ],
     "dependencies": [
-
+        
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js"
+            }
+        }
     ]
 }

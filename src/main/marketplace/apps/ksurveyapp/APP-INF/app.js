@@ -4,6 +4,7 @@ controllerMappings
     .enabled(true)
     .defaultView(views.templateView('ksurveyapp/manageSurveys.html'))
     .addMethod('GET', 'getSurveys')
+    .addMethod('POST', 'uploadSurveyImage', 'uploadSurveyImage')
     .addMethod('POST', 'saveSurvey', 'saveSurvey')
     .addMethod('POST', 'deleteSurvey', 'deleteSurvey')
     .addMethod('POST', 'clearSurveyResult', 'clearSurveyResult')
@@ -78,7 +79,13 @@ controllerMappings
     .enabled(true)
     .addMethod('GET', 'getSurveysJson')
     .build();
-
+    
+controllerMappings
+    .adminController()
+    .path('/uploadSurveyImage/')
+    .enabled(true)
+    .addMethod('POST', 'uploadSurveyImage')
+    .build();
 
 
 // website controllers
