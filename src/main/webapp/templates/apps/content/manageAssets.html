@@ -56,6 +56,10 @@
                 <span class="fa fa-cogs"></span>
                 Manage types
             </a>
+            <button class="btn btn-info" data-toggle="modal" data-target="#export-modal">
+                <span class="fa fa-download"></span>
+                Backup
+            </button>
         </div>
 
         <div class="collapse" id="bulk-upload">
@@ -167,6 +171,31 @@
                             <button type="submit" value="Upload" class="btn btn-success">
                                 <span class="fa fa-upload"></span>
                                 Upload
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="export-modal" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Export all assets</h4>
+                    </div>
+                    <form id="frmExport" action="$page.href" method="post" enctype="multipart/form-data" class="form-horizontal">
+                        <div class="modal-body">
+                            <input type="hidden" name="exportToZip" value="true"/>
+
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <button type="submit" value="Upload" class="btn btn-success">
+                                <span class="fa fa-download"></span>
+                                Export all assets
                             </button>
                         </div>
                     </form>
