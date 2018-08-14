@@ -708,6 +708,46 @@ $(function () {
         return arr.join(',');
     }
     
+    function initSurveyImageUpload() {
+        flog('initSurveyImageUpload');
+        $('.btn-survey-img-upload').each(function (i, item) {
+            var btn = $(this);
+            
+            btn.upcropImage({
+                buttonContinueText: 'Save',
+                url: '/uploadSurveyImage/',
+                fieldName: 'image',
+                onCropComplete: function (resp) {
+                    flog('onCropComplete:', resp, resp.nextHref);
+                    $('#survey-image').val(resp.result.nextHref);   
+                    $('.survey-image').show()
+                    $('#img-survey').attr('src', resp.result.nextHref)
+                },
+                onContinue: function (resp) {
+                    flog('onContinue:', resp, resp.result.nextHref);
+                    $('#survey-image').val(resp.result.nextHref);
+                    $('.survey-image').show()
+                    $('#img-survey').attr('src', resp.result.nextHref)
+                }
+            });
+        });
+    }
+
+    function initSurveyImageDelete() {
+        $('body').on('click', '.btn-survey-img-del', function (e) {
+            e.preventDefault();
+
+            Kalert.confirm('You want to remove the survey image?', 'Ok', function () {
+                $('#survey-image').val(null); 
+                $('.survey-image').hide()
+            });
+        });
+    }
+
+    function reloadSurvey() {
+        window.location.reload();
+    }
+    
     initGroupModal();
     initDateRange();
     initProgressBar();
@@ -719,4 +759,8 @@ $(function () {
     initSortableAnswers();
     initToggleQuestions();
     initYesNoAnswers();
+    
+    initSurveyImageUpload();
+    initSurveyImageDelete();
+    
 });

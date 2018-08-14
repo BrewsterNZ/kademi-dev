@@ -68,6 +68,30 @@
                                 <textarea rows="8" class="form-control required" name="description" required="required" value="">$!survey.jsonObject.description</textarea>
                             </div>
                         </div>
+                        
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="">Survey image</label>
+                            <input type="hidden" name="image" id="survey-image" value="#if( $formatter.isNotNull($survey.jsonObject.image) ) $!survey.jsonObject.image #end" />                            
+                            <div class="col-md-4">
+                                
+                                <button type="button" title="Upload Image" class="btn btn-sm btn-success btn-survey-img-upload" data-toggle="modal" data-target="#upcrop-87473185-1534228898053" style="margin-bottom:16px">
+                                    <i class="fa fa-upload"></i>
+                                </button>
+                                <br>
+                                
+                                <div class="row survey-image" #if($formatter.isNull($survey.jsonObject.image)) hidden #end>
+                                    <div class="col-xs-12 col-md-12 ">                                            
+                                        <img id="img-survey" hieght="300" width="300" src="$survey.jsonObject.image" />
+                                        <br>
+                                        <a class="btn-survey-img-del btn btn-xs btn-danger">
+                                            Remove <span class="fa fa-times"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                               
+                            </div>                            
+                        </div>                                                                        
+                        
                         <div class="form-group">
                             <label class="control-label col-md-2" for="enable">Enabled</label>
                             <div class="col-md-4">

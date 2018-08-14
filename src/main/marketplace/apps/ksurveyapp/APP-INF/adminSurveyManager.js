@@ -102,6 +102,7 @@ function saveSurvey(page, params) {
     var startTime = params.startTime;
     var endTime = params.endTime;
     var websites = params.websites;
+    var image = params.image;
     var db = getDB(page);
     var errors = [];
     var returnObj;
@@ -125,6 +126,8 @@ function saveSurvey(page, params) {
                     survey.startTime = startTime;
                     survey.endTime = endTime;
                 }
+                survey.image = image;
+                
                 returnObj = survey;
                 returnObj.surveyId = surveyId;
                 surveyRes.update(JSON.stringify(survey), RECORD_TYPES.SURVEY);
@@ -150,6 +153,11 @@ function saveSurvey(page, params) {
                 surveyJson.startTime = startTime;
                 surveyJson.endTime = endTime;
             }
+            
+            if (image) {
+                surveyJson.image = image;
+            }
+            
             returnObj = surveyJson;
             returnObj.surveyId = newId;
             db.createNew(newId, JSON.stringify(surveyJson), RECORD_TYPES.SURVEY);
@@ -174,6 +182,29 @@ function saveSurvey(page, params) {
     return views.jsonObjectView(JSON.stringify(result)).wrapJsonResult();
 }
 
+/**
+     * API for uploading survrey images
+     * 
+     * @param {type} page
+     * @param {type} params
+     * @param {type} files
+     * @returns {undefined}
+     */
+    uploadSurveyImage = function (page, params, files) {
+
+        var file = files.get('image');
+        var hash;
+        transactionManager.runInTransaction(function () {
+            hash = fileManager.uploadFile(file);
+            var m = {
+                imageHash: hash
+            };            
+        });
+
+        return page.jsonResult(true, 'Uploaded', '/_hashes/files/' + hash);
+
+    };
+    
 // GET /ksurvey/deleteAnswer
 function deleteAnswer(page, params) {
     var answerId = params.answerId;

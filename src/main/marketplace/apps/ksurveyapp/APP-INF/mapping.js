@@ -42,6 +42,15 @@ var surveyMapping = {
                 }
             }
         },
+        "image": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
         "status": {
             "store": true,
             "type": "boolean"

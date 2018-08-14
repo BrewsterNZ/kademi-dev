@@ -72,7 +72,7 @@
         var badge = page.attributes.badgeId;
 
         transactionManager.runInTransaction(function () {
-            services.catalogManager.createAssetForRecognition(badge, contentType);
+            services.recognitionManager.createAssetForRecognition(badge, contentType);
         });
 
         return page.jsonResult(true, 'Success');
