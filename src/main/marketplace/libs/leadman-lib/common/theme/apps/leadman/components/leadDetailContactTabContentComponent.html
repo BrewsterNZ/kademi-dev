@@ -77,50 +77,11 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label class="control-label">$field.text</label>
-                            $field.html( $fields[$field], "", "extraField_" )
+                            $field.html( $fields[$field], "", "" )
                         </div>
                     </div>
                     #end
                     #end
-                </div>
-                <div class="row hide">
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label class="control-label">Address Line 1</label>
-                            <input type="text" name="address" id="address" class="form-control" placeholder="Address Line 1" value="$!profile.address" />
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label class="control-label">Address Line 2</label>
-                            <input type="text" name="addressLine2" id="addressLine2" class="form-control" placeholder="Address Line 2" value="$!profile.addressLine2" />
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label class="control-label">Town/City</label>
-                            <input type="text" name="state" id="state" class="form-control" placeholder="Town/City" value="$!profile.state" />
-                        </div>
-                    </div>
-                </div>
-                <div class="row hide">
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label class="control-label">Postcode</label>
-                            <input type="text" name="postcode" id="postcode" class="form-control" placeholder="Postcode" value="$!profile.postcode" />
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label class="control-label">Country</label>
-                            <select name="country" class="form-control selectpicker" data-live-search="true" data-live-search-normalize="true" id="country">
-                                <option value="">[No country selected]</option>
-                                #foreach($cc in $formatter.countryCodes.list)
-                                $formatter.option( $cc.alpha2Code, $cc.englishShortName, $!profile.country )
-                                #end
-                            </select>
-                        </div>
-                    </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12 text-right">
