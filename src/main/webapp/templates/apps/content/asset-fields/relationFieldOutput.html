@@ -11,6 +11,6 @@ $assetRes.href
         #elseif ($fieldDef.contentType.startsWith("text"))
             $asset.text
         #else
-            TODO: Show value $asset
+            <a href="/asset-manager/$sset.uniqueId">$asset.name</a>
         #end
 #end
