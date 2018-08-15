@@ -4,7 +4,21 @@
         initDeleteAssets();
         initUploadModal();
         initSelectPicker();
+        initRestore();
     });
+
+    function initRestore() {
+        var restoreForm = $('#frmRestore');
+        restoreForm.forms({
+            onSuccess : function(resp){
+                if( resp.status) {
+                    Msg.info("Restore process has been started");
+                } else {
+                    Msg.error("There was a problem starting the restore " + resp.messages);
+                }
+            }
+        });
+    }
 
     function initUploadModal() {
         flog('initUploadModal');

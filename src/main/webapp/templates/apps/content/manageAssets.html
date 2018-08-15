@@ -20,6 +20,8 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li><a data-toggle="collapse" href="#bulk-upload">Bulk upload</a></li>
+                    <li><a data-toggle="modal" data-target="#export-modal"><span class="fa fa-download"></span>Backup</a></li>
+                    <li><a data-toggle="collapse" href="#restore-container"><span class="fa fa-upload"></span>Restore</a></li>
                 </ul>
             </div>
 
@@ -56,15 +58,22 @@
                 <span class="fa fa-cogs"></span>
                 Manage types
             </a>
-            <button class="btn btn-info" data-toggle="modal" data-target="#export-modal">
-                <span class="fa fa-download"></span>
-                Backup
-            </button>
         </div>
 
         <div class="collapse" id="bulk-upload">
             <div class="well">
                 <form action="${page.href}_DAV/PUT?overwrite=true" class="dropzone dropzone-fullwidth" id="uploadFileDropzone"></form>
+            </div>
+        </div>
+
+        <div class="collapse" id="restore-container">
+            <div class="well">
+                <form action="${page.href}" id="frmRestore" enctype="multipart/form-data">
+                    <p>
+                        <input type="file" name="restoreFile" class="form-control file-input" />
+                    </p>
+                    <button class="btn btn-success" type="submit">Start restore</button>
+                </form>
             </div>
         </div>
 
@@ -100,31 +109,31 @@
 
         <table class="table table-striped" id="table-assets">
             <tbody id="table-body-assets">
-            <tr>
-                <th>Displaying $page.paginator.records.size() of $page.paginator.totalRecords assets</th>
-                <th>Format</th>
-                <th>Language</th>
-                <th>Created</th>
-                <th>Modified</th>
-                <th width="40"><input type="checkbox" class="chk-all"></th>
-            </tr>
-            #foreach( $asset in $page.paginator.records )
-            <tr>
-                <td><a href="$asset.uniqueId">$asset.name</a></td>
-                <td>
-                    $!asset.format
-                    #foreach($ct in $asset.assetTypes)
-                    <a href="/content-types/$ct" class="label label-info">$ct</a>
-                    #end
-                </td>
-                <td>$!asset.language</td>
-                <td><abbr class="timeago" title="$formatter.formatDateISO8601($asset.createdDate, $page.parent.organisation.timezone)">$formatter.formatDateTime($asset.createdDate, $page.parent.organisation.timezone)</abbr></td>
-                <td><abbr class="timeago" title="$formatter.formatDateISO8601($asset.modifiedDate, $page.parent.organisation.timezone)">$formatter.formatDateTime($asset.modifiedDate, $page.parent.organisation.timezone)</abbr></td>
-                <td>
-                    <input type="checkbox" data-id="$asset.uniqueId" class="asset-check">
-                </td>
-            </tr>
-            #end
+                <tr>
+                    <th>Displaying $page.paginator.records.size() of $page.paginator.totalRecords assets</th>
+                    <th>Format</th>
+                    <th>Language</th>
+                    <th>Created</th>
+                    <th>Modified</th>
+                    <th width="40"><input type="checkbox" class="chk-all"></th>
+                </tr>
+                #foreach( $asset in $page.paginator.records )
+                <tr>
+                    <td><a href="$asset.uniqueId">$asset.name</a></td>
+                    <td>
+                        $!asset.format
+                        #foreach($ct in $asset.assetTypes)
+                        <a href="/content-types/$ct" class="label label-info">$ct</a>
+                        #end
+                    </td>
+                    <td>$!asset.language</td>
+                    <td><abbr class="timeago" title="$formatter.formatDateISO8601($asset.createdDate, $page.parent.organisation.timezone)">$formatter.formatDateTime($asset.createdDate, $page.parent.organisation.timezone)</abbr></td>
+                    <td><abbr class="timeago" title="$formatter.formatDateISO8601($asset.modifiedDate, $page.parent.organisation.timezone)">$formatter.formatDateTime($asset.modifiedDate, $page.parent.organisation.timezone)</abbr></td>
+                    <td>
+                        <input type="checkbox" data-id="$asset.uniqueId" class="asset-check">
+                    </td>
+                </tr>
+                #end
             </tbody>
             <tfoot id="assetsFooter">
                 <tr>
