@@ -17,7 +17,7 @@
             #set( $ruleNum = $formatter.toInteger($params.ruleNum) - 1 )
             #if( $ruleNum <= $rules.rules.size() )
             #set( $rule = $rules.rules[$ruleNum] )
-            <h1>Edit pricing rule: $params.ruleNum</h1>
+            <h1>Pricing rule #$params.ruleNum</h1>
             #else
             <h1 class="text-danger">Couldnt find pricing rule: $params.ruleNum</h1>
             #break
@@ -29,10 +29,13 @@
         <form id="detailsForm" name="frmDetails" action="$page.href" method="post" class="form-horizontal">
             <input type="hidden" name="ruleNum" value="$ruleNum" />
 
-            <h2>Activation</h2>
+            <h2>
+                <i class="fa fa-lightbulb-o text-success"></i>
+                Activation
+            </h2>
             <p class="lead">These parameters control when this rule is applied.</p>
             <div class="form-group">
-                <label class="control-label col-md-2" for="promotionName">promotionName</label>
+                <label class="control-label col-md-2" for="promotionName">Promotion</label>
                 <div class="col-md-10">
                     <select name="promotionName" class="form-control">
                         <option value="">[Not selected]</option>
@@ -40,15 +43,11 @@
                         $formatter.option($reward.name, $reward.title, $rule.promotionName)
                         #end
                     </select>
+                    <i>If selected, this rule will only be active during the promotion period, and will only apply to users elligible for the promotion</i>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="control-label col-md-2" for="userId">User Id</label>
-                <div class="col-md-4">
-                    <input type="text" name="userId" value="$!rule.userId" placeholder="" class="form-control entity-select" data-entity-type="profile" />
-                </div>
-
                 <label class="control-label col-md-2" for="groupName">User group</label>
                 <div class="col-md-4">
                     <select name="groupName" class="form-control">
@@ -58,12 +57,20 @@
                         #end
                     </select>
                 </div>
+
+                <label class="control-label col-md-2" for="userId">User Id</label>
+                <div class="col-md-4">
+                    <input type="text" name="userId" value="$!rule.userId" placeholder="" class="form-control entity-select" data-entity-type="profile" />
+                    <i>Use this to limit the rule to a single user</i>
+                </div>
+
             </div>
 
             <div class="form-group">
                 <label class="control-label col-md-2" for="orgId">Organisation ID</label>
                 <div class="col-md-4">
                     <input type="text" name="orgId" value="$!rule.orgId" placeholder="" class="form-control entity-select" data-entity-type="organisation"/>
+                    <i>Limit the rule to members of a specific organisation, eg dealer</i>
                 </div>
 
                 <label class="control-label col-md-2" for="orgType">Org type</label>
@@ -77,17 +84,9 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="control-label col-md-2" for="minQuantity">min quantity</label>
-                <div class="col-md-4">
-                    <input type="text" name="minQuantity" value="$!rule.minQuantity" placeholder="" class="form-control" />
-                </div>
+            <hr/>
 
-                <label class="control-label col-md-2" for="maxQuantity">max quantity</label>
-                <div class="col-md-4">
-                    <input type="text" name="maxQuantity" value="$!rule.maxQuantity" placeholder="" class="form-control" />
-                </div>
-            </div>
+            <h4>Product and item based activation</h4>
 
             <div class="form-group">
                 <label class="control-label col-md-2" for="categoryName">Product category</label>
@@ -102,9 +101,36 @@
                     <i>Note that this is the base product code, not SKU codes</i>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="categoryName">Brand</label>
+                <div class="col-md-4">
+                    <input type="text" name="brandName" value="$!rule.brandName" placeholder="" class="form-control" />
+                    <i>Enter the brand code, not title</i>
+                </div>
+            </div>
+
+            <p>Use these factors to limit the rule to only apply when a user purchases a given quantity</p>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="minQuantity">Minimum quantity</label>
+                <div class="col-md-4">
+                    <input type="text" name="minQuantity" value="$!rule.minQuantity" placeholder="" class="form-control" />
+                </div>
+
+                <label class="control-label col-md-2" for="maxQuantity">Maximum quantity</label>
+                <div class="col-md-4">
+                    <input type="text" name="maxQuantity" value="$!rule.maxQuantity" placeholder="" class="form-control" />
+                </div>
+            </div>
+
+
             <hr/>
 
-            <h2>Pricing adjustments</h2>
+            <h2>
+                <i class="fa fa-dollar text-success"></i>
+                Pricing adjustments
+            </h2>
             <p class="lead">These parameters control how the product price is changed when the rule is applied.</p>
 
             <div class="form-group">
@@ -130,7 +156,10 @@
             <hr/>
 
             <h2>Notes</h2>
-            <textarea name="notes" placeholder="" class="form-control" >$!rule.notes</textarea>
+
+            <textarea name="notes" placeholder="" class="form-control" style="height: 200px" >$!rule.notes</textarea>
+
+            <br/>
 
             <div class="form-group">
                 <div class="col-md-12">
