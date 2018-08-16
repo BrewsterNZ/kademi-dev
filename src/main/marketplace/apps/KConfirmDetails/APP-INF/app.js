@@ -89,7 +89,9 @@
         }
 
         try {
-            securityManager.addToGroup(userName, group);
+            transactionManager.runInTransaction(function () {
+                securityManager.addToGroup(userName, group);
+            });
             return views.jsonObjectView(JSON.stringify(result));
         } catch (e) {
             log.error('Error when updating user: ' + e, e);
