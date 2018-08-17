@@ -1,42 +1,17 @@
+#set ($pollDb = $applications.KongoDB.findDatabase('kpollDB'))
+#set ($poll = $pollDb.child($pollName))
+#set ($curUser = $userResource)
+#if ($poll)
+#set ($answer = $applications.kpollapp.call('getAnswerByUser', $rootFolder, $poll.name, $curUser.name))
+#set ($answers = $applications.kpollapp.call('getAnswers', $rootFolder, $poll.name).answers)
+#end
+
+
 #if ($page)
-    #script()
-    <script>
-        var pollName = templatingContext.get('pollName');
-        var pollDb = applications.KongoDB.findDatabase('kpollDB');
-        var poll = pollDb.child(pollName);
-        var curUser = securityManager.currentUser;
-        var answer = applications.kpollapp.call('getAnswerByUser', page, poll.name, curUser.name);
-        var answers = applications.kpollapp.call('getAnswers', page, poll.name).answers;
-        templatingContext.put('answers', answers);
-        templatingContext.put('poll', poll);
-        templatingContext.put('answer', answer);
-    </script>
-    #end
 
     #if ($user && $poll)
         #if (!$answer)
-        <form method="post" action="/kpoll/${pollName}/answer" class="form-kpoll">
-            <div class="kpoll">
-                <div class="kpoll-question clearfix">
-                    $poll.jsonObject.question
-                </div>
-                <hr />
-                <div class="kpoll-anwsers">
-                    #foreach($ans in $poll.jsonObject.answers)
-                        #set ($anwserId = "answer-" + $pollName + "-" + $foreach.index)
-                        <div class="radio kpoll-anwser">
-                            <label for="$anwserId">
-                                $formatter.radio($anwserId, "answer", false, $ans, "required") $ans
-                            </label>
-                        </div>
-                    #end
-                </div>
-                <div class="kpoll-action">
-                    <button type="submit" class="btn btn-primary btn-sm btn-small">Submit</button>
-                    <button type="button" class="btn btn-success btn-see-result btn-sm btn-small">See result</button>
-                </div>
-            </div>
-        </form>
+            #renderPollForm($poll.jsonObject.question $poll.jsonObject.answers)
         #end
 
         <div class="poll-result" #if (!$answer) style="display: none" #end>
@@ -75,44 +50,41 @@
             </div>
         </div>
     #else
-        <p class="alert alert-info">You don't have any poll for now.</p>
+        #renderPollForm("<p>Please select a poll</p>" ["Sample answer 1", "Sample answer 2"])
     #end
 #else
-    <form method="post" action="/kpoll/${pollName}/answer" class="form-kpoll">
-        <div class="kpoll">
-            <div class="kpoll-question clearfix">
-                Example Poll
-            </div>
-            <hr />
-            <div class="kpoll-anwsers">
-                <div class="radio">
-                    <label>
-                        <input required="required" name="test" value="0" type="radio"> Answer 1
-                    </label>
-                </div>
+    #if ($poll)
+    #renderPollForm($poll.jsonObject.question $poll.jsonObject.answers)
+    #else
+#renderPollForm("<p>Please select a poll</p>" ["Sample answer 1", "Sample answer 2"])
+    #end
+#end
 
-                <div class="radio">
-                    <label>
-                        <input required="required" name="test" value="0" type="radio"> Answer 2
-                    </label>
-                </div>
+#macro (renderPollItem $anwserId $ans)
+<div class="radio kpoll-anwser">
+    <label for="$anwserId">
+        $formatter.radio($anwserId, "answer", false, $ans, "required") $ans
+    </label>
+</div>
+#end
 
-                <div class="radio">
-                    <label>
-                        <input required="required" name="test" value="0" type="radio"> Answer 3
-                    </label>
-                </div>
-
-                <div class="radio">
-                    <label>
-                        <input required="required" name="test" value="0" type="radio"> Answer 4
-                    </label>
-                </div>
-            </div>
-            <div class="kpoll-action">
-                <button type="submit" class="btn btn-primary btn-sm btn-small">Submit</button>
-                <button type="button" class="btn btn-success btn-see-result btn-sm btn-small">See result</button>
-            </div>
+#macro (renderPollForm $pollQuestion $answers)
+<form method="post" action="/kpoll/${pollName}/answer" class="form-kpoll">
+    <div class="kpoll">
+        <div class="kpoll-question clearfix">
+            $pollQuestion
         </div>
-    </form>
+        <hr />
+        <div class="kpoll-anwsers">
+            #foreach($ans in $answers)
+            #set ($anwserId = "answer-" + $pollName + "-" + $foreach.index)
+            #renderPollItem($anwserId $ans)
+            #end
+        </div>
+        <div class="kpoll-action">
+            <button type="submit" class="btn btn-primary btn-sm btn-small">Submit</button>
+            <button type="button" class="btn btn-success btn-see-result btn-sm btn-small">See result</button>
+        </div>
+    </div>
+</form>
 #end
