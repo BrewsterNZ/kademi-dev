@@ -445,12 +445,12 @@ function initBrands() {
     var brandSearch = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: {
-            url: window.location.pathname + '?brands',
-            ttl: 0,
-            cache: false
+        remote: {
+            url: window.location.pathname + '?catSearch=%QUERY',
+            wildcard: '%QUERY'
         }
     });
+
 
     brandSearch.initialize();
 
