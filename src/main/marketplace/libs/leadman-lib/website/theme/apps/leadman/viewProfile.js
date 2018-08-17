@@ -163,20 +163,20 @@ function initAssignOrg() {
     });
 }
 
-function initTableProfileLeads() {
-    if ($('#tableProfileLeads').length){
-        $('#tableProfileLeads').DataTable({
-            paging: false,
-            searching: false,
-            destroy: true,
-            info: false,
-            initComplete: function(settings, json) {
-                $('#tableProfileLeads').closest('.row').siblings('.row').remove();
-            }
-        });
-    }
-}
-
-$(function () {
-    initTableProfileLeads();
-})
+// function initTableProfileLeads() {
+//     if ($('#tableProfileLeads').length){
+//         $('#tableProfileLeads').DataTable({
+//             paging: false,
+//             searching: false,
+//             destroy: true,
+//             info: false,
+//             initComplete: function(settings, json) {
+//                 $('#tableProfileLeads').closest('.row').siblings('.row').remove();
+//             }
+//         });
+//     }
+// }
+//
+// $(function () {
+//     initTableProfileLeads();
+// })
