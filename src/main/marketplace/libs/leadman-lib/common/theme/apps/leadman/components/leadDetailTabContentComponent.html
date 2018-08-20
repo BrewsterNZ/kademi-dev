@@ -14,7 +14,12 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">Lead Title:</label>
+                        <i class="pull-right">
+                            $formatter.firstNotNull($page.funnel.title, $page.funnel.name)
+                        </i>
+                        <label class="control-label">
+                            Lead Title:
+                        </label>
                         <input type="text" value="$!page.leadTitle" name="leadTitle" class="form-control immediateUpdate"/>
                     </div>
                 </div>
