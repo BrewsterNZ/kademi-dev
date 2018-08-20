@@ -94,7 +94,7 @@ function doEcomSearch(page, params) {
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
     page.attributes.brands = listBrands(store, page.attributes.searchAggs);
-    findAttributes(page, store, searchResults);
+    findAttributes(page, store, page.attributes.searchAggs);
     return views.templateView("KCommerce2/searchResults");
 }
 

@@ -296,7 +296,7 @@ function appendCriteria(queryJson, store, category, query, attributePairs, other
             "must": must
         }
     };
-    if (query != null) {
+    if (!formatter.isNull(query)) {
         must.push({
             "multi_match": {
                 "query": query,
