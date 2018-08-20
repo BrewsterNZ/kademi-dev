@@ -29,11 +29,9 @@
                         #if(!$gName)
                             #set($gName = $group.name)
                         #end
-                        #if( $group.groupType == "P" )
-                            <b class="text-info">$gName</b>
-                        #else
-                            $group.name
-                        #end
+
+                        <b class="text-info">$gName</b>
+
                     </span>
 
                     <div class="btn-group btn-group-xs">
