@@ -8,10 +8,11 @@
 
         <h1 class="leadTitle">
             #if($page.leadOrg)
-            <a href="javascript:void (0)">$page.leadOrg.formattedName</a>
+            $page.leadOrg.formattedName
             #end
         </h1>
-        <p>$!page.leadOrg.address <br>
+        <p>
+            $!page.leadOrg.address <br>
             $!page.leadOrg.addressLine2 <br>
             $!page.leadOrg.state $!page.leadOrg.postcode<br>
             #foreach($cc in $formatter.countryCodes.list)
@@ -20,7 +21,7 @@
                     #break
                 #end
             #end
-            </p>
+        </p>
         #if( $page.leadOrg.email )
         <p>
             <a href="mailto:${page.leadOrg.email}" class="btn btn-primary btn-primary-light"><i class="fa fa-envelope"></i> $page.leadOrg.email</a>
