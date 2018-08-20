@@ -8,7 +8,9 @@ controllerMappings
     .addMethod('POST', 'addOrgType', "addOrgType")
     .addMethod('POST', 'removeOrgType', "removeOrgType")
     .postPriviledge("READ_CONTENT")
+    .addType("leadManResource") // this is so the SalesRole will apply
     .build();
+
 
 function getLeadOrgTypes(page, params) {
     log.info('getLeadOrgTypes {} {}', page, params);
