@@ -1,3 +1,4 @@
+#set( $profileBean = $services.userManager.toProfileBean($page.profile) )
 <div class="panel panel-primary panel-leadProfile" id="leadProfileLeft">
     <div class="panel-body text-center">
         #set ($ava = "/theme/apps/leadman/user-placeholder.png")
@@ -48,13 +49,18 @@
             <a href="tel:${page.profile.phone}" class="btn btn-primary btn-primary-light"><i class="fa fa-phone"></i> $page.profile.phone</a>
         </p>
         #end
-        #if ($page.is("leadProfile"))
-            #if ($page.leads.size() > 0)
-                #foreach($l in $page.leads)
-                <p><a class="btn btn-primary btn-primary-light" href="/companies/$l.organisation.id"><i class="fa fa-users"></i> $l.organisation.title</a></p>
-                #end
-            #end
+
+
+        #foreach($memberOrgData in $profileBean.allMemberships().toOrgsList(true) )
+        <p>
+            <a class="btn btn-primary btn-primary-light" href="/companies/$memberOrgData.id">
+                <i class="fa fa-users"></i>
+                $memberOrgData.formattedName
+            </a>
+        </p>
         #end
+
+
         <div class="row">
             <div class="col-sm-6">
                 <div class="leadscore text-center">4.5</div>
