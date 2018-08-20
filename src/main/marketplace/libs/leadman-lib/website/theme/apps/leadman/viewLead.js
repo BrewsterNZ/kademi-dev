@@ -647,7 +647,7 @@
             }
         });
     }
-    
+
     function initFilterActivities() {
         $('#filterActivities').on('change', function (e) {
             if (this.value){
@@ -796,7 +796,7 @@
             }
         });
     }
-    
+
     function initSendEmail() {
         $('.panel[data-activity="newEmail"] form').forms({
             onSuccess: function (resp) {
