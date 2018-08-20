@@ -305,15 +305,18 @@ function appendCriteria(queryJson, store, category, query, attributePairs, other
             }
         });
     }
-    //log.info("appendCriteria {}", attributePairs);
     if (attributePairs != null) {
-        //log.info("appendCriteria {}", attributePairs.length);
         for (var i = 0; i < attributePairs.length; i++) {
             var nvp = attributePairs[i];
-            //log.info("appendCriteria {} {} {}", i, nvp.name, nvp.value);
-            var term = {};
-            term[nvp.name] = nvp.value;
-            must.push({"term": term});
+            var arr = nvp.value.split(',');
+            var terms = {};
+            terms[nvp.name] = [];
+            arr.forEach(function (item) {
+                if (item){
+                    terms[nvp.name].push(item);
+                }
+            });
+            must.push({"terms": terms});
         }
     }
 }
