@@ -86,7 +86,11 @@
                     #if ($orgArr.size() > 1)
                     <li class="simple-navbar-org-selector">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            #if( $services.queryManager.currentTeamOrg )
+                            $services.queryManager.currentTeamOrg.formattedName
+                            #else
                             Select org
+                            #end
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right">

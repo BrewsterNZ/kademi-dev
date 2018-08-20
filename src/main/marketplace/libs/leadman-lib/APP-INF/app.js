@@ -21,22 +21,26 @@ controllerMappings.addComponent("leadman/components", "countNewProposals", "html
 
 controllerMappings.addComponent("leadman/components", "leadsImporterWizard", "html", "Import wizard for leads", "Leadman App component");
 
+
 /* Templates */
-controllerMappings.addTemplate('theme/apps/leadman/', 
-                               'viewProfile', 
-                               'View Customer Profile', 
+controllerMappings.addTemplate('theme/apps/leadman/',
+                               'viewProfile',
+                               'View Customer Profile',
                                true);
-                               
+
 // ============================================================================
 // Portlet
 // ============================================================================
-controllerMappings
-    .websitePortletController()
-    .portletSection('shoppingCart')
-    .templatePath('/theme/apps/leadman/leadmanOrgSelectorPortlet.html')
-    .method('getLeadmanOrgSelector')
-    .enabled(true)
-    .build();
+//
+// This is standard in menu component now, and we cant have 2 org selector menus!!
+//
+//controllerMappings
+//    .websitePortletController()
+//    .portletSection('shoppingCart')
+//    .templatePath('/theme/apps/leadman/leadmanOrgSelectorPortlet.html')
+//    .method('getLeadmanOrgSelector')
+//    .enabled(true)
+//    .build();
 
 function getLeadmanOrgSelector() {
     log.info('getLeadmanOrgSelector');

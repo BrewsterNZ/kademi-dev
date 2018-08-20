@@ -160,7 +160,10 @@
 </div>
 #end
 
+
+
 #macro( showMenu $menuItem $isRootMenuItem )
+
     <li #if ($isRootMenuItem) class="rootMenuItem" #end>
         <div data-id="$menuItem.id" data-href="$!menuItem.href" data-hidden="$menuItem.hidden" class="menuItem">
             <span class="btn-group btn-group-xs small">
@@ -180,7 +183,7 @@
             </span>
 
             <span class="menuItemIcon"><i class="$!menuItem.cssClass"></i></span>
-            <span class="menuItemText">#if ($menuItem.text) $!menuItem.text #else Root Menu Item #end </span>
+            <span class="menuItemText">#if ($menuItem.text) $!menuItem.text #else Root Menu Item #end</span>
         </div>
 
         #showMenuList($menuItem)
@@ -196,8 +199,12 @@
 #end
 
 #macro( showMenuItem $item $isSubmenu $caret)
+
+    #if ( $formatter.isEmpty($item.text) )
+    <li role="separator" class="divider"></li>
+    #else
     #if( $item.visible.isEmpty() )
-    <li class="$formatter.ifTrue($item.active, 'active', '') nav-${item.id}-wrapper" title="${item.text}">
+    <li class="$formatter.ifTrue($item.active, 'active', '') nav-${item.id}-wrapper" title="${item.text}" data-ordering="$item.ordering">
         <a class="nav-${item.id}" href="$item.href" shape="rect" title="$item.text">
             #if ($isSubmenu)
             <span class="trans-lookup" data-transcode="nav-${item.id}">$item.text</span>
@@ -217,7 +224,7 @@
     #else
     <li class="dropdown  nav-${item.id}-wrapper">
         <a href="#" class="dropdown-toggle nav-${item.id}" data-toggle="dropdown" $formatter.ifTrue($showSubMenuOnHover,
-            'data-hover="dropdown"', '') title="$item.text"
+            'data-hover="dropdown"', '') title="$item.text"  data-ordering="$item.ordering"
             >
             #if ($displayMenuItem == "icon" || $displayMenuItem == "text-icon")
                 <i class="$item.cssClass"></i>
@@ -240,5 +247,6 @@
             #end
         </ul>
     </li>
+    #end
     #end
 #end
