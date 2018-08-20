@@ -12,7 +12,7 @@
 
 #if ($formatter.isNull($usernamePlaceholder) || !$usernamePlaceholder)
     #set ($usernamePlaceholder = "Enter your email address or username")
-#end 
+#end
 
 #if ($formatter.isNull($loginFormTitle) || !$loginFormTitle)
     #set ($loginFormTitle = "Please login to view this page")
@@ -23,7 +23,14 @@
         #if ($page)
             #if( $userResource )
                 <h1 class="trans-lookup" data-transcode="sorry-no-permission-to-view-page">Sorry, you don't have permission to view this page</h1>
-                <h4><span class="trans-lookup" data-transcode="you-are-logged-in-as">You're currently logged in as</span> <b>$userResource.title</b> <span class="trans-lookup" data-transcode="with-email">with email</span> <b>$userResource.email</b></h4>
+                <h4>
+                    <span class="trans-lookup" data-transcode="you-are-logged-in-as">You're currently logged in as</span>
+                    <b>$userResource.title</b>
+                    #if( $userResource.email )
+                    <span class="trans-lookup" data-transcode="with-email">with email</span>
+                    <b>$userResource.email</b>
+                    #end
+                </h4>
             #else
                 #renderLoginForm($layout)
             #end
