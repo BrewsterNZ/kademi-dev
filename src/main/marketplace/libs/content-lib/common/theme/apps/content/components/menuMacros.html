@@ -199,13 +199,13 @@
 #end
 
 #macro( showMenuItem $item $isSubmenu $caret)
-
+    #set( $itemHref = $formatter.firstNotNull($item.href, "") )
     #if ( $formatter.isEmpty($item.text) )
     <li role="separator" class="divider"></li>
     #else
     #if( $item.visible.isEmpty() )
     <li class="$formatter.ifTrue($item.active, 'active', '') nav-${item.id}-wrapper" title="${item.text}" data-ordering="$item.ordering">
-        <a class="nav-${item.id}" href="$item.href" shape="rect" title="$item.text">
+        <a class="nav-${item.id}" href="$itemHref" shape="rect" title="$item.text">
             #if ($isSubmenu)
             <span class="trans-lookup" data-transcode="nav-${item.id}">$item.text</span>
             #else
