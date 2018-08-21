@@ -54,7 +54,7 @@
             var href = link.attr("href");
             var folder = href.substring(0, href.lastIndexOf('/'));
 
-            flog("Duplicate", href);
+            flog("cutcopy: Duplicate", href);
 
             setClipboard(config.clipboardName, href, false);
             doClipboardActionInList(0, href, folder, false, function () {
@@ -97,13 +97,13 @@
 
         container.on('click', config.copySelectedClass, function (e) {
             e.preventDefault();
-            
+
             var checkBoxes = container.find("input[type=checkbox]:checked")
             if( checkBoxes.length == 0) {
                 Msg.error("Please select the files you want to copy by clicking the checkboxes to the right");
-                return;                
+                return;
             }
-            
+
             var combinedHrefs = "";
             checkBoxes.each(function(i, n){
                 var href = $(n).val();
@@ -194,6 +194,7 @@ function checkRequiresClipboard(clipboardName) {
 }
 
 function setClipboard(clipboardName, href, isCut) {
+    flog("setClipboard: href=", href);
     var cookieName = 'clipboard-' + clipboardName;
     var val = href;
     if (isCut) {
@@ -234,7 +235,7 @@ function doClipboardActionInList(itemNum, hrefs, newUrl, isCut, onDone) {
         typeof onDone == "function" && onDone();
     } else {
         var href = hrefs[itemNum];
-        flog("doClipboardActionInList", href);
+        flog("doClipboardActionInList href=", href, "newUrl=", newUrl);
         doClipboardAction(href, newUrl, isCut, function (resp, sourceHref, destHref) {
             var filename = getFileName(href);
             var copy = isCut ? "Cut" : "Copied";
