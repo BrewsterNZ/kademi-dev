@@ -230,14 +230,24 @@ function isClipboardCut(clipboardName) {
 }
 
 function doClipboardActionInList(itemNum, hrefs, newUrl, isCut, onDone) {
-    flog("doClipboardActionInList", itemNum, hrefs);
+    flog("doClipboardActionInList.1", itemNum, hrefs);
     if (itemNum >= hrefs.length) {
         typeof onDone == "function" && onDone();
     } else {
-        var href = hrefs[itemNum];
-        flog("doClipboardActionInList href=", href, "newUrl=", newUrl);
+        var href;
+        if( $.isArray(hrefs) ) {
+            href = hrefs[itemNum];
+        } else {
+            if( itemNum > 0 ) {
+                typeof onDone == "function" && onDone();
+                return;
+            }
+            href = hrefs;
+        }
+        flog("doClipboardActionInList.2 href=", href, "newUrl=", newUrl);
         doClipboardAction(href, newUrl, isCut, function (resp, sourceHref, destHref) {
             var filename = getFileName(href);
+            flog("doClipboardActionInList.3: fileName=", filename);
             var copy = isCut ? "Cut" : "Copied";
             Msg.info(copy + " " + filename, "copy-notify");
             doClipboardActionInList(itemNum + 1, hrefs, newUrl, isCut, onDone);

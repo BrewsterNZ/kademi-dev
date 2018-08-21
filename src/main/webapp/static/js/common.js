@@ -437,6 +437,7 @@ function getFileName(path) {
         }
 
         path = path.replaceAll(' ', '%20'); // safari bug. path is returned encoded from window.location.pathname
+        flog("getFileName: path=", path, "name=", name);
         return name;
     }
 }
