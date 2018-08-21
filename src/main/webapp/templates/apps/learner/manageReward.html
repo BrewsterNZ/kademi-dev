@@ -51,12 +51,14 @@
                     <ul class="TabNav nav nav-tabs tab-bricky pull-left">
                         <li class=""><a href="#details" data-toggle="tab">Details</a></li>
                         <li class=""><a href="#rewardContent" data-toggle="tab">Content</a></li>
-                        <li class=""><a href="#groups" data-toggle="tab">Groups</a></li>
+                        <li class=""><a href="#groups" data-toggle="tab">Elligibility</a></li>
                         <li class=""><a href="#entryForm" data-toggle="tab">Competition</a></li>
                         <li class=""><a href="#checkout" data-toggle="tab">Checkout</a></li>
                         <li class=""><a href="#points" data-toggle="tab">Points</a></li>
+                        <!--
                         <li class=""><a href="#restrictions" data-toggle="tab">Restrictions</a></li>
                         <li class=""><a href="#entries" data-toggle="tab">Entries</a></li>
+                        -->
                     </ul>
                 </div>
                 <div class="tab-content">
@@ -216,6 +218,27 @@
                                 -->
                             </tbody>
                         </table>
+
+                        <hr/>
+
+                        <div class="well reset-margin-bottom">
+                            <h4>Promotion entries</h4>
+                            <p>Note this only applies to promotions with a specific entry mechanic.</p>
+                            <table class="entriesLinks">
+                                <tr>
+                                    <th>Entries</th>
+                                    <td>$page.numEntries entries <a href="../entries-${page.name}.html" class="btn btn-primary btn-sm">View</a></td>
+                                </tr>
+                                <tr>
+                                    <th>Export</th>
+                                    <td><a href="entries.csv" class="btn btn-primary btn-sm">Export as CSV</a></td>
+                                </tr>
+                                <tr>
+                                    <th>Photos</th>
+                                    <td><a href="photos.html" class="btn btn-primary btn-sm">View photo entries</a> (for photo upload comps)</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
 
                     #set ($rewardsRepo = $page.find("/repositories/rewards/").live.href)
@@ -261,7 +284,7 @@
                         </h3>
                         <div class="well margin-top-10">Add user groups to rewards to allow these users to directly enter the competition. These users will see the reward on their dashboard when it is active.</div>
 
-                        <button class="btn btn-sm btn-success Add AddGroup pull-left" data-toggle="modal" data-target="#modalGroup">
+                        <button class="btn btn-sm btn-success Add AddGroup pull-left" data-toggle="modal" data-target="#modalGroup" style="margin-right: 30px">
                             <i class="fa fa-plus"></i> Add/remove groups
                         </button>
 
@@ -298,9 +321,9 @@
                             <label for="nickName" class="control-label col-md-2">Excluded organisation type</label>
                             <div class="col-md-4">
                                 <select name="excludedPointsOrgType" class="form-control">
-                                    $formatter.option("", "[Any]", $page.excludedPointsOrgType)
+                                    $formatter.option("", "[Any]", $page.excludedPointsOrgType.name)
                                     #foreach($orgType in $page.orgTypes)
-                                    $formatter.option($orgType.name, $orgType.displayName, $page.excludedPointsOrgType)
+                                    $formatter.option($orgType.name, $orgType.displayName, $page.excludedPointsOrgType.name)
                                     #end
                                 </select>
                             </div>
@@ -463,6 +486,7 @@
                         </table>
                     </div>
 
+                    <!--
                     <div class="tab-pane" id="restrictions">
                         <div class="clearfix">
                             <button class="btn btn-sm btn-primary addRestriction" data-toggle="modal" data-target="#modalAddRestriction">
@@ -483,26 +507,7 @@
                             #end
                         </ul>
                     </div>
-
-
-                    <div class="tab-pane" id="entries">
-                        <div class="well reset-margin-bottom">
-                            <table class="entriesLinks">
-                                <tr>
-                                    <th>Entries</th>
-                                    <td>$page.numEntries entries <a href="../entries-${page.name}.html" class="btn btn-primary btn-sm">View</a></td>
-                                </tr>
-                                <tr>
-                                    <th>Export</th>
-                                    <td><a href="entries.csv" class="btn btn-primary btn-sm">Export as CSV</a></td>
-                                </tr>
-                                <tr>
-                                    <th>Photos</th>
-                                    <td><a href="photos.html" class="btn btn-primary btn-sm">View photo entries</a> (for photo upload comps)</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
+                    -->
                 </div>
             </div>
         </form>
