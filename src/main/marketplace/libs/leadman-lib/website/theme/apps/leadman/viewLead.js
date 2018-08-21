@@ -716,7 +716,7 @@
                         type: 'POST',
                         dataType: 'json',
                         data: {
-                            title: newTag
+                            addTag : newTag
                         },
                         success: function (resp) {
                             if (resp.status) {
