@@ -183,7 +183,7 @@ function initCloseDealModal() {
     closeDealModal.find("form").forms({
         onSuccess: function (resp) {
             Msg.info('Deal marked as closed');
-            if ($('#lead-cover').length) {
+            if ($('#leadDetailTabs').length) {
                 $('#maincontentContainer').reloadFragment({
                     whenComplete: function () {
                         $('abbr.timeago').timeago();

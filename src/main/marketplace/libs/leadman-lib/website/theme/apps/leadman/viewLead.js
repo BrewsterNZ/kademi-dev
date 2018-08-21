@@ -632,6 +632,7 @@
                 $('.detailActivitiesBody').find('.panel').addClass('hide');
                 $('.detailActivitiesBody').find('.panel[data-activity='+activity+']').removeClass('hide').stop().fadeIn();
 
+                $('.btnActivityGroup').find('span').text($(this).text());
             }
 
         })
