@@ -297,6 +297,7 @@
                             #end
                         </div>
 
+                        <div class="clearfix"></div>
                         <hr/>
 
                         <h3>
@@ -321,7 +322,7 @@
                             <label for="nickName" class="control-label col-md-2">Excluded organisation type</label>
                             <div class="col-md-4">
                                 <select name="excludedPointsOrgType" class="form-control">
-                                    $formatter.option("", "[Any]", $page.excludedPointsOrgType.name)
+                                    $formatter.option("", "[Not selected]", $page.excludedPointsOrgType.name)
                                     #foreach($orgType in $page.orgTypes)
                                     $formatter.option($orgType.name, $orgType.displayName, $page.excludedPointsOrgType.name)
                                     #end
