@@ -255,13 +255,58 @@
                     </div>
 
                     <div class="tab-pane" id="groups">
-                        <button class="btn btn-sm btn-primary Add AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
+                        <h3>
+                            <i class="fa fa-user-circle"></i>
+                            Elligible user groups
+                        </h3>
                         <div class="well margin-top-10">Add user groups to rewards to allow these users to directly enter the competition. These users will see the reward on their dashboard when it is active.</div>
-                        <div class="GroupList">
+
+                        <button class="btn btn-sm btn-success Add AddGroup pull-left" data-toggle="modal" data-target="#modalGroup">
+                            <i class="fa fa-plus"></i> Add/remove groups
+                        </button>
+
+                        <div class="GroupList" id="selected-groups-div">
                             #foreach($g in $page.selectedGroups)
-                            <button class="btn btn-sm btn-default reset-margin-bottom" type="button">$g.name</button>
+                            <button class="btn btn-sm btn-info reset-margin-bottom" type="button">
+                                <i class="fa fa-users"></i>
+                                $g.name
+                            </button>
                             #end
                         </div>
+
+                        <hr/>
+
+                        <h3>
+                            <i class="fa fa-sitemap"></i>
+                            Elligible organisations
+                        </h3>
+
+                        <p>You can select an organisation type to include, and one to exclude</p>
+
+                        <div class="form-group">
+                            <label for="nickName" class="control-label col-md-2">Included organisation type</label>
+                            <div class="col-md-4">
+                                <select name="pointsOrgType" class="form-control">
+                                    $formatter.option("", "[Any]", $page.pointsOrgType)
+                                    #foreach($orgType in $page.orgTypes)
+                                    $formatter.option($orgType.name, $orgType.displayName, $page.pointsOrgType)
+                                    #end
+                                </select>
+                                <i>You can <a href="/orgTypes/">manage organisation types here</a></i>
+                            </div>
+
+                            <label for="nickName" class="control-label col-md-2">Excluded organisation type</label>
+                            <div class="col-md-4">
+                                <select name="excludedPointsOrgType" class="form-control">
+                                    $formatter.option("", "[Any]", $page.excludedPointsOrgType)
+                                    #foreach($orgType in $page.orgTypes)
+                                    $formatter.option($orgType.name, $orgType.displayName, $page.excludedPointsOrgType)
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+
+
                     </div>
 
                     <div class="tab-pane" id="entryForm">
@@ -356,7 +401,7 @@
 
 
                         <h3>Gift with purchase</h3>
-                        
+
                         <p>Allow customers to get discounts and free gifts when they checkout from your store</p>
 
                         <p>
