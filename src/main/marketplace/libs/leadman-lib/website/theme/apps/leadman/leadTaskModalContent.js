@@ -29,7 +29,7 @@
         }
 
         if (modal.length > 0) {
-            flog('Init modalEditTask');
+            //flog('Init modalEditTask');
             $(document.body).on('hidden.bs.modal', '#modalEditTask', function () {
                 modal.removeClass('editingTask');
             });
@@ -52,10 +52,10 @@
                             var notesInner = notes.find('.lead-notes-inner');
                             var toggler = $('<a href="#" class="text-info">View more <i class="fa fa-angle-double-down"></i></a>');
                             notes.append(toggler);
-                            
+
                             toggler.click(function (e) {
                                 e.preventDefault();
-                                
+
                                 if (toggler.hasClass('opened')) {
                                     notesInner.html(currentContent);
                                     toggler.html('View more <i class="fa fa-angle-double-down"></i>');
@@ -69,9 +69,9 @@
                         }
                     }
                 });
-                
+
             });
         }
     });
-    
+
 })(jQuery);
