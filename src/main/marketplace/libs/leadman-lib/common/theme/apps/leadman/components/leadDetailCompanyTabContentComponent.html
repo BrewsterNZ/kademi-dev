@@ -1,14 +1,65 @@
+#showOrg($page.leadOrg)
+
+<div id="profile-companies-div">
+#foreach( $orgData in $page.leadProfile.allMemberships().toOrgsList(true) )
+    #set( $profOrg = $services.criteriaBuilders.getBuilder("organisation").get($orgData.id) )
+    #showOrg($profOrg)
+#end
+</div>
+
+
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h2 class="text-center">
+            <a href="#newOrgModal" data-toggle="modal" class="text-primary">
+                <i class="fa fa-plus-circle"></i>
+                Click to add a new company
+            </a>
+        </h2>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="newOrgModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="">Add a company, organsiation or business unit</h4>
+            </div>
+            <form method="post" action="$page.href" class="form-horizontal">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="taskDescription">Find organisation</label>
+                        <div class="col-md-9">
+                            <input type="text" name="newOrgId" class="form-control entity-finder-org" value="" autocomplete="nope" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                    <button class="btn btn-primary" type="submit">Create</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+#macro( showOrg $leadOrg )
 <div id="pjax-container">
 <div class="panel panel-default panel-kcrm panel-header-info">
     <div class="panel-body">
-        #set( $leadOrg = $page.leadOrg )
         <form action="$page.href" method="post" id="leadOrgDetails">
             <input type="hidden" name="leadOrgDetails" value="leadOrgDetails" />
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label class="control-label">Company name</label>
-                        <input type="text" id="orgTitleSearch" name="title" class="form-control" value="$!leadOrg.title" autocomplete="nope">
+                        <input type="text" id="orgTitleSearch" name="title" class="form-control" value="$!leadOrg.title" autocomplete="nope" />
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -106,3 +157,4 @@
     </div>
 </div>
 </div>
+#end

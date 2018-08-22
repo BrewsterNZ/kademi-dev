@@ -45,6 +45,7 @@ function initLeadManEvents() {
     initStatsSummaryComponents();
     initLeadContactsTable();
     initLeadCompaniesTable();
+    initOrgFinder();
     // initLeadTasksTable();
     // initReloadLeadTasksTable();
     // init the login form
@@ -115,6 +116,28 @@ function initLeadManEvents() {
     $('abbr.timeago').timeago();
 }
 
+function initOrgFinder() {
+        var orgFinders = $(".entity-finder-org");
+        flog("initLeadManPage", orgFinders);
+        if( orgFinders.length > 0 ) {
+            orgFinders.entityFinder({
+                type: 'organisation',
+                useActualId: true,
+                url : '/leads/'
+            });
+        }
+
+        $("#newOrgModal form").forms({
+            onSuccess : function(resp) {
+                if( resp.status ) {
+                    $("#profile-companies-div").reloadFragment();
+                    $("#newOrgModal").modal('hide');
+                } else {
+                    Msg.error("An error occured adding the company " + resp.messages);
+                }
+            }
+        });
+}
 
 function initLeadsDashLoading() {
     var div = $("#all_contacts");
