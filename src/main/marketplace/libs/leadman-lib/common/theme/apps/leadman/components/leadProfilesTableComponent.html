@@ -4,7 +4,7 @@
     #set($paginator = $paginator.totalRecords($page.totalProfiles))
 
     <div class="panel panel-default">
-        <table id="leadContactsTable" class="table table-striped table-hover kcrm-table">
+        <table id="leadContactsTable" class="table table-striped table-hover kcrm-table dataTable">
             <thead>
             <tr>
                 <th>Name</th>
@@ -53,6 +53,6 @@
             </tbody>
         </table>
         $!paginator.setRecords($searchResults)
-        $!paginator.html(null)
+        <div style="padding: 15px">$!paginator.html(null)</div>
     </div>
 </div> <!-- End results table -->

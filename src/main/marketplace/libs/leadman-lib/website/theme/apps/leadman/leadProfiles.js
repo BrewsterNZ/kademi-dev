@@ -4,7 +4,6 @@ function initLeadUploads() {
 
     var form = $("#leadsImporterWizard form");
 
-
     $("#leadImporterFunnelName").on("change", function () {
         var funnelName = $(this).val();
         flog("Selected funnel ", funnelName);
@@ -14,6 +13,7 @@ function initLeadUploads() {
             flog("Upload href ", href);
             $('#btn-upload').mupload({
                 url: href,
+                acceptedFiles: '.csv',
                 useJsonPut: false,
                 buttonText: '<i class="clip-folder"></i> Upload CSV',
                 oncomplete: function (resp, name, href) {
@@ -428,9 +428,8 @@ function initUploads() {
         }
     });
 
-    //$("body").
-
     $('#btn-upload').mupload({
+        acceptedFiles: '.csv',
         url: window.location.pathname,
         useJsonPut: false,
         buttonText: '<i class="clip-folder"></i> Upload CSV',
@@ -587,14 +586,14 @@ function doLeadSearch(forceSearch) {
 }
 
 function doCheckCallBack() {
-    doSearch();
+    doLeadSearch();
 }
 function doCheckProcessStatus() {
     checkProcessStatus($('#myWizard'), doCheckCallBack);
 }
 
 function doLeadCheckCallBack() {
-    doSearch();
+    doLeadSearch();
 }
 function doLeadCheckProcessStatus() {
     checkProcessStatus($('#liWizard'), doLeadCheckCallBack);

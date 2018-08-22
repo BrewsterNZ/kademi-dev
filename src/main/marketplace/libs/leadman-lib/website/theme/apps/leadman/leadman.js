@@ -872,10 +872,9 @@ function initDeleteCust() {
     }
 
     $(".select-all-cust").click(function (e) {
-        var node = $(e.target);
-        flog("selectall", node, node.is(":checked"));
+        var checked = this.checked;
         $("#searchResults").find("input[type=checkbox][name=custId]").each(function (index) {
-            $(this).prop("checked", true);
+            $(this).prop("checked", checked);
         });
     });
 
@@ -895,8 +894,11 @@ function initDeleteCust() {
             },
             success: function (data) {
                 if (data.status) {
-                    Msg.success('Customers removed successfully');
-                    $("#searchResults").reloadFragment();
+                    Msg.info('Processing...');
+                    setTimeout(function () {
+                        $("#searchResults").reloadFragment();
+                        Msg.success('Customers removed successfully');
+                    }, 1200);
                 } else {
                     if (data.messages.length > 0) {
                         Msg.error(data.messages[0]);
