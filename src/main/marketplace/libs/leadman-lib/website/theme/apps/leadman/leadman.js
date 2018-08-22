@@ -1225,6 +1225,38 @@ function initNewNoteForm() {
         editModal.modal('show');
     });
 
+    $(document.body).on('click', '.note-delete', function (e) {
+        e.preventDefault();
+
+        var btn = $(this);
+        var noteId = btn.attr('href');
+        var c = confirm('Are you sure you want to delete this note?');
+        if (!c) return;
+
+        $.ajax({
+            url: window.location.pathname,
+            data: {
+                deleteNoteId: noteId
+            },
+            dataType: 'json',
+            type: 'post',
+            success: function (resp) {
+                if (resp && resp.status){
+                    Msg.info('Deleted Note');
+                    $('#leadDetailActivities').reloadFragment({
+                        whenComplete: function () {
+                            $(document).find('abbr.timeago').timeago();
+                            initNotesDotDotDot();
+                        }
+                    });
+                }
+            },
+            error: function () {
+                Msg.error('Error when deleting note. Please try again');
+            }
+        })
+    });
+
     editForm.forms({
         onSuccess: function (resp) {
             if (resp.nextHref) {
@@ -1232,7 +1264,7 @@ function initNewNoteForm() {
             }
             Msg.info('Updated Note');
             editModal.modal("hide");
-            $('#notes').reloadFragment({
+            $('#leadDetailActivities').reloadFragment({
                 whenComplete: function () {
                     $(document).find('abbr.timeago').timeago();
                     initNotesDotDotDot();
