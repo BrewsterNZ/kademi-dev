@@ -208,6 +208,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/leadman/leadCompanies.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/static/jquery-map-donutchart/1.0.0/js/jquery.map-donutchart.js"
             }
         },

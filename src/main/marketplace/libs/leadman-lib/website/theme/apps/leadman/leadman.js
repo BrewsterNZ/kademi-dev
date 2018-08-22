@@ -44,10 +44,7 @@ function initLeadManEvents() {
     initHideModalAndGoLinks();
     initStatsSummaryComponents();
     initLeadContactsTable();
-    initLeadCompaniesTable();
     initOrgFinder();
-    // initLeadTasksTable();
-    // initReloadLeadTasksTable();
     // init the login form
     $(".login").user({});
 
@@ -2020,20 +2017,6 @@ function initClipboard() {
             return "<img class='img-responsive' src='" + nextHref + "'/>";
         }
     });
-}
-
-function initLeadCompaniesTable() {
-    if ($('#leadCompaniesTable').length){
-        var dataTable = $('#leadCompaniesTable').DataTable({
-            paging: false,
-            searching: false,
-            destroy: true,
-            info: false,
-            initComplete: function(settings, json) {
-                $('#leadCompaniesTable').closest('.row').siblings('.row').remove();
-            }
-        });
-    }
 }
 
 function initLeadContactsTable() {

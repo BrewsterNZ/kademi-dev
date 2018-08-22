@@ -6,7 +6,7 @@
                     <i class="fa fa-search"></i>
                 </button>
             </span>
-            <input type="text" id="org-query" class="form-control" placeholder="Search for organisations here" value="" />
+            <input type="text" id="lead-companies-query" class="form-control" placeholder="Search for organisations here" value="" />
             <!--<span class="input-group-btn">-->
                 <!--<button class="btn btn-default clear" type="button" >-->
                     <!--<i class="fa fa-times"></i>-->
@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="col-md-8 text-right">
-        <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+        <button class="btn btn-danger" id="btnDeleteCompanies"><i class="fa fa-trash"></i></button>
     </div>
 </div>
 <br>
@@ -65,40 +65,5 @@
     </table>
 </div>
 <script>
-    $("#org-query").on({
-        keyup: function () {
-            typewatch(function () {
-                flog("initSearchOrg: do search");
-                doSearch();
-            }, 500);
-        },
-        change: function () {
-            flog("do search");
-            doSearch();
-        }
-    });
 
-    $(".clear").on("click", function(){
-        $("#org-query").val("");
-        doSearch();
-    });
-
-    function doSearch() {
-        flog("doSearch");
-        var newUrl = window.location.pathname + "?q=" + $("#org-query").val();
-        $.ajax({
-            type: 'GET',
-            url: newUrl,
-            success: function (data) {
-                window.history.pushState("", document.title, newUrl);
-                var $fragment = $(data).find("#searchResults");
-                flog("replace", $("#se"));
-                flog("frag", $fragment);
-                $("#searchResults").replaceWith($fragment);
-            },
-            error: function (resp) {
-                Msg.error("err");
-            }
-        });
-    }
 </script>
