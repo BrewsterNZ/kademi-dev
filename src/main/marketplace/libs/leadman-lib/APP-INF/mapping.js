@@ -41,7 +41,7 @@ function newOrgType(page, params) {
     var newOrgType = params.newOrgType;
     var orgId = params.orgId;
     if (newOrgType && orgId){
-        var name = newOrgType.replace(/[^a-zA-Z ]/g, "").replace(/\s/g, "-");
+        var name = newOrgType.replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s/g, "-");
         var rootFolder = page.find('/');
         var orgType = rootFolder.createOrgType(name, newOrgType);
         if (orgType){
