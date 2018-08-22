@@ -10,16 +10,6 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <label class="control-label">Title</label>
-                            <select name="contactTitle" id="contactTitle" class="form-control" placeholder="Job Title">
-                                <option value="Mr">Mr</option>
-                                <option value="Mrs">Mrs</option>
-                                <option value="Ms">Ms</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
                             <label class="control-label">First name</label>
                             <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!profile.firstName" />
                         </div>
@@ -30,29 +20,14 @@
                             <input type="text" name="surName" id="surName" class="form-control" placeholder="Last name" value="$!profile.surName" />
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label class="control-label">Middle name</label>
-                            <input type="text" name="middleName" id="middleName" class="form-control" placeholder="Middle name" value="$!profile.middleName" />
-                        </div>
-                    </div>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label class="control-label">Preferred name</label>
                             <input type="text" name="nickName" id="nickname" class="form-control" placeholder="Preferred name" value="$!profile.nickName" />
                         </div>
                     </div>
-                    #if (!$page.href.contains("cust"))
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label class="control-label">Job Title</label>
-                            <input type="text" name="jobTitle" id="jobTitle" class="form-control" placeholder="Job Title" value="$!page.jobTitle" />
-                        </div>
-                    </div>
-                    #end
                 </div>
+
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group">
@@ -66,6 +41,14 @@
                             <input type="text" name="email" id="email" class="form-control" placeholder="Email address" value="$!profile.email" />
                         </div>
                     </div>
+                    #if (!$page.href.contains("cust"))
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Job Title</label>
+                            <input type="text" name="jobTitle" id="jobTitle" class="form-control" placeholder="Job Title" value="$!page.jobTitle" />
+                        </div>
+                    </div>
+                    #end
                 </div>
                 <div class="row">
                     #set($fields = $page.profileExtraFields)
