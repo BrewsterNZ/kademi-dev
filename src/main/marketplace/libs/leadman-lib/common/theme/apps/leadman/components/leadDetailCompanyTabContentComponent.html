@@ -1,9 +1,11 @@
-#showOrg($page.leadOrg)
+
+#showOrg($page.leadOrg, true)
 
 <div id="profile-companies-div">
-#foreach( $orgData in $page.leadProfile.allMemberships().toOrgsList(true) )
+#set($orgsList = $page.leadProfile.allMemberships().toOrgsList(true))
+#foreach( $orgData in $orgsList )
     #set( $profOrg = $services.criteriaBuilders.getBuilder("organisation").get($orgData.id) )
-    #showOrg($profOrg)
+    #showOrg($profOrg, false)
 #end
 </div>
 
@@ -23,7 +25,7 @@
 
 
 <div class="modal fade" id="newOrgModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -31,13 +33,25 @@
             </div>
             <form method="post" action="$page.href" class="form-horizontal">
                 <div class="modal-body">
+                    <h3>Select an existing organisation</h3>
                     <div class="form-group">
-                        <label class="control-label col-md-3" for="taskDescription">Find organisation</label>
-                        <div class="col-md-9">
-                            <input type="text" name="newOrgId" class="form-control entity-finder-org" value="" autocomplete="nope" />
+                        <label class="control-label col-md-4" for="taskDescription">Find organisation</label>
+                        <div class="col-md-8">
+                            <input type="text" name="newOrgId" class="form-control entity-finder-org" value="" autocomplete="off" />
+                        </div>
+                    </div>
+                    <hr/>
+                    <h3>Or, Create a new organisation</h3>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="taskDescription">New organisation name</label>
+                        <div class="col-md-8">
+                            <input type="text" name="newOrgTitle" class="form-control" />
                         </div>
                     </div>
                 </div>
+
+
+
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
 
@@ -49,17 +63,25 @@
 </div>
 
 
-#macro( showOrg $leadOrg )
+#macro( showOrg $leadOrg $isLeadOrg )
 <div id="pjax-container">
 <div class="panel panel-default panel-kcrm panel-header-info">
     <div class="panel-body">
-        <form action="$page.href" method="post" id="leadOrgDetails">
-            <input type="hidden" name="leadOrgDetails" value="leadOrgDetails" />
+        <form action="$page.href" method="post" class="leadOrgDetails">
+            <input type="hidden" name="leadOrgDetails" value="$!leadOrg.id" />
+            <input type="hidden" name="isLeadOrg" value="$isLeadOrg" />
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
+                        #if( $leadOrg )
+                        <a href="/companies/$leadOrg.id" class="pull-right">
+                            <small>
+                            <i>View company</i>
+                            </small>
+                        </a>
+                        #end
                         <label class="control-label">Company name</label>
-                        <input type="text" id="orgTitleSearch" name="title" class="form-control" value="$!leadOrg.title" autocomplete="nope" />
+                        <input type="text" id="orgTitleSearch" name="title" class="form-control" value="$!leadOrg.title" autocomplete="off" />
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -108,7 +130,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label class="control-label">Country</label>
-                        <select autocomplete="nope" name="country" class="form-control selectpicker" data-live-search="true" data-live-search-normalize="true" id="country">
+                        <select autocomplete="off" name="country" class="form-control selectpicker" data-live-search="true" data-live-search-normalize="true" id="country">
                             <option value="">[No country selected]</option>
                             #foreach($cc in $formatter.countryCodes.list)
                             $formatter.option( $cc.alpha2Code, $cc.englishShortName, $leadOrg.country )
@@ -117,6 +139,7 @@
                     </div>
                 </div>
             </div>
+            #if( $isLeadOrg )
             <div class="row">
                 #set($fields = $page.leadCompanyExtraFields)
                 #set($counter = 0)
@@ -141,15 +164,24 @@
                     </div>
                 </div>
             </div>
+            #end
 
             <input type="hidden" name="leadOrgId" value="$!leadOrg.orgId" />
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="form-group text-right" id="companyTabButtons">
-                        <button type="submit" class="btn btn-primary btn-save-company">Save details</button>
+                    <div class="form-group companyTabButtons" id="company-btns-$!leadOrg.id-$isLeadOrg">
                         #if ($leadOrg)
-                        <button type="submit" class="btn btn-warning btn-unlink-company">Unlink company</button>
+                        #if( $isLeadOrg )
+                        <button type="submit" class="btn btn-warning btn-unlink-company">Unlink</button>
+                        #else
+                        <button type="submit" class="btn btn-warning btn-unlink-company" data-remove-orgid="$leadOrg.id">Unlink</button>
                         #end
+                        #end
+
+                        <button type="submit" class="btn btn-success btn-save-company pull-right">
+                            <i class="fa fa-save"></i>
+                            Save details
+                        </button>
                     </div>
                 </div>
             </div>

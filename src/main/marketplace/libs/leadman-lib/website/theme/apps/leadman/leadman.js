@@ -127,7 +127,7 @@ function initOrgFinder() {
         $("#newOrgModal form").forms({
             onSuccess : function(resp) {
                 if( resp.status ) {
-                    $("#profile-companies-div").reloadFragment();
+                    reloadProfileCompanies()
                     $("#newOrgModal").modal('hide');
                 } else {
                     Msg.error("An error occured adding the company " + resp.messages);
