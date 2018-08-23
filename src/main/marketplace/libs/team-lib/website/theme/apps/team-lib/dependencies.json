@@ -5,6 +5,12 @@
                 "group": "main",
                 "path": "/theme/apps/team/viewTeams.js"
             }
+        },
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/team/team.less"
+            }
         }
     ]
 }
