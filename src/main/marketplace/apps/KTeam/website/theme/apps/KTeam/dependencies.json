@@ -6,7 +6,7 @@
         },
         {
             "appId": "team-lib",
-            "branch" : "1.0.2"
+            "branch" : "1.0.3"
         },
         {
             "appId": "search",
@@ -14,7 +14,7 @@
         },
         {
             "appId": "search-lib",
-            "branch" : "1.1.4"
+            "branch" : "1.1.5"
         },
         {
             "appId": "email",

@@ -1,5 +1,17 @@
 {
+    "appDependencies": [
+        {
+            "appId": "bootstrap-select-lib",
+            "branch" : "1.12.5"
+        }
+    ],
     "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/uri/1.15.1/URI.js"
+            }
+        },
         {
             "js": {
                 "group": "main",
