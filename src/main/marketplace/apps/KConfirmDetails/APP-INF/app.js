@@ -78,6 +78,8 @@
             status: true
         };
 
+        transactionManager.begin();
+
         var group;
         try {
             var rootFolder = page.closest("website");
@@ -87,6 +89,8 @@
                 group = orgData.createGroup(groupName);
             }
         } catch (e) {
+            transactionManager.rollback();
+
             log.error('Error when looking for group: ' + groupName + ' - ' + e, e);
             result.status = false;
             result.messages = ['Error when finding group: ' + e];
@@ -94,11 +98,14 @@
         }
 
         try {
-            transactionManager.runInTransaction(function () {
-                securityManager.addToGroup(userName, group);
-            });
+            securityManager.addToGroup(userName, group);
+            
+            transactionManager.commit();
+            
             return views.jsonObjectView(JSON.stringify(result));
         } catch (e) {
+            transactionManager.rollback();
+
             log.error('Error when updating user: ' + e, e);
             result.status = false;
             result.messages = ['Error when updating user: ' + e];
