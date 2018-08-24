@@ -44,13 +44,16 @@ JBNodes['groupGoal'] = {
         );
 
         $.ajax({
-            url: '/groups/_DAV/PROPFIND?fields=name',
+            url: '/groups/?asJson',
             type: 'get',
             dataType: 'json',
             success: function (resp) {
+                var groups = resp.data;
+                flog("got groups", groups);
                 var optionsStr = '<option value="">[No group selected]</option>';
-                for (var i = 1; i < resp.length; i++) {
-                    optionsStr += '<option value="' + resp[i].name + '">' + resp[i].name + '</option>';
+                for( var groupName in groups) {
+                    flog("group", groupName);
+                    optionsStr += '<option value="' + groupName + '">' + groups[groupName] + '</option>';
                 }
 
                 form.find('.groupName').html(optionsStr);
