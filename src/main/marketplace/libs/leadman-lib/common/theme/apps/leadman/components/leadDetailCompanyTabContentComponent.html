@@ -1,24 +1,23 @@
+<div id="pjax-container">
+    #showOrg($page.leadOrg, true)
 
-#showOrg($page.leadOrg, true)
+    <div id="profile-companies-div">
+    #set($orgsList = $page.leadProfile.allMemberships().toOrgsList(true))
+    #foreach( $orgData in $orgsList )
+        #set( $profOrg = $services.criteriaBuilders.getBuilder("organisation").get($orgData.id) )
+        #showOrg($profOrg, false)
+    #end
+    </div>
 
-<div id="profile-companies-div">
-#set($orgsList = $page.leadProfile.allMemberships().toOrgsList(true))
-#foreach( $orgData in $orgsList )
-    #set( $profOrg = $services.criteriaBuilders.getBuilder("organisation").get($orgData.id) )
-    #showOrg($profOrg, false)
-#end
-</div>
-
-
-
-<div class="panel panel-default">
-    <div class="panel-body">
-        <h2 class="text-center">
-            <a href="#newOrgModal" data-toggle="modal" class="text-primary">
-                <i class="fa fa-plus-circle"></i>
-                Click to add a new company
-            </a>
-        </h2>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h2 class="text-center">
+                <a href="#newOrgModal" data-toggle="modal" class="text-primary">
+                    <i class="fa fa-plus-circle"></i>
+                    Click to add a new company
+                </a>
+            </h2>
+        </div>
     </div>
 </div>
 
@@ -64,7 +63,6 @@
 
 
 #macro( showOrg $leadOrg $isLeadOrg )
-<div id="pjax-container">
 <div class="panel panel-default panel-kcrm panel-header-info">
     <div class="panel-body">
         <form action="$page.href" method="post" class="leadOrgDetails">
@@ -187,6 +185,5 @@
             </div>
         </form>
     </div>
-</div>
 </div>
 #end
