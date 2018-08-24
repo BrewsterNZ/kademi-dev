@@ -32,3 +32,17 @@
         $formatter.checkbox("showExtraFields", "showExtraFields", $!page.getAppSetting($app.instanceId, 'showExtraFields'))
     </div>
 </div>
+
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="autoreload">Auto-refresh page</label>
+    <div class="col-sm-7">
+        $formatter.checkbox("autoreload", "autoreload", $!page.getAppSetting($app.instanceId, 'autoreload'))
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="preventClose">Prevent user from closing modal</label>
+    <div class="col-sm-7">
+        $formatter.checkbox("preventClose", "preventClose", $!page.getAppSetting($app.instanceId, 'preventClose'))
+    </div>
+</div>

@@ -26,17 +26,22 @@
 #set($tcText = "Please read and accept the T&C")
 #end
 
+#set( $autoreload = $formatter.toBool($appSettings.autoreload, false) )
+#set( $preventClose = $formatter.toBool($appSettings.preventClose, false) )
+
 #set( $rightKindOfPage = $page.is("dashboard") )
 
 #if( $rightKindOfPage )
 #set($isInGroup = $userResource.isInGroup($groupName))
 #if( $isInGroup == false )
-<div id="modal-confirm-details" class="modal fade" aria-hidden="true">
+<div id="modal-confirm-details" class="modal fade" #if($preventClose)data-keyboard="false" data-backdrop="static"#end data-autoreload="$!autoreload" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
+                #if(!$preventClose)
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Confirm Details</h4>
+                #end
+                <h4 class="modal-title">Confirm Details  $autoreload $preventClose </h4>
             </div>
             <form action="/profile/" method="POST" class="form-horizontal initProfileForm" charset="utf-8" role="form" id="confirmDetailsForm">
                 <div class="modal-body">
