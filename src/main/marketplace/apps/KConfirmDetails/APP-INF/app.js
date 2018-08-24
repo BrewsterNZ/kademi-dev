@@ -7,12 +7,16 @@
         var tcURL = params.tcURL || '';
         var tcText = params.tcText || '';
         var showExtraFields = params.showExtraFields || '';
+        var autoreload = params.autoreload || '';
+        var preventClose = params.preventClose || '';
 
         page.setAppSetting(APP_NAME, 'groupName', groupName);
         page.setAppSetting(APP_NAME, 'showTC', showTC);
         page.setAppSetting(APP_NAME, 'tcURL', tcURL);
         page.setAppSetting(APP_NAME, 'tcText', tcText);
         page.setAppSetting(APP_NAME, 'showExtraFields', showExtraFields);
+        page.setAppSetting(APP_NAME, 'autoreload', autoreload);
+        page.setAppSetting(APP_NAME, 'preventClose', preventClose);
 
         return views.jsonResult(true);
     };
@@ -79,13 +83,14 @@
             var rootFolder = page.closest("website");
             group = rootFolder.group(groupName);
             if( group == null ) {
+                var orgData = services.userManager.toOrgData(page.organisation);
                 group = orgData.createGroup(groupName);
             }
         } catch (e) {
             log.error('Error when looking for group: ' + groupName + ' - ' + e, e);
             result.status = false;
             result.messages = ['Error when finding group: ' + e];
-            return result;
+            return views.jsonObjectView(JSON.stringify(result));
         }
 
         try {
@@ -97,7 +102,7 @@
             log.error('Error when updating user: ' + e, e);
             result.status = false;
             result.messages = ['Error when updating user: ' + e];
-            return result;
+            return views.jsonObjectView(JSON.stringify(result));
         }
     };
 
