@@ -1,0 +1,41 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h4 class="page-header">Assigned Leads</h4>
+        <table class="table table-striped kcrm-table dataTable">
+            <thead>
+            <tr>
+                <th></th>
+                <th>First name</th>
+                <th>Surname</th>
+                <th>Stage</th>
+                <th>Deal value</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            #foreach($lead in $page.attributes.leads)
+            <tr>
+                <td>
+                    <a href="/leads/$lead.id">
+                        <i class="fa fa-bullseye"></i>
+                    </a>
+                </td>
+                <td>$!lead.profile.firstName</td>
+                <td>$!lead.profile.surName</td>
+                <td>$!lead.stageName</td>
+                <td>$!lead.dealAmount</td>
+                <td>
+                    #if( $lead.cancelled )
+                    Cancelled
+                    #elseif( $lead.closedDate )
+                    Won
+                    #else
+                    Active
+                    #end
+                </td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
+</div>

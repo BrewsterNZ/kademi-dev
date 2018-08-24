@@ -90,11 +90,25 @@
         });
     }
 
+    function initTeamMemberForm(){
+        var form = $('#teamMemberDetails');
+        if (form.length){
+            form.forms({
+                onSuccess: function (resp) {
+                    if (resp && resp.status){
+                        Msg.success("Updated");
+                    }
+                }
+            })
+        }
+    }
+
     $(function () {
         initCreateMemberForm();
         initCreateTeam();
         initSelectPicker();
         initSearch();
+        initTeamMemberForm();
     });
 
 })(jQuery);
