@@ -27,5 +27,11 @@
 
     $(function () {
         initGroupSelect();
+
+        $("#teamSettingsForm").forms({
+            onSuccess : function() {
+                Msg.info("Saved");
+            }
+        });
     });
 })(jQuery);
