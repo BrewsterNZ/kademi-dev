@@ -51,7 +51,7 @@
         </tr>
         </thead>
         <tbody id="searchResults">
-        #set($sr = $page.searchUsers)
+        #set($sr = $services.teamManager.searchUsers)
         #if($sr.size() > 0)
         #foreach($m in $sr)
         <tr>
