@@ -49,7 +49,8 @@
                         <i class="fa fa-caret-down"></i>
                     </button>
                     <ul class="dropdown-menu">
-                        #foreach($o in $page.teamsForUser)
+                        #set( $teamOrgType = $applications.team.selectedOrgType )
+                        #foreach($o in $services.teamManager.teamsForUser($user, $teamOrgType))
                         <li>
                             <a data-filter="team" class="btn-select-org $formatter.ifTrue($params.tags.contains($o.orgId.toString()), 'filterSelected', '')" href="$o.orgId">
                                 <span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.team.contains($o.orgId.toString()), '', 'hide')"></i></span>
@@ -69,7 +70,7 @@
                         <i class="fa fa-caret-down"></i>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="assingedToDrop">
-                        #foreach($t in $page.find("/leads").teamMembers)
+                        #foreach($t in $services.teamManager.teamMembers($user, $teamOrgType))
                         <li>
                             <a data-filter="assignedTo" class="$formatter.ifTrue($params.assignedTo.contains($t.name), 'filterSelected', '')" href="$t.userId"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.assignedTo.contains($t.name), '', 'hide')"></i></span> $!t.firstName $!t.surName</a>
                         </li>
