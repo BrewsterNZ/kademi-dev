@@ -39,6 +39,8 @@
     </div>
 </div>
 <br>
+
+
 <div class="panel panel-default">
     <table id="teamTable" class="table table-striped table-hover kcrm-table dataTable">
         <thead>
@@ -51,12 +53,12 @@
         </tr>
         </thead>
         <tbody id="searchResults">
-        #set($sr = $services.teamManager.searchUsers)
+        #set($sr = $page.searchUsers)
         #if($sr.size() > 0)
         #foreach($m in $sr)
         <tr>
             <td>
-                <a href="$m.fields.userId.value">
+                <a href="$m.fields.userId.value/">
                 #if($m.fields.firstName.value)
                 $m.fields.firstName.value $!m.fields.surName.value
                 #elseif($m.fields.nickName.value)

@@ -44,14 +44,17 @@ function getTeamMember(page, params) {
     page.attributes.leads = leads;
 }
 
+
 function saveMember(page, params) {
-    log.info('a={}', page.attributes.member);
-    var profile = page.attributes.member.thisProfile;
-    log.info('profile={} params={}', profile, params);
-    profile.firstName = params.firstName;
-    profile.surName = params.surName;
-    profile.nickName = params.nickName;
-    profile.phone = params.phone;
-    services.userManager.updateUser(profile);
+    log.info('saveMember={}', page.attributes.member);
+    transactionManager.runInTransaction(function () {
+        var profile = page.attributes.member.thisProfile;
+        log.info('saveMember profile={} params={}', profile, params);
+        profile.firstName = params.firstName;
+        profile.surName = params.surName;
+        profile.nickName = params.nickName;
+        profile.phone = params.phone;
+        services.userManager.updateUser(profile);
+    });
     return views.jsonView(true, "Profile updated");
 }
