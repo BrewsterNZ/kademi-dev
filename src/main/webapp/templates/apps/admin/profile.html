@@ -482,6 +482,45 @@
                             </div>
                             #end
 
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <i class="clip-key"></i>Addresses
+                                </div>
+                                <div class="panel-body">
+                                    <a class="btn btn-success edit-address" href="0">
+                                        <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
+                                <table class="table table-striped">
+                                    <colgroup>
+                                        <col/>
+                                        <col/>
+                                        <col style="width: 50px"/>
+                                    </colgroup>
+                                    <tbody id="addresses-table-body">
+                                    #foreach( $entityAddress in $services.userManager.findAddresses($page.profile) )
+                                    <tr>
+                                        <td>$!entityAddress.addressType</td>
+                                        <td>
+                                            $!entityAddress.address.addressLine1,
+                                            $!entityAddress.address.addressLine2,
+                                            $!entityAddress.address.city,
+                                            $!entityAddress.address.addressState,
+                                            $!entityAddress.address.postcode,
+                                            $!entityAddress.address.country,
+
+                                        </td>
+                                        <td>
+                                            <a href="$entityAddress.id" class="edit-address">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    #end
+                                    </tbody>
+                                </table>
+                            </div>
+
                             <div class="well well-unsubscribe">
                                 <form action="$request.absolutePath" method="POST" class="form-inline form-unsubscribe">
                                     <h4>Unsubscribe</h4>
@@ -510,14 +549,14 @@
 
                             #set( $notes = $services.criteriaBuilders.leadNote.eq("relatedProfile", $page.profile).sortDesc("createDate").execute(1000) )
                             <div id="profile-notes">
-                            #foreach( $note in $notes )
-                            <div>
-                                $note.notes
-                                <br/>
-                                <small>By $note.createdBy.formattedName at $formatter.formatDateTime($note.createDate)</small>
-                                <hr/>
-                            </div>
-                            #end
+                                #foreach( $note in $notes )
+                                <div>
+                                    $note.notes
+                                    <br/>
+                                    <small>By $note.createdBy.formattedName at $formatter.formatDateTime($note.createDate)</small>
+                                    <hr/>
+                                </div>
+                                #end
                             </div>
                         </div>
                     </div>
@@ -649,6 +688,27 @@
                     <div class="modal-footer">
                         <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="addressModal" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Edit Address</h4>
+                    </div>
+                    <form method="POST" action="." class="form-horizontal">
+                        <div id="editAddressContent">
+                            <div class="modal-body">
+                                <i>Please wait..</i>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

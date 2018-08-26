@@ -1,0 +1,52 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        #set( $eaId = $formatter.toLong($params.editAddress) )
+        #set( $entityAddress = $services.userManager.findAddress($page.profile, $eaId) )
+        <div id="editAddressContent">
+            <div class="modal-body">
+                <input type="hidden" name="entityAddressId" value="$!entityAddress.id" />
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input name="addressType" placeholder="Address type" type="text" class="form-control required" value="$!entityAddress.addressType" />
+                    </div>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input name="addressLine1" placeholder="Address line 1" type="text" class="form-control required" value="$!entityAddress.address.addressLine1" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input name="addressLine2" placeholder="Address line 2" type="text" class="form-control" value="$!entityAddress.address.addressLine2" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input name="addressState" placeholder="State" type="text" class="form-control required"  value="$!entityAddress.address.addressState" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input name="postcode" placeholder="Postcode" type="text" class="form-control required"  value="$!entityAddress.address.postcode" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="hidden" name="country" value="$!entityAddress.address.country" />
+                    <div class="col-md-12">
+                        <input name="country" placeholder="Country" type="text" class="form-control required" value="$!entityAddress.address.country" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-sm btn-primary" type="submit">Save</button>
+            </div>
+        </div>
+
+    </body>
+</html>

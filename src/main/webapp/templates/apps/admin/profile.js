@@ -4,6 +4,7 @@ function initProfile() {
     initNewMembershipForm();
     initEnableDisable();
     initTabLazyLoading();
+    initAddressEditing();
 
 
     $(".initProfileForm").forms({
@@ -128,6 +129,30 @@ function initProfile() {
                 }
             });
         });
+    });
+}
+
+function initAddressEditing() {
+    var modal = $("#addressModal");
+    modal.find("form").forms({
+        onSuccess : function(resp) {
+            if( resp.status ) {
+                Msg.info("Saved address");
+                modal.modal("hide");
+                $("#addresses-table-body").reloadFragment();
+            } else {
+                Msg.error("Errors occured: " + resp.messages);
+            }
+        }
+    });
+
+    $("body").on("click", ".edit-address", function(e) {
+        e.preventDefault();
+        var id = $(e.target).closest("a").attr("href");
+        $("#editAddressContent").reloadFragment({
+            url: window.location.pathname + "?editAddress=" + id
+        });
+        modal.modal("show");
     });
 }
 
