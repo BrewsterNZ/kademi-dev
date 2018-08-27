@@ -204,8 +204,15 @@
     <li role="separator" class="divider"></li>
     #else
     #if( $item.visible.isEmpty() )
-    <li class="$formatter.ifTrue($item.active, 'active', '') nav-${item.id}-wrapper" title="${item.text}" data-ordering="$item.ordering">
-        <a class="nav-${item.id}" href="$itemHref" shape="rect" title="$item.text">
+    <li class="$formatter.ifTrue($item.active, 'active', '') nav-${item.id}-wrapper" title="${formatter.textFromHtml($item.text)}" data-ordering="$item.ordering">
+        #if ($formatter.isNull($item.href))
+            #set ($href = "javascript:void(0)")
+            #set ($itemCss = "cursor: default")
+        #else
+            #set ($href = $itemHref)
+            #set ($itemCss = "")
+        #end
+        <a class="nav-${item.id}" style="$!{itemCss}" href="$!href" shape="rect" title="${formatter.textFromHtml($item.text)}">
             #if ($isSubmenu)
             <span class="trans-lookup" data-transcode="nav-${item.id}">$item.text</span>
             #else
@@ -220,6 +227,7 @@
                 #end
             #end
         </a>
+
     </li>
     #else
     <li class="dropdown  nav-${item.id}-wrapper">
