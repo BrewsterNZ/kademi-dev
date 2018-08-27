@@ -235,7 +235,8 @@ function initCancelLeadModal() {
                     $('#all_contacts').html('');
                     // initLeadsDashLoading();
                 }
-                if ($('#lead-cover').length) {
+
+                if ($('#leadDetailTabs').length) {
                     $('#maincontentContainer').reloadFragment({
                         whenComplete: function () {
                             $('abbr.timeago').timeago();
