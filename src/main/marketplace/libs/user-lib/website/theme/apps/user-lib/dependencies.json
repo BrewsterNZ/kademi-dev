@@ -1,4 +1,10 @@
 {
+    "appDependencies": [
+        {
+            "appId": "countries-states-lib",
+            "branch": "1.0.0"
+        }
+    ],
     "dependencies": [
         {
             "less": {
@@ -22,6 +28,24 @@
             "js": {
                 "group": "main",
                 "path": "/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/typeahead/0.11.1/typeahead.bundle.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/uri/1.15.1/URI.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/typeahead/0.11.1/typeahead.css"
             }
         },
         {

@@ -1,0 +1,80 @@
+<div class="details well profile-address-component profile-panel">
+    <form action="$request.absolutePath" method="POST" enctype="multipart/form-data" id="profileAddressForm" class="form-horizontal form-horizontal-narrow" role="form">
+        <h4 class="trans-lookup" data-transcode="profile-heading">Addresses</h4>
+
+        <div class="pageMessage alert alert-danger form-message" style="display: none"></div>
+        <p class="trans-lookup" data-transcode="profile-panel-desc">Home address or work address</p>
+
+        #set ($addresses = $services.userManager.findAddresses($page.profile))
+        #if ($addresses && $addresses.size() > 0)
+            #if ($formatter.isNotNull($params.addressType))
+                #foreach ($addr in $addresses)
+                    #if ($addr.addressType == $params.addressType)
+                        #set ($defaultAddress = $addr)
+                        #break
+                    #end
+                #end
+            #else
+                #set ($defaultAddress = $addresses[0])
+            #end
+        #end
+        <div class="form-group">
+            <label class="control-label col-sm-3">Address Type</label>
+            <div class="col-sm-9">
+                <select type="text" name="addressType" id="profileComAddressType" class="form-control">
+                    <option #if ($formatter.isNull($params.addressType) || $params.addressType == 'Home') selected #end  value="Home">Home</option>
+                    <option #if ($params.addressType == 'Work') selected #end value="Work">Work</option>
+                </select>
+            </div>
+        </div>
+        <div id="profileComponentAddressWrap">
+            <input type="hidden" name="entityAddressId" value="$defaultAddress.id">
+            <div class="form-group">
+                <label class="control-label col-sm-3">Address Line 1</label>
+                <div class="col-sm-9">
+                    <input type="text" name="addressLine1" id="addressLine1" class="form-control" placeholder="Address Line 1" value="$!defaultAddress.address.addressLine1" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Address Line 2</label>
+                <div class="col-sm-9">
+                    <input type="text" name="addressLine2" id="addressLine2" class="form-control" placeholder="Address Line 2" value="$!defaultAddress.address.addressLine2" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">City</label>
+                <div class="col-sm-9">
+                    <input type="text" name="city" id="city" class="form-control" placeholder="City" value="$!defaultAddress.address.city" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">State</label>
+                <div class="col-sm-9">
+                    <input type="text" name="addressState" id="addressState" class="form-control" placeholder="State" value="$!defaultAddress.address.addressState" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Postcode</label>
+                <div class="col-sm-9">
+                    <input type="text" name="postcode" id="postcode" class="form-control" placeholder="Postcode" value="$!defaultAddress.address.postcode" />
+                </div>
+            </div>
+            <input type="hidden" name="country" value="$!defaultAddress.address.country">
+            <div class="form-group">
+                <label class="control-label col-sm-3">Country</label>
+                <div class="col-sm-9">
+                    <input type="text" id="profileAddresscountry" class="form-control" placeholder="Country" value="$!defaultAddress.address.country" />
+                </div>
+            </div>
+        </div>
+        <div class="control-group form-group">
+            <div class="controls col-md-offset-3 col-md-8">
+                <button class="btn btn-success trans-lookup" type="submit">Save</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+#if ($page)
+    #portlets("profilePrimary")
+#end
