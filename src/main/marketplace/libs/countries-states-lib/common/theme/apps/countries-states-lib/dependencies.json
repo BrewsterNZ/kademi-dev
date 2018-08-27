@@ -1,0 +1,10 @@
+{
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/countries-states-lib/countries_states.js"
+            }
+        }
+    ]
+}

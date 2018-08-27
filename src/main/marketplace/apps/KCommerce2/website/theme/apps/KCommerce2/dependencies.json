@@ -1,6 +1,9 @@
 {
     "appDependencies": [
-
+        {
+            "appId": "countries-states-lib",
+            "branch": "1.0.0"
+        }
     ],
     "dependencies": [
         {
@@ -67,12 +70,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/typeahead/0.10.2/typeahead.bundle.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/KCommerce2/countries_states.js"
             }
         },
         {

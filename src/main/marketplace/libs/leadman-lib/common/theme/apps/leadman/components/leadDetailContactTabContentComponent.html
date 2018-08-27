@@ -50,6 +50,72 @@
                     </div>
                     #end
                 </div>
+
+                #set ($addresses = $services.userManager.findAddresses($profile))
+                #if ($addresses && $addresses.size() > 0)
+                    #if ($formatter.isNotNull($params.addressType))
+                        #foreach ($addr in $addresses)
+                            #if ($addr.addressType == $params.addressType)
+                                #set ($defaultAddress = $addr)
+                                #break
+                            #end
+                        #end
+                    #else
+                        #set ($defaultAddress = $addresses[0])
+                    #end
+                #end
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Address Type</label>
+
+                            <select type="text" name="addressType" id="addressType" class="form-control">
+                                <option #if ($formatter.isNull($params.addressType) || $params.addressType == 'Home') selected #end  value="Home">Home</option>
+                                <option #if ($params.addressType == 'Work') selected #end value="Work">Work</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="profileAddressWrap">
+                    <input type="hidden" name="entityAddressId" value="$defaultAddress.id">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Address Line 1</label>
+                            <input type="text" name="addressLine1" id="addressLine1" class="form-control" placeholder="Address Line 1" value="$!defaultAddress.address.addressLine1" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Address Line 2</label>
+                            <input type="text" name="addressLine2" id="addressLine2" class="form-control" placeholder="Address Line 2" value="$!defaultAddress.address.addressLine2" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">City</label>
+                            <input type="text" name="city" id="city" class="form-control" placeholder="City" value="$!defaultAddress.address.city" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">State</label>
+                            <input type="text" name="addressState" id="addressState" class="form-control" placeholder="State" value="$!defaultAddress.address.addressState" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label">Postcode</label>
+                            <input type="text" name="postcode" id="postcode" class="form-control" placeholder="Postcode" value="$!defaultAddress.address.postcode" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="hidden" name="country" value="$!defaultAddress.address.country">
+                        <div class="form-group">
+                            <label class="control-label">Country</label>
+                            <input type="text" id="profileAddresscountry" class="form-control" placeholder="Country" value="$!defaultAddress.address.country" />
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     #set($fields = $page.profileExtraFields)
                     #set($counter = 0)
