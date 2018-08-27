@@ -3,7 +3,7 @@
 #set ($taskType = "dueTasks")
 #end
 #if($userResource.hasRole('TakeLead'))
-#set ($tasks = $formatter.newArrayList())
+    #set ($tasks = $formatter.newArrayList())
     #if ($taskType == "unassignedTasks")
         #set( $tasks = $leadsPage.unassignedTasks )
         #set ($headerTitle = "Incoming tasks")
@@ -14,6 +14,9 @@
         #set ($headerTitle = "My due tasks in 7 days")
         #set ($labelClass = "label-danger")
         #set ($panelClass = "panel-header-danger")
+    #end
+    #if ($formatter.isNotNull($headingTitle))
+        #set ($headerTitle = $headingTitle)
     #end
     <div class="panel panel-default panel-kcrm-light $!panelClass">
         <div class="panel-body">
