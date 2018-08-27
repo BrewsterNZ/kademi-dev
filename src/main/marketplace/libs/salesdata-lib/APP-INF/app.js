@@ -4,6 +4,7 @@ controllerMappings.addComponent("salesdata/components", "salesTable", "html", "D
 controllerMappings.addComponent("salesdata/components", "salesDataCompare", "html", "Displays chart to compare sale amount between last year and current", "Sales data");
 controllerMappings.addComponent("salesdata/components", "salesLeaderboardWeb", "html", "Displays sales data leaderboard", "Sales data");
 controllerMappings.addComponent("salesdata/components", "onTrackAllKpis", "html", "Shows indicators if the user is on track to achieve all available KPIs", "Sales data");
+controllerMappings.addComponent("salesdata/components", "kpiStatus", "html", "Shows current status of single KPI", "Sales data");
 
 
 controllerMappings.addComponent("salesdata/components", "kpiLeaderboardEDM")
