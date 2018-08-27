@@ -17,7 +17,7 @@
                         <div class="col-md-4">
                             <select data-placeholder="Select a source" name="source" class="form-control selectpicker">
                                 <option value="">[None]</option>
-                                #foreach( $source in $page.find("/leads/").funnels.get($request.params.leadName).sources )
+                                #foreach( $source in $page.find("/leads/").funnels.get($params.leadName).sources )
                                 $formatter.option($source, $source, $page.source)
                                 #end
                             </select>
@@ -27,7 +27,7 @@
 
                             <select name="funnel" class="form-control">
                                 #foreach($entry in $leadsPage.funnels.entrySet())
-                                <option value="$entry.key">$formatter.firstNotNull($entry.value.title, $entry.value.name)</option>
+                                <option #if ($params.leadName == $entry.key) selected #end value="$entry.key">$formatter.firstNotNull($entry.value.title, $entry.value.name)</option>
                                 #end
                             </select>
                         </div>
