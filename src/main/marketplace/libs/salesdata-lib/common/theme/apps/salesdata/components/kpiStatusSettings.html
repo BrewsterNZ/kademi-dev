@@ -1,0 +1,51 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12"><strong>KPI</strong></label>
+        <div class="col-sm-12">
+            <select class="form-control select-kpi">
+                <option value="">- None -</option>
+                #foreach ($kpi in $rootFolder.find('/sales/').allKpis)
+                <option value="$kpi.name">$kpi.title</option>
+                #end
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Target Level</strong></label>
+        <div class="col-sm-12">
+            <select class="form-control select-level">
+                <option value="">- None -</option>
+                #foreach ($kpi in $rootFolder.find('/sales/').allKpis)
+                #set ($levelTitles = $kpi.levelTitles)
+                #foreach ($level in $kpi.levelNames)
+                <option value="$level" data-kpi="$kpi.name" style="display: none;">$levelTitles.get($foreach.index)</option>
+                #end
+                #end
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Achieved text</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control txt-achieved-text" placeholder="Achieved" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Not achieved text</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control txt-not-achieved-text" placeholder="Not achieved" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">On track text</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control txt-on-track-text" placeholder="On track" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Off track text</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control txt-off-track-text" placeholder="Off track" />
+        </div>
+    </div>
+</form>

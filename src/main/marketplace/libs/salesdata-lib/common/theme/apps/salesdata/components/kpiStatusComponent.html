@@ -1,0 +1,129 @@
+#if (!$achievedText)
+    #set ($achievedText = "Achieved")
+#end
+
+#if (!$notAchievedText)
+    #set ($notAchievedText = "Not achieved")
+#end
+
+#if (!$onTrackText)
+    #set ($onTrackText = "On track")
+#end
+
+#if (!$offTrackText)
+    #set ($offTrackText = "Off track")
+#end
+
+#set ($currentStartDate = $formatter.yearStart)
+#set ($currentEndDate = $formatter.yearEnd())
+
+#set ($startDate = $queryManager.commonStartDate)
+#set ($endDate = $queryManager.commonFinishDate)
+
+#if ($startDate && $endDate)
+    #set ($currentStartDate = $startDate)
+    #set ($currentEndDate = $endDate)
+#end
+#set ($lastStartDate = $formatter.addYears($currentStartDate, -1))
+
+#set ($sales = $rootFolder.find('/sales/'))
+#set ($sales = $page.find('/sales/'))
+#set($kpis = $sales.allKpis)
+
+#set ($selectedKpi = false)
+#foreach($k in $kpis)
+    #if ($k.name == $kpi)
+        #set ($selectedKpi = $k)
+    #end
+#end
+
+#set( $result = $selectedKpi.getAssessedResult($formatter.addMinutes($startDate,1)) )
+#set( $percent = 0 )
+
+#set ($isAchieved = false)
+#set ($isAssessed = false)
+#if( $result )
+    #set ($isAssessed = true)
+    #if( $selectedKpi.is("PERC_GROWTH") )
+        #set ($percentBounds = 'data-min="0" data-max="100"')
+        #set( $percent = $result.assessedAmount + 100 )
+    #else
+        #set( $percent = $selectedKpi.getAssessedResultPerc($result, $kpiLevel) )
+    #end
+
+    ## we have an assessed result, so display results
+    #if( $percent >= 100)
+        #set ($isAchieved = true)
+    #else
+        #set ($isAchieved = false)
+    #end
+#else
+    ## no assessed result, so need to forecast
+    #set( $forecastLevel = $selectedKpi.progressLevel)
+    #if( $selectedKpi.is("PERC_GROWTH") )
+        #set( $percent = $selectedKpi.progress + 100 )
+    #else
+        #set( $percent = $selectedKpi.getProgressOfLevelPerc($kpiLevel) )
+    #end
+
+    #if ($percent >= 100)
+        #set ($isAchieved = true)
+    #else
+        #set ($isAchieved = false)
+    #end
+#end
+
+#if ($selectedKpi)
+    <div class="panel-circle-sales panel-on-track">
+        <div class="circle-sales-colors" style="display: none !important;">
+            <button type="button" class="btn btn-primary"></button>
+            <button type="button" class="btn btn-info"></button>
+            <button type="button" class="btn btn-success"></button>
+            <button type="button" class="btn btn-warning"></button>
+            <button type="button" class="btn btn-danger"></button>
+        </div>
+        <div class="circle-sales-wrapper text-center">
+            <div class="circle-sales">
+                <div class="circle-sales-knob-wrapper">
+                    <input $!percentBounds class="circle-sales-knob #if($isAchieved == true) circle-sales-success #else circle-sales-warning #end" value="$percent" />
+                </div>
+
+                <div class="circle-sales-label">
+                    #if ($isAchieved == true)
+                        <i class="fa fa-check fa-3x"></i>
+                        <span>#if ($isAssessed == true) $achievedText #else $onTrackText #end</span>
+                    #else
+                        <i class="fa fa-times fa-3x"></i>
+                        <span>#if ($isAssessed == true) $notAchievedText #else $offTrackText #end</span>
+                    #end
+                </div>
+            </div>
+            <span class="circle-sales-title">$selectedKpi.title</span>
+        </div>
+    </div>
+#else
+    #if (!$page)
+    <div class="panel-circle-sales panel-on-track">
+        <div class="circle-sales-colors" style="display: none !important;">
+            <button type="button" class="btn btn-primary"></button>
+            <button type="button" class="btn btn-info"></button>
+            <button type="button" class="btn btn-success"></button>
+            <button type="button" class="btn btn-warning"></button>
+            <button type="button" class="btn btn-danger"></button>
+        </div>
+        <div class="circle-sales-wrapper text-center">
+            <div class="circle-sales">
+                <div class="circle-sales-knob-wrapper">
+                    <input $!percentBounds class="circle-sales-knob circle-sales-success" value="100" />
+                </div>
+
+                <div class="circle-sales-label">
+                    <i class="fa fa-check fa-3x"></i>
+                    <span>Archived</span>
+                </div>
+            </div>
+            <span class="circle-sales-title">Sample KPI</span>
+        </div>
+    </div>
+    #end
+#end
