@@ -51,6 +51,10 @@
         {
             "appId": "bootstrap-select-lib",
             "branch": "1.12.4"
+        },
+        {
+            "appId": "countries-states-lib",
+            "branch": "1.0.0"
         }
     ],
 

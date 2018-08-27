@@ -850,6 +850,8 @@
         initLeadDetailTags();
         initSendEmail();
         initPjax();
+        initLeadContactAddresses();
+        initLeadCountryList();
     }
 })();
 
@@ -874,5 +876,50 @@ function initLeadOrgForms() {
                 }
             });
         }
+    });
+}
+
+function initLeadContactAddresses() {
+    $(document).on('change', '#leadDetails #addressType', function () {
+        var uri = new URI(window.location.href);
+        uri.setSearch('addressType', this.value);
+        history.pushState(null, null, uri.toString());
+        $('#profileAddressWrap').reloadFragment({
+            url: uri.toString(),
+            whenComplete: function () {
+                initLeadCountryList()
+            }
+        })
+    })
+}
+
+function initLeadCountryList() {
+    var countriesBH = new Bloodhound({
+        datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.name); },
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        local: getCountries() // From countries-state-lib
+    });
+
+    countriesBH.initialize();
+
+    var profileAddressWrap = $('#profileAddressWrap');
+    profileAddressWrap.find('#profileAddresscountry').typeahead(null, {
+        displayKey: 'name',
+        valueKey: "iso_code",
+        source: countriesBH.ttAdapter()
+    });
+
+    var selectedCountry = profileAddressWrap.find('[name=country]').val();
+    if (selectedCountry){
+        var sel = getCountries().filter(function (item) {
+            return item.iso_code === selectedCountry;
+        });
+        if (sel.length){
+            profileAddressWrap.find('#profileAddresscountry').typeahead('val', sel[0].name);
+        }
+    }
+
+    profileAddressWrap.find('#profileAddresscountry').on("typeahead:selected", function(e, datum) {
+        profileAddressWrap.find('[name=country]').val(datum.iso_code);
     });
 }
