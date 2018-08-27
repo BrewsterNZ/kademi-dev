@@ -817,6 +817,7 @@
                 initBodyForm();
                 initOrgSearchTab();
                 $('#leadDetailTabs').html($(doc).find('#leadDetailTabs').html());
+                initLeadCountryList();
             },
             debug: true
         });
