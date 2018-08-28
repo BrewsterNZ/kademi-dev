@@ -11,6 +11,15 @@ controllerMappings
     .addType("leadManResource") // this is so the SalesRole will apply
     .build();
 
+controllerMappings
+    .websiteController()
+    .enabled(true)
+    .isPublic(false)
+    .path('/leadCompany')
+    .addMethod('POST', 'newCompany', "newCompany")
+    .postPriviledge("READ_CONTENT")
+    .build();
+
 
 function getLeadOrgTypes(page, params) {
     log.info('getLeadOrgTypes {} {}', page, params);
@@ -62,5 +71,20 @@ function removeOrgType(page, params) {
         return views.jsonObjectView({status: true});
     }
 
+    return views.jsonObjectView({status: false});
+}
+
+function newCompany(page, params) {
+    log.info('newCompany {} {}', page, params);
+    var newCompany = params.newCompany;
+    if (newCompany){
+        var orgId = newCompany.replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s/g, "-");
+        var rootFolder = page.find('/');
+        var org = services.organisationManager.createOrg(null, orgId, newCompany);
+        if (org){
+            rootFolder.addOrgType(org.orgId, "cust-company");
+            return views.jsonObjectView({status: true});
+        }
+    }
     return views.jsonObjectView({status: false});
 }

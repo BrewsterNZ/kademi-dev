@@ -79,7 +79,7 @@ function initSearchCompanies() {
 
 function doSearch() {
     flog("doSearch");
-    var newUrl = window.location.pathname + "?q=" + $("#org-query").val();
+    var newUrl = window.location.pathname + "?q=" + $("#lead-companies-query").val();
     $.ajax({
         type: 'GET',
         url: newUrl,
