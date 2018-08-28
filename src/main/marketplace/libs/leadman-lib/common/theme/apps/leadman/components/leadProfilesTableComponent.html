@@ -39,7 +39,7 @@
                         <td>
                             #if( $page.getLastContactDate($p.fields.userName.value) )
                             #set($cd = $page.getLastContactDate($p.fields.userName.value))
-                            <small class="pull-right"><abbr class="timeago" title="$formatter.formatDateISO8601($cd, $page.organisation.timezone)">$formatter.formatDateISO8601($cd, $page.organisation.timezone)</abbr></small>
+                            <abbr class="timeago" title="$formatter.formatDateISO8601($cd, $page.organisation.timezone)">$formatter.formatDateISO8601($cd, $page.organisation.timezone)</abbr>
                             #end
                         </td>
                         <td>
