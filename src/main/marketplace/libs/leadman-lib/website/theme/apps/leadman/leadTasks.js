@@ -193,6 +193,12 @@ $(function () {
                 }
 
                 dataTable.draw();
+
+                setTimeout(function () {
+                    $('#leadTasksNav').reloadFragment({
+                        url: url || window.location.href
+                    });
+                },500);
             },
             error: function () {
                 Msg.error('Could not load data');
@@ -214,7 +220,7 @@ $(function () {
             var s = uri.search(true);
             if (!uri.hasSearch('assignedTo') || !s.assignedTo){
                 uri = uri.addSearch('assignedTo', currentUser);
-                loadTasks(uri.toString())
+                // loadTasks(uri.toString())
                 history.pushState(null, null, uri.toString());
             }
         }
@@ -236,7 +242,7 @@ $(function () {
         });
     });
 
-    $('#lead-tasks-page input[name=taskType]').on('change', function (e) {
+    $(document).on('change', '#lead-tasks-page input[name=taskType]', function (e) {
         var t = $(this);
         var uri = new URI(window.location.search);
         uri.removeSearch('type');
@@ -261,19 +267,19 @@ $(function () {
         history.pushState(null, null, uri.toString());
     });
 
-    $(document.body).on('submit', '#search-tasks-form', function (e) {
+    $(document.body).on('input', '#search-tasks-form input[type=text]', function (e) {
         e.preventDefault();
+        var val = this.value;
+        typewatch(function () {
+            var uri = new URI(window.location.search);
+            uri.removeSearch('q');
+            uri = uri.addSearch('q', val);
 
-        var form = $(this);
-        var searchField = form.find('input');
-        var val = searchField.val();
+            loadTasks(uri.toString());
+            history.pushState(null, null, uri.toString());
+        }, 500);
 
-        var uri = new URI(window.location.search);
-        uri.removeSearch('q');
-        uri = uri.addSearch('q', val);
 
-        loadTasks(uri.toString());
-        history.pushState(null, null, uri.toString());
     });
 
     window.doReloadTasksPage = function () {
