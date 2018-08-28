@@ -1,9 +1,9 @@
 <div class="panel panel-primary panel-leadProfileTabs">
-    <div class="panel-body">
+    <div class="panel-body" id="leadDetailTabs">
         <div class="row">
             <div class="col-sm-8">
-                <ul class="nav nav-pills" id="leadDetailTabs">
-                    <li role="presentation" #if (!$params.view || $params.view == 'detail') class="active" #end><a href="?view=detail" class="text-center pjax"><i class="fa fa-dollar fa-2x"></i><br>Lead</a></li>
+                <ul class="nav nav-pills">
+                    <li id="firstTab" role="presentation" #if (!$params.view || $params.view == 'detail') class="active" #end><a href="?view=detail" class="text-center pjax"><i class="fa fa-dollar fa-2x"></i><br>Lead</a></li>
                     <li role="presentation" #if ($params.view == 'company') class="active" #end><a href="?view=company" class="text-center pjax"><i class="fa fa-building fa-2x"></i><br>Company</a></li>
                     <li role="presentation" #if ($params.view == 'contact') class="active" #end><a href="?view=contact" class="text-center pjax"><i class="fa fa-user fa-2x"></i><br>Contact</a></li>
                     <li role="presentation" #if ($params.view == 'activities') class="active" #end><a href="?view=activities" class="text-center pjax"><i class="fa fa-tasks fa-2x"></i><br>Activities</a></li>
@@ -24,7 +24,7 @@
                     <a style="margin-right: 20px" href="?cancel" data-target="#modalCancelLead" data-toggle="modal" class="btn btn-danger">Lost</a>
                     #set ($won = "Won")
                     #if (!$formatter.isNull($page.dealAmount))
-                    #set ($won = "Won: $" + $formatter.formatCurrency($page.dealAmount))
+                    #set ($won = "Won: $" + $!formatter.formatCurrency($page.dealAmount))
                     #end
                     <button class="btn btn-success" data-toggle="modal" data-target="#closeDealModal">$won</button>
                     #end

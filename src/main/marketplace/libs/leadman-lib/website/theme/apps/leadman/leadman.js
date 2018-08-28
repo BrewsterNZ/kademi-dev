@@ -204,10 +204,10 @@ function initCloseDealModal() {
         onSuccess: function (resp) {
             Msg.info('Deal marked as closed');
             if ($('#leadDetailTabs').length) {
-                $('#maincontentContainer').reloadFragment({
+                $('#leadDetailTabs').reloadFragment({
                     whenComplete: function () {
                         $('abbr.timeago').timeago();
-                        initLeadManEvents();
+                        $('#leadDetailTabs').find('#firstTab a').trigger('click');
                     }
                 });
             }
@@ -237,10 +237,10 @@ function initCancelLeadModal() {
                 }
 
                 if ($('#leadDetailTabs').length) {
-                    $('#maincontentContainer').reloadFragment({
+                    $('#leadDetailTabs').reloadFragment({
                         whenComplete: function () {
                             $('abbr.timeago').timeago();
-                            initLeadManEvents();
+                            $('#leadDetailTabs').find('#firstTab a').trigger('click')
                         }
                     });
                 }
