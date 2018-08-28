@@ -53,49 +53,45 @@
             }
         });
 
-        $.getScript('/static/typeahead/0.10.5/typeahead.bundle.js', function () {
-            $.getScript('/static/handlebars/1.2.0/handlebars.js', function () {
-                try {
-                    var searchUrl = $('#registerForm').attr('action');
+        try {
+            var searchUrl = $('#registerForm').attr('action');
 
-                    var orgs = new Bloodhound({
-                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-                        queryTokenizer: Bloodhound.tokenizers.whitespace,
-                        remote: {
-                            url: searchUrl + '?jsonQuery=%QUERY&th',
-                            replace: function () {
-                                return registerForm.attr('action') + '?jsonQuery=' + encodeURIComponent($('#orgName').val()) + '&th';
-                            }
-                        }
-                    });
-
-                    orgs.initialize();
-
-                    $('#orgName').typeahead(null, {
-                        minLength: 1,
-                        displayKey: 'title',
-                        name: 'orgs',
-                        source: orgs.ttAdapter(),
-                        templates: {
-                            empty: [
-                                '<div class="empty-message">',
-                                'No organisations match your search',
-                                '</div>'
-                            ].join('\n'),
-                            suggestion: Handlebars.compile('<p><strong>{{title}}</strong> {{address}}, {{postcode}}</p>')
-                        }
-                    });
-                    $('.tt-hint').removeClass('required');
-                    $('#orgName').on('typeahead:selected', function (e, datum) {
-                        log('Selected', e, datum);
-                        $('#orgId').val(datum.orgId);
-                    });
-                    flog('init typeahead3');
-                } catch (e) {
-                    flog('exception: ' + e);
+            var orgs = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: searchUrl + '?jsonQuery=%QUERY&th',
+                    replace: function () {
+                        return registerForm.attr('action') + '?jsonQuery=' + encodeURIComponent($('#orgName').val()) + '&th';
+                    }
                 }
             });
-        });
+
+            orgs.initialize();
+
+            $('#orgName').typeahead(null, {
+                minLength: 1,
+                displayKey: 'title',
+                name: 'orgs',
+                source: orgs.ttAdapter(),
+                templates: {
+                    empty: [
+                        '<div class="empty-message">',
+                        'No organisations match your search',
+                        '</div>'
+                    ].join('\n'),
+                    suggestion: Handlebars.compile('<p><strong>{{title}}</strong> {{address}}, {{postcode}}</p>')
+                }
+            });
+            $('.tt-hint').removeClass('required');
+            $('#orgName').on('typeahead:selected', function (e, datum) {
+                log('Selected', e, datum);
+                $('#orgId').val(datum.orgId);
+            });
+            flog('init typeahead3');
+        } catch (e) {
+            flog('exception: ' + e);
+        }
 
         function showPendingMessage() {
             showModal($('#pending'));

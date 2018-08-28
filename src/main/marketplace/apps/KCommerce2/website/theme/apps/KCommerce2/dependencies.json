@@ -3,6 +3,10 @@
         {
             "appId": "countries-states-lib",
             "branch": "1.0.0"
+        },
+        {
+            "appId": "typeahead-lib",
+            "branch": "0.11.1"
         }
     ],
     "dependencies": [
@@ -64,12 +68,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/jquery.zoom/1.7.14/jquery.zoom.min.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/typeahead/0.10.2/typeahead.bundle.js"
             }
         },
         {

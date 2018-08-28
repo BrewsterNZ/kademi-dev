@@ -1,6 +1,14 @@
 {
     "appDependencies": [
         {
+            "appId": "handlebars-lib",
+            "branch": "3.0.3.2"
+        },
+        {
+            "appId": "typeahead-lib",
+            "branch": "0.11.1"
+        },
+        {
             "appId": "countries-states-lib",
             "branch": "1.0.0"
         }
@@ -33,19 +41,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/static/typeahead/0.11.1/typeahead.bundle.min.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
                 "path": "/static/uri/1.15.1/URI.js"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/typeahead/0.11.1/typeahead.css"
             }
         },
         {

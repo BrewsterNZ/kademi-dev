@@ -6,7 +6,7 @@
         },
         {
             "appId": "handlebars-lib",
-            "branch": "3.0.3"
+            "branch": "3.0.3.2"
         },
         {
             "appId": "moment-lib",
@@ -15,15 +15,13 @@
         {
             "appId": "pagedatepicker-lib",
             "branch": "1.0.4"
+        },
+        {
+            "appId": "typeahead-lib",
+            "branch": "0.11.1"
         }
     ],
     "dependencies": [
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/typeahead/0.11.1/typeahead.css"
-            }
-        },
         {
             "css": {
                 "cssMedia": "all",
@@ -34,12 +32,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/typeahead/0.11.1/typeahead.bundle.min.js"
             }
         },
         {

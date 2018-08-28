@@ -1,0 +1,17 @@
+{
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/typeahead-lib/typeahead.bundle.min.js",
+                "position": 10
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/typeahead-lib/typeahead.css"
+            }
+        }
+    ]
+}

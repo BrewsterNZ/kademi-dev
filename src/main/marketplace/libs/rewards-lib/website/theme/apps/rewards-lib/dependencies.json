@@ -2,20 +2,18 @@
     "appDependencies": [
         {
             "appId": "handlebars-lib",
-            "branch": "3.0.3"
+            "branch": "3.0.3.2"
         },
         {
             "appId": "mupload-lib",
             "branch": "1.0.2"
+        },
+        {
+            "appId": "typeahead-lib",
+            "branch": "0.11.1"
         }
     ],
     "dependencies": [
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/typeahead/0.11.1/typeahead.css"
-            }
-        },
         {
             "less": {
                 "lessMedia": "all",
@@ -44,12 +42,6 @@
             "css": {
                 "path": "/static/formBuilder/1.24.3/form-render.css",
                 "cssMedia": "all"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/typeahead/0.11.1/typeahead.bundle.min.js"
             }
         },
         {

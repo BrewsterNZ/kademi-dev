@@ -6,7 +6,7 @@
         },
         {
             "appId": "reporting-lib",
-            "branch": "1.3.3"
+            "branch": "1.3.8"
         }
     ]
 }
