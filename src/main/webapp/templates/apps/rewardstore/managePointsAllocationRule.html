@@ -73,6 +73,13 @@
                                     $formatter.option($reward.name, $reward.name, $page.rule.promotion.name)
                                     #end
                                 </select>
+                                <small>
+                                #if( $page.rule.promotion )
+                                <a href="/rewards/$page.rule.promotion.name/">View promotion</a>
+                                #else
+                                <a href="/rewards/">View promotions</a>
+                                #end
+                                </small>
                             </div>
                         </div>
 
