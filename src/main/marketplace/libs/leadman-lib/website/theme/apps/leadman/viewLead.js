@@ -642,6 +642,7 @@
             onSuccess: function (resp) {
                 Msg.info('Created new activity');
                 reloadLeadActivities();
+                form.trigger('reset');
             }
         });
     }

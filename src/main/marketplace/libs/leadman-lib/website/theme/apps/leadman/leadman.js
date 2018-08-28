@@ -1239,7 +1239,7 @@ function initNewNoteForm() {
         var btn = $(this);
         var noteId = btn.attr('href');
         var type = btn.data('type');
-        var notes = btn.closest('li.timeline-inverted').find('.timeline-body pre').text();
+        var notes = btn.closest('li.timeline-inverted').find('.timeline-body pre').html();
 
         editModal.find('[name=action]').val(type);
         editModal.find('[name=note]').val(notes);
