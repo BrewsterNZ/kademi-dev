@@ -132,6 +132,17 @@ function reloadCompanyTags() {
     });
 }
 
+function initCompanyForm(){
+    $('#leadOrgDetails').forms({
+        onSuccess: function (resp) {
+            if (resp && resp.status){
+                Msg.success('Updated');
+            }
+        }
+    })
+}
+
 $(function () {
     initLeadCompanyDetailTags();
-})
+    initCompanyForm();
+});
