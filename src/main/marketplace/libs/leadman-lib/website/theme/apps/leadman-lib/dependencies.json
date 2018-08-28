@@ -14,7 +14,7 @@
         },
         {
             "appId": "handlebars-lib",
-            "branch": "3.0.3"
+            "branch": "3.0.3.2"
         },
         {
             "appId": "dropzone-lib",
@@ -53,6 +53,10 @@
             "branch": "1.12.4"
         },
         {
+            "appId": "typeahead-lib",
+            "branch": "0.11.1"
+        },
+        {
             "appId": "countries-states-lib",
             "branch": "1.0.0"
         }
@@ -69,12 +73,6 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/leadman/jquery.inline-attachment.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/typeahead/0.11.1/typeahead.bundle.min.js"
             }
         },
         {
@@ -231,12 +229,6 @@
             "css": {
                 "cssMedia": "all",
                 "path": "/static/select2/4.0.3/dist/css/select2.min.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/typeahead/0.11.1/typeahead.css"
             }
         },
         {

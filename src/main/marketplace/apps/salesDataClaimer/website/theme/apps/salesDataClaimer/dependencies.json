@@ -39,7 +39,11 @@
         {
             "appId": "fuelux-lib",
             "branch": "3.13.0"
-        }        
+        },
+        {
+            "appId": "typeahead-lib",
+            "branch": "0.11.1"
+        }
     ],
     "dependencies": [
         {
@@ -64,18 +68,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/uri/1.15.1/URI.js"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/typeahead/0.11.1/typeahead.css"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/typeahead/0.11.1/typeahead.bundle.min.js"
             }
         },
         {

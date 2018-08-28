@@ -1,5 +1,13 @@
 {
     "appDependencies": [
+        {
+            "appId": "handlebars-lib",
+            "branch": "3.0.3.2"
+        },
+        {
+            "appId": "typeahead-lib",
+            "branch": "0.11.1"
+        }
     ],
     "dependencies": [
         {
