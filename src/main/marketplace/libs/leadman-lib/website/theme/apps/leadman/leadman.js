@@ -1097,11 +1097,13 @@ function initNotesDotDotDot() {
         }
     }
 
-    $('.note-content').dotdotdot({
-        height: 100,
-        callback: dotdotdotCallback,
-        after: 'a.note-more'
-    });
+    $('.note-content').each(function () {
+        $(this).dotdotdot({
+            height: 100,
+            callback: dotdotdotCallback,
+            after: 'a.note-more'
+        });
+    })
 }
 
 function initNoteMoreLess() {

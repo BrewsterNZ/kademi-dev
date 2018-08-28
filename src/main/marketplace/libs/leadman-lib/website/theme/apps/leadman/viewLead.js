@@ -662,6 +662,7 @@
             whenComplete: function () {
                 $('#filterActivities').trigger('change');
                 $('.timeago').timeago();
+                initNotesDotDotDot();
             }
         })
     }
