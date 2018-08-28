@@ -43,7 +43,6 @@ function initLeadManEvents() {
     initChangeLeadAvatar();
     initHideModalAndGoLinks();
     initStatsSummaryComponents();
-    initLeadContactsTable();
     initOrgFinder();
     // init the login form
     $(".login").user({});
@@ -2022,16 +2021,3 @@ function initClipboard() {
     });
 }
 
-function initLeadContactsTable() {
-    if ($('#leadContactsTable').length){
-        var dataTable = $('#leadContactsTable').DataTable({
-            paging: false,
-            searching: false,
-            destroy: true,
-            info: false,
-            initComplete: function(settings, json) {
-                $('#leadContactsTable').closest('.row').siblings('.row').remove();
-            }
-        });
-    }
-}
