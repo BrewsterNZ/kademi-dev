@@ -80,11 +80,13 @@ function newCompany(page, params) {
     if (newCompany){
         var orgId = newCompany.replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s/g, "-");
         var rootFolder = page.find('/');
-        var org = services.organisationManager.createOrg(null, orgId, newCompany);
-        if (org){
-            rootFolder.addOrgType(org.orgId, "cust-company");
-            return views.jsonObjectView({status: true});
-        }
+        transactionManager.runInTransaction(function () {
+            var org = services.organisationManager.createOrg(null, orgId, newCompany);
+            if (org){
+                rootFolder.addOrgType(org.orgId, "customer-company");
+            }
+        });
+        return views.jsonObjectView({status: true});
     }
     return views.jsonObjectView({status: false});
 }

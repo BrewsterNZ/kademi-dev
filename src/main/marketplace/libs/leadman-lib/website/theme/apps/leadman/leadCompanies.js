@@ -2,6 +2,7 @@ $(function () {
     initLeadCompaniesTable();
     initSearchCompanies();
     initDeleteCompanies();
+    initAddNewCompany();
 });
 function initLeadCompaniesTable() {
     if ($('#leadCompaniesTable').length){
@@ -48,6 +49,7 @@ function initDeleteCompanies() {
                             $('#searchResults').reloadFragment({
                                 whenComplete: function () {
                                     Msg.success('Deleted');
+                                    initLeadCompaniesTable();
                                 }
                             });
                         }, 1200);
@@ -94,4 +96,22 @@ function doSearch() {
             Msg.error("err");
         }
     });
+}
+
+function initAddNewCompany() {
+    $('#modal-add-company form').forms({
+        onSuccess: function (resp) {
+            if (resp && resp.status){
+                Msg.info('Processing...');
+                setTimeout(function () {
+                    $('#searchResults').reloadFragment({
+                        whenComplete: function () {
+                            Msg.success('Done');
+                            initLeadCompaniesTable();
+                        }
+                    });
+                }, 1200);
+            }
+        }
+    })
 }
