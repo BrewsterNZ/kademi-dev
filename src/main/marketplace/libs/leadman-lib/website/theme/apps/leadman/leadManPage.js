@@ -9,7 +9,7 @@
         sources: [],
         journeys: [],
         from: 0,
-        size: 10
+        size: 100
     };
 
     var dataTable = null;
