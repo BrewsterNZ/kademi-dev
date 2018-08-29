@@ -451,6 +451,7 @@
     }
 
     function doSearch() {
+        searchOptions.from = 0;
         $.ajax({
             url: window.location.pathname + '?sLead&' + $.param(searchOptions),
             dataType: 'JSON',
