@@ -52,6 +52,46 @@
                         </div>
                     </article>
 
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Lead/journey scanner</h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>DueIDs</th>
+                                    <td>$applications.funnels.scannerDueIds</td>
+                                </tr>
+                                <tr>
+                                    <th>Due Fork IDs</th>
+                                    <td>$applications.funnels.scannerForkDueIds</td>
+                                </tr>
+                                <tr>
+                                    <th>Current Lead ID</th>
+                                    <td>$!applications.funnels.currentScannerLeadId</td>
+                                </tr>
+                                <tr>
+                                    <th>Last Lead Started at</th>
+                                    <td>$!applications.funnels.currentScannerLeadStartedAt</td>
+                                </tr>
+                                <tr>
+                                    <th>Num due</th>
+                                    <td>$!applications.funnels.possiblyDueCount</td>
+                                </tr>
+                            </table>
+
+                            <hr/>
+
+                            <table class="table table-striped">
+                                #foreach($pair in $!applications.funnels.possiblyDueList )
+                                <tr>
+                                    <td>$pair.object1</td>
+                                    <td>$pair.object2</td>
+                                </tr>
+                                #end
+                            </table>
+                        </div>
+                    </article>
 
                     <article class="panel panel-default">
                         <div class="panel-heading">
