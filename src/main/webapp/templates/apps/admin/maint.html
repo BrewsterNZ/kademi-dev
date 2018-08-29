@@ -74,6 +74,21 @@
                                     <th>Last Lead Started at</th>
                                     <td>$!applications.funnels.currentScannerLeadStartedAt</td>
                                 </tr>
+                                <tr>
+                                    <th>Num due</th>
+                                    <td>$!applications.funnels.possiblyDueCount</td>
+                                </tr>
+                            </table>
+
+                            <hr/>
+
+                            <table class="table table-striped">
+                                #foreach($pair in $!applications.funnels.possiblyDueList )
+                                <tr>
+                                    <td>$pair.object1</td>
+                                    <td>$pair.object2</td>
+                                </tr>
+                                #end
                             </table>
                         </div>
                     </article>
