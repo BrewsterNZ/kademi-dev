@@ -603,15 +603,6 @@
         })
     }
 
-    function initSelectPicker() {
-        var sp = $('.selectpicker');
-        if (sp.length > 0) {
-            $('.selectpicker').selectpicker({
-                maxOptions: 5
-            });
-        }
-    }
-
     function initLeadDetailActivities() {
         $(document).on('click', '.btnActivity', function (e) {
             e.preventDefault();
@@ -861,6 +852,15 @@
         initLeadCountryList();
     }
 })();
+
+function initSelectPicker() {
+    var sp = $('.selectpicker');
+    if (sp.length > 0) {
+        $('.selectpicker').selectpicker({
+            maxOptions: 5
+        });
+    }
+}
 
 function reloadProfileCompanies() {
     $("#profile-companies-div").reloadFragment({

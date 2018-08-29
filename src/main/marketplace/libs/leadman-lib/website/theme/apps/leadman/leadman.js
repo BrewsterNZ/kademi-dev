@@ -1112,9 +1112,17 @@ function initNoteMoreLess() {
         var div = btn.parents('.note-content');
         if (btn.hasClass('note-less')) {
             div.find('a.note-more').text('more').removeClass('note-less');
-            initNotesDotDotDot();
+            div.dotdotdot({
+                height: 100,
+                callback: function (isTruncated, originalContent) {
+                    if (!isTruncated) {
+                        $("a.note-more", div).remove();
+                    }
+                },
+                after: 'a.note-more'
+            });
         } else {
-            $('.note-content').trigger('destroy').css('max-height', '');
+            div.trigger('destroy').css('max-height', '');
             div.find('a.note-more').text('less').addClass('note-less');
         }
 
