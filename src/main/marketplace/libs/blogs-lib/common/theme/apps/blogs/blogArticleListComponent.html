@@ -18,7 +18,7 @@
 #end
 
 #if(!$sortBy)
-    #set ($sortBy = "articleDate")
+    #set ($sortBy = "articleDateDate")
 #end
 
 #if(!$orderBy)
@@ -158,7 +158,7 @@
                                 <p>
                                     <i class="fa fa-clock-o"></i> <abbr class="timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
                                 </p>
-    
+
                                 <p>
                                     #if( $article.category )
                                         <span class="label label-primary">$article.category</span>
