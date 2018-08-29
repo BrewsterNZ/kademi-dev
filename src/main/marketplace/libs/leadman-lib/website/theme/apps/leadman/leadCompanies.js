@@ -91,6 +91,7 @@ function doSearch() {
             flog("replace", $("#se"));
             flog("frag", $fragment);
             $("#searchResults").replaceWith($fragment);
+            initLeadCompaniesTable()
         },
         error: function (resp) {
             Msg.error("err");

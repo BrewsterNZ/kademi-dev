@@ -18,6 +18,7 @@ controllerMappings
     .path('/leadCompany')
     .addMethod('POST', 'newCompany', "newCompany")
     .postPriviledge("READ_CONTENT")
+    .addType("leadManResource") // this is so the SalesRole will apply
     .build();
 
 
