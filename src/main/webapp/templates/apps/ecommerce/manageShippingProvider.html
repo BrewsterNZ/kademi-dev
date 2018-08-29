@@ -10,16 +10,16 @@
         </a>
         #set( $rules = $services.pricingRulesService.rules($page.storeWebsite) )
         #if( $params.shippingId == "new" )
-            #set( $provider = false )
+        #set( $provider = false )
         <h1>Create shipping provider</h1>
         #else
-            #set( $provider = $rules.shippingProvider($params.shippingId) )
-            #if( $provider )
-            <h1>Edit shipping provider: $params.shippingId</h1>
-            #else
-            <h1 class="text-danger">Couldnt find shipping provider: $params.shippingId</h1>
-            #break
-            #end
+        #set( $provider = $rules.shippingProvider($params.shippingId) )
+        #if( $provider )
+        <h1>Edit shipping provider: $params.shippingId</h1>
+        #else
+        <h1 class="text-danger">Couldnt find shipping provider: $params.shippingId</h1>
+        #break
+        #end
         #end
 
         <hr/>
@@ -32,47 +32,75 @@
                 <div class="col-md-10">
                     <input type="text" name="title" value="$!provider.title" placeholder="" class="form-control" />
                 </div>
-            </div>    
-            
-            <div class="form-group">
-                <label class="control-label col-md-2" for="fixedPerItemCost">fixedPerItemCost</label>
-                <div class="col-md-4">
-                    <input type="text" name="fixedPerItemCost" value="$!provider.fixedPerItemCost" placeholder="" class="form-control" />
-                </div>
+            </div>
 
-                <label class="control-label col-md-2" for="fixedCartCost">fixedCartCost</label>
+            <div class="form-group">
+                <label class="control-label col-md-2" for="fixedCartCost">Fixed cart cost</label>
                 <div class="col-md-4">
                     <input type="text" name="fixedCartCost" value="$!provider.fixedCartCost" placeholder="" class="form-control" />
+                    <i>This specifies a fixed amount for any cart, regardless of items ordered</i>
                 </div>
-            </div>            
+
+                <label class="control-label col-md-2" for="fixedPerItemCost">Fixed per item cost</label>
+                <div class="col-md-4">
+                    <input type="text" name="fixedPerItemCost" value="$!provider.fixedPerItemCost" placeholder="" class="form-control" />
+                    <i>This will add a fixed fee for each item in the cart</i>
+                </div>
+            </div>
 
             <div class="form-group">
-                <label class="control-label col-md-2" for="weightMult">weightMult</label>
+                <label class="control-label col-md-2" for="weightMult">Weight multiplier</label>
                 <div class="col-md-4">
                     <input type="text" name="weightMult" value="$!provider.weightMult" placeholder="" class="form-control" />
+                    <i>If provided, a fee is calculated by multiplying the total cart weight by this factor</i>
                 </div>
 
-                <label class="control-label col-md-2" for="volumetricMult">volumetricMult</label>
+                <label class="control-label col-md-2" for="volumetricMult">Volumetric multiplier</label>
                 <div class="col-md-4">
                     <input type="text" name="volumetricMult" value="$!provider.volumetricMult" placeholder="" class="form-control" />
+                    <i>If provided, a fee is calculated by multiplying this factor by the volumetric weight of each item in the cart. The volumentric weight is the greater
+                    of the normal weight or height x width x length (in cm)</i>
                 </div>
-            </div>            
+            </div>
 
+            <hr/>
+
+            <h3>Activation factors</h3>
+
+            <h4>Cost range</h4>
             <div class="form-group">
-                <label class="control-label col-md-2" for="minTotalWeightKgs">minTotalWeightKgs</label>
+                <label class="control-label col-md-2" for="minCartCost">Min cost</label>
+                <div class="col-md-4">
+                    <input type="text" name="minCartCost" value="$!provider.minCartCost" placeholder="" class="form-control" />
+                </div>
+
+                <label class="control-label col-md-2" for="maxCartCost">Max cost</label>
+                <div class="col-md-4">
+                    <input type="text" name="maxCartCost" value="$!provider.maxCartCost" placeholder="" class="form-control" />
+                </div>
+            </div>
+
+            <h4>Weight range</h4>
+            <div class="form-group">
+                <label class="control-label col-md-2" for="minTotalWeightKgs">Min total (Kgs)</label>
                 <div class="col-md-4">
                     <input type="text" name="minTotalWeightKgs" value="$!provider.minTotalWeightKgs" placeholder="" class="form-control" />
                 </div>
 
-                <label class="control-label col-md-2" for="maxTotalWeightKgs">maxTotalWeightKgs</label>
+                <label class="control-label col-md-2" for="maxTotalWeightKgs">Max total (Kgs)</label>
                 <div class="col-md-4">
                     <input type="text" name="maxTotalWeightKgs" value="$!provider.maxTotalWeightKgs" placeholder="" class="form-control" />
                 </div>
-            </div>            
-            
-            <h2>Available countries</h2>
-            <textarea name="availableCountries" placeholder="" class="form-control" style="min-height: 100px">$formatter.toCsv($provider.availableCountries)</textarea>          
-            <i>Enter a comma seperated list of country codes</i>
+            </div>
+
+            <h4>Available countries</h4>
+            <div class="form-group">
+                <label class="control-label col-md-2" for="minTotalWeightKgs">Available countries (codes)</label>
+                <div class="col-md-10">
+                    <textarea name="availableCountries" placeholder="" class="form-control" style="min-height: 100px">$formatter.toCsv($provider.availableCountries)</textarea>
+                    <i>Enter a comma seperated list of country codes</i>
+                </div>
+            </div>
 
             <div class="form-group">
                 <div class="col-md-12">
