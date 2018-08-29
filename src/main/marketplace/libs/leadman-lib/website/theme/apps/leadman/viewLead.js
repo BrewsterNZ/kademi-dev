@@ -273,7 +273,8 @@
             form.find('input[name=phone]').val(sug.phone);
             form.find('input[name=address]').val(sug.address);
             form.find('input[name=addressLine2]').val(sug.addressLine2);
-            form.find('input[name=addressState]').val(sug.state);
+            form.find('input[name=addressState]').val(sug.addressState);
+            form.find('input[name=city]').val(sug.city);
             form.find('input[name=postcode]').val(sug.postcode);
             form.find('input[name=leadOrgId]').val(sug.orgId);
             form.find('[name=country]').val(sug.country);
@@ -290,6 +291,7 @@
                     form.find('input[name=address]').val('');
                     form.find('input[name=addressLine2]').val('');
                     form.find('input[name=addressState]').val('');
+                    form.find('input[name=city]').val('');
                     form.find('input[name=postcode]').val('');
                     form.find('input[name=leadOrgId]').val('');
                     form.find('[name=country]').val('');
@@ -820,6 +822,7 @@
                 initOrgSearchTab();
                 $('#leadDetailTabs').html($(doc).find('#leadDetailTabs').html());
                 initLeadCountryList();
+                initSelectPicker();
             },
             debug: true
         });
@@ -864,6 +867,7 @@ function reloadProfileCompanies() {
         whenComplete: function () {
             flog("done");
             initLeadOrgForms();
+            initSelectPicker();
         }
     });
 }
