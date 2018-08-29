@@ -295,6 +295,7 @@
                     form.find('input[name=postcode]').val('');
                     form.find('input[name=leadOrgId]').val('');
                     form.find('[name=country]').val('');
+                    $('.selectpicker').selectpicker('refresh')
                 }
             }
         });
