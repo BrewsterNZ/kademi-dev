@@ -823,6 +823,7 @@
                 $('#leadDetailTabs').html($(doc).find('#leadDetailTabs').html());
                 initLeadCountryList();
                 initSelectPicker();
+                initJobTitleSearch();
             },
             debug: true
         });
