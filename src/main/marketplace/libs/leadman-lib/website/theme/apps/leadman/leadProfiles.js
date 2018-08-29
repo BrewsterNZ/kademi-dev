@@ -734,6 +734,7 @@ $(function () {
     var leadContactsTable = $('#leadContactsTable');
     if (leadContactsTable.length > 0) {
         initSearchLead();
+        initLeadContactsTable();
         // initUploads();
     }
 });
