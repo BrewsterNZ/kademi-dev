@@ -97,12 +97,17 @@
                             </thead>
                             <tbody id="table-claims-body">
                                 #set ($claims = $page.attributes.claims)
+
                                 #if ($claims.size() > 0)
                                 #foreach($hit in $claims)
                                 #if ($hit.jsonObject.status == 0)
                                 #renderClaim($hit.jsonObject)
                                 #end
                                 #end
+
+                                <tr>
+                                    <td colspan="5">--</td>
+                                </tr>
 
                                 #foreach($hit in $claims)
                                 #if ($hit.jsonObject.status != 0)
@@ -225,23 +230,6 @@
     </tr>
     #end
 
-    #macro (renderClaimGroup $hit)
-    #if($formatter.isNotNull($hit.contactRequest))
-    #set( $contactPath = "/manageContacts/" + $hit.contactRequest )
-    #set( $contactRequest = $page.find($contactPath) )
-    <tr>
-        <td>$hit.claimGroupId</td>
-        <td>$contactRequest.contactRequest.firstName $contactRequest.contactRequest.surName</td>
-        <td>$contactRequest.contactRequest.email</td>
-        <td>$contactRequest.contactRequest.fieldValue('action-type')</td>
-        <td>$contactRequest.contactRequest.fieldValue('purchase-date')</td>
-        <td>$contactRequest.contactRequest.fieldValue('store-name')</td>
-        <td><a href="/manageSaleDataClaimer/?claimGroup=$hit.claimGroupId#claims-list-tab">$contactRequest.contactRequest.fieldValue('claims-number')</a></td>
-        <td><a href='/manageContacts/$contactRequest.contactRequest.id'>View</a></td>
-        <td>#set($createDate = $formatter.parseDate($hit.enteredDate)) $formatter.formatDate($createDate, $page.organisation.timezone)</td>
-    </tr>
-    #end
-    #end
 
     <div class="modal fade" id="modal-review-claim">
         <div class="modal-dialog modal-md">
@@ -262,7 +250,7 @@
                                 <input type="text" class="form-control" disabled="disabled" value=""/>
                             </div>
                         </div>
-                        
+
                         <table class="table table-hover table-striped" id="table-claims">
                             <thead>
                                 <tr>
@@ -294,7 +282,7 @@
                     <div class="modal-body">
                         <code class="pull-right totalConfidence">Total Confidence: <span></span></code>
                         <div class="form-message alert alert-danger" style="display: none;"></div>
-                        
+
                         <div class="row">
                             <div id="scanned-image-section" class="col-sm-4">
                                 <span class='zoom' id='ocrFile'>
@@ -350,7 +338,7 @@
                                 <input type="text" name="salesTeam" class="form-control" value=""/>
                             </div>
                         </div>
-                        
+
                         <div class="claim-items">
                             <div class="claim-items-wrapper">
                                 <table class="table table-hover">
@@ -422,7 +410,7 @@
                                 <input type="text" name="salesTeam" class="form-control" value=""/>
                             </div>
                         </div>
-                        
+
                         <div class="claim-items">
                             <div class="claim-items-wrapper">
                                 <table class="table table-hover">
@@ -474,7 +462,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="modal fade" id="modal-upload-ocr-claim">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -486,7 +474,7 @@
                     <div class="modal-body">
                         <div class="form-message alert alert-danger" style="display: none;"></div>
                         <input type="hidden" name="imageClaim" value="true" />
-                        
+
                         <div class="form-group sales-team">
                             <label class="control-label col-md-2">Sales Team</label>
                             <div class="col-md-10">

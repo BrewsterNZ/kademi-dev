@@ -1,10 +1,10 @@
 <form class="form-horizontal form-new-image-claim well" action="/salesDataClaims/" method="post" enctype="multipart/form-data">
     <div class="form-message alert alert-danger" style="display: none;"></div>
     <input type="hidden" name="imageClaim" value="true" class="modal-action" />
-    
+
     <div class="form-group">
         <label class="control-label sr-only">File</label>
-        
+
         <div class="col-sm-12">
             #if ($hidePreviewReceipt != "true")
                 <p class="thumbnail">
@@ -12,8 +12,7 @@
                 </p>
             #end
             <button type="button" class="btn btn-sm btn-info btn-upload-image-claim btn-block"><i class="fa fa-file-picture-o"></i> <span>Upload Image Claim</span></button>
-            <span class="text-danger img-error" style="display: none;">Selected file is not image!</span>
-            <input type="file" name="claimImage" accept="image/*" class="form-control" style="display: none !important;" />
+            <input type="file" name="claimImage" accept=".csv,.xls,.xlsx,image/*,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" class="form-control" style="display: none !important;" />
         </div>
     </div>
     <button class="btn btn-primary btn-block" type="submit">Save Image Claim</button>

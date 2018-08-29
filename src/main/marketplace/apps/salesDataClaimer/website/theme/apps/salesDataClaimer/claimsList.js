@@ -332,8 +332,6 @@
                 var file = this.files[0];
                 var isImage = $.inArray(file['type'], ['image/gif', 'image/jpeg', 'image/png']) !== -1;
 
-                form.find('.img-error').css('display', isImage ? 'none' : 'block');
-
                 if (isImage) {
                     var reader = new FileReader();
                     reader.onload = function (e) {
@@ -399,9 +397,6 @@
             inputImage.on('change', function () {
                 var file = this.files[0];
                 var isImage = $.inArray(file['type'], ['image/gif', 'image/jpeg', 'image/png']) !== -1;
-
-                form.find('.img-error').css('display', isImage ? 'none' : 'block');
-
                 if (isImage) {
                     var reader = new FileReader();
                     reader.onload = function (e) {

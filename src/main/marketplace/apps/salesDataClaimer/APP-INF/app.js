@@ -350,9 +350,9 @@ function handleScanJobEvent(rf, event) {
 
     var autoReject = totalConfidence < autoRejectThreshold;
 
-    var XMLDocumentString = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    var xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
 
-    XMLDocumentString += '<rows totalConfidence="' + totalConfidence + '">';
+    xml += '<rows totalConfidence="' + totalConfidence + '">';
 
     var rows = {
         index: 0,
@@ -361,7 +361,7 @@ function handleScanJobEvent(rf, event) {
 
     while (rows.iterator.hasNext()) {
         log.info("New row");
-        XMLDocumentString += '<row index="' + formatter.toString(rows.index) + '">\n';
+        xml += '<row index="' + formatter.toString(rows.index) + '">\n';
 
         var row = rows.iterator.next();
 
@@ -371,22 +371,22 @@ function handleScanJobEvent(rf, event) {
 
         while (cells.iterator.hasNext()) {
             var cell = cells.iterator.next();
-            XMLDocumentString += '<cell>\n';
-            XMLDocumentString += '<text>' + formatter.htmlEncode(formatter.toString(cell.text).trim()) + '</text>\n';
-            XMLDocumentString += '<confidence>' + formatter.toString(cell.confidence).trim() + '</confidence>\n';
-            XMLDocumentString += '</cell>\n';
+            xml += '<cell>\n';
+            xml += '<text>' + formatter.htmlEncode(formatter.toString(cell.text).trim()) + '</text>\n';
+            xml += '<confidence>' + formatter.toString(cell.confidence).trim() + '</confidence>\n';
+            xml += '</cell>\n';
         }
 
         rows.index++;
-        XMLDocumentString += '</row>\n';
+        xml += '</row>\n';
     }
 
-    XMLDocumentString += '</rows>';
-    log.info("XMLDocumentString: {}", XMLDocumentString);
+    xml += '</rows>';
+    log.info("handleScanJobEvent: XML={}", xml);
 
-    var XMLDocumentHash = fileManager.upload(XMLDocumentString.getBytes());
+    var xmlHash = fileManager.upload(xml.getBytes());
 
-    log.info("XMLDocumentHash: {}", XMLDocumentHash);
+    log.info("handleScanJobEvent: XML Hash={}", xmlHash);
 
     /**
      * Update Claim with retrieved Hash
@@ -395,7 +395,7 @@ function handleScanJobEvent(rf, event) {
         var page = rf;
         var id = "claim-" + event.jobId;
         var params = event;
-        log.info("id: {}", id);
+        log.info("handleScanJobEvent: save claim id: {}", id);
 
         var db = getDB(page);
         var claim = db.child(id);
@@ -403,7 +403,7 @@ function handleScanJobEvent(rf, event) {
         if (claim !== null) {
             var claimJson = JSON.parse(claim.json);
 
-            claimJson.ocrFileHash = XMLDocumentHash;
+            claimJson.ocrFileHash = xmlHash;
             claimJson.modifiedDate = formatter.formatDateISO8601(formatter.now);
 
             log.info("handleScanJobEvent: obj {} ocrFileHash {}", claimJson.recordId, claimJson.ocrFileHash);
@@ -441,7 +441,7 @@ function handleScanJobEvent(rf, event) {
                 }
             }
         } else {
-            log.error('This claim does not exist');
+            log.error('handleScanJobEvent: This claim does not exist ID={}', id);
         }
     } catch (e) {
         log.error('Error when updating claim: ' + e, e);
