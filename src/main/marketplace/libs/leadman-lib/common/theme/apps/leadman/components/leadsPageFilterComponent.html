@@ -33,9 +33,10 @@
                     <button  id="tagsDrop" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-caret-down"></i>
                     </button>
+                    #set ($tagsArr = $params.tags.split(","))
                     <ul class="dropdown-menu">
                         #foreach($tag in $page.availableTags)
-                        <li><a data-filter="tags" class="$formatter.ifTrue($params.tags.contains($tag.id.toString()), 'filterSelected', '')" href="$tag.id"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.tags.contains($tag.id.toString()), '', 'hide')"></i></span> $formatter.firstNotNull($tag.title, $tag.name)</a></li>
+                        <li><a data-filter="tags" class="$formatter.ifTrue($tagsArr.contains($tag.id.toString()), 'filterSelected', '')" href="$tag.id"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($tagsArr.contains($tag.id.toString()), '', 'hide')"></i></span> $formatter.firstNotNull($tag.title, $tag.name)</a></li>
                         #end
                     </ul>
                 </div>
@@ -49,11 +50,12 @@
                         <i class="fa fa-caret-down"></i>
                     </button>
                     <ul class="dropdown-menu">
+                        #set ($teamToArr = $params.team.split(","))
                         #set( $teamOrgType = $applications.team.selectedOrgType )
                         #foreach($o in $services.teamManager.teamsForUser($user, $teamOrgType))
                         <li>
-                            <a data-filter="team" class="btn-select-org $formatter.ifTrue($params.tags.contains($o.orgId.toString()), 'filterSelected', '')" href="$o.orgId">
-                                <span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.team.contains($o.orgId.toString()), '', 'hide')"></i></span>
+                            <a data-filter="team" class="btn-select-org $formatter.ifTrue($teamToArr.contains($o.orgId.toString()), 'filterSelected', '')" href="$o.orgId">
+                                <span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($teamToArr.contains($o.orgId.toString()), '', 'hide')"></i></span>
                                 $formatter.ifNull($o.title, $o.orgId)
                             </a>
                         </li>
@@ -69,10 +71,11 @@
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-caret-down"></i>
                     </button>
+                    #set ($assignedToArr = $params.assignedTo.split(","))
                     <ul class="dropdown-menu" aria-labelledby="assingedToDrop">
                         #foreach($t in $services.teamManager.teamMembers($user, $teamOrgType))
                         <li>
-                            <a data-filter="assignedTo" class="$formatter.ifTrue($params.assignedTo.contains($t.name), 'filterSelected', '')" href="$t.userId"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.assignedTo.contains($t.name), '', 'hide')"></i></span> $!t.firstName $!t.surName</a>
+                            <a data-filter="assignedTo" class="$formatter.ifTrue($assignedToArr.contains($t.id.toString()), 'filterSelected', '')" href="$t.id"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($assignedToArr.contains($t.id.toString()), '', 'hide')"></i></span> $!t.firstName $!t.surName</a>
                         </li>
                         #end
                     </ul>
@@ -87,11 +90,12 @@
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-caret-down"></i>
                     </button>
+                    #set ($sourcesArr = $params.sources.split(","))
                     <ul class="dropdown-menu" aria-labelledby="sourcesDrop">
-                        <li><a data-filter="sources" class="$formatter.ifTrue($params.sources.contains('NOSOURCE'), 'filterSelected', '')" href="NOSOURCE"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.sources.contains('NOSOURCE'), '', 'hide')"></i></span> Leads with no source</a></li>
+                        <li><a data-filter="sources" class="$formatter.ifTrue($sourcesArr.contains('NOSOURCE'), 'filterSelected', '')" href="NOSOURCE"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($sourcesArr.contains('NOSOURCE'), '', 'hide')"></i></span> Leads with no source</a></li>
                         #foreach( $funnel in $page.find("/leads/").funnels)
                         #foreach( $source in $funnel.sources)
-                        <li><a data-filter="sources" class="$formatter.ifTrue($params.sources.contains($source), 'filterSelected', '')" href="$source"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.sources.contains($source), '', 'hide')"></i></span> $source</a></li>
+                        <li><a data-filter="sources" class="$formatter.ifTrue($sourcesArr.contains($source), 'filterSelected', '')" href="$source"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($sourcesArr.contains($source), '', 'hide')"></i></span> $source</a></li>
                         #end
                         #end
                     </ul>
@@ -106,9 +110,10 @@
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-caret-down"></i>
                     </button>
+                    #set ($journeysToArr = $params.journeys.split(","))
                     <ul class="dropdown-menu" aria-labelledby="journeysDrop">
                         #foreach( $funnel in $page.find("/leads/").funnels)
-                            <li><a data-filter="journeys" class="$formatter.ifTrue($params.contains($funnel), 'filterSelected', '')" href="$funnel.name"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.contains($funnel), '', 'hide')"></i></span> $funnel.name</a></li>
+                            <li><a data-filter="journeys" class="$formatter.ifTrue($journeysToArr.contains($funnel.name), 'filterSelected', '')" href="$funnel.name"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($journeysToArr.contains($funnel.name), '', 'hide')"></i></span> $funnel.name</a></li>
                         #end
                     </ul>
                 </div>

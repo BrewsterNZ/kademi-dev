@@ -355,7 +355,7 @@
     }
 
     function initDropdownFilter() {
-        $('.leadDropFilter ul li').on('click', function (e) {
+        $(document).on('click', '.leadDropFilter ul li', function (e) {
             e.preventDefault();
             e.stopPropagation();
             var filterName = $(this).find('a').attr('data-filter');
@@ -384,20 +384,19 @@
         if (w.searchOptions) {
             searchOptions.query = w.searchOptions.query;
             if (w.searchOptions.tags) {
-                searchOptions.tags = w.searchOptions.tags.split(',');
+                searchOptions.tags = w.searchOptions.tags.trim().split(',');
             }
             if (w.searchOptions.sources) {
-                searchOptions.sources = w.searchOptions.sources.split(',');
+                searchOptions.sources = w.searchOptions.sources.trim().split(',');
             }
             if (w.searchOptions.team) {
-                searchOptions.team = w.searchOptions.team.split(',');
+                searchOptions.team = w.searchOptions.team.trim().split(',');
+            }
+            if (w.searchOptions.journeys) {
+                searchOptions.journeys = w.searchOptions.journeys.trim().split(',');
             }
             if (w.searchOptions.assignedTo) {
-                if (typeof w.searchOptions.assignedTo === 'string' || w.searchOptions.assignedTo instanceof String) {
-                    searchOptions.assignedTo = w.searchOptions.assignedTo.split(',');
-                } else {
-                    searchOptions.assignedTo = w.searchOptions.assignedTo + "";
-                }
+                searchOptions.assignedTo = w.searchOptions.assignedTo.toString().trim().split(',');
             }
             if (w.searchOptions.leadType) {
                 searchOptions.leadType = w.searchOptions.leadType;
