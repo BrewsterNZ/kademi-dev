@@ -84,7 +84,8 @@ function newCompany(page, params) {
         transactionManager.runInTransaction(function () {
             var org = services.organisationManager.createOrg(null, orgId, newCompany);
             if (org){
-                rootFolder.addOrgType(org.orgId, "customer-company");
+                var ortType = applications.leadMan.leadsOrgType;
+                rootFolder.addOrgType(org.orgId, ortType.name);
             }
         });
         return views.jsonObjectView({status: true});

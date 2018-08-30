@@ -295,6 +295,7 @@
                     form.find('input[name=postcode]').val('');
                     form.find('input[name=leadOrgId]').val('');
                     form.find('[name=country]').val('');
+                    $('.selectpicker').selectpicker('refresh')
                 }
             }
         });
@@ -547,6 +548,7 @@
                     success: function (resp) {
                         if (resp.status) {
                             reloadProfileCompanies();
+                            $('.selectpicker').selectpicker('refresh');
                         } else {
                             Msg.error("Couldnt remove org: " + resp.messages);
                         }
@@ -565,9 +567,11 @@
                 form.find('input[name=addressLine2]').val('');
                 form.find('input[name=addressState]').val('');
                 form.find('input[name=postcode]').val('');
+                form.find('input[name=city]').val('');
                 form.find('input[name=leadOrgId]').val('');
                 form.find('[name=country]').val('');
                 form.find('.btn-unlink-company').css('display', 'none');
+                $('.selectpicker').selectpicker('refresh');
                 form.trigger('submit');
             }
         });

@@ -27,7 +27,7 @@
             <div class="col-sm-5">
                 <select name="team" id="teamFilters" class="form-control selectpicker" data-live-search="true" data-live-search-normalize="true" data-style="btn-primary">
                     <option value="">[All Team]</option>
-                    #foreach ($team in $services.teamManager.allTeams)
+                    #foreach ($team in $page.allTeams)
                     <option #if ($params.team == $team.id) selected #end value="$team.id">$team.title</option>
                     #end
                 </select>

@@ -8,7 +8,8 @@
                 leadType: $leads.data("lead-type"),
                 tags: $leads.data("tags"),
                 assignedTo: $leads.data("assigned-to"),
-                sources: $leads.data("sources")
+                sources: $leads.data("sources"),
+                journeys: $leads.data("journeys")
             };
 
             initLeadManPage();

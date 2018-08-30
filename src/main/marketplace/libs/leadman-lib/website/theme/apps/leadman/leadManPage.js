@@ -7,7 +7,9 @@
         tags: [],
         assignedTo: [],
         sources: [],
-        journeys: []
+        journeys: [],
+        from: 0,
+        size: 100
     };
 
     var dataTable = null;
@@ -353,7 +355,7 @@
     }
 
     function initDropdownFilter() {
-        $('.leadDropFilter ul li').on('click', function (e) {
+        $(document).on('click', '.leadDropFilter ul li', function (e) {
             e.preventDefault();
             e.stopPropagation();
             var filterName = $(this).find('a').attr('data-filter');
@@ -382,20 +384,19 @@
         if (w.searchOptions) {
             searchOptions.query = w.searchOptions.query;
             if (w.searchOptions.tags) {
-                searchOptions.tags = w.searchOptions.tags.split(',');
+                searchOptions.tags = w.searchOptions.tags.trim().split(',');
             }
             if (w.searchOptions.sources) {
-                searchOptions.sources = w.searchOptions.sources.split(',');
+                searchOptions.sources = w.searchOptions.sources.trim().split(',');
             }
             if (w.searchOptions.team) {
-                searchOptions.team = w.searchOptions.team.split(',');
+                searchOptions.team = w.searchOptions.team.trim().split(',');
+            }
+            if (w.searchOptions.journeys) {
+                searchOptions.journeys = w.searchOptions.journeys.trim().split(',');
             }
             if (w.searchOptions.assignedTo) {
-                if (typeof w.searchOptions.assignedTo === 'string' || w.searchOptions.assignedTo instanceof String) {
-                    searchOptions.assignedTo = w.searchOptions.assignedTo.split(',');
-                } else {
-                    searchOptions.assignedTo = w.searchOptions.assignedTo + "";
-                }
+                searchOptions.assignedTo = w.searchOptions.assignedTo.toString().trim().split(',');
             }
             if (w.searchOptions.leadType) {
                 searchOptions.leadType = w.searchOptions.leadType;
@@ -449,6 +450,7 @@
     }
 
     function doSearch() {
+        searchOptions.from = 0;
         $.ajax({
             url: window.location.pathname + '?sLead&' + $.param(searchOptions),
             dataType: 'JSON',
@@ -580,6 +582,7 @@
         initDropdownFilter();
         initSearchFromQuery();
         doSearch();
+        initScroll();
     };
 
     w.doSearchLeadmanPage = function () {
@@ -588,5 +591,51 @@
             doSearch();
         }, 800)
     };
+    
+    function initScroll() {
+        var leadTable = $('#leadTable');
+        var leadTableLoader = $('#leadTableLoader');
+        var win = $(window);
+        if (!leadTable.length) return;
+        // Each time the user scrolls
+        win.scroll(function() {
+            // End of the document reached?
+            if ($(document).height() - win.height() == win.scrollTop()) {
+                if (leadTableLoader.hasClass('hide') && !leadTableLoader.hasClass('end')){
+                    leadTableLoader.removeClass('hide');
+                    flog('new page');
+                    searchOptions.from += searchOptions.size;
+                    $.ajax({
+                        url: window.location.pathname + '?sLead&' + $.param(searchOptions),
+                        dataType: 'JSON',
+                        success: function (resp, textStatus, jqXHR) {
+                            if (dataTable && resp && resp.status && resp.data && resp.data.results){
+                                var hits = resp.data.results.hits.hits;
+                                if (!hits.length) {
+                                    leadTableLoader.addClass('end');
+                                }
+                                for (var i = 0; i < hits.length; i++) {
+                                    var hit = hits[i];
+                                    var _source = hit._source;
+                                    _source.score = hit._score.toFixed(2);
+                                    scores[_source.leadId] = _source.score;
+                                    dataTable.row.add(_source);
+                                }
+                                leadTableLoader.addClass('hide');
+                                dataTable.draw();
+                            }
+                        },
+                        error: function (err) {
+                            leadTableLoader.addClass('hide');
+                            flog('error when loading new leads');
+                        }
+                    });
+
+                } else {
+                    flog('still loading..');
+                }
+            }
+        });
+    }
 
 })(this);

@@ -2,6 +2,7 @@
      data-lead-type="$!params.leadType" data-tags="$!params.tags"
      data-assigned-to="$!params.assignedTo"
      data-sources="$!params.sources"
+     data-journeys="$!params.journeys"
 
     #if (!$params.leadType)
      data-lead-type="active"
@@ -41,6 +42,9 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div id="leadTableLoader" class="text-center hide">
+            <i class="fas fa-circle-notch fa-spin"></i>
         </div>
     </div>
 </div>
