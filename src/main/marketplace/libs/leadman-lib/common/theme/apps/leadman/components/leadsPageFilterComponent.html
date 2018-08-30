@@ -66,12 +66,14 @@
             </div>
 
             <div class="form-group leadDropFilter" id="assingedToDropWrap">
+                #if($page.teamsForUser && $page.teamsForUser.size() > 0)
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary"><span class="aggr-title">Assigned to </span></button>
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-caret-down"></i>
                     </button>
                     #set ($assignedToArr = $params.assignedTo.split(","))
+                    #set( $teamOrgType = $applications.team.selectedOrgType )
                     <ul class="dropdown-menu" aria-labelledby="assingedToDrop">
                         #foreach($t in $services.teamManager.teamMembers($user, $teamOrgType))
                         <li>
@@ -80,6 +82,7 @@
                         #end
                     </ul>
                 </div>
+                #end
             </div>
 
             <div class="form-group leadDropFilter hide" id="sourcesDropWrap">
