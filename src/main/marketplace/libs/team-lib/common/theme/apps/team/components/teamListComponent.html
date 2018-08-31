@@ -70,7 +70,15 @@
             </td>
             <td>$!m.fields.email.value</td>
             <td>$!m.fields.phone.value</td>
-            <td></td>
+            <td>
+                #set ($ur = $applications.userApp.findUserResourceById($!m.fields.userId.value))
+                #if ($ur)
+                    #set ($mbs = $ur.primaryMemberships.filterByOrgType($applications.team.selectedOrgTypeName))
+                    #foreach ($bean in $mbs)
+                        <span class="label label-success">$bean.groupTitle in $bean.org.title</span>
+                    #end
+                #end
+            </td>
             <td><input type="checkbox" name="memberId" value="$!m.fields.userId.value"></td>
         </tr>
         #end
