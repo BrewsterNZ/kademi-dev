@@ -80,6 +80,7 @@ function doAfterAddToCartSuggestionsModal(page, params) {
     return views.templateView("KCommerce2/afterAddToCart");
 }
 
+
 function doEcomSearch(page, params) {
     var query = params.q;
     if (formatter.isEmpty(query)) {
@@ -87,36 +88,35 @@ function doEcomSearch(page, params) {
     }
     log.info("doEcomSearch: {} from {} size {}", query, params.pageFrom, params.pageSize);
     var store = page.attributes.store;
-    var attributePairs = findAttsInParams(params);
-    var otherCats = findOtherCatsInParams(params)
-    var brands = findBrandsInParams(params);
-    var searchResults = productSearch(page, store, page.attributes.category, query, attributePairs, otherCats, brands, params.pageFrom, params.pageSize);
-    page.attributes.searchResults = searchResults; // make available to templates
-    page.attributes.categories = listCategories(store, page.attributes.category);
-    page.attributes.brands = listBrands(store, page.attributes.searchAggs);
-    findAttributes(page, store, page.attributes.searchAggs);
+    var cat = page.attributes.category;
+    doProductSearch(page, store, cat, params);
     return views.templateView("KCommerce2/searchResults");
 }
 
+
 function doEcomList(page, params) {
     var store = page.attributes.store;
-    var attributePairs = findAttsInParams(params);
-    var otherCats = findOtherCatsInParams(params)
-    var brands = findBrandsInParams(params);
-    log.info("doEcomList: brands={}", brands);
-    var searchResults = productSearch(page, store, page.attributes.category, null, attributePairs, otherCats, brands, params.pageFrom, params.pageSize);
-    //log.info("searchResults: " + searchResults);
-    page.attributes.searchResults = searchResults; // make available to templates
-    page.attributes.categories = listCategories(store, page.attributes.category);
-    page.attributes.brands = listBrands(store, page.attributes.searchAggs);
+    var cat = page.attributes.category;
 
-    findAttributes(page, store, page.attributes.searchAggs);
+    doProductSearch(page, store, cat, params);
 
     if (page.attributes.category) {
         return views.templateView("KCommerce2/viewCategory");
     } else {
         return views.templateView("KCommerce2/viewStore");
     }
+}
+
+function doProductSearch(page, store, category, params) {
+    var query = params.q;
+    var attributePairs = findAttsInParams(params);
+    var otherCats = findOtherCatsInParams(params)
+    var brands = findBrandsInParams(params);
+    var searchResults = productSearch(page, store, category, query, attributePairs, otherCats, brands, params.pageFrom, params.pageSize);
+    page.attributes.searchResults = searchResults; // make available to templates
+    page.attributes.categories = listCategories(store, page.attributes.category);
+    page.attributes.brands = listBrands(store, page.attributes.searchAggs);
+    findAttributes(page, store, page.attributes.searchAggs);
 }
 
 /**

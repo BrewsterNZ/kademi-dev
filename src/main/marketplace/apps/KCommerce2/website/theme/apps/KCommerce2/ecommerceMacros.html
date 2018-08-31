@@ -4,7 +4,8 @@
         <title></title>
     </head>
     <body>
-        #macro(rightSidebar $store)
+
+        #macro(rightSidebar $store $categoriesList )
 
             <div class="list-group list-group-root ecomStoreCategoriesList">
                 <span href="#" class="list-group-item heading-item">Browse by category</span>
@@ -86,6 +87,165 @@
             #end
 
         #end
+
+
+
+        #macro( productRow $productHit $basePath )
+        #set ($prodUrl = "/$basePath/$hit.fields.name.value")
+            #set($bg = "/static/images/photo_holder.png")
+            #if ($hit.fields.primaryImageHref)
+            #set($bg = $hit.fields.primaryImageHref.value)
+            #end
+            <div class="media prod">
+                <div class="media-left hidden-sm hidden-xs">
+                    <a href="$prodUrl">
+                        <img class="media-object" alt="$hit.fields.title.value" src="$bg" width="200" height=""/>
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading" style="margin-bottom: 10px;">
+                        <a href="$prodUrl">$hit.fields.title.value</a>
+                    </h4>
+                    <p><label class="label label-success" style="font-size: 14px;">
+                        #if ($hit.fields.finalCost.value)
+                        $$!formatter.formatCurrency( $hit.fields.finalCost.value )
+                        #else
+                        N/A
+                        #end</label></p>
+                    <div class="media-content clearfix">
+                        <p>$!formatter.truncate( $formatter.toPlain( $hit.fields.content.value ), 200 )</p>
+                        <div>
+                            <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+        #end
+
+
+        #macro( productTile $productHit $basePath )
+            #set($bg = "/static/images/photo_holder.png")
+            #if ($hit.fields.primaryImageHref)
+            #set($bg = $hit.fields.primaryImageHref.value)
+            #end
+            #if( $formatter.isEmpty($hit.fields.webName.value) )
+                #set( $prodHref = "${basePath}$hit.fields.name.value" )
+            #else
+                #set( $prodHref = "${basePath}$hit.fields.webName.value" )
+            #end
+
+            <div class="$clsName product-item">
+                <div class="thumbnail product">
+                    <div class="product-info">
+                        <h3 class="product-title" ><a class="text-primary" href="$prodHref">$hit.fields.title.value</a>
+                        </h3>
+                        <div class="embed-responsive embed-responsive-4by3">
+                            <a href="$prodHref" class="embed-responsive-item"
+                               style="background-image: url($bg);"></a>
+                        </div>
+                        <div class="product-content">$!formatter.truncate( $formatter.encodeAsHtmlEntities($hit.fields.content.value), 65)</div>
+                    </div>
+                    <div class="caption">
+
+                        <h3 class="text-center product-price bg-info">
+                            #if ($hit.fields.finalCost.value)
+                            $$!hit.fields.finalCost.value
+                            #else
+                            N/A
+                            #end
+                        </h3>
+
+                        <a href="$prodHref" class="btn btn-info" role="button">
+                            <i class="fa fa-shopping-cart"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        #end
+
+
+
+
+
+
+        #macro(fakeProductListUI)
+            #if ($layout == "grid")
+                #set ($clsName = "col-sm-3")
+                #if ($itemsPerRow == 1)
+                    #set ($clsName = "col-sm-12")
+                #elseif ($itemsPerRow == 2)
+                    #set ($clsName = "col-sm-6")
+                #elseif ($itemsPerRow == 3)
+                    #set ($clsName = "col-sm-4")
+                #elseif ($itemsPerRow == 4)
+                    #set ($clsName = "col-sm-3")
+                #end
+
+            <div class="row products-list" id="products-list-$!prodsListId">
+                #set ($prodUrl = "")
+                #foreach($p in [1..3])
+                    <div class="product $clsName">
+                        <div class="thumbnail">
+                            <div class="embed-responsive embed-responsive-16by9">
+                                #set($bg = "/static/images/photo_holder.png")
+                                <a title="$p.title" href="$prodUrl" class="embed-responsive-item"
+                                   style="background: url($bg) no-repeat 50% 50%; background-size: cover;">
+                                    <span class="sr-only">Example Title</span>
+                                </a>
+                                <label class="label label-success"
+                                       style="position: absolute; top: 5px; right: 5px; font-size: 14px;"><i
+                                        class="fa fa-usd"></i> 100</label>
+                            </div>
+                            <div class="caption">
+                                <h4><a title="$p.title" href="$prodUrl">Example Title</a></h4>
+                                <p style="word-wrap: break-word;" class="product-brief">notes</p>
+                                <div class="text-right">
+                                    <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
+                                    <a href="$prodUrl" class="btn btn-primary btn-sm btn-ecom-add-to-cart" role="button">Add to
+                                        Cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                #end
+
+
+            </div>
+            #else
+            <div class="products-list" id="products-list-$!prodsListId">
+                #set ($prodUrl = "")
+                #foreach($p in [1..3])
+                    <div class="media prod">
+                        <div class="media-left hidden-sm hidden-xs">
+                            #set($bg = "/static/images/photo_holder.png")
+                            <a href="$prodUrl">
+                                <img class="media-object" alt="$p.title" src="$bg" width="200" height=""/>
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading" style="margin-bottom: 10px;">
+                                <a href="$prodUrl">Example Title</a>
+                            </h4>
+                            <p><label class="label label-success" style="font-size: 14px;">$100</label>
+                            </p>
+                            <div class="media-content clearfix">
+                                <p>$!formatter.truncate( $formatter.toPlain( $p.notes ), 200 )</p>
+                                <div>
+                                    <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
+                                    <a href="$prodUrl" class="btn btn-primary btn-sm btn-ecom-add-to-cart" role="button">Add to
+                                        Cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                #end
+            </div>
+            #end
+        #end
+
+
 
     </body>
 </html>

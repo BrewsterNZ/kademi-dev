@@ -1,6 +1,22 @@
 #parse("/theme/apps/KCommerce2/ecommerceMacros.html")
+
 #if($page)
-    #set( $storeOb = $page.attributes.store )
+    #if( $formatter.isEmpty($store) )
+        #set( $storeOb = $page.attributes.store )
+    #else
+        #set( $storeOb = $services.criteriaBuilders.ecommerceStore.eq("name",$store).executeSingle() )
+    #end
+
+    
+    #if( $formatter.isEmpty($category) )
+
+    #else
+        #set( $categoryOb = $services.criteriaBuilders.category.eq("name",$category).executeSingle() )
+    #end
+
+    #set( $searchResults = $applications.KCommerce2.call("doProductSearch", $page, $storeOb, $categoryOb, $request.params ) )
+
+
     #set( $basePath = "/$storeOb.name/" )
 
     #set ($prodsListId = $formatter.randomGuid)
@@ -50,6 +66,6 @@
     #end
 
 #else
-    #fakeUI()
+    #fakeProductListUI()
 #end
 
