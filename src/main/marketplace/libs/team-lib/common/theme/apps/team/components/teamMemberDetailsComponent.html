@@ -43,6 +43,20 @@
                         </div>
                     </div>
                     <div class="row">
+                        #set($fields = $services.userManager.extraFields($profile.thisProfile))
+                        #foreach($field in $fields.keySet())
+                        #if ($extraFields && $extraFields.contains($field.name))
+                        #else
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label">$field.text</label>
+                                $field.html( $fields[$field], "", "" )
+                            </div>
+                        </div>
+                        #end
+                        #end
+                    </div>
+                    <div class="row">
                         <div class="col-sm-12 text-right">
                             <button type="submit" class="btn btn-info">Update</button>
                         </div>
