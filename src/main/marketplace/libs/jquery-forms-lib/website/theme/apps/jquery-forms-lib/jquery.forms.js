@@ -775,10 +775,12 @@ function checkRequiredCheckboxes(form, config) {
     form.find('input.required:checkbox').not(':checked').each(function () {
         var input = $(this);
         flog('[jquery.forms] Field is required', input);
-        
-        errorFields.push(input);
-        error++;
-        input.attr('error-message', config.requiredErrorMessage);
+        var name = input.attr('name');
+        if (!form.find('input.required:checkbox[name='+name+']:checked').length) {
+            errorFields.push(input);
+            error++;
+            input.attr('error-message', config.requiredErrorMessage);
+        }
     });
     
     return {
