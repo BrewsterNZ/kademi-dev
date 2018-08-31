@@ -53,16 +53,20 @@
                     </div>
                     <div class="panel-tools">
                         <div class="btn-group btn-group-sm">
+                            <a href="$group.name" class="btn $typeColour">
+                                #if( $group.groupType == "P" )
+                                    $group.regoModeText
+                                    /
+                                #end
+                                $group.groupTypeText
+                            </a>
+
                             <a href="$group.name/members" class="btn btn-info">
                                 <i class="clip-users"></i>
                                 $!group.numMembers
                             </a>
 
-                            <a href="$group.name" class="btn $typeColour">
-                                #if( $group.groupType == "P" )
-                                    $group.regoModeText
-                                #end
-                                $group.groupTypeText
+                            <a href="$group.name" class="btn btn-info">
                                 <i class="fa fa-cog"></i>
                             </a>
 
