@@ -13,10 +13,14 @@
             onSuccess: function (resp) {
                 if (resp.status) {
                     modal.modal('hide');
-                    $('#teamTable').reloadFragment();
-                    Msg.success('Member added');
-                } else {
-
+                    Msg.info('Processing...');
+                    setTimeout(function () {
+                        $('#teamTable').reloadFragment({
+                            whenComplete: function (resp) {
+                                Msg.success('Member added');
+                            }
+                        });
+                    }, 800);
                 }
             }
         });
