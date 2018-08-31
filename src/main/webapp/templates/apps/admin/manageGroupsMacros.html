@@ -8,7 +8,7 @@
             #if($folder)
                 #set( $folderName = "-" + $folder.name.replaceAll('[^A-Za-z0-9]','') )
             #end
-            <div id="$group.name" class="panel panel-default group" data-name="$group.name" data-title="$!group.groupTitle" data-notes="$!group.notes" data-type="$!group.groupType">
+            <div id="$group.name" class="panel panel-default group" data-name="$group.group.name" data-title="$!group.groupTitle" data-notes="$!group.notes" data-type="$!group.groupType">
                 <div class="panel-heading" data-toggle="collapse" data-parent="#${wrapper}" data-target="#group${folderName}-${foreach.count}">
                     #set($typeColour = "btn-info")
 
@@ -24,13 +24,10 @@
                     #end
 
                     <span class="group-name clickable">
-                        #set($gName = false)
-                        #set($gName = $group.groupTitle)
-                        #if(!$gName)
-                            #set($gName = $group.name)
-                        #end
-
-                        <b class="text-info">$gName</b>
+                        <b class="text-info">$!group.groupTitle</b>
+                        <span class="text-muted">
+                            <small>($group.group.name)</small>
+                        </span>
 
                     </span>
 
