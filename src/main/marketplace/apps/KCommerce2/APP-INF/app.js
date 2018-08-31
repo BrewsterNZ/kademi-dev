@@ -9,6 +9,7 @@ controllerMappings.addComponent("KCommerce2/components", "ecomCheckoutForm", "ht
 controllerMappings.addComponent("KCommerce2/components", "ecomSearchInput", "html", "A search input field with suggestions", "E-commerce App component");
 controllerMappings.addComponent("KCommerce2/components", "suggestionList", "html", "Renders the suggestion list for the search input component", "E-commerce App component");
 controllerMappings.addComponent("KCommerce2/components", "afterAddToCartSuggestions", "html", "Shows suggestions following an item being added to the cart", "E-commerce App component");
+controllerMappings.addComponent("KCommerce2/components", "featuredProductList", "html", "Shows featured products, from a specified store and category", "E-commerce App component");
 
 controllerMappings.addComponent("ecommerce/components", "ecomProduct", "html", "Display ecom product details", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "orderHistoryECom", "html", "Shows the current user's orders and status", "E-commerce App component");

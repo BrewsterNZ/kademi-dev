@@ -2,20 +2,36 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['storeProductList'] = {
+    KEditor.components['featuredProductList'] = {
         settingEnabled: true,
 
-        settingTitle: 'Product List Settings',
+        settingTitle: 'Featured Product list',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "storeProductList" component', form, keditor);
+            flog('initSettingForm "featuredProductList" component', form, keditor);
 
             return $.ajax({
-                url: '_components/storeProductList?settings',
+                url: '_components/featuredProductList?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {
                     form.html(resp);
+
+                    form.find('.select-store').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-store', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find('.select-category').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-category', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
 
                     form.find('.select-layout').on('change', function () {
                         var component = keditor.getSettingComponent();
@@ -64,6 +80,8 @@
             flog('showSettingForm "storeProductList" component', form, component, keditor);
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
+            form.find('.select-store').val(dataAttributes['data-store']);
+            form.find('.select-category').val(dataAttributes['data-category']);
             form.find('.select-layout').val(dataAttributes['data-layout']);
             form.find('.number-of-products').val(dataAttributes['data-number-of-products']);
             form.find('.items-per-row').val(dataAttributes['data-items-per-row']);
