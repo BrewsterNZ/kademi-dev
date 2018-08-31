@@ -55,6 +55,8 @@ function saveMember(page, params) {
         profile.nickName = params.nickName;
         profile.phone = params.phone;
         services.userManager.updateUser(profile);
+        services.userManager.storeExtrFields(profile, params);
+
     });
     return views.jsonView(true, "Profile updated");
 }
