@@ -1,0 +1,126 @@
+#if($user)
+
+#if( !$height )
+#set( $height = 300 )
+#end
+
+#if( !$tableTitle || $tableTitle=="" )
+#set( $tableTitle = "Module Statuses Table" )
+#end
+
+#set( $showStartDate = $formatter.toBool($showStartDate, false) )
+#set( $showCpdHours = $formatter.toBool($showCpdHours, false) )
+#set( $showCertificates = $formatter.toBool($showCertificates, false) )
+
+#set ($queryTableId = "query-component-tbody-" + $formatter.randomGuid)
+#set ($queryCompId = "query-component-" + $formatter.randomGuid)
+#set ($resp = $applications.get("learner-lib").call("buildTableModuleStatuses", $programCode, $courseCode, $moduleCode, $complete, $user.id))
+<div class="panel panel-default panel-module-status-user-table" id="$queryCompId" data-items-per-page="$itemsPerPage" data-queryname="$query" data-querytype="$queryType">
+    <div class="panel-heading">
+        <i class="fa fa-table"></i> $tableTitle
+    </div>
+    
+    <!--
+    module image 
+    title
+    status (started/completed)
+    date (either completed or started)
+    provide a link to download certificate(s)
+    -->
+    
+    <div class="table-responsive" style="height: $!{height}px; min-height: 0; overflow-y: auto">
+        <table class="table table-striped table-condensed">
+            <colgroup>
+                <col width="10%"/>
+                <col />
+                #if ($showStartDate )
+                <col />
+                #end
+                <col />
+                <col />
+                #if ($showCpdHours)
+                <col />
+                #end
+                #if($showCertificates)
+                <col />
+                #end
+            </colgroup>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Title</th>
+                    #if ($showStartDate == "true")
+                    <th>Started</th>
+                    #end
+                    <th>Completed</th>
+                    <th>Status</th>
+                    #if ($showCpdHours == "true")
+                    <th>CPD Hours</th>
+                    #end
+                    #if($showCertificates)
+                    <th>Certificates</th>
+                    #end
+                </tr>
+            </thead>
+            <tbody id="$queryTableId">
+                #if ($resp.hits.totalHits < 1)
+                <tr>
+                    <td colspan="99">No result</td>
+                </tr>
+                #end
+                #foreach($hit in $resp.hits.hits)
+                    #set( $mf = $applications.learning.findModuleFolder($rootFolder, $hit.source.programCode, $hit.source.courseCode, $hit.source.moduleCode) )
+                    <tr>
+                        <td>
+                            #if($formatter.isNotNull($mf.thumb))
+                            <img src="$mf.thumb/" class="img-responsive" />
+                            #end
+                        </td>
+                        <td>
+                            #if( $hit.source.moduleTitle )
+                            $hit.source.moduleTitle
+                            #else
+                            $hit.source.programCode / $hit.source.courseCode / $hit.source.moduleCode
+                            #end
+                        </td>
+
+                        #if ($showStartDate)
+                        <td>$!formatter.formatDate($formatter.toDate($hit.source.createdDate), $rootFolder.organisation.timezone)</td>
+                        #end
+                        <td>
+                            #if ($hit.source.complete)
+                                $!formatter.formatDate($formatter.toDate($hit.source.modifiedDate), $rootFolder.organisation.timezone)
+                            #end
+                        </td>
+                        #if ($hit.source.complete)
+                        <td><i class="fa fa-check-circle text-success"></i></td>
+                        #else
+                        <td>$hit.source.percentComplete%</td>
+                        #end
+
+                        #if ($showCpdHours)
+                        <td>
+                            #set( $hours = $formatter.toDouble(0) )
+                            #foreach($cert in $mf.certificates)
+                                #set( $hours = $hours + $formatter.toDouble($mf.cpdPoints.get( $cert.name )) )
+                            #end
+
+                            #if( $hours > 0 )
+                            $hours
+                            #end
+                        </td>
+                        #end
+                        #if($showCertificates)
+                        <td>
+                            #foreach($certHref in $mf.certificateHrefs)
+                            <a href="$certHref" class="btn btn-success btn-sm" title="Generate Certificate"><i class="fa fa-cloud-download"></i></a>
+                            #end
+                        </td>
+                        #end
+                    </tr>
+                #end
+            </tbody>
+        </table>
+    </div>
+</div>
+#end

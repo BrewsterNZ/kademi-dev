@@ -3,6 +3,7 @@ controllerMappings.addComponent("learner/components", "modulesList", "html", "Di
 controllerMappings.addComponent("learner/components", "coursePicker", "html", "Displays course picker", "Learning App");
 controllerMappings.addComponent("learner/components", "courseDescription", "html", "Displays course description", "Learning App");
 controllerMappings.addComponent("learner/components", "moduleStatuses", "html", "Displays table of module statuses", "Learning App");
+controllerMappings.addComponent("learner/components", "userModuleStatuses", "html", "Displays table of module statuses for the logged in user", "Learning App");
 controllerMappings.addComponent("learner/components", "certificates", "html", "Lists the user's certificates", "Learning App");
 controllerMappings.addComponent("learner/components", "certificate", "html", "Shows certificate content", "Learning App");
 
@@ -301,7 +302,7 @@ function buildTableModuleStatuses(programCode, courseCode, moduleCode, complete,
     if (profile){
         query.query.bool.must.push({
             "term": {
-                "profile": params.profile
+                "profile": profile
             }
         });
     }
