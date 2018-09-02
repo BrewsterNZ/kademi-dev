@@ -79,26 +79,37 @@
                 <span class="fa fa-remove"></span>
                 Remove
             </button>
+
+            <h4>Rule is activated when these conditions match:</h4>
+
+            <div class="rulesBuilder"></div>
+            <hr />
+
+            <h4>When rule is activated return</h4>
             <div class="rule-switcher-container">
                 <div class="form-group">
-                    <label class="control-label col-md-1" for="target.$count"><input type="radio" name="rule.$count" class="rule-switcher" id="target.$count"  /></label>
+                    <label class="control-label col-md-1" for="target.$count">
+                        <input type="radio" name="rule.$count" class="rule-switcher" id="target.$count" $formatter.checked($formatter.isNotEmpty($rule.singleAssetUniqueId)) />
+                    </label>
 
                     <div class="col-md-6">
                         #set($selectAsset = $formatter.ifEqual("", "select-asset", $count, "new"))
                         <div class="input-group">
-                            <span class="input-group-addon"><span style="display: block; width: 120px; text-align: left;">Target asset </span></span>
+                            <span class="input-group-addon"><span style="display: block; width: 120px; text-align: left;">a single asset</span></span>
                             <input type="text" name="target.$count" data-asset-name="$!rule.asset.name" value="$!rule.asset.uniqueId" placeholder="" class="form-control $!selectAsset" />
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label col-md-1" for="targettype.$count"><input type="radio" name="rule.$count" class="rule-switcher" id="targettype.$count" /></label>
+                    <label class="control-label col-md-1" for="targettype.$count">
+                        <input type="radio" name="rule.$count" class="rule-switcher" id="targettype.$count" $formatter.checked($rule.queryAssetTypes)  />
+                    </label>
 
                     <div class="col-md-6">
                         <!-- TODO: allow selection of multiple types -->
                         <div class="input-group">
-                            <span class="input-group-addon"><span style="display: block; width: 120px; text-align: left;">Target asset type</span></span>
+                            <span class="input-group-addon"><span style="display: block; width: 120px; text-align: left;">assets with type</span></span>
                             <select name="targettype.$count" class="form-control" disabled="disabled">
                                 <option value="">[None]</option>
                                 #foreach( $assetType in $page.find("/content-types" ).children )
@@ -110,21 +121,21 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label col-md-1" for="targetexp.$count"><input type="radio" name="exp.$count" class="rule-switcher" id="exp.$count" /></label>
+                    <label class="control-label col-md-1" for="targetexp.$count">
+                        <input type="radio" name="rule.$count" class="rule-switcher" id="exp.$count" $formatter.checked($formatter.isNotEmpty($rule.expression)) />
+                    </label>
 
-                    <div class="col-md-6">
+                    <div class="col-md-10">
                         <div class="input-group">
-                            <span class="input-group-addon"><span style="display: block; width: 120px; text-align: left;">Expression </span></span>
-                            <input type="text" name="expr.$count" value="$!rule.expression" placeholder="" class="form-control" />
+                            <span class="input-group-addon"><span style="display: block; width: 120px; text-align: left;">an expression </span></span>
                         </div>
+                        <textarea type="text" name="expr.$count" class="form-control" style="height: 300px">$!rule.expression</textarea>
                     </div>
                 </div>
             </div>
 
-            <div class="rulesBuilder"></div>
-            <br />
 
-            <textarea class="form-control rulesInput" name="rules.$count" style="width: 100%; min-height: 300px; display: none">$formatter.firstNotNull($rule.rules, "{}")</textarea>
+            <textarea class="form-control rulesInput" name="rules.$count" style="width: 100%; min-height: 200px; display: none">$formatter.firstNotNull($rule.rules, "{}")</textarea>
             <hr />
         </div>
 
