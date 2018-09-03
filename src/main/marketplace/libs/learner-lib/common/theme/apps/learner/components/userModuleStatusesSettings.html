@@ -1,0 +1,72 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Title</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control txt-title"/>
+        </div>
+    </div>
+    <p><i>You may optionally filter the table to only show modules with specific program, course or module codes</i></p>
+    <div class="form-group">
+        <label class="col-sm-12">Program code</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control programCode"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Course code</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control courseCode"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Module code</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control moduleCode"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Status</label>
+        <div class="col-sm-12">
+            <select class="form-control complete">
+                <option value="">Any status</option>
+                <option value="true">Only completed</option>
+                <option value="false">Only in-progress</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Height</label>
+        <div class="col-sm-12">
+            <input type="number" class="form-control query-height"/>
+            <em class="help-block small text-muted">Minimum is 200</em>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-12">Shows Start date</div>
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label><input type="checkbox" class="chk-show-start-date" /></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-12">Shows CPD hours</div>
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label><input type="checkbox" class="chk-show-cpd-hours" /></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-12">Show Certificates</div>
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label><input type="checkbox" class="chk-show-certificates" /></label>
+            </div>
+        </div>
+    </div>
+
+</form>
