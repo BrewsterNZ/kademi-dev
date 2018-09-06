@@ -34,6 +34,7 @@ function initDeleteCompanies() {
             });
             var c = confirm('Are you sure you want to delete '+ arr.length + ' companies');
             if (!c) return;
+            Msg.info('Processing..');
             $.ajax({
                 url: window.location.pathname,
                 data: {
@@ -44,15 +45,18 @@ function initDeleteCompanies() {
                 dataType: 'json',
                 success: function (resp) {
                     if (resp && resp.status){
-                        Msg.info('Processing..');
+
                         setTimeout(function () {
                             $('#searchResults').reloadFragment({
-                                whenComplete: function () {
+                                url: window.location.href,
+                                whenComplete: function (resp) {
                                     Msg.success('Deleted');
+                                    var $fragment = $(resp).find("#searchResults");
+                                    $("#searchResults").replaceWith($fragment);
                                     initLeadCompaniesTable();
                                 }
                             });
-                        }, 1200);
+                        }, 100);
                     }
                 }, error: function (err) {
                     Msg.error("Error when deleting companies. Please try again");
@@ -88,8 +92,6 @@ function doSearch() {
         success: function (data) {
             window.history.pushState("", document.title, newUrl);
             var $fragment = $(data).find("#searchResults");
-            flog("replace", $("#se"));
-            flog("frag", $fragment);
             $("#searchResults").replaceWith($fragment);
             initLeadCompaniesTable()
         },
@@ -106,12 +108,15 @@ function initAddNewCompany() {
                 Msg.info('Processing...');
                 setTimeout(function () {
                     $('#searchResults').reloadFragment({
-                        whenComplete: function () {
+                        url: window.location.href,
+                        whenComplete: function (resp) {
                             Msg.success('Done');
+                            var $fragment = $(resp).find("#searchResults");
+                            $("#searchResults").replaceWith($fragment);
                             initLeadCompaniesTable();
                         }
                     });
-                }, 1200);
+                }, 100);
             }
         }
     })
