@@ -86,11 +86,22 @@
                         <br />
 
                         <table class="table table-hover table-striped" id="table-claims">
+                            <colgroup>
+                                <col style="width: 50px" />
+                                <col style="width: 100px" />
+                                <col style="width: 100px" />
+                                <col style="" />
+                                <col style="" />
+                                <col style="width: 90px" />
+                                <col style="width: 30px" />
+                            </colgroup>
                             <thead>
                                 <tr>
                                     <th width="50"></th>
                                     <th width="100">Receipt</th>
                                     <th>Enter Date</th>
+                                    <th>Submitter</th>
+                                    <th>Team</th>
                                     <th width="90"></th>
                                     <th width="30"><input type="checkbox" class="chk-all" /></th>
                                 </tr>
@@ -106,7 +117,7 @@
                                 #end
 
                                 <tr>
-                                    <td colspan="5">--</td>
+                                    <td colspan="7">--</td>
                                 </tr>
 
                                 #foreach($hit in $claims)
@@ -188,6 +199,8 @@
         </div>
 
         #macro (renderClaim $hit)
+        #set( $enteredBy = $services.userManager.findById($formatter.toLong($hit.enteredById)) )
+        #set( $team = $services.organisationManager.findOrg($hit.salesTeamOrgId) )
     <tr>
         <td class="fa-2x text-center">
             #if ($hit.status == 0)
@@ -210,6 +223,15 @@
             <abbr class="timeago" title="$formatter.formatDateISO8601($enteredDate, $page.organisation.timezone)">
                 $formatter.formatTimeLong($enteredDate, $page.organisation.timezone)
             </abbr>
+        </td>
+        <td>
+            <a href="/manageUsers/$hit.enteredById/">$enteredBy.formattedName</a>
+        </td>
+        <td>
+            #if( $team )
+            <a href="/organisations/$hit.salesTeamOrgId/">$team.formattedName</a>
+            #end
+            <span class="text-muted">($hit.salesTeamOrgId)</span>
         </td>
         <td>
             #if ($hit.status == 0)
@@ -281,24 +303,26 @@
                 <form class="form-horizontal form-new-claim" action="/manageSaleDataClaimer/" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
                         <code class="pull-right totalConfidence">Total Confidence: <span></span></code>
+                        <div class="clearfix"></div>
                         <div class="form-message alert alert-danger" style="display: none;"></div>
 
                         <div class="row">
-                            <div id="scanned-image-section" class="col-sm-4">
-                                <span class='zoom' id='ocrFile'>
-                                    <span>Click to Zoom</span>
-                                    <img src="" alt="OCR File Hash" name="ocrFileHash"/>
-                                </span>
+                            <div id="scanned-image-section" class="col-lg-2">
+                                <a name="ocrFileHash" class="btn btn-success" target="_blank">
+                                    <i class="fa fa-download"></i>
+                                    Download
+                                </a>
+                                <br/>
+                                <a name="ocrFileHash" href="" target="_blank">
+                                    <img name="ocrFileHash" src="" />
+                                </a>
                             </div>
 
-                            <div class="col-sm-8">
+                            <div class="col-lg-10 col-sm-12">
                                 <div class="row">
-                                    <br/>
-                                    <div class="form-group sales-team" style="display: none;">
-                                        <label class="control-label col-sm-2">Sales Team</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" disabled="disabled" value=""/>
-                                        </div>
+                                    <div class="input-group sales-team" style="display: none;">
+                                        <span class="input-group-addon" id="basic-addon3">Sales team</span>
+                                        <input type="text" class="form-control" value=""/>
                                     </div>
                                 </div>
                                 <table class="table table-striped table-hover table-condensed">
@@ -515,34 +539,33 @@
         var lowConfidenceFrom = '$!page.attributes.settings.lowConfidenceFrom';
         var lowConfidenceTo = '$!page.attributes.settings.lowConfidenceTo';
 
-        #if ($page.attributes.settings.defaultColumns)
-            var defaultColumns = $page.attributes.settings.defaultColumns;
-        #else
         var defaultColumns = [
-                "amount",
-                "entered",
-                "productSku",
-                "attributedTo",
-                "periodFrom",
-                "id",
-                "tags"
-        ];
-                #end
+                        "amount",
+                        "entered",
+                        "productSku",
+                        "attributedTo",
+                        "periodFrom",
+                        "id",
+                        "tags"
+                ];
 
-        var options = [
-            {value: "", title: "[Do not import]"},
-            {value: "amount", title: "Amount"},
-            {value: "entered", title: "Entered Date"},
-            {value: "productSku", title: "Product Sku"},
-            {value: "attributedTo", title: "Sale attributed to"},
-            {value: "periodFrom", title: "Sale date"},
-            {value: "id", title: "Sales Data Id"},
-            {value: "tags", title: "tags"},
+        #if ($page.attributes.settings.defaultColumns)
+                defaultColumns = $page.attributes.settings.defaultColumns;
+        #end
 
-            #foreach($xf in $applications.salesData.getDataSeriesExtraFields($page.attributes.settings.dataSeries))
-                    {value: "$xf.name", title: "$xf.title"},
+                var options = [
+                    {value: "", title: "[Do not import]"},
+                    {value: "amount", title: "Amount"},
+                    {value: "entered", title: "Entered Date"},
+                    {value: "productSku", title: "Product Sku"},
+                    {value: "attributedTo", title: "Sale attributed to"},
+                    {value: "periodFrom", title: "Sale date"},
+                    {value: "id", title: "Sales Data Id"},
+                    {value: "tags", title: "tags"},
+                    #foreach($xf in $applications.salesData.getDataSeriesExtraFields($page.attributes.settings.dataSeries))
+                            {value: "$xf.name", title: "$xf.title"},
                     #end
-        ];
+                ];
 
         function initProcessClaim() {
             $('#modal-process-claim').on('change', 'select', function () {

@@ -738,7 +738,8 @@ function imageClaim(page, params, files) {
                     enteredById: (isNotNull(custProfileBean) ? custProfileBean.userId : params.soldById),
                     modifiedDate: now,
                     status: RECORD_STATUS.NEW,
-                    receipt: '/_hashes/files/' + uploadedFiles[0].hash
+                    receipt: '/_hashes/files/' + uploadedFiles[0].hash,
+                    receiptFileName : uploadedFiles[0].originalFileName
                 };
 
                 appendSalesTeam(page, params, claimObj);

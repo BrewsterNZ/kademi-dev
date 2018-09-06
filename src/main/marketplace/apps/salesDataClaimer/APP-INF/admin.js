@@ -299,7 +299,15 @@ function processImageClaim(page, params, files) {
 
                             switch (cell.column) {
                                 case 'amount':
-                                    claimItem.amount = parseFloat(cell.value);
+                                    var recordAmount = parseFloat(cell.value);
+                                    if (isNotNull(recordAmount)) {
+                                        claimItem.amount = recordAmount;
+                                    } else {
+                                        log.info("parseFloat {} {}", cell.value, recordAmount);
+                                        result.status = false;
+                                        result.messages = ["Invalid amount " + cell.value + " on row " + i];
+                                        return views.jsonObjectView(JSON.stringify(result));
+                                    }
                                     break;
                                 case 'productSku':
                                     claimItem.productSku = cell.value;
@@ -311,6 +319,10 @@ function processImageClaim(page, params, files) {
                                     if (isNotNull(participant)) {
                                         claimItem.soldBy = participant.name;
                                         claimItem.soldById = participant.userId;
+                                    } else {
+                                        result.status = false;
+                                        result.messages = ["Couldnt find participant " + cell.value + " on row " + i];
+                                        return views.jsonObjectView(JSON.stringify(result));
                                     }
                                     break;
                                 case 'periodFrom':
@@ -433,17 +445,22 @@ function findParticipant(entityName, series) {
     var st = series.salesType;
     log.info("findParticipant {} {}", entityName, st);
 
-    if (isNull(st) || st === "SALES_PROFILE") {
+    if (isNull(st) || st == "SALES_PROFILE") {
         var mr = services.userManager.newProfileMatchRequest();
         mr.email(entityName).or().userName(entityName);
         var profileBeans = services.userManager.findMatching(mr);
         if (profileBeans.size() === 0) {
+            log.info("findParticipant: not found");
             return null;
         } else {
-            return profileBeans.get(0).entityObject(); // convert bean to Profile
+            var p = profileBeans.get(0).entityObject(); // convert bean to Profile
+            log.info("findParticipant: found {}", p);
+            return p;
         }
     } else {
         // TODO
+        log.warn("findParticipant: sales type not supported {}", st);
+        return null;
     }
 
 }

@@ -451,13 +451,19 @@
                 dataType: 'JSON',
                 success: function (resp) {
                     flog('OCR data', resp);
+                    if( resp.status ) {
+                        var fileName = resp.data.receiptFileName;
+                        modalProcess.find('a[name="ocrFileHash"]').attr('download', fileName);
 
-                    if (resp.status && resp.data && resp.data.salesTeamOrgId && resp.data.salesTeamOrgId.length > 0) {
-                        salesTeamInput.val(resp.data.salesTeamOrgId);
-                        salesTeamDiv.show();
+                        if ( resp.data && resp.data.salesTeamOrgId && resp.data.salesTeamOrgId.length > 0) {
+                            salesTeamInput.val(resp.data.salesTeamOrgId);
+                            salesTeamDiv.show();
+                        } else {
+                            salesTeamDiv.hide();
+                            salesTeamInput.val('');
+                        }
                     } else {
-                        salesTeamDiv.hide();
-                        salesTeamInput.val('');
+                        Msg.error("There was a problem retrieving claim data");
                     }
                 }
             });
@@ -468,9 +474,11 @@
                 type: 'get',
                 dataType: 'json',
                 success: function (resp) {
+                    flog("Got receipt file data", resp);
                     if (resp && resp.status) {
                         modalProcess.find('[name=ids]').val(id);
                         modalProcess.find('img[name="ocrFileHash"]').attr('src', receiptUrl);
+                        modalProcess.find('a[name="ocrFileHash"]').attr('href', receiptUrl);
 
                         var xmlDocument = $.parseXML(resp.OCRFileXML);
                         var $xml = $(xmlDocument);
@@ -663,10 +671,12 @@
                             success: function (resp) {
                                 if (resp && resp.status) {
                                     Msg.success(resp.messages);
+                                    modalProcess.modal('hide');
                                     reloadClaimsList(function () {
-                                        modalProcess.modal('hide');
+
                                     });
                                 } else {
+                                    flog("saveImageDetails", resp, resp.messages);
                                     Msg.error(resp.messages || 'An unknown error processing the claims. Please contact your administrators to resolve this issue.');
                                 }
                             },
@@ -814,7 +824,6 @@
                     reloadClaimsList();
 
                     flog('RESP ', resp);
-                    modalProcess.modal('hide');
 
                     modalProcess.find('[name="select-all"]').prop('checked', false);
                     modalProcess.find('select').removeAttr('disabled');

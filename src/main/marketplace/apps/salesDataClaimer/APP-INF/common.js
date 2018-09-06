@@ -13,6 +13,8 @@ function uploadFile(page, params, files) {
             var fileHash = fileManager.uploadFile(file);
 
             result.push({
+                originalFileName : file.name,
+                originalContentType : file.contentType,
                 fileName: fileHash,
                 type: file.contentType,
                 size: file.size,
