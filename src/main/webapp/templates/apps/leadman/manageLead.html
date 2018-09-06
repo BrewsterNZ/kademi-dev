@@ -182,7 +182,7 @@
                                         <label class="control-label col-sm-3">Est hours</label>
                                         <div class="col-sm-3">
                                             <input type="text" value="$!page.estimatedHours" name="estimatedHours" class="form-control immediateUpdate" />
-                                        </div>                                        
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-sm-3">Stage</label>
@@ -211,7 +211,7 @@
                                                 #end
                                             </select>
                                         </div>
-                                        
+
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-sm-3" for="createDate">Created</label>
@@ -288,18 +288,18 @@
                                         </div>
                                     </div>
                                     #end
-                                    
+
                                     #set ( $forks = $page.leadForks )
                                     #set ( $forkExists = false )
-                                    
+                                    #if( $forks.size() > 0 )
                                     <h3>Fork Timers</h3>
-                                    
+
                                     #foreach($fork in $forks)
                                         #if( $fork.timerDate && $fork.currentGoal )
                                         #set ( $forkExists = true )
                                         <div class="timeline-panel">
                                             <div class="timeline-body">
-                                                <p>$!page.nodeTitle($fork.currentGoal) 
+                                                <p>$!page.nodeTitle($fork.currentGoal)
                                                 <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
                                                     <abbr title="$formatter.formatDateISO8601($fork.timerDate)" class="info timeago">$fork.timerDate</abbr>
                                                 </small>
@@ -324,7 +324,8 @@
                                         </div>
                                         #end
                                     #end
-                                    
+                                    #end
+
                                     #if ( !$forkExists )
                                         <div class="timeline-panel">
                                             <div class="timeline-body">
@@ -1303,8 +1304,8 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div>
-    
-    
+
+
     #foreach($fork in $forks)
         #if( $fork.timerDate && $fork.currentGoal )
         <div class="modal fade" id="goNextNodeModal$fork.id" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
@@ -1354,7 +1355,7 @@
         </div>
         #end
     #end
-    
+
     #macro(genFileIcon $file)
     #set($fIcon = "fa-file")
 

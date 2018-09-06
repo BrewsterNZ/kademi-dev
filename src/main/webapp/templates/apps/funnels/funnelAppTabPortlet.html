@@ -30,36 +30,43 @@
     <div class="panel-body">
         <table class="table table-striped">
             <tr>
-                <td>Created</td>
+                <th>Created</th>
                 <td>
                     <abbr title="$formatter.formatDateISO8601($lead.createDate, $page.organisation.timezone)" class="timeago">
                         $formatter.formatDateTime($lead.createDate, $page.organisation.timezone)
                     </abbr>
                 </td>
-            </tr>
-            <tr>
-                <td>Stage</td>
-                <td>$!lead.stageName</td>
-            </tr>
-            <tr>
-                <td>Source</td>
-                <td>$!lead.source</td>
+
+                <th>Lead num</th>
+                <td>$!lead.leadNum</td>
+
+                <th>Lead title</th>
+                <td>$!lead.title</td>
             </tr>
 
             <tr>
-                <td>Assigned to group</td>
+                <th>Stage</th>
+                <td>$!lead.stageName</td>
+
+                <th>Source</th>
+                <td>$!lead.source</td>
+
+                <th>Description</th>
+                <td>$!lead.description</td>
+            </tr>
+
+            <tr>
+                <th>Assigned to group</th>
                 <td>$!lead.assignedToGroup.name</td>
-            </tr>
-            <tr>
-                <td>Assigned to org</td>
+
+                <th>Assigned to org</th>
                 <td>$!lead.assignedToOrg.title</td>
-            </tr>
-            <tr>
-                <td>Sales person</td>
+
+                <th>Sales person</th>
                 <td>$!lead.assignedToProfile.title</td>
             </tr>
             <tr>
-                <td>Current goal</td>
+                <th>Current goal</th>
                 <td>
                     #if( $lead.currentGoal )
                         $!funnel.get($lead.currentGoal).title
@@ -68,9 +75,8 @@
                         <span class="label label-warning">No current goal. Not being processed.</span>
                     #end
                 </td>
-            </tr>
-            <tr>
-                <td>Last attained goal</td>
+
+                <th>Last attained goal</th>
                 <td>
                     #if( $lead.lastAttainedGoal )
                         $lead.lastAttainedGoal
@@ -101,7 +107,7 @@
             </tr>
             #else
             <tr>
-                <td>Timer</td>
+                <th>Timer</th>
                 <td>
                     #if( $lead.timerDate )
                         <abbr title="$formatter.formatDateISO8601($lead.timerDate, $page.organisation.timezone)" class="timeago">
@@ -112,10 +118,8 @@
                         No current timer
                     #end
                 </td>
-            </tr>
 
-            <tr>
-                <td>Timer processing</td>
+                <th>Timer processing</th>
                 <td>
                     #if( $lead.processingStartedAt || $lead.completedProcessingAt || $lead.numAttempts )
                         <table class="table">
@@ -136,12 +140,11 @@
                 </td>
             </tr>
 
+            #set( $forks = $applications.funnels.getForksForLead($lead) )
+            #if( $forks.size() > 0 )
             <tr>
-                <td>Forks</td>
-                <td>
-                    #set( $forks = $applications.funnels.getForksForLead($lead) )
-
-                    #if( $forks.size() > 0 )
+                <th>Forks</th>
+                <td colspan="4">
                         <table class="table">
                             <tr>
                                 <th>Current Goal</th>
@@ -187,11 +190,9 @@
                             </tr>
                             #end
                         </table>
-                    #else
-                        No forks
-                    #end
                 </td>
             </tr>
+            #end
             #end
 
 
@@ -256,7 +257,7 @@
                     <td>
                         <abbr title="$formatter.formatDateISO8601($funnelEdm.emailItem.sendStatusDate, $page.organisation.timezone)" class="timeago">
                             $formatter.formatDateTime($funnelEdm.emailItem.sendStatusDate, $page.organisation.timezone)
-                        </abbr>                        
+                        </abbr>
                     </td>
                 </tr>
             #end

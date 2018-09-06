@@ -3,8 +3,11 @@
     <div class="panel-body">
         <div class="leadSummary">
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
                     <div class="form-group">
+                        <label class="control-label">
+                            Assigned to:
+                        </label>
                         <select id="assignToName" data-live-search="true" data-live-search-normalize="true" name="assignToName" class="form-control selectpicker immediateUpdate" data-style="btn-primary">
                             <option value="">[Not Assigned]</option>
                             #foreach($user in $page.find("/leads").teamMembers)
@@ -23,10 +26,13 @@
                         <input type="text" value="$!page.leadTitle" name="leadTitle" class="form-control immediateUpdate"/>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
                     <div class="form-group">
+                        <label class="control-label">
+                            Stage:
+                        </label>
                         <select data-live-search="true" data-live-search-normalize="true" name="stageName" class="form-control immediateUpdate selectpicker" data-style="btn-primary">
-                            <option value="">[None]</option>
+                            <option value="">[No stage]</option>
                             #foreach( $stage in $page.allStages )
                             #set($a = $formatter.ifNull($stage.desc, $stage.name))
                             #set($oText = "Stage: "+$a)
@@ -40,11 +46,14 @@
                     </div>
 
                 </div>
-                <div class="col-sm-4">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
                     <div class="form-group">
+                        <label class="control-label">
+                            Source
+                        </label>
                         <!-- Split button -->
                         <select data-live-search="true" data-live-search-normalize="true" data-placeholder="Select a source" name="source" class="form-control immediateUpdate selectpicker" data-style="btn-primary">
-                            <option data-subtext="Source" value="">[None]</option>
+                            <option data-subtext="Source" value="">[No source]</option>
                             #set($foundSource = false)
                             #foreach( $source in $page.allSources )
                                 #if($source == $page.source)
@@ -61,6 +70,13 @@
                     <div class="form-group">
                         <label class="control-label">Created date:</label>
                         <input type="text" name="createDate" id="createDate" class="form-control date-time immediateUpdate" value=" $formatter.formatDateTime( $!page.createDate )" />
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                    <div class="form-group">
+                        <label class="control-label">Lead num:</label>
+                        <input type="text" value="$!page.lead.leadNum" name="leadNum" class="form-control immediateUpdate"/>
                     </div>
                 </div>
             </div>
