@@ -630,15 +630,15 @@
 
         $('span#ocrFile').zoom({magnify: 3, on: 'grab'});
 
+        var deleteConfirmDone = false;
+
         modalProcess.on('click', '.btn-delete-row', function (e) {
             e.preventDefault();
 
             var btn = $(this);
             var tr = btn.closest('tr');
 
-            Kalert.confirm('You want to delete this row', function () {
-                tr.remove();
-            });
+            tr.remove();
         });
 
         modalProcess.on('focus', 'input[type="text"]', function () {
