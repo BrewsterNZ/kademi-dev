@@ -514,7 +514,9 @@
                         for (counter = 0; counter < $rows.length; counter++) {
                             var row = '';
                             row += '<tr data-index="' + $($rows[counter]).attr('index') + '">';
-                            row += '    <td><button type="button" class="btn btn-danger btn-delete-row" title="Delete Row"><i class="fa fa-trash"></i></button></td>';
+                            row += '    <td><div style="width: 50px"> <button type="button" class="btn btn-danger btn-delete-row btn-xs" title="Delete Row"><i class="fa fa-trash"></i></button>' +
+                                ' <button type="button" class="btn btn-primary btn-fill-user btn-xs" title="Fill down"><i class="fa fa-long-arrow-down"></i></button>' +
+                                '</div></td>';
 
                             var $cells = $($rows[counter]).find("cell");
                             for (cells_counter = 0; cells_counter < $cells.length; cells_counter++) {
@@ -639,6 +641,52 @@
             Kalert.confirm('You want to delete this row', function () {
                 tr.remove();
             });
+        });
+
+        modalProcess.on('click', '.btn-fill-user', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var table = btn.closest('table');
+            var thead = table.find('thead');
+            var tbody = table.find('tbody');
+
+            var columnIndex = -1;
+            thead.find('select').each(function () {
+                if (this.value == 'attributedTo'){
+                    columnIndex = $(this).closest('th').index();
+                }
+            });
+
+            if (columnIndex != -1){
+                var currentRow = btn.closest('tr');
+                var currentCell = $(currentRow.find('td')[columnIndex]);
+
+                var currentRowIndex = currentRow.index();
+                var currentUser = '';
+                for (var i = currentRowIndex; i >= 0; i--){
+                    var row = $(tbody.find('tr')[i]);
+                    var cell = $(row.find('td')[columnIndex]);
+                    var user = cell.find('input').val();
+                    if (user){
+                        currentCell.find('input').val(user);
+                        currentUser = user;
+                        break;
+                    }
+                }
+
+                if (currentUser){
+                    for (var i = currentRowIndex + 1; i < tbody.find('tr').length; i++){
+                        var row = $(tbody.find('tr')[i]);
+                        var cell = $(row.find('td')[columnIndex]);
+                        var currentValue = cell.find('input').val();
+                        if (!currentValue){
+                            cell.find('input').val(currentUser);
+                        } else break;
+                    }
+                }
+            }
+
         });
 
         modalProcess.on('focus', 'input[type="text"]', function () {
