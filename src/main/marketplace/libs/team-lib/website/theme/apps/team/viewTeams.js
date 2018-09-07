@@ -5,7 +5,7 @@
         var teamOrgType = form.find('#teamFinder').attr('data-team-orgtype');
         var url = '/leads/';
         if (teamOrgType){
-            url += '?orgType='+teamOrgType;
+            url += '?' + $.param({orgType: teamOrgType});
         }
         form.find('#teamFinder').entityFinder({
             type: 'organisation',
