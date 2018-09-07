@@ -2,11 +2,15 @@
     function initCreateMemberForm() {
         var modal = $('#modal-add-member');
         var form = modal.find('form');
-
+        var teamOrgType = form.find('#teamFinder').attr('data-team-orgtype');
+        var url = '/leads/';
+        if (teamOrgType){
+            url += '?orgType='+teamOrgType;
+        }
         form.find('#teamFinder').entityFinder({
             type: 'organisation',
             useActualId: true,
-            url : '/leads/'
+            url : url
         });
 
         form.forms({
