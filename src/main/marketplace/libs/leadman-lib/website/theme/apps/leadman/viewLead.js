@@ -264,11 +264,13 @@
                     form.find('.btn-save-company').html('Create new company');
                     form.find('.btn-company-details').css('display', 'none');
                     form.find('input[name=leadOrgId]').val('');
+                    form.find('input[name=leadOrgDetails]').val('');
                 }
             }, 50);
         });
 
         orgTitleSearch.bind('typeahead:select', function (ev, sug) {
+            debugger;
             form.find('input[name=email]').val(sug.email);
             form.find('input[name=phone]').val(sug.phone);
             form.find('input[name=address]').val(sug.address);
@@ -277,8 +279,9 @@
             form.find('input[name=city]').val(sug.city);
             form.find('input[name=postcode]').val(sug.postcode);
             form.find('input[name=leadOrgId]').val(sug.orgId);
+            form.find('input[name=leadOrgDetails]').val(sug.id);
             form.find('[name=country]').val(sug.country);
-            $('.selectpicker').selectpicker('refresh')
+            $('.selectpicker').selectpicker('refresh');
             form.find('.btn-company-details').css('display', 'inline').attr('href', '/companies/' + sug.id);
             btnSaveCompany.html('Save details');
         });
@@ -294,6 +297,7 @@
                     form.find('input[name=city]').val('');
                     form.find('input[name=postcode]').val('');
                     form.find('input[name=leadOrgId]').val('');
+                    form.find('input[name=leadOrgDetails]').val('');
                     form.find('[name=country]').val('');
                     $('.selectpicker').selectpicker('refresh')
                 }

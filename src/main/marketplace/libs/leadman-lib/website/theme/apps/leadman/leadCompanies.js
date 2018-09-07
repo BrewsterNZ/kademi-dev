@@ -47,15 +47,8 @@ function initDeleteCompanies() {
                     if (resp && resp.status){
 
                         setTimeout(function () {
-                            $('#searchResults').reloadFragment({
-                                url: window.location.href,
-                                whenComplete: function (resp) {
-                                    Msg.success('Deleted');
-                                    var $fragment = $(resp).find("#searchResults");
-                                    $("#searchResults").replaceWith($fragment);
-                                    initLeadCompaniesTable();
-                                }
-                            });
+                            $("#lead-companies-query").val('').trigger('change');
+                            Msg.success('Deleted');
                         }, 100);
                     }
                 }, error: function (err) {
@@ -107,16 +100,10 @@ function initAddNewCompany() {
             if (resp && resp.status){
                 Msg.info('Processing...');
                 setTimeout(function () {
-                    $('#searchResults').reloadFragment({
-                        url: window.location.href,
-                        whenComplete: function (resp) {
-                            Msg.success('Done');
-                            var $fragment = $(resp).find("#searchResults");
-                            $("#searchResults").replaceWith($fragment);
-                            initLeadCompaniesTable();
-                        }
-                    });
-                }, 100);
+                    Msg.success('Done');
+                    $("#lead-companies-query").val('').trigger('change');
+                    $('#modal-add-company').modal('hide');
+                }, 1000);
             }
         }
     })
