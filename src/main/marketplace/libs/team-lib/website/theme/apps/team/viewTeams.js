@@ -4,16 +4,28 @@
         var form = modal.find('form');
         var teamOrgType = form.find('#teamFinder').attr('data-team-orgtype');
         var url = '/leads/';
-        if (teamOrgType){
+        if (teamOrgType) {
             url += '?' + $.param({orgType: teamOrgType});
         }
         form.find('#teamFinder').entityFinder({
             type: 'organisation',
             useActualId: true,
-            url : url
+            url: url
         });
 
         form.forms({
+            validate : function(form, config) {
+                var selectedRoles = form.find("input[name=group]:checked");
+                if( selectedRoles.length == 0) {
+                    return {
+                        error: 1,
+                        errorFields: ["Roles"],
+                        errorMessages: ['Please select at least one role']
+                    };
+                } else {
+                    return true;
+                }
+            },
             onSuccess: function (resp) {
                 if (resp.status) {
                     modal.modal('hide');
@@ -34,14 +46,13 @@
         });
     }
 
-    function initSelectPicker(){
+    function initSelectPicker() {
         $('.selectpicker').selectpicker({
-
         });
     }
 
     var searchOpts = {};
-    function initSearch(){
+    function initSearch() {
         var timer;
 
         $('#team-members-query').on('input', function () {
@@ -64,9 +75,9 @@
 
     }
 
-    function doSearch(){
+    function doSearch() {
         var uri = new URI(window.location.pathname);
-        for(var key in searchOpts){
+        for (var key in searchOpts) {
             uri.setSearch(key, searchOpts[key]);
         }
 
@@ -79,7 +90,7 @@
         })
     }
 
-    function initCreateTeam(){
+    function initCreateTeam() {
         var modal = $('#modal-add-team');
         var form = modal.find('form');
 
@@ -98,17 +109,59 @@
         });
     }
 
-    function initTeamMemberForm(){
+    function initTeamMemberForm() {
         var form = $('#teamMemberDetails');
-        if (form.length){
+        if (form.length) {
             form.forms({
                 onSuccess: function (resp) {
-                    if (resp && resp.status){
+                    if (resp && resp.status) {
                         Msg.success("Updated");
                     }
                 }
             })
         }
+    }
+
+    function initDeleteTeams() {
+        $("body").on("click", ".btn-teams-delete", function (e) {
+            e.preventDefault();
+            var btn = (e.target).closest("button");
+            var container = $(btn.closest(".teams-list-container"));
+            flog("delete teams", btn, container);
+
+            var ids = [];
+
+            container.find('input[name=memberId]:checked').each(function (i, item) {
+                var id = $(item).val();
+                ids.push(id);
+            });
+
+            if (ids.length < 1) {
+                Msg.info('Please select at least one member to delete');
+            } else {
+                if( confirm('You want to delete ' + ids.length + ' member' + (ids.length > 1 ? 's' : '') + '?', '') )  {
+                    $.ajax({
+                        type: 'POST',
+                        url: window.location.pathname,
+                        data: {
+                            toRemoveTeamIds: ids
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            if (data.status) {
+                                container.reloadFragment();
+                                Msg.info('Successfully deleted ' + ids.length + ' member' + (ids.length > 1 ? 's' : ''));
+                            } else {
+                                Msg.error("Sorry, an error occured deleting the members " + data.messages);
+                            }
+                        },
+                        error: function (resp) {
+                            Msg.error("An error occured deleting teams");
+                        }
+                    });
+                }
+            }
+        });
     }
 
     $(function () {
@@ -117,6 +170,7 @@
         initSelectPicker();
         initSearch();
         initTeamMemberForm();
+        initDeleteTeams();
     });
 
 })(jQuery);

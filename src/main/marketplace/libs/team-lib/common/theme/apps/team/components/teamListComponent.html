@@ -1,4 +1,5 @@
 #if ($page)
+<div class="teams-list-container" id="teams-list-container">
 <div class="row">
     <div class="col-md-4">
         <div class="input-group">
@@ -33,7 +34,7 @@
                 </select>
             </div>
             <div class="col-sm-2">
-                <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                <button class="btn btn-danger btn-teams-delete"><i class="fa fa-trash"></i></button>
             </div>
         </div>
     </div>
@@ -89,6 +90,7 @@
         #end
         </tbody>
     </table>
+</div>
 </div>
 
 <div class="modal fade" id="modal-add-member" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
@@ -150,7 +152,7 @@
                                     <div class="col-sm-6">
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" name="group" value="$g.id" class="required" />
+                                                <input type="checkbox" name="group" value="$g.id" />
                                                 $g.name
                                             </label>
                                         </div>
