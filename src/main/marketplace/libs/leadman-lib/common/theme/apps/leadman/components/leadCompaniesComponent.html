@@ -47,7 +47,9 @@
             <td>$!com.email</td>
             <td>$!com.phone</td>
             <td>
-                $!com.address, $!com.addressLine2
+                <span>$!com.address</span>
+                #if ($com.address)<span>, </span>#end
+                <span>$!com.addressLine2</span>
             </td>
             <td>$com.members.size()</td>
             <td><input type="checkbox" name="companyId" value="$com.id"></td>
