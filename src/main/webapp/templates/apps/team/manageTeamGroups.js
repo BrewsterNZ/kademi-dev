@@ -25,8 +25,22 @@
         });
     }
 
+    function initRemoveOrgs() {
+        var $body = $(document.body);
+
+        $body.off('click', '.btn-delete-org').on('click', '.btn-delete-org', function (e) {
+            e.preventDefault();
+            var href = $(this).attr('href');
+
+            confirmDelete(href, getFileName(href), function (resp) {
+                $("#stores-table").reloadFragment();
+            });
+        });
+    }
+
     $(function () {
         initGroupSelect();
+        initRemoveOrgs();
 
         $("#teamSettingsForm").forms({
             onSuccess : function() {
