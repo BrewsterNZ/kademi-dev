@@ -74,6 +74,18 @@
                                 </tr>
 
                                 <tr>
+                                    <td>Code</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <input type="text" name="name" placeholder="Enter a code here" value="$page.reward.name" class="form-control required" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+
+                                <tr>
                                     <td>Points system</td>
                                     <td>
                                         <div class="form-group">
@@ -94,7 +106,7 @@
                                                     $formatter.option($orgType.name, $orgType.displayName, $page.pointsOrgType)
                                                     #end
                                                 </select>
-                                                <i>You can <a href="/orgTypes/">manage organisation types here</a></i>
+                                                <i class='pointsOrgType'>You can <a href="/orgTypes/">manage organisation types here</a></i>
                                             </div>
                                         </div>
                                     </td>
@@ -130,7 +142,7 @@
                                     <td>Choose an expiry date</td>
                                     <td>
                                         <div class="form-group">
-                                            <div class="col-sm-5">
+                                            <div class="col-sm-4">
                                                 <div class="input-group">
                                                     <input type="text" name="expiryDate" placeholder="Expiry date" data-format="DD/MM/YYYY" value="$formatter.formatDate($!page.expiryDate)" class="form-control DateTime" />
                                                     <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
