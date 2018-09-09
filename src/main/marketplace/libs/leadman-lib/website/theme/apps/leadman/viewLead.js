@@ -858,6 +858,7 @@
         initPjax();
         initLeadContactAddresses();
         initLeadCountryList();
+        initAddProduct();
     }
 })();
 
@@ -937,5 +938,34 @@ function initLeadCountryList() {
 
     profileAddressWrap.find('#profileAddresscountry').on("typeahead:selected", function(e, datum) {
         profileAddressWrap.find('[name=country]').val(datum.iso_code);
+    });
+}
+
+function initAddProduct() {
+    $("body").on("click", ".btn-add-lead-product", function(e) {
+        e.preventDefault();
+        var btn = $(e.target).closest("button");
+        var leadId = btn.data("lead-id");
+        var inp = btn.closest(".input-group").find("input");
+        var productCode = inp.val();
+        if( productCode.length > 0 ) {
+            $.ajax({
+                type: 'POST',
+                url : "/leadProduct",
+                data: {
+                    leadId : leadId,
+                    addProduct : productCode
+                },
+                success: function (resp) {
+                    if( resp.status){
+                        $("#table-lead-products").reloadFragment();
+                    } else {
+                        alert("Sorry, we couldnt add that product. " + resp.messages);
+                    }
+                }
+            });
+        } else {
+            alert("Please search for and select a product to add");
+        }
     });
 }
