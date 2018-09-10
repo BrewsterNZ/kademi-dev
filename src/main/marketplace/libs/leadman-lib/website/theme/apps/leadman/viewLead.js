@@ -270,7 +270,6 @@
         });
 
         orgTitleSearch.bind('typeahead:select', function (ev, sug) {
-            debugger;
             form.find('input[name=email]').val(sug.email);
             form.find('input[name=phone]').val(sug.phone);
             form.find('input[name=address]').val(sug.address);

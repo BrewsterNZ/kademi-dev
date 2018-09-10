@@ -3,15 +3,79 @@
         var modal = $('#modal-add-member');
         var form = modal.find('form');
         var teamOrgType = form.find('#teamFinder').attr('data-team-orgtype');
-        var url = '/leads/';
+        var url = '/leads?orgSearch=%QUERY&';
         if (teamOrgType) {
-            url += '?' + $.param({orgType: teamOrgType});
+            url += $.param({orgType: teamOrgType});
         }
-        form.find('#teamFinder').entityFinder({
-            type: 'organisation',
-            useActualId: true,
-            url: url
+        // form.find('#teamFinder').entityFinder({
+        //     type: 'organisation',
+        //     useActualId: true,
+        //     url: url
+        // });
+
+        var orgSearch = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: url,
+                wildcard: '%QUERY'
+            }
         });
+        var orgTitleSearch = $('#teamFinder');
+        var form = orgTitleSearch.closest('form');
+
+        orgTitleSearch.typeahead({
+            highlight: true,
+            cache: false
+
+        }, {
+            display: 'title',
+            limit: 10,
+            source: orgSearch,
+            templates: {
+                empty: [
+                    '<div class="empty-message">',
+                    'No existing teams were found.',
+                    '</div>'
+                ].join('\n'),
+                suggestion: Handlebars.compile(
+                    '<div>'
+                    + '<strong>{{title}}</strong>'
+                    + '</br>'
+                    + '<span>{{phone}}</span>'
+                    + '</br>'
+                    + '<span>{{#if address}}{{address}}{{/if}} {{#if addressLine2}}{{#if address}},{{/if}}{{addressLine2}}{{/if}} {{#if addressState}}{{addressState}}{{/if}} {{#if postcode}}{{postcode}}{{/if}}</span>'
+                    + '</div>')
+            }
+        });
+
+        var timer;
+        orgTitleSearch.bind('typeahead:render', function (ev) {
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                var ttMenu = orgTitleSearch.siblings('.tt-menu');
+                var isSuggestionAvailable = ttMenu.find('.empty-message').length === 0;
+
+                flog('typeahead:render Is suggestion available: ' + isSuggestionAvailable, ttMenu.find('.empty-message'));
+
+                if (!isSuggestionAvailable) {
+                    form.find('input[name=teamId]').val('');
+                }
+            }, 50);
+        });
+
+        orgTitleSearch.bind('typeahead:select', function (ev, sug) {
+            form.find('input[name=teamId]').val(sug.id);
+        });
+
+        orgTitleSearch.on({
+            input: function () {
+                if (!this.value) {
+                    form.find('input[name=teamId]').val('');
+                }
+            }
+        });
+        orgTitleSearch.attr('autocomplete', 'nope');
 
         form.forms({
             validate : function(form, config) {
