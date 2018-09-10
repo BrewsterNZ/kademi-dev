@@ -26,8 +26,8 @@
                         <div class="col-md-4">
 
                             <select name="funnel" class="form-control">
-                                #foreach($entry in $leadsPage.funnels.entrySet())
-                                <option #if ($params.leadName == $entry.key) selected #end value="$entry.key">$formatter.firstNotNull($entry.value.title, $entry.value.name)</option>
+                                #foreach($funnel in $services.funnelManager.nonHiddenFunnels)
+                                <option #if ($params.leadName == $funnel.name) selected #end value="$funnel.name">$formatter.firstNotNull($funnel.title, $funnel.name)</option>
                                 #end
                             </select>
                         </div>
@@ -81,9 +81,8 @@
                         </div>
                     </div>
                     <hr>
-                    #foreach($entry in $leadsPage.funnels.entrySet())
-                    #set( $funnel = $entry.value )
-                    #if ($funnel.extraFields && $entry.key == $params.leadName)
+                    #foreach($funnel in $services.funnelManager.nonHiddenFunnels)
+                    #if ($funnel.extraFields && $funnel.name == $params.leadName)
                     <div class="form-group">
                         #foreach($field in $funnel.extraFields)
                         <label class="control-label col-md-2" for="newUserEmail">$field.title</label>
