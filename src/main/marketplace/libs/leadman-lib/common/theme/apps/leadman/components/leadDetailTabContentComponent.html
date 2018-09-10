@@ -8,11 +8,13 @@
                             <label class="control-label">
                                 Assigned to:
                             </label>
+                            #set( $teamOrgType = $applications.team.selectedOrgType )
+                            #set ($teamMems = $services.teamManager.teamMembers($userResource.thisProfile, $teamOrgType))
                             <select id="assignToName" data-live-search="true" data-live-search-normalize="true" name="assignToName" class="form-control selectpicker immediateUpdate" data-style="btn-primary">
                                 <option value="">[Not Assigned]</option>
-                                #foreach($user in $page.find("/leads").teamMembers)
-                                #set($oText = "Assigned to: " + $user.formattedName)
-                                $formatter.option($user.name, $oText, $page.assignedTo.name)
+                                #foreach($o in $teamMems)
+                                #set($oText = "Assigned to: " + $o.formattedName)
+                                $formatter.option($o.name, $oText, $page.assignedTo.name)
                                 #end
                             </select>
                         </div>

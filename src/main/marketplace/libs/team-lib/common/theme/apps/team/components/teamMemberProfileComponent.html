@@ -1,0 +1,34 @@
+#set( $profileBean = $page.attributes.member.profile )
+#set( $thisProfile = $page.attributes.member.thisProfile )
+<div class="panel panel-primary panel-leadProfile" id="leadProfileLeft">
+    <div class="panel-body text-center">
+        #set ($ava = "/theme/apps/leadman/user-placeholder.png")
+        #if ($thisProfile.photoHash && $thisProfile.photoHash != "/templates/apps/user/profile.png")
+        #set ($ava = "/_hashes/files/" + $thisProfile.photoHash)
+        #end
+        <img src="$ava" class="profile-avatar-img media-object img-circle">
+
+        <h1 class="leadTitle">
+            $thisProfile.formattedName
+        </h1>
+        #if( $thisProfile.phone )
+        <p>
+            <a href="tel:${thisProfile.phone}" class="btn btn-primary btn-primary-light"><i class="fa fa-phone"></i> $thisProfile.phone</a>
+        </p>
+        #end
+
+        #if( $thisProfile.email )
+        <p>
+            <a href="mailto:${thisProfile.email}" class="btn btn-primary btn-primary-light"><i class="fa fa-envelope-o"></i> $thisProfile.email</a>
+        </p>
+        #end
+        #foreach($memberOrgData in $profileBean.allMemberships().toOrgsList(true) )
+        <p>
+            <a class="btn btn-primary btn-primary-light" href="/companies/$memberOrgData.id">
+                <i class="fa fa-users"></i>
+                $memberOrgData.formattedName
+            </a>
+        </p>
+        #end
+    </div>
+</div>
