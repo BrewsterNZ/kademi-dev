@@ -685,7 +685,7 @@
         var assignedTags = $('#assignedTags');
         var viewLeadTagsInput = $("#view-lead-tags");
         var tagsSearch = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
                 url: '/leads/?asJson&tags&q=%QUERY',
