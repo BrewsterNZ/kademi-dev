@@ -12,9 +12,12 @@
                             #set ($teamMems = $services.teamManager.teamMembers($userResource.thisProfile, $teamOrgType))
                             <select id="assignToName" data-live-search="true" data-live-search-normalize="true" name="assignToName" class="form-control selectpicker immediateUpdate" data-style="btn-primary">
                                 <option value="">[Not Assigned]</option>
+                                #if( $page.assignedTo )
+                                $formatter.option($page.assignedTo.name, $page.assignedTo.formattedName, $page.assignedTo.name)
+                                #end
+
                                 #foreach($o in $teamMems)
-                                #set($oText = "Assigned to: " + $o.formattedName)
-                                $formatter.option($o.name, $oText, $page.assignedTo.name)
+                                $formatter.option($o.name, $o.formattedName, $page.assignedTo.name)
                                 #end
                             </select>
                         </div>
