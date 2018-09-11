@@ -229,7 +229,7 @@ function initCancelLeadModal() {
     cancelLeadModal.on('loaded.bs.modal', function () {
         cancelLeadModal.find("form").forms({
             onSuccess: function (resp) {
-                Msg.info('Lead cancelled');
+                Msg.info('Cancelled!');
                 reloadTasks();
                 if ($('#all_contacts').length) {
                     $('#all_contacts').html('');
