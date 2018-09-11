@@ -430,6 +430,10 @@
                                 <option value="email-false">Email to customer</option>
                                 <option value="email-true">Email from customer</option>
                                 <option value="note-false">General note</option>
+
+                                #foreach ($a in $page.actions)
+                                <option value="${a.id}-${a.inbound}">$a.text</option>
+                                #end
                             </select>
                         </div>
                     </div>
