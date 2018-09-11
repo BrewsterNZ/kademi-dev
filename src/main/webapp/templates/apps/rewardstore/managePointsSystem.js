@@ -131,6 +131,9 @@ function initFormPointsSystem() {
             flog("done");
             if (resp.status) {
                 Msg.info("Saved", "managePointsSystem");
+                if( resp.nextHref ) {
+                    window.location = resp.nextHref;
+                }
             } else {
                 Msg.error("Sorry, couldnt save", "managePointsSystem");
             }
@@ -374,7 +377,7 @@ function doHistorySearch() {
     var pointsFooter = $("#pointsFooter");
     var debitTarget = $("#debitsTableBody");
     var debitFooterTarget = $("#debitsPaginator");
-    
+
     target.load();
 
     $.ajax({

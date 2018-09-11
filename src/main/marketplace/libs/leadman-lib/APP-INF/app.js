@@ -23,10 +23,8 @@ controllerMappings.addComponent("leadman/components", "leadsImporterWizard", "ht
 
 
 /* Templates */
-controllerMappings.addTemplate('theme/apps/leadman/',
-                               'viewProfile',
-                               'View Customer Profile',
-                               true);
+controllerMappings.addTemplate('theme/apps/leadman/', 'viewProfile', 'View Customer Profile', true);
+
 
 // ============================================================================
 // Portlet

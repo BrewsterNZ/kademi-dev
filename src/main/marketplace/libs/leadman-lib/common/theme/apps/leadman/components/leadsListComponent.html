@@ -1,7 +1,7 @@
 #set( $leadsPage = $page.find("/leads") )
 #set( $leads = $leadsPage.myVisibleLeads )
 <div class="panel panel-default panel-kcrm-light panel-header-primary">
-    <div class="panel-body">
+    <div class="panel-body" id="leadsList">
         <h3>Leads <span class="label label-primary pull-right"><small>$leads.size()</small></span></h3>
         <br>
         <ul class="media-list leadsDashList">

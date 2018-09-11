@@ -21,6 +21,16 @@ controllerMappings
     .addType("leadManResource") // this is so the SalesRole will apply
     .build();
 
+controllerMappings
+    .websiteController()
+    .enabled(true)
+    .isPublic(false)
+    .path('/leadProduct')
+    .addMethod('POST', 'addProduct', "addProduct")
+    .postPriviledge("READ_CONTENT")
+    .addType("leadManResource") // this is so the SalesRole will apply
+    .build();
+
 
 function getLeadOrgTypes(page, params) {
     log.info('getLeadOrgTypes {} {}', page, params);
@@ -91,4 +101,22 @@ function newCompany(page, params) {
         return views.jsonObjectView({status: true});
     }
     return views.jsonObjectView({status: false});
+}
+
+function addProduct(page, params, files, form) {
+    var leadId = form.longParam("leadId");
+    var prodCode = form.cleanedParam("addProduct");
+    var p = services.catalogManager.findProductByName(prodCode);
+    if( p == null) {
+        return views.jsonResult(false, "Couldnt find product " + prodCode);
+    }
+    var lead = services.criteriaBuilders.getBuilder("lead").get(leadId);
+    if( lead == null ) {
+        return views.jsonResult(false, "Couldnt find lead " + leadId);
+    }
+    var lp;
+    transactionManager.runInTransaction(function () {
+        lp = lead.addProduct(p);
+    });
+    return views.jsonResult(true, "Added lead product ID=" + lp.id);
 }

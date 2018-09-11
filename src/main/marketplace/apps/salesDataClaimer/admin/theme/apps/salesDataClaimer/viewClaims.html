@@ -230,8 +230,11 @@
         <td>
             #if( $team )
             <a href="/organisations/$hit.salesTeamOrgId/">$team.formattedName</a>
-            #end
             <span class="text-muted">($hit.salesTeamOrgId)</span>
+            #else
+            No sales team
+            #end
+
         </td>
         <td>
             #if ($hit.status == 0)

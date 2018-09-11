@@ -1,4 +1,5 @@
 #if ($page)
+<div class="teams-list-container" id="teams-list-container">
 <div class="row">
     <div class="col-md-4">
         <div class="input-group">
@@ -33,7 +34,7 @@
                 </select>
             </div>
             <div class="col-sm-2">
-                <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                <button class="btn btn-danger btn-teams-delete"><i class="fa fa-trash"></i></button>
             </div>
         </div>
     </div>
@@ -71,7 +72,7 @@
             <td>$!m.fields.email.value</td>
             <td>$!m.fields.phone.value</td>
             <td>
-                #set ($ur = $applications.userApp.findUserResourceById($!m.fields.userId.value))
+                #set ($ur = $applications.userApp.findUserResourceById($m.fields.userId.value))
                 #if ($ur)
                     #set ($mbs = $ur.primaryMemberships.filterByOrgType($applications.team.selectedOrgTypeName))
                     #foreach ($bean in $mbs)
@@ -89,6 +90,7 @@
         #end
         </tbody>
     </table>
+</div>
 </div>
 
 <div class="modal fade" id="modal-add-member" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
@@ -129,10 +131,11 @@
 
                     <div class="form-group">
                         <label class="control-label col-md-3" for="">Team</label>
+                        <input type="hidden" name="teamId">
                         <div class="col-md-9">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <input type="text" name="teamId" id="teamFinder" class="form-control required" placeholder="Type to find team" />
+                                    <input data-team-orgtype="$!applications.team.selectedOrgTypeName" type="text" id="teamFinder" class="form-control required" placeholder="Type to find team" />
                                 </div>
                             </div>
                         </div>
@@ -148,9 +151,9 @@
                                     <div class="row">
                                     #foreach($g in $page.selectedGroups)
                                     <div class="col-sm-6">
-                                        <div class="checkbox">
+                                        <div class="radio">
                                             <label>
-                                                <input type="checkbox" name="group" value="$g.id" class="required" />
+                                                <input type="radio" name="group" value="$g.id" />
                                                 $g.name
                                             </label>
                                         </div>

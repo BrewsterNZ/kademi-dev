@@ -44,6 +44,7 @@ function initLeadManEvents() {
     initHideModalAndGoLinks();
     initStatsSummaryComponents();
     initOrgFinder();
+    initReloadLeads();
     // init the login form
     $(".login").user({});
 
@@ -228,7 +229,7 @@ function initCancelLeadModal() {
     cancelLeadModal.on('loaded.bs.modal', function () {
         cancelLeadModal.find("form").forms({
             onSuccess: function (resp) {
-                Msg.info('Lead cancelled');
+                Msg.info('Cancelled!');
                 reloadTasks();
                 if ($('#all_contacts').length) {
                     $('#all_contacts').html('');
@@ -244,6 +245,7 @@ function initCancelLeadModal() {
                     });
                 }
                 cancelLeadModal.modal("hide");
+                $(document).trigger('leadsRefresh');
             }
         });
     });
@@ -652,6 +654,8 @@ function initNewLeadForm() {
                             loadFunnel();
                         }
                     }
+
+                    $(document).trigger('leadsRefresh');
                 } else {
                     Msg.info('Saved, going to the new lead');
                     if (resp.nextHref) {
@@ -2029,3 +2033,14 @@ function initClipboard() {
     });
 }
 
+function initReloadLeads() {
+    if (!$('#leadsList').length) return;
+    function reloadLeads(){
+        setTimeout(function () {
+            $('#leadsList').reloadFragment();
+        }, 300);
+    }
+    $(document).on('leadClosed', reloadLeads);
+    $(document).on('leadsRefresh', reloadLeads);
+
+}

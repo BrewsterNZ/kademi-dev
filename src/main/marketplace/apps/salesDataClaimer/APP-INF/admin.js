@@ -164,6 +164,7 @@ function approveClaims(page, params) {
                             var claimItem = claimOb.claimItems[counter];
 
                             var soldByUser = services.userManager.findById(claimItem.soldById);
+                            log.info("approveClaims: soldby={} name={}", claimItem.soldById, soldByUser.formattedName);
 
                             var dp = services.dataSeriesManager.newDataPoint();
                             dp.series = dataSeries;
@@ -317,8 +318,9 @@ function processImageClaim(page, params, files) {
                                 case 'attributedTo':
                                     var participant = findParticipant(cell.value, dataSeries);
                                     if (isNotNull(participant)) {
+                                        log.info("processImageClaim: soldById={}", participant.id);
                                         claimItem.soldBy = participant.name;
-                                        claimItem.soldById = participant.userId;
+                                        claimItem.soldById = participant.id;
                                     } else {
                                         result.status = false;
                                         result.messages = ["Couldnt find participant " + cell.value + " on row " + i];
@@ -454,7 +456,7 @@ function findParticipant(entityName, series) {
             return null;
         } else {
             var p = profileBeans.get(0).entityObject(); // convert bean to Profile
-            log.info("findParticipant: found {}", p);
+            log.info("findParticipant: found {}", p.id);
             return p;
         }
     } else {

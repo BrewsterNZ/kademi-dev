@@ -370,11 +370,11 @@
                                 var claimItem = item;
 
                                 var claimRow = '<tr>' +
-                                        '<td>' + (claimItem.productSku && claimItem.productSku.length > 0 ? claimItem.productSku : '') + '</td>' +
-                                        '<td>' + (claimItem.productSku && claimItem.productSku.length > 0 ? claimItem.productSku : '') + '</td>' +
-                                        '<td>' + (claimItem.soldDate && claimItem.soldDate.length > 0 ? claimItem.soldDate : '') + '</td>' +
-                                        '<td>' + (claimItem.soldBy && claimItem.soldBy.length > 0 ? claimItem.soldBy : '') + '</td>' +
-                                        '<td>' + (claimItem.modifiedDate && claimItem.modifiedDate.length > 0 ? claimItem.modifiedDate : '') + '</td>' +
+                        '   <td>' + claimItem.amount + '</td>' +
+                        '   <td>' + claimItem.productSku + '</td>' +
+                        '   <td><abbr class="timeago" title="' + claimItem.soldDate + '">' + claimItem.soldDate + '</abbr></td>' +
+                        '   <td><a href="/manageUsers/' + claimItem.soldById + '/">' + claimItem.soldBy + '</a></td>' +
+                        '   <td><abbr class="timeago" title="' + claimItem.modifiedDate + '">' + claimItem.modifiedDate + '</abbr></td>' +
                                         '</tr>';
 
                                 claimItemsBody.append(claimRow);
@@ -514,8 +514,8 @@
                         for (counter = 0; counter < $rows.length; counter++) {
                             var row = '';
                             row += '<tr data-index="' + $($rows[counter]).attr('index') + '">';
-                            row += '    <td><div style="width: 50px"> <button type="button" class="btn btn-danger btn-delete-row btn-xs" title="Delete Row"><i class="fa fa-trash"></i></button>' +
-                                ' <button type="button" class="btn btn-primary btn-fill-user btn-xs" title="Fill down"><i class="fa fa-long-arrow-down"></i></button>' +
+                            row += '    <td><div style="width: 80px"> <button type="button" class="btn btn-danger btn-delete-row btn-xs" title="Delete Row"><i class="fa fa-trash"></i></button>' +
+                                ' <button type="button" class="btn btn-primary btn-fill-user btn-xs" title="Fill down"><i class="fa fa-user"></i><i class="fa fa-long-arrow-down"></i></button>' +
                                 '</div></td>';
 
                             var $cells = $($rows[counter]).find("cell");

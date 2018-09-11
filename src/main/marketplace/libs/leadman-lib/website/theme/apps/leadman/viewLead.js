@@ -264,6 +264,7 @@
                     form.find('.btn-save-company').html('Create new company');
                     form.find('.btn-company-details').css('display', 'none');
                     form.find('input[name=leadOrgId]').val('');
+                    form.find('input[name=leadOrgDetails]').val('');
                 }
             }, 50);
         });
@@ -277,8 +278,9 @@
             form.find('input[name=city]').val(sug.city);
             form.find('input[name=postcode]').val(sug.postcode);
             form.find('input[name=leadOrgId]').val(sug.orgId);
+            form.find('input[name=leadOrgDetails]').val(sug.id);
             form.find('[name=country]').val(sug.country);
-            $('.selectpicker').selectpicker('refresh')
+            $('.selectpicker').selectpicker('refresh');
             form.find('.btn-company-details').css('display', 'inline').attr('href', '/companies/' + sug.id);
             btnSaveCompany.html('Save details');
         });
@@ -294,6 +296,7 @@
                     form.find('input[name=city]').val('');
                     form.find('input[name=postcode]').val('');
                     form.find('input[name=leadOrgId]').val('');
+                    form.find('input[name=leadOrgDetails]').val('');
                     form.find('[name=country]').val('');
                     $('.selectpicker').selectpicker('refresh')
                 }
@@ -682,7 +685,7 @@
         var assignedTags = $('#assignedTags');
         var viewLeadTagsInput = $("#view-lead-tags");
         var tagsSearch = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
                 url: '/leads/?asJson&tags&q=%QUERY',
@@ -693,7 +696,8 @@
         tagsSearch.initialize();
 
         viewLeadTagsInput.typeahead({
-            highlight: true
+            highlight: true,
+            minLength: 3
         }, {
             name: tagsSearch.name,
             displayKey: 'name',
@@ -854,6 +858,7 @@
         initPjax();
         initLeadContactAddresses();
         initLeadCountryList();
+        initAddProduct();
     }
 })();
 
@@ -933,5 +938,34 @@ function initLeadCountryList() {
 
     profileAddressWrap.find('#profileAddresscountry').on("typeahead:selected", function(e, datum) {
         profileAddressWrap.find('[name=country]').val(datum.iso_code);
+    });
+}
+
+function initAddProduct() {
+    $("body").on("click", ".btn-add-lead-product", function(e) {
+        e.preventDefault();
+        var btn = $(e.target).closest("button");
+        var leadId = btn.data("lead-id");
+        var inp = btn.closest(".input-group").find("input");
+        var productCode = inp.val();
+        if( productCode.length > 0 ) {
+            $.ajax({
+                type: 'POST',
+                url : "/leadProduct",
+                data: {
+                    leadId : leadId,
+                    addProduct : productCode
+                },
+                success: function (resp) {
+                    if( resp.status){
+                        $("#table-lead-products").reloadFragment();
+                    } else {
+                        alert("Sorry, we couldnt add that product. " + resp.messages);
+                    }
+                }
+            });
+        } else {
+            alert("Please search for and select a product to add");
+        }
     });
 }

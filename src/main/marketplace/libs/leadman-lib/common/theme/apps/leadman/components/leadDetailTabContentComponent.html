@@ -1,105 +1,153 @@
 <div id="pjax-container">
-<div class="panel panel-default panel-kcrm panel-header-info">
-    <div class="panel-body">
-        <div class="leadSummary">
-            <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                    <div class="form-group">
-                        <label class="control-label">
-                            Assigned to:
-                        </label>
-                        <select id="assignToName" data-live-search="true" data-live-search-normalize="true" name="assignToName" class="form-control selectpicker immediateUpdate" data-style="btn-primary">
-                            <option value="">[Not Assigned]</option>
-                            #foreach($user in $page.find("/leads").teamMembers)
-                                #set($oText = "Assigned to: " + $user.formattedName)
-                                $formatter.option($user.name, $oText, $page.assignedTo.name)
-                            #end
-                        </select>
+    <div class="panel panel-default panel-kcrm panel-header-info">
+        <div class="panel-body">
+            <div class="leadSummary">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label">
+                                Assigned to:
+                            </label>
+                            #set( $teamOrgType = $applications.team.selectedOrgType )
+                            #set ($teamMems = $services.teamManager.teamMembers($userResource.thisProfile, $teamOrgType))
+                            <select id="assignToName" data-live-search="true" data-live-search-normalize="true" name="assignToName" class="form-control selectpicker immediateUpdate" data-style="btn-primary">
+                                <option value="">[Not Assigned]</option>
+                                #foreach($o in $teamMems)
+                                #set($oText = "Assigned to: " + $o.formattedName)
+                                $formatter.option($o.name, $oText, $page.assignedTo.name)
+                                #end
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <i class="pull-right">
+                                $formatter.firstNotNull($page.funnel.title, $page.funnel.name)
+                            </i>
+                            <label class="control-label">
+                                Lead Title:
+                            </label>
+                            <input type="text" value="$!page.leadTitle" name="leadTitle" class="form-control immediateUpdate"/>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <i class="pull-right">
-                            $formatter.firstNotNull($page.funnel.title, $page.funnel.name)
-                        </i>
-                        <label class="control-label">
-                            Lead Title:
-                        </label>
-                        <input type="text" value="$!page.leadTitle" name="leadTitle" class="form-control immediateUpdate"/>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                    <div class="form-group">
-                        <label class="control-label">
-                            Stage:
-                        </label>
-                        <select data-live-search="true" data-live-search-normalize="true" name="stageName" class="form-control immediateUpdate selectpicker" data-style="btn-primary">
-                            <option value="">[No stage]</option>
-                            #foreach( $stage in $page.allStages )
-                            #set($a = $formatter.ifNull($stage.desc, $stage.name))
-                            #set($oText = "Stage: "+$a)
-                            $formatter.option($stage.name, $oText, $page.stageName)
-                            #end
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Lead value:</label>
-                        <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate"/>
-                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label">
+                                Stage:
+                            </label>
+                            <select data-live-search="true" data-live-search-normalize="true" name="stageName" class="form-control immediateUpdate selectpicker" data-style="btn-primary">
+                                <option value="">[No stage]</option>
+                                #foreach( $stage in $page.allStages )
+                                #set($a = $formatter.ifNull($stage.desc, $stage.name))
+                                #set($oText = "Stage: "+$a)
+                                $formatter.option($stage.name, $oText, $page.stageName)
+                                #end
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Lead value:</label>
+                            <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate"/>
+                        </div>
 
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                    <div class="form-group">
-                        <label class="control-label">
-                            Source
-                        </label>
-                        <!-- Split button -->
-                        <select data-live-search="true" data-live-search-normalize="true" data-placeholder="Select a source" name="source" class="form-control immediateUpdate selectpicker" data-style="btn-primary">
-                            <option data-subtext="Source" value="">[No source]</option>
-                            #set($foundSource = false)
-                            #foreach( $source in $page.allSources )
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label">
+                                Source
+                            </label>
+                            <!-- Split button -->
+                            <select data-live-search="true" data-live-search-normalize="true" data-placeholder="Select a source" name="source" class="form-control immediateUpdate selectpicker" data-style="btn-primary">
+                                <option data-subtext="Source" value="">[No source]</option>
+                                #set($foundSource = false)
+                                #foreach( $source in $page.allSources )
                                 #if($source == $page.source)
                                 #set($foundSource = true)
-                            #end
-                            #set($oText = "Source: "+$source)
-                            $formatter.option($source, $oText, $page.source)
-                            #end
-                            #if(!$foundSource && $page.source)
+                                #end
+                                #set($oText = "Source: "+$source)
+                                $formatter.option($source, $oText, $page.source)
+                                #end
+                                #if(!$foundSource && $page.source)
                                 $formatter.option($page.source, $page.source, $page.source)
-                            #end
-                        </select>
+                                #end
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Created date:</label>
+                            <input type="text" name="createDate" id="createDate" class="form-control date-time immediateUpdate" value=" $formatter.formatDateTime( $!page.createDate )" />
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label">Created date:</label>
-                        <input type="text" name="createDate" id="createDate" class="form-control date-time immediateUpdate" value=" $formatter.formatDateTime( $!page.createDate )" />
-                    </div>
-                </div>
 
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                    <div class="form-group">
-                        <label class="control-label">Lead num:</label>
-                        <input type="text" value="$!page.lead.leadNum" name="leadNum" class="form-control immediateUpdate"/>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label">Lead num:</label>
+                            <input type="text" value="$!page.lead.leadNum" name="leadNum" class="form-control immediateUpdate"/>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="form-group">
-                        <label class="control-label">Lead description:</label>
-                        <textarea id="description" class="form-control immediateUpdate" placeholder="Description" name="description" style="height: 100px">$!page.description</textarea>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label">Lead description:</label>
+                            <textarea id="description" class="form-control immediateUpdate" placeholder="Description" name="description" style="height: 100px">$!page.description</textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                #foreach($field in $page.extraFields)
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label class="control-label">$field.title:</label>
-                        <input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>
+                <div class="row">
+                    #foreach($field in $page.extraFields)
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">$field.title:</label>
+                            <input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>
+                        </div>
                     </div>
+                    #end
                 </div>
-                #end
             </div>
         </div>
     </div>
-</div>
+
+    <div class="panel panel-default panel-kcrm panel-header-info">
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="control-label">
+                    Add a product
+                </label>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search for a product to add..">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success btn-add-lead-product" type="button" data-lead-id="$page.lead.id">
+                            <i class="fa fa-plus-circle"></i>
+                            Add
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        #set( $prods = $page.lead.leadProducts )
+        <table class="table table-striped" id="table-lead-products">
+            #if( $prods.size() > 0 )
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Product title</th>
+                    <th>Base cost</th>
+                </tr>
+            </thead>
+            <tbody>
+            #foreach( $prod in $prods )
+            <tr>
+                <td>$prod.name</td>
+                <td>$prod.title</td>
+                <td>$!prod.baseCost</td>
+            </tr>
+            #end
+            </tbody>
+            #else
+            <tr>
+                <td>No products have been added yet</td>
+            </tr>
+            #end
+        </table>
+    </div>
+
+
 
 </div>
