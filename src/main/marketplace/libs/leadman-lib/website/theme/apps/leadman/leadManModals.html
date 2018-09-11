@@ -277,7 +277,7 @@
                                     <select class="form-control" id="assignedTo" name="assignedTo">
                                         <option value="$user.name">Assign to me</option>
                                         <option value="">Assign to nobody</option>
-                                        #set($teamMembers = $page.find("/leads").teamMembers)
+                                        #set($teamMembers = $leadsPage.teamMembers)
                                         #if($teamMembers && $teamMembers.size() > 0)
                                         #foreach($user in $teamMembers)
                                         <option value="$user.name">$!user.firstName $!user.surName</option>
@@ -318,6 +318,10 @@
                                 <option value="phone-true">Call from customer</option>
                                 <option value="email-false">Email to customer</option>
                                 <option value="email-true">Email from customer</option>
+
+                                #foreach( $a in $leadsPage.funnels.get($params.leadName).customerActivities )
+                                <option value="${a.id}-${a.inbound}">$a.text</option>
+                                #end
                             </select>
                         </div>
                     </div>
@@ -431,7 +435,7 @@
                                 <option value="email-true">Email from customer</option>
                                 <option value="note-false">General note</option>
 
-                                #foreach ($a in $page.actions)
+                                #foreach( $a in $leadsPage.funnels.get($params.leadName).customerActivities )
                                 <option value="${a.id}-${a.inbound}">$a.text</option>
                                 #end
                             </select>

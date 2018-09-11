@@ -1194,9 +1194,15 @@ function initNewNoteForm() {
 
     $(document.body).on('click', '.createNote', function (e) {
         e.preventDefault();
-        var href = $(e.target).closest("a").attr("href");
+        var href = $(this).closest("a").attr("href");
+        var leadName = $(this).attr('data-leadName'); // actually funnel name
         form.attr("action", href);
-        modal.modal("show");
+        modal.reloadFragment({
+            url: window.location.pathname + '?leadName='+leadName,
+            whenComplete: function () {
+                modal.modal("show");
+            }
+        });
     });
 
     form.forms({

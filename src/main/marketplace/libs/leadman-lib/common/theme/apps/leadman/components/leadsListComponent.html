@@ -26,7 +26,7 @@
                                         <ul class="dropdown-menu dropdown-menu-right">
                                             <li><a class="closeLead" href="/leads/$leadRanked.lead.id/" ><i class="fa fa-check"></i> Sold, close the deal</a></li>
                                             <li><a class="" href="/leads/$leadRanked.lead.id/?cancel" title="Deal cancelled" data-target="#modalCancelLead" data-toggle="modal"><i class="fa fa-ban"></i> Cancel</a></li>
-                                            <li><a class="createNote" title="Create note" href="/leads/$leadRanked.lead.id/" ><i class="fa fa-pencil"></i> Create note</a></li>
+                                            <li><a data-leadName="$!leadRanked.lead.funnel.name" class="createNote" title="Create note" href="/leads/$leadRanked.lead.id/" ><i class="fa fa-pencil"></i> Create note</a></li>
                                             <li><a href="mailto:$!leadRanked.lead.profile.email?bcc=to-lead-$!leadRanked.lead.id@${page.find('/').domainName}" title="Send email">
                                                 <i class="fa fa-envelope-o"></i> Send email
                                             </a></li>
