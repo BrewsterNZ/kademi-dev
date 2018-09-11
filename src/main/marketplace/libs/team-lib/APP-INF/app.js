@@ -2,3 +2,4 @@ controllerMappings.addComponent("team/components", "teamList", "html", "Shows li
 controllerMappings.addComponent("team/components", "teamMemberDetails", "html", "Shows team member details", "TeamApp");
 controllerMappings.addComponent("team/components", "teamMemberProfile", "html", "Shows team member profile", "TeamApp");
 controllerMappings.addComponent("team/components", "teamMemberLeads", "html", "Shows team member's assigned leads", "TeamApp");
+controllerMappings.addComponent("team/components", "teamMemberTimeline", "html", "Shows team member's timeline", "TeamApp");
