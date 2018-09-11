@@ -54,6 +54,7 @@ function saveMember(page, params) {
         profile.surName = params.surName;
         profile.nickName = params.nickName;
         profile.phone = params.phone;
+        profile.email = params.email;
         services.userManager.updateUser(profile);
         services.userManager.storeExtrFields(profile, params);
 
