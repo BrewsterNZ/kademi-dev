@@ -190,27 +190,32 @@ function initClearHistory() {
     // btn-clear-history
     $(document.body).on('click', '.btn-clear-history', function (e) {
         e.preventDefault();
-        if (confirm("Are you sure you want to clear all records? This can not be undone!")) {
-            $.ajax({
-                type: 'POST',
-                data: {
-                    clearHistory: true
-                },
-                dataType: "json",
-                url: "",
-                success: function (data) {
-                    flog("success", data);
-                    if (data.status) {
-                        $('#history-table-body').empty();
-                        Msg.success("Removed sales data ok");
-                    } else {
-                        Msg.error("There was a problem removing sales data. Please try again and contact the administrator if you still have problems");
+        if (confirm("Are you sure you want to delete ALL records? This can not be undone!")) {
+            var p = prompt("This will delete all records in this series, not just those selected. Just to make sure you understand, please enter the words DELETE ALL to continue.");
+            if (p == "DELETE ALL") {
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        clearHistory: true
+                    },
+                    dataType: "json",
+                    url: "",
+                    success: function (data) {
+                        flog("success", data);
+                        if (data.status) {
+                            $('#history-table-body').empty();
+                            Msg.success("Removed sales data ok");
+                        } else {
+                            Msg.error("There was a problem removing sales data. Please try again and contact the administrator if you still have problems");
+                        }
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occurred removing sales data. You might not have permission to do this");
                     }
-                },
-                error: function (resp) {
-                    Msg.error("An error occurred removing sales data. You might not have permission to do this");
-                }
-            });
+                });
+            } else {
+                alert("You did not enter DELETE ALL so wont do anything");
+            }
         }
     });
 }
@@ -252,7 +257,7 @@ function doHistorySearch() {
 
 
     $("#history-table-body, #search-summary").reloadFragment({
-        url : uri.toString(),
+        url: uri.toString(),
         whenComplete: function () {
             Msg.success("Search complete", "sales-cat");
             $(".timeago").timeago();
