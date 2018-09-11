@@ -502,13 +502,22 @@
                                     <tr>
                                         <td>$!entityAddress.addressType</td>
                                         <td>
-                                            $!entityAddress.address.addressLine1,
-                                            $!entityAddress.address.addressLine2,
-                                            $!entityAddress.address.city,
-                                            $!entityAddress.address.addressState,
-                                            $!entityAddress.address.postcode,
-                                            $!entityAddress.address.country,
 
+                                            #foreach($cc in $formatter.countryCodes.list)
+                                                #if ($entityAddress.address.country == $cc.alpha2Code)
+                                                    #set ($englishShortName = $cc.englishShortName)
+                                                    #break
+                                                #end
+                                            #end
+                                            #set ($addrList = [
+                                                $!entityAddress.address.addressLine1,
+                                                $!entityAddress.address.addressLine2,
+                                                $!entityAddress.address.city,
+                                                $!entityAddress.address.addressState,
+                                                $!entityAddress.address.postcode,
+                                                $!englishShortName
+                                            ])
+                                            $formatter.stringJoin($addrList, ", ")
                                         </td>
                                         <td>
                                             <a href="$entityAddress.id" class="edit-address">

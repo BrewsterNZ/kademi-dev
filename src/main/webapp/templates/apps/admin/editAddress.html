@@ -10,7 +10,10 @@
                 <input type="hidden" name="entityAddressId" value="$!entityAddress.id" />
                 <div class="form-group">
                     <div class="col-md-12">
-                        <input name="addressType" placeholder="Address type" type="text" class="form-control required" value="$!entityAddress.addressType" />
+                        <select name="addressType" class="form-control required">
+                            $formatter.option("Home", "Home", $!entityAddress.addressType)
+                            $formatter.option("Work", "Work", $!entityAddress.addressType)
+                        </select>
                     </div>
                 </div>
                 <hr/>
@@ -42,7 +45,12 @@
 
                 <div class="form-group">
                     <div class="col-md-12">
-                        <input name="country" placeholder="Country" type="text" class="form-control required" value="$!entityAddress.address.country" />
+                        <select autocomplete="off" name="country" class="form-control" data-live-search="true" data-live-search-normalize="true" id="country">
+                            <option value="">[No country selected]</option>
+                            #foreach($cc in $formatter.countryCodes.list)
+                            $formatter.option( $cc.alpha2Code, $cc.englishShortName, $!entityAddress.address.country )
+                            #end
+                        </select>
                     </div>
                 </div>
             </div>
