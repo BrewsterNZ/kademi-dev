@@ -696,7 +696,8 @@
         tagsSearch.initialize();
 
         viewLeadTagsInput.typeahead({
-            highlight: true
+            highlight: true,
+            minLength: 3
         }, {
             name: tagsSearch.name,
             displayKey: 'name',
