@@ -195,11 +195,11 @@
                         <div class="col-sm-6">
                             <select class="form-control required" name="leadsGroup">
                                 <option value="">[No group selected]</option>
-                                #foreach ($g in $page.find("/groups").children)
-                                #if( $g.group.isSubscription() == true || $g.group.primary == true)
+                                #foreach ($g in $services.userManager.groups)
+                                #if( $g.isSubscription() == true || $g.primary == true)
                                 <option #if ($g.name == $page.funnel.leadsGroup) selected #end value="$g.name">
-                                    #if ($g.groupTitle)
-                                    $g.groupTitle
+                                    #if ($g.title)
+                                    $g.title
                                     #else
                                     $g.name
                                     #end
