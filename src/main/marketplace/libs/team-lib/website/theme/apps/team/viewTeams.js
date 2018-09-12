@@ -100,7 +100,7 @@
                                 Msg.success('Member added');
                             }
                         });
-                    }, 800);
+                    }, 1000);
                 }
             }
         });
@@ -189,8 +189,8 @@
     function initDeleteTeams() {
         $("body").on("click", ".btn-teams-delete", function (e) {
             e.preventDefault();
-            var btn = (e.target).closest("button");
-            var container = $(btn.closest(".teams-list-container"));
+            var btn = $(this);
+            var container = btn.closest(".teams-list-container");
             flog("delete teams", btn, container);
 
             var ids = [];
@@ -213,14 +213,19 @@
                         datatype: "json",
                         success: function (data) {
                             if (data.status) {
-                                container.reloadFragment();
+                                setTimeout(function () {
+                                    $('#teamTable').reloadFragment({
+                                        whenComplete: function (resp) {
+                                        }
+                                    });
+                                }, 1000);
                                 Msg.info('Successfully deleted ' + ids.length + ' member' + (ids.length > 1 ? 's' : ''));
                             } else {
-                                Msg.error("Sorry, an error occured deleting the members " + data.messages);
+                                Msg.error("Sorry, an error occurred deleting the members " + data.messages);
                             }
                         },
                         error: function (resp) {
-                            Msg.error("An error occured deleting teams");
+                            Msg.error("An error occurred deleting teams");
                         }
                     });
                 }
