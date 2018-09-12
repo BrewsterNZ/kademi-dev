@@ -20,211 +20,211 @@
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="points">
 
-                        <div class="Content">
-                            <div class="clearfix">
-                                <div class="btn-group pull-right" style="margin-bottom: 15px">
-                                    <a href="/points-buckets/" class="btn btn-sm btn-primary">
-                                        <span class="glyphicon glyphicon-star"></span>
-                                        Points buckets
-                                    </a>
-                                    <a href="/rewards/" class="btn btn-sm btn-primary">
-                                        <span class="glyphicon glyphicon-star"></span>
-                                        Promotions
-                                    </a>
-                                    <a href="#" class="btn btn-sm btn-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="fa fa-list"></span>
-                                        Tools
-                                        <span class="caret"></span>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="#" class="btn-refresh-pb">
-                                                <i class="fa fa-refresh"></i>
-                                                Refresh Points Balance
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" data-toggle="modal" data-target="#modal-new-points">
-                                                <span class="glyphicon glyphicon-plus"></span>
-                                                Award points
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" data-toggle="modal" data-target="#modal-debit-points">
-                                                <span class="glyphicon glyphicon-minus"></span>
-                                                Debit points
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/tableUploaders/pointsUploader">
-                                                <span class="glyphicon glyphicon-upload"></span>
-                                                Upload file
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="btn-export-points" href="points.csv">
-                                                <span class="glyphicon glyphicon-download"></span>
-                                                Export to CSV
-                                            </a>
-                                        </li>
-                                        <li role="separator" class="divider"></li>
-                                        <li>
-                                            <a href="#" class="removeUsers">
-                                                <span class="glyphicon glyphicon-remove"></span>
-                                                Remove points
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="input-group">
-                                        <label for="data-query" class="input-group-addon">Search</label>
-                                        <input type="text" id="data-query" placeholder="Search" value="" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="input-group">
-                                        <label for="searchReward" class="input-group-addon">Reward</label>
-                                        <select name="searchReward" id="searchReward" class="form-control">
-                                            <option value="">&nbsp;</option>
-                                            #foreach($r in $page.rewards)
-                                            <option value="$r.name">$r.title</option>
-                                            #end
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="input-group">
-                                        <label for="pointsTag" class="input-group-addon">Tag</label>
-                                        <select name="tagId" id="tagId" class="form-control">
-                                            <option value="">&nbsp;</option>
-                                            #foreach($pointTag in $page.pointTags)
-                                            <option value="$pointTag.id">$pointTag.title</option>
-                                            #end
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="input-group">
-                                        <label for="reasonCode" class="input-group-addon">Reason Code</label>
-                                        <select name="reasonCode" id="reasonCode" class="form-control">
-                                            <option value="">&nbsp;</option>
-                                            #foreach($code in $page.reasonCodes)
-                                            <option value="$code">$code</option>
-                                            #end
-                                        </select>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <hr />
-
-
-
-
-
-
-                            <div class="table-responsive" id="pointsContainer">
-                                <table class="table table-striped table-hover pagination-container" id="pointsTable">
-                                    <thead>
-                                        <tr>
-                                            <th><a class="sort-field" id="reward" href="#">Reward</a></th>
-                                            <th><a class="sort-field" id="ISSUED_TO" href="#">Issued to</a></th>
-                                            <th><a class="sort-field" id="issued_by" href="#">Issued By</a></th>
-                                            <th><a class="sort-field" id="issued_Date" href="#">Issued date/time</a></th>
-                                            <th><a class="sort-field" id="expiry_Date" href="#">Expiry</a></th>
-                                            <th><a class="sort-field" id="num_Points" href="#">No. Points</a></th>
-                                            <th><a class="sort-field" id="reason" href="#">Reason</a></th>
-                                            <th>Tag/Reason Code</th>
-                                            <th class="center">
-                                                <div class="checkbox-table">
-                                                    <label>
-                                                        <input type="checkbox" name="toRemoveId" class="selectAll" />
-                                                    </label>
-                                                </div>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="pointsBody" class="pagination-results">
-
-                                        #if( $page.paginator.isEmpty() )
-                                        <tr>
-                                            <td colspan="9">There are no results matching the selected date range and criteria</td>
-                                        </tr>
-                                        #else
-                                        #foreach($p in $page.paginator.records)
-                                        #set($isDebit = false)
-                                        #if($p.class.simpleName == "PointsDebit")
-                                        #set($isDebit = true)
-                                        #end
-                                        <tr>
-                                            <td><a href="/points-buckets/$p.reward.name">$p.reward.title</a></td>
-                                            <td>
-                                                #if( $p.issuedTo.asOrg() )
-                                                <a href="/organisations/$p.issuedTo.id/edit">$p.issuedTo.formattedName</a>
-                                                #else
-                                                <a href="/manageUsers/$p.issuedTo.id">$p.issuedTo.formattedName</a>
-                                                #end
-                                            </td>
-                                            <td>
-                                                #if( $p.issuedBy )
-                                                <a href="/manageUsers/$p.issuedBy.id">$p.issuedBy.formattedName</a>
-                                                #end
-                                            </td>
-                                            <td>$formatter.formatDateTime($p.issuedDate, $page.organisation.timezone)</td>
-                                            <td>$!formatter.formatDateTime($p.expiryDate, $page.organisation.timezone)</td>
-                                            <td>
-                                                #if($isDebit)
-                                                <span class="label label-warning">- $!formatter.formatCurrency($p.numPoints)</span>
-                                                #else
-                                                <span class="label label-success">$!formatter.formatCurrency($p.numPoints)</span>
-                                                #end
-                                            </td>
-                                            <td>$!p.reason</td>
-                                            <td>
-                                                #if($isDebit)
-                                                $!p.reasonCode
-                                                #else
-                                                $!p.pointsTag.title
-                                                #end
-                                            </td>
-                                            <td class="center">
-                                                <div class="checkbox-table">
-                                                    <label>
-                                                        #if($isDebit)
-                                                        <input type="checkbox" name="toRemoveId" value="D-$p.id" />
-                                                        #else
-                                                        <input type="checkbox" name="toRemoveId" value="C-$p.id" />
-                                                        #end
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <!--
-                                    <td>
-                                        <a href="$p.id" class="btn btn-primary btnEditPoints" title="Edit this credit record">
-                                            <span class="glyphicon glyphicon-pencil"></span>
+                    <div class="Content">
+                        <div class="clearfix">
+                            <div class="btn-group pull-right" style="margin-bottom: 15px">
+                                <a href="/points-buckets/" class="btn btn-sm btn-primary">
+                                    <span class="glyphicon glyphicon-star"></span>
+                                    Points buckets
+                                </a>
+                                <a href="/rewards/" class="btn btn-sm btn-primary">
+                                    <span class="glyphicon glyphicon-star"></span>
+                                    Promotions
+                                </a>
+                                <a href="#" class="btn btn-sm btn-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="fa fa-list"></span>
+                                    Tools
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#" class="btn-refresh-pb">
+                                            <i class="fa fa-refresh"></i>
+                                            Refresh Points Balances..
                                         </a>
-                                    </td>
-                                            -->
-                                        </tr>
-                                        #end
-                                        #end
-                                    </tbody>
-                                    <tfoot id="pointsFooter">
-                                        <tr>
-                                            <td colspan="6">
-                                                $!page.paginator.html
-                                            </td>
-                                        </tr>
-                                    </tfoot>
+                                    </li>
+                                    <li>
+                                        <a href="#" data-toggle="modal" data-target="#modal-new-points">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                            Award points..
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" data-toggle="modal" data-target="#modal-debit-points">
+                                            <span class="glyphicon glyphicon-minus"></span>
+                                            Debit points..
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/tableUploaders/pointsUploader">
+                                            <span class="glyphicon glyphicon-upload"></span>
+                                            Import points CSV..
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="btn-export-points" href="points.csv">
+                                            <span class="glyphicon glyphicon-download"></span>
+                                            Export points CSV..
+                                        </a>
+                                    </li>
 
-                                </table>
+
+                                </ul>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <label for="data-query" class="input-group-addon">Search</label>
+                                    <input type="text" id="data-query" placeholder="Search" value="" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <label for="searchReward" class="input-group-addon">Reward</label>
+                                    <select name="searchReward" id="searchReward" class="form-control">
+                                        <option value="">&nbsp;</option>
+                                        #foreach($r in $page.rewards)
+                                        <option value="$r.name">$r.title</option>
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <label for="pointsTag" class="input-group-addon">Tag</label>
+                                    <select name="tagId" id="tagId" class="form-control">
+                                        <option value="">&nbsp;</option>
+                                        #foreach($pointTag in $page.pointTags)
+                                        <option value="$pointTag.id">$pointTag.title</option>
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <label for="reasonCode" class="input-group-addon">Reason Code</label>
+                                    <select name="reasonCode" id="reasonCode" class="form-control">
+                                        <option value="">&nbsp;</option>
+                                        #foreach($code in $page.reasonCodes)
+                                        <option value="$code">$code</option>
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <hr />
+
+
+
+
+
+
+                        <a href="#" class="removeUsers btn btn-warning pull-right">
+                            <span class="glyphicon glyphicon-remove"></span>
+                            Remove
+                        </a>
+
+                        <div class="table-responsive" id="pointsContainer">
+                            <table class="table table-striped table-hover pagination-container" id="pointsTable">
+                                <thead>
+                                    <tr>
+                                        <th><a class="sort-field" id="reward" href="#">Reward</a></th>
+                                        <th><a class="sort-field" id="ISSUED_TO" href="#">Issued to</a></th>
+                                        <th><a class="sort-field" id="issued_by" href="#">Issued By</a></th>
+                                        <th><a class="sort-field" id="issued_Date" href="#">Issued date/time</a></th>
+                                        <th><a class="sort-field" id="expiry_Date" href="#">Expiry</a></th>
+                                        <th><a class="sort-field" id="num_Points" href="#">No. Points</a></th>
+                                        <th><a class="sort-field" id="reason" href="#">Reason</a></th>
+                                        <th>Tag/Reason Code</th>
+                                        <th class="center">
+                                            <div class="checkbox-table">
+                                                <label>
+                                                    <input type="checkbox" name="toRemoveId" class="selectAll" />
+                                                </label>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pointsBody" class="pagination-results">
+
+                                    #if( $page.paginator.isEmpty() )
+                                    <tr>
+                                        <td colspan="9">There are no results matching the selected date range and criteria</td>
+                                    </tr>
+                                    #else
+                                    #foreach($p in $page.paginator.records)
+                                    #set($isDebit = false)
+                                    #if($p.class.simpleName == "PointsDebit")
+                                    #set($isDebit = true)
+                                    #end
+                                    <tr>
+                                        <td><a href="/points-buckets/$p.reward.name">$p.reward.title</a></td>
+                                        <td>
+                                            #if( $p.issuedTo.asOrg() )
+                                            <a href="/organisations/$p.issuedTo.id/edit">$p.issuedTo.formattedName</a>
+                                            #else
+                                            <a href="/manageUsers/$p.issuedTo.id">$p.issuedTo.formattedName</a>
+                                            #end
+                                        </td>
+                                        <td>
+                                            #if( $p.issuedBy )
+                                            <a href="/manageUsers/$p.issuedBy.id">$p.issuedBy.formattedName</a>
+                                            #end
+                                        </td>
+                                        <td>$formatter.formatDateTime($p.issuedDate, $page.organisation.timezone)</td>
+                                        <td>$!formatter.formatDateTime($p.expiryDate, $page.organisation.timezone)</td>
+                                        <td>
+                                            #if($isDebit)
+                                            <span class="label label-warning">- $!formatter.formatCurrency($p.numPoints)</span>
+                                            #else
+                                            <span class="label label-success">$!formatter.formatCurrency($p.numPoints)</span>
+                                            #end
+                                        </td>
+                                        <td>$!p.reason</td>
+                                        <td>
+                                            #if($isDebit)
+                                            $!p.reasonCode
+                                            #else
+                                            $!p.pointsTag.title
+                                            #end
+                                        </td>
+                                        <td class="center">
+                                            <div class="checkbox-table">
+                                                <label>
+                                                    #if($isDebit)
+                                                    <input type="checkbox" name="toRemoveId" value="D-$p.id" />
+                                                    #else
+                                                    <input type="checkbox" name="toRemoveId" value="C-$p.id" />
+                                                    #end
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <!--
+                                <td>
+                                    <a href="$p.id" class="btn btn-primary btnEditPoints" title="Edit this credit record">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                </td>
+                                        -->
+                                    </tr>
+                                    #end
+                                    #end
+                                </tbody>
+                                <tfoot id="pointsFooter">
+                                    <tr>
+                                        <td colspan="6">
+                                            $!page.paginator.html
+                                        </td>
+                                    </tr>
+                                </tfoot>
+
+                            </table>
+                        </div>
+                    </div>
 
                 </div>
                 <div role="tabpanel" class="tab-pane active" id="summary">
