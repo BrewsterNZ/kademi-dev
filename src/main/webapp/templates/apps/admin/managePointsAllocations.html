@@ -25,6 +25,10 @@
         #if( $formatter.isNotEmpty($request.params.maxValue) )
         #if( $query.lt("pointsAmount", $formatter.toBigDecimal($request.params.maxValue)) )#end
         #end
+        #if( $formatter.isNotEmpty($request.params.source) )
+            #set( $source = $services.criteriaBuilders.pointsAllocationSource.get( $formatter.toLong($request.params.source) ) )
+            #if( $query.eq("source", $source) )#end
+        #end
 
         #set( $allocs = $query.execute($searchProps) )
 
@@ -32,6 +36,7 @@
 
         #set( $paginator = $paginator.totalRecords($totalRecs) )
 
+        #set( $sources = $services.criteriaBuilders.pointsAllocationSource.execute(100) )
 
         <div class="Content">
             <div class="row">
@@ -48,7 +53,19 @@
                         <input id="data-max-value" class="form-control search-input" type="text" value="$!request.params.maxValue" />
                     </div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-2">
+                    <div class="input-group">
+                        <label for="data-max-value" class="input-group-addon">Source</label>
+                        <select class="form-control search-input" id="data-source">
+                            $formatter.option("", "[All sources]", $request.params.source)
+                            #foreach( $source in $sources )
+                            $formatter.option($source.id, $source.name, $request.params.source)
+                            #end
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
                     <div class="btn-group pull-right">
                         <a href="/sales-incentives.csv" class="btn btn-info">
                             <i class="fa fa-table"></i>
@@ -186,6 +203,7 @@
                 var uri = URI(window.location);
                 uri.setSearch("minValue", $("#data-min-value").val());
                 uri.setSearch("maxValue", $("#data-max-value").val());
+                uri.setSearch("source", $("#data-source").val());
                 history.pushState(null, null, uri.toString());
 
                 $("#points-allocs-table").reloadFragment({
