@@ -41,7 +41,7 @@
                             <input type="text" name="email" id="email" class="form-control" placeholder="Email address" value="$!profile.email" />
                         </div>
                     </div>
-                    #if (!$page.href.contains("cust"))
+                    #if( $page.is("lead") )
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label class="control-label">Job Title</label>
