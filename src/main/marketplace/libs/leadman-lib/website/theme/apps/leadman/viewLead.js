@@ -684,57 +684,47 @@
     function initLeadDetailTags() {
         var assignedTags = $('#assignedTags');
         var viewLeadTagsInput = $("#view-lead-tags");
-        var tagsSearch = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            remote: {
-                url: '/leads/?asJson&tags&q=%QUERY',
-                wildcard: '%QUERY'
-            }
+
+        var substringMatcher = function (strs) {
+            return function findMatches(q, cb) {
+                var matches, substringRegex;
+
+                // an array that will be populated with substring matches
+                matches = [];
+
+                // regex used to determine if a string contains the substring `q`
+                substrRegex = new RegExp(q, 'i');
+
+                // iterate through the pool of strings and for any string that
+                // contains the substring `q`, add it to the `matches` array
+                $.each(strs, function (i, str) {
+                    if (substrRegex.test(str)) {
+                        matches.push(str);
+                    }
+                });
+
+                cb(matches);
+            };
+        };
+
+        var data = [];
+        $.get("/leads/?asJson&tags&q=", function (resp) {
+            $.each(resp, function(i, n) {
+                data.push(n.name);
+            });
         });
 
-        tagsSearch.initialize();
 
         viewLeadTagsInput.typeahead({
+            hint: true,
             highlight: true,
-            minLength: 3
-        }, {
-            name: tagsSearch.name,
-            displayKey: 'name',
-            source: tagsSearch.ttAdapter(),
-            templates: {
-                empty: '<div class="text-danger" style="padding: 5px 10px;">No existing tags were found. Press enter to add</div>',
-                suggestion: Handlebars.compile(
-                        '<div>'
-                        + '<div><i class="fa fa-tag"></i> {{name}}</div>'
-                        + '</div><hr>')
-            }
-        }).on('keyup', function (event) {
-            if (event.keyCode == 13) {
-                var newTag = this.value;
-                if (confirm('Are you sure you want to add this tag?')) {
-                    $.ajax({
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
-                            addTag: newTag
-                        },
-                        success: function (resp) {
-                            if (resp.status) {
-                                reloadTags();
-                            } else {
-                                Msg.error("Couldnt add tag: " + resp.messages);
-                            }
-                        },
-                        error: function (e) {
-                            Msg.error(e.status + ': ' + e.statusText);
-                        }
-                    }).always(function () {
-                        viewLeadTagsInput.typeahead('val', '');
-                    })
-                }
-            }
+            minLength: 1
+        },
+        {
+            name: 'states',
+            source: substringMatcher(data)
         });
+
 
         function doAddTag(tagId) {
             if (!assignedTags.find('[data-tag-id=' + tagId + ']').length) {
@@ -912,7 +902,9 @@ function initLeadContactAddresses() {
 
 function initLeadCountryList() {
     var countriesBH = new Bloodhound({
-        datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.name); },
+        datumTokenizer: function (d) {
+            return Bloodhound.tokenizers.whitespace(d.name);
+        },
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         local: getCountries() // From countries-state-lib
     });
@@ -927,37 +919,37 @@ function initLeadCountryList() {
     });
 
     var selectedCountry = profileAddressWrap.find('[name=country]').val();
-    if (selectedCountry){
+    if (selectedCountry) {
         var sel = getCountries().filter(function (item) {
             return item.iso_code === selectedCountry;
         });
-        if (sel.length){
+        if (sel.length) {
             profileAddressWrap.find('#profileAddresscountry').typeahead('val', sel[0].name);
         }
     }
 
-    profileAddressWrap.find('#profileAddresscountry').on("typeahead:selected", function(e, datum) {
+    profileAddressWrap.find('#profileAddresscountry').on("typeahead:selected", function (e, datum) {
         profileAddressWrap.find('[name=country]').val(datum.iso_code);
     });
 }
 
 function initAddProduct() {
-    $("body").on("click", ".btn-add-lead-product", function(e) {
+    $("body").on("click", ".btn-add-lead-product", function (e) {
         e.preventDefault();
         var btn = $(e.target).closest("button");
         var leadId = btn.data("lead-id");
         var inp = btn.closest(".input-group").find("input");
         var productCode = inp.val();
-        if( productCode.length > 0 ) {
+        if (productCode.length > 0) {
             $.ajax({
                 type: 'POST',
-                url : "/leadProduct",
+                url: "/leadProduct",
                 data: {
-                    leadId : leadId,
-                    addProduct : productCode
+                    leadId: leadId,
+                    addProduct: productCode
                 },
                 success: function (resp) {
-                    if( resp.status){
+                    if (resp.status) {
                         $("#table-lead-products").reloadFragment();
                     } else {
                         alert("Sorry, we couldnt add that product. " + resp.messages);
