@@ -684,47 +684,56 @@
     function initLeadDetailTags() {
         var assignedTags = $('#assignedTags');
         var viewLeadTagsInput = $("#view-lead-tags");
-
-        var substringMatcher = function (strs) {
-            return function findMatches(q, cb) {
-                var matches, substringRegex;
-
-                // an array that will be populated with substring matches
-                matches = [];
-
-                // regex used to determine if a string contains the substring `q`
-                substrRegex = new RegExp(q, 'i');
-
-                // iterate through the pool of strings and for any string that
-                // contains the substring `q`, add it to the `matches` array
-                $.each(strs, function (i, str) {
-                    if (substrRegex.test(str)) {
-                        matches.push(str);
-                    }
-                });
-
-                cb(matches);
-            };
-        };
-
-        var data = [];
-        $.get("/leads/?asJson&tags&q=", function (resp) {
-            $.each(resp, function(i, n) {
-                data.push(n.name);
-            });
+        var tagsSearch = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: {
+                url: '/leads/?asJson&tags',
+                ttl: 0,
+                cache: false
+            }
         });
 
+        tagsSearch.initialize();
 
         viewLeadTagsInput.typeahead({
-            hint: true,
             highlight: true,
-            minLength: 1
-        },
-        {
-            name: 'states',
-            source: substringMatcher(data)
+        }, {
+            displayKey: 'name',
+            source: tagsSearch.ttAdapter(),
+            templates: {
+                empty: '<div class="text-danger" style="padding: 5px 10px;">No existing tags were found. Press enter to add</div>',
+                suggestion: Handlebars.compile(
+                    '<div>'
+                    + '<div><i class="fa fa-tag"></i> {{name}}</div>'
+                    + '</div><hr>')
+            }
+        }).on('keyup', function (event) {
+            if (event.keyCode == 13) {
+                var newTag = this.value;
+                if (confirm('Are you sure you want to add this tag?')) {
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            addTag: newTag
+                        },
+                        success: function (resp) {
+                            if (resp.status) {
+                                reloadTags();
+                            } else {
+                                Msg.error("Couldnt add tag: " + resp.messages);
+                            }
+                        },
+                        error: function (e) {
+                            Msg.error(e.status + ': ' + e.statusText);
+                        }
+                    }).always(function () {
+                        viewLeadTagsInput.typeahead('val', '');
+                    })
+                }
+            }
         });
-
 
         function doAddTag(tagId) {
             if (!assignedTags.find('[data-tag-id=' + tagId + ']').length) {
