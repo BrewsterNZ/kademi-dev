@@ -24,9 +24,14 @@
                 #end
             #end
         </h1>
-        <!--<p>$page.profile.addressLine1<br>-->
-            <!--$page.profile.state, $page.profile.postcode<br>-->
-            <!--$page.profile.country</p>-->
+        #set ($addresses = $services.userManager.findAddresses($page.profile))
+        #if ($addresses && $addresses.size() > 0)
+        #set ($address = $addresses[0].address)
+        <p>$formatter.stringJoin([$address.addressLine1,
+            $address.city,
+            $address.addressState, $address.postcode,
+            $formatter.countryCodes.getFrom2Code($address.country).englishShortName], "<br>")</p>
+        #end
         #if( $page.profile.email )
         <p>
             <div class="btn-group">
