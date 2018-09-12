@@ -64,13 +64,6 @@
                             <li><a href="#" data-name="assignedTo" data-value="$o.name" class="filter">$o.formattedName</a>
                             </li>
                             #end
-                        #else
-                            #foreach($b in $aggr.aggregations.assignee.buckets)
-                                #set($ur = false)
-                                #set($ur = $applications.userApp.findUserResourceById($b.key))
-                                <li><a href="#" data-name="assignedTo" data-value="$ur.name" class="filter">$ur.thisUser.formattedName</a>
-                                </li>
-                            #end
                         #end
                     </ul>
                 </div>
