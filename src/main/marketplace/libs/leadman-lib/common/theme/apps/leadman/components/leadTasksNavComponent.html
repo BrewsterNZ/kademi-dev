@@ -41,18 +41,36 @@
                 <div class="btn-group">
                     <button class="btn btn-primary dropdown-toggle text-capitalize" type="button" id="assigneeDropdown"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        Assignee: $formatter.ifNull($params.assignedTo, "ALL")
+                        Assignee:
+                        #set ($assignee = $applications.userApp.findUserResource($params.assignedTo).formattedName)
+                        #if ($formatter.isNull($assignee))
+                            #if ($params.assignedTo == "ALL")
+                                Any assignment
+                            #elseif ($params.assignedTo == "NONE")
+                                Assigned to nobody
+                            #end
+                        #else
+                            $assignee
+                        #end
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu taskAssigneeDropdown" aria-labelledby="assigneeDropdown"
+                    <ul class="dropdown-menu taskAssigneeDropdown dropdown-menu-left" aria-labelledby="assigneeDropdown"
                         data-current-user="$userResource.name">
                         <li><a href="#" data-name="assignedTo" data-value="NONE" class="filter">Assigned to nobody</a></li>
                         <li><a href="#" data-name="assignedTo" data-value="ALL" class="filter">Any assigment</a></li>
-                        #foreach($b in $aggr.aggregations.assignee.buckets)
-                        #set($ur = false)
-                        #set($ur = $applications.userApp.findUserResourceById($b.key))
-                        <li><a href="#" data-name="assignedTo" data-value="$ur.name" class="filter">$ur.thisUser.formattedName</a>
-                        </li>
+                        #set( $teamOrgType = $applications.team.selectedOrgType )
+                        #if ($teamOrgType)
+                            #foreach($o in $services.teamManager.teamMembers($userResource.thisUser, $teamOrgType))
+                            <li><a href="#" data-name="assignedTo" data-value="$o.name" class="filter">$o.formattedName</a>
+                            </li>
+                            #end
+                        #else
+                            #foreach($b in $aggr.aggregations.assignee.buckets)
+                                #set($ur = false)
+                                #set($ur = $applications.userApp.findUserResourceById($b.key))
+                                <li><a href="#" data-name="assignedTo" data-value="$ur.name" class="filter">$ur.thisUser.formattedName</a>
+                                </li>
+                            #end
                         #end
                     </ul>
                 </div>
