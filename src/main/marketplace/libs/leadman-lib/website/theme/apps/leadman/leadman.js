@@ -1257,12 +1257,16 @@ function initNewNoteForm() {
         var noteId = btn.attr('href');
         var type = btn.data('type');
         var notes = btn.closest('li.timeline-inverted').find('.timeline-body pre').html();
-
-        editModal.find('[name=action]').val(type);
-        editModal.find('[name=note]').val(notes);
-        editModal.find('[name=editNote]').val(noteId);
-
-        editModal.modal('show');
+        var leadName = $(this).attr('data-leadName');
+        $('#editNoteModalBody').reloadFragment({
+            url: window.location.pathname + '?leadName='+leadName,
+            whenComplete: function () {
+                editModal.find('[name=action]').val(type);
+                editModal.find('[name=note]').val(notes);
+                editModal.find('[name=editNote]').val(noteId);
+                editModal.modal("show");
+            }
+        });
     });
 
     $(document.body).on('click', '.note-delete', function (e) {
