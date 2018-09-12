@@ -10,6 +10,8 @@ function initLeadCompaniesTable() {
             paging: false,
             searching: false,
             destroy: true,
+            ordering: false,
+            ordering: false,
             info: false,
             initComplete: function(settings, json) {
                 $('#leadCompaniesTable').closest('.row').siblings('.row').remove();

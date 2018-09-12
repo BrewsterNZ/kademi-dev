@@ -86,6 +86,7 @@ function initLeadManEvents() {
                     flog("onSuccess", resp, modal);
                     form.closest(".modal").modal("hide");
                     flog("done");
+                    Msg.info("Done");
                     reloadTasks();
                 }
             });
@@ -1322,7 +1323,7 @@ function reloadTasks() {
     if ($('#lead-tasks-page').length) {
         setTimeout(function () {
             $(document).trigger('taskChanged');
-        }, 500);
+        }, 1000);
     } else if ($("#tasksList").length){
         $("#tasksList").reloadFragment({
             whenComplete: function (doc) {

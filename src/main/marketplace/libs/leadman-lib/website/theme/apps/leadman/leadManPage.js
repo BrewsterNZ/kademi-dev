@@ -71,6 +71,7 @@
             paging: false,
             searching: false,
             destroy: true,
+            ordering: false,
             info: false,
             select: true,
             order: [

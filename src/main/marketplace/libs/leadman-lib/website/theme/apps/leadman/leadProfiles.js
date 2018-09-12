@@ -721,6 +721,7 @@ function initLeadContactsTable() {
         leadContactsTable.DataTable({
             paging: false,
             searching: false,
+            ordering: false,
             destroy: true,
             info: false,
             initComplete: function(settings, json) {

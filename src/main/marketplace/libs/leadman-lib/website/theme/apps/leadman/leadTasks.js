@@ -34,6 +34,7 @@ $(function () {
             dataTable = $('#leadTasksTable').DataTable({
                 paging: false,
                 searching: false,
+                ordering: false,
                 destroy: true,
                 info: false,
                 columns: [

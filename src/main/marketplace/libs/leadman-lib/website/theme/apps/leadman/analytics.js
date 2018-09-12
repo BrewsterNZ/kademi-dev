@@ -190,7 +190,8 @@
     function initDataTable() {
         flog('initDataTable', $('#leadTable'));
         var dataTable = $('#leadTable').DataTable({
-            paging: false
+            paging: false,
+            ordering: false
         });
 
         $('#funnel-lead-query').on({
