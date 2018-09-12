@@ -1197,7 +1197,7 @@ function initNewNoteForm() {
         var href = $(this).closest("a").attr("href");
         var leadName = $(this).attr('data-leadName'); // actually funnel name
         form.attr("action", href);
-        modal.reloadFragment({
+        $('#newNoteModalBody').reloadFragment({
             url: window.location.pathname + '?leadName='+leadName,
             whenComplete: function () {
                 modal.modal("show");
