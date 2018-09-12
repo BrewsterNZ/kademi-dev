@@ -307,13 +307,12 @@
                 <h4 class="modal-title">Enter a note on a lead</h4>
             </div>
             <form method="post" action="" class="form-horizontal">
-                <div class="modal-body">
+                <div class="modal-body" id="newNoteModalBody">
                     <div class="form-message alert alert-danger" style="display: none;"></div>
                     <div class="form-group">
                         <div class="col-md-12">
                             <select name="action" class="form-control">
                                 <option value="note-false">General note</option>
-                                <option value="">[Select what the note is for]</option>
                                 <option value="phone-false">Call to customer</option>
                                 <option value="phone-true">Call from customer</option>
                                 <option value="email-false">Email to customer</option>
@@ -424,11 +423,10 @@
             </div>
             <form method="post" action="" class="form-horizontal">
                 <input type="hidden" name="editNote" />
-                <div class="modal-body">
+                <div class="modal-body" id="editNoteModalBody">
                     <div class="form-group">
                         <div class="col-md-12">
                             <select name="action" class="form-control">
-                                <option value="">[Select what the note is for]</option>
                                 <option value="phone-false">Call to customer</option>
                                 <option value="phone-true">Call from customer</option>
                                 <option value="email-false">Email to customer</option>
