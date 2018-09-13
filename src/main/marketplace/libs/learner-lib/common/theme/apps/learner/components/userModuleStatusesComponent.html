@@ -8,6 +8,7 @@
 #set( $tableTitle = "Module Statuses Table" )
 #end
 
+#set( $showThumbnail = $formatter.toBool($showThumbnail, false) )
 #set( $showStartDate = $formatter.toBool($showStartDate, false) )
 #set( $showCpdHours = $formatter.toBool($showCpdHours, false) )
 #set( $showCertificates = $formatter.toBool($showCertificates, false) )
@@ -31,7 +32,9 @@
     <div class="table-responsive" style="height: $!{height}px; min-height: 0; overflow-y: auto">
         <table class="table table-striped table-condensed">
             <colgroup>
+                #if($showThumbnail)
                 <col width="10%"/>
+                #end
                 <col />
                 #if ($showStartDate )
                 <col />
@@ -47,7 +50,9 @@
             </colgroup>
             <thead>
                 <tr>
+                    #if($showThumbnail)
                     <th></th>
+                    #end
                     <th>Title</th>
                     #if ($showStartDate == "true")
                     <th>Started</th>
@@ -71,11 +76,13 @@
                 #foreach($hit in $resp.hits.hits)
                     #set( $mf = $applications.learning.findModuleFolder($rootFolder, $hit.source.programCode, $hit.source.courseCode, $hit.source.moduleCode) )
                     <tr>
+                        #if($showThumbnail)
                         <td>
                             #if($formatter.isNotNull($mf.thumb))
                             <img src="$mf.thumb/" class="img-responsive" />
                             #end
                         </td>
+                        #end
                         <td>
                             #if( $hit.source.moduleTitle )
                             $hit.source.moduleTitle
