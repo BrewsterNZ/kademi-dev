@@ -53,16 +53,16 @@
 
                     #set ($addresses = $services.userManager.findAddresses($profile))
                     #if ($addresses && $addresses.size() > 0)
-                    #if ($formatter.isNotNull($params.addressType))
-                    #foreach ($addr in $addresses)
-                    #if ($addr.addressType == $params.addressType)
-                    #set ($defaultAddress = $addr)
-                    #break
-                    #end
-                    #end
-                    #else
-                    #set ($defaultAddress = $addresses[0])
-                    #end
+                        #if ($formatter.isNotNull($params.addressType))
+                            #foreach ($addr in $addresses)
+                                #if ($addr.addressType == $params.addressType)
+                                #set ($defaultAddress = $addr)
+                                #break
+                                #end
+                            #end
+                        #else
+                            #set ($defaultAddress = $addresses[0])
+                        #end
                     #end
                     <div class="row">
                         <div class="col-sm-4">
@@ -133,26 +133,33 @@
                         #end
                     </div>
                     <div class="row">
-                        <div class="col-sm-12 text-right">
-                            <button type="submit" class="btn btn-info">Update</button>
+                        <div class="col-sm-12" id="contactCompaniesWrap">
+                            <div class="form-inline">
+                                <div id="assignedCompanies" class="form-group">
+                                    #set ($custUrl = "/custs/$profile.name")
+                                    #set ($custPage = $page.find($custUrl))
+                                    #foreach($mem in $services.userManager.membershipList( $page.profile ).filterSubOrgs() )
+                                        <a href="/companies/$mem.org.id" data-contact-url="$!custUrl" data-mId="$mem.id" class="btn btn-primary contactMbsItem">
+                                            <i class="fa fa-tag"></i>
+                                            $mem.groupTitle in
+                                            <b>$mem.org.formattedName</b>
+                                            <span class="text-muted fa fa-times"></span></a>
+                                    #end
+                                    <div class="contactCompanySearchWrap">
+                                        <div class="input-group">
+                                            <input data-contact-url="$!custUrl" data-company-org-type="$!applications.leadMan.leadsOrgType.name" id="contactCompaniesSearch" type="text" class="form-control" placeholder="Type to add companies..">
+                                            <span class="input-group-addon">
+                                            <i class="fa fa-search"></i>
+                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-12">
-
-
-                            <div class="assignedCompanies" id="assignedCompanies" >
-                                #foreach($mem in $services.userManager.membershipList( $page.profile ).filterSubOrgs() )
-                                <a data-tag-id="$mem.id" href="/companies/$mem.org.id" class="btn btn-primary btn-primary-light" style="margin-bottom: 10px">
-                                    <i class="fa fa-tag"></i>
-                                    $mem.groupTitle in
-                                    <b>$mem.org.formattedName</b>
-                                    <span class="remove-membership" data-membership-id="$mem.id" data-profile-name="$mem.profile().name">
-                                        <i class="fa fa-times"></i>
-                                    </span>
-                                </a>
-                                #end
-                            </div>
+                        <div class="col-sm-12 text-right">
+                            <button type="submit" class="btn btn-info">Update</button>
                         </div>
                     </div>
                 </form>

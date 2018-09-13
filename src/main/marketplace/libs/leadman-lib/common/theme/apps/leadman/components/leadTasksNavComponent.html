@@ -19,19 +19,16 @@
                 #if($request.params.type)
                 #set($type = $request.params.type)
                 #end
-                <label class="btn btn-success #if($type == 'active')active#end">
-                    <input type="radio" name="taskType" value="active" autocomplete="off" #if($type==
-                    'active')checked="checked"#end/> Active <span
+                <label class="btn btn-success $formatter.ifTrue($type.equals('active'), 'active', '')">
+                    <input type="radio" name="taskType" value="active" autocomplete="off" $formatter.checked($type.equals('active')) /> Active <span
                         class="badge">$!aggr.aggregations.active.docCount</span>
                 </label>
-                <label class="btn btn-warning #if($type == 'closed')active#end">
-                    <input type="radio" name="taskType" value="closed" autocomplete="off" #if($type==
-                    'closed')checked="checked"#end/> Closed <span
+                <label class="btn btn-warning $formatter.ifTrue($type.equals('closed'), 'active', '') ">
+                    <input type="radio" name="taskType" value="closed" autocomplete="off" $formatter.checked($type.equals('active')) /> Closed <span
                         class="badge">$!aggr.aggregations.closed.docCount</span>
                 </label>
-                <label class="btn btn-danger #if($type == 'cancelled')active#end">
-                    <input type="radio" name="taskType" value="cancelled" autocomplete="off" #if($type==
-                    'cancelled')checked="checked"#end/> Cancelled <span class="badge">$!aggr.aggregations.cancelled.docCount</span>
+                <label class="btn btn-danger $formatter.ifTrue($type.equals('cancelled'), 'active', '')">
+                    <input type="radio" name="taskType" value="cancelled" autocomplete="off" $formatter.checked($type.equals('active')) /> Cancelled <span class="badge">$!aggr.aggregations.cancelled.docCount</span>
                 </label>
             </div>
 

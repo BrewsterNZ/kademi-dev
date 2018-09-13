@@ -884,6 +884,8 @@
         initLeadContactAddresses();
         initLeadCountryList();
         initAddProduct();
+        initAddContactCompanies();
+        initDeleteContactCompany();
     }
 })();
 
@@ -995,4 +997,91 @@ function initAddProduct() {
             alert("Please search for and select a product to add");
         }
     });
+}
+
+function initAddContactCompanies() {
+    var input = $('#contactCompaniesSearch');
+    var orgType = input.attr('data-company-org-type');
+    var contactUrl = input.attr('data-contact-url');
+    var url = '/leads/?';
+    if (orgType){
+        url += $.param({orgType: orgType});
+    }
+    input.entityFinder({
+        type: 'organisation',
+        useActualId: true,
+        url : url,
+        onSelectSuggestion: function (item, orgId) {
+            assignContactCompany(orgId, contactUrl);
+        }
+    });
+}
+
+function initDeleteContactCompany() {
+    $(document).on('click', '.contactMbsItem span', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        var mId = $(this).closest('a').attr('data-mid');
+        var contactUrl = $(this).closest('a').attr('data-contact-url');
+        if (!mId || !contactUrl){
+            return Msg.warning('Contact doesnt exist');
+        }
+        if (confirm('Are you sure you want to remove this company?')) {
+            $.ajax({
+                url: contactUrl,
+                dataType: 'json',
+                type: 'POST',
+                data: {
+                    removeMembership: true,
+                    mId: mId
+                },
+                success: function (data, textStatus, jqXHR) {
+                    setTimeout(function () {
+                        $('#assignedCompanies').reloadFragment({
+                            url: window.location.href,
+                            whenComplete: function () {
+                                initAddContactCompanies();
+                            }
+                        });
+                    }, 500)
+                }
+            });
+        }
+    })
+}
+function assignContactCompany(orgId, contactUrl) {
+    if (!orgId || !contactUrl){
+        Msg.warning('Contact doesnt exist');
+        return;
+    }
+
+    $.ajax({
+        url: contactUrl,
+        type: 'post',
+        dataType: 'json',
+        data: {
+            assignOrgModal: true,
+            orgId: orgId
+        },
+        success: function (resp) {
+            if (resp && resp.status){
+                Msg.success('Company Added');
+                setTimeout(function () {
+                    $('#assignedCompanies').reloadFragment({
+                        url: window.location.href,
+                        whenComplete: function () {
+                            initAddContactCompanies();
+                        }
+                    });
+                }, 500);
+                $('#contactCompaniesSearch').closest('[data-current-value]').val('')
+            } else {
+                Msg.error('There was an error occurred. Please contact administrator for details');
+            }
+        },
+        error: function () {
+            Msg.error('There was an error occurred. Please contact administrator for details');
+        }
+    })
 }
