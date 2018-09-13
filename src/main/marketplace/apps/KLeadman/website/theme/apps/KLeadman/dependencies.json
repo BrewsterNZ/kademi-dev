@@ -5,6 +5,14 @@
             "branch" : ""
         },
         {
+          "appId": "team",
+          "branch" : ""
+        },
+        {
+          "appId": "team-lib",
+          "branch" : "1.0.4"
+        },
+        {
             "appId": "leadman-lib",
             "branch" : "3.0.6"
         },
