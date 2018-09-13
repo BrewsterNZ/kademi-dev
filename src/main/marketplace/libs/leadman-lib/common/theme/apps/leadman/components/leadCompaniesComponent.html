@@ -33,6 +33,7 @@
         <thead>
         <tr>
             <th>Title</th>
+            <th>Type</th>
             <th>Email</th>
             <th>Phone</th>
             <th>Address</th>
@@ -44,12 +45,17 @@
         #foreach($com in $page.paginator.records)
         <tr>
             <td><a href="./$com.id">$com.title</a></td>
+            <td>
+                #set ($arr = [])
+                #foreach($t in $com.selectedOrgTypes)
+                    #if ($arr.add($t.displayName)) #end
+                #end
+                $formatter.stringJoin($arr, ", ")
+            </td>
             <td>$!com.email</td>
             <td>$!com.phone</td>
             <td>
-                <span>$!com.address</span>
-                #if ($com.address)<span>, </span>#end
-                <span>$!com.addressLine2</span>
+                $formatter.stringJoin([$!com.address, $com.addressLine2], ", ")
             </td>
             <td>$com.members.size()</td>
             <td><input type="checkbox" name="companyId" value="$com.id"></td>
