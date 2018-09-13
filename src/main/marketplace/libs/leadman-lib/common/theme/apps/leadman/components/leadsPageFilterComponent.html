@@ -77,7 +77,7 @@
                     <ul class="dropdown-menu" aria-labelledby="assingedToDrop">
                         #foreach($t in $services.teamManager.teamMembers($user, $teamOrgType))
                         <li>
-                            <a data-filter="assignedTo" class="$formatter.ifTrue($assignedToArr.contains($t.id.toString()), 'filterSelected', '')" href="$t.id"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($assignedToArr.contains($t.id.toString()), '', 'hide')"></i></span> $!t.firstName $!t.surName</a>
+                            <a data-filter="assignedTo" class="$formatter.ifTrue($assignedToArr.contains($t.id.toString()), 'filterSelected', '')" href="$t.id"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($assignedToArr.contains($t.id.toString()), '', 'hide')"></i></span> $!t.formattedName $formatter.ifEqual("<i>(you)</i>", "", $t.name, $userResource.name)</a>
                         </li>
                         #end
                     </ul>
