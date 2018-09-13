@@ -249,6 +249,8 @@ var JBApp = {
 
                 if (node[portName]) {
                     JBApp.connectNode(node.nodeId, node[portName], type, portName);
+                } else if (node.customNextNodes && node.customNextNodes[portName]){
+                    JBApp.connectNode(node.nodeId, node.customNextNodes[portName], type, portName);
                 }
             }
         }

@@ -704,9 +704,9 @@
             templates: {
                 empty: '<div class="text-danger" style="padding: 5px 10px;">No existing tags were found. Press enter to add</div>',
                 suggestion: Handlebars.compile(
-                    '<div>'
-                    + '<div><i class="fa fa-tag"></i> {{name}}</div>'
-                    + '</div><hr>')
+                        '<div>'
+                        + '<div><i class="fa fa-tag"></i> {{name}}</div>'
+                        + '</div><hr>')
             }
         }).on('keyup', function (event) {
             if (event.keyCode == 13) {
@@ -786,11 +786,37 @@
                     });
                 }
             }
-        })
+        });
+
+        $("body").on("click", ".remove-membership", function (e) {
+            e.preventDefault();
+            var target = $(e.target).closest(".remove-membership");
+            var memId = target.data("membership-id");
+            var profileName = target.data("profile-name");
+            $.ajax({
+                url : '/custs/' + profileName,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    removeMembership: true,
+                    mId : memId
+                },
+                success: function (resp) {
+                    if (resp.status) {
+                        reloadTags();
+                    } else {
+                        Msg.error("Couldnt remove organisation: " + resp.messages);
+                    }
+                },
+                error: function (e) {
+                    Msg.error(e.status + ': ' + e.statusText);
+                }
+            });
+        });
     }
 
     function reloadTags() {
-        $('#assignedTags').reloadFragment({
+        $('#assignedTags, #assignedCompanies').reloadFragment({
             whenComplete: function () {
                 Msg.success('Tags updated');
             }

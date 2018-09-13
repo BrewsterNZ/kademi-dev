@@ -59,7 +59,7 @@
                         #set( $teamOrgType = $applications.team.selectedOrgType )
                         #if ($teamOrgType)
                             #foreach($o in $services.teamManager.teamMembers($userResource.thisUser, $teamOrgType))
-                            <li><a href="#" data-name="assignedTo" data-value="$o.name" class="filter">$o.formattedName</a>
+                        <li><a href="#" data-name="assignedTo" data-value="$o.name" class="filter">$o.formattedName $formatter.ifEqual("<i>(you)</i>", "", $o.name, $userResource.name)</a>
                             </li>
                             #end
                         #end

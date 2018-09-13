@@ -139,11 +139,19 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="assignedTags" id="assignedTags">
-                                <a data-tag-id="contacts" href="javascript:void(0)" class="btn btn-primary btn-primary-light"><i class="fa fa-tag"></i> contacts <span class="" data-role="removetag">X</span></a>
-                                <a data-tag-id="trade-customer" href="javascript:void(0)" class="btn btn-primary btn-primary-light"><i class="fa fa-tag"></i> Trade Customer <span class="" data-role="removetag">X</span></a>
-                                <a data-tag-id="bbb1" href="javascript:void(0)" class="btn btn-primary btn-primary-light"><i class="fa fa-tag"></i> bbb1 <span class="" data-role="removetag">X</span></a>
-                                <a data-tag-id="bbb2" href="javascript:void(0)" class="btn btn-primary btn-primary-light"><i class="fa fa-tag"></i> bbb2 <span class="" data-role="removetag">X</span></a>
+
+
+                            <div class="assignedCompanies" id="assignedCompanies" >
+                                #foreach($mem in $services.userManager.membershipList( $page.profile ).filterSubOrgs() )
+                                <a data-tag-id="$mem.id" href="/companies/$mem.org.id" class="btn btn-primary btn-primary-light" style="margin-bottom: 10px">
+                                    <i class="fa fa-tag"></i>
+                                    $mem.groupTitle in
+                                    <b>$mem.org.formattedName</b>
+                                    <span class="remove-membership" data-membership-id="$mem.id" data-profile-name="$mem.profile().name">
+                                        <i class="fa fa-times"></i>
+                                    </span>
+                                </a>
+                                #end
                             </div>
                         </div>
                     </div>
