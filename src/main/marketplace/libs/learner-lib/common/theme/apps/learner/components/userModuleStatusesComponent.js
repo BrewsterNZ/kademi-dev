@@ -90,6 +90,14 @@
                         component.attr('data-show-certificates', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('.chk-show-thumbnail').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-show-thumbnail', this.checked);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
