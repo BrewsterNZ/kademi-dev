@@ -113,6 +113,7 @@
             form.find('.chk-show-cpd-hours').prop('checked', dataAttributes['data-show-cpd-hours'] === 'true');
             form.find('.chk-show-start-date').prop('checked', dataAttributes['data-show-start-date'] === 'true');
             form.find('.chk-show-certificates').prop('checked', dataAttributes['data-show-certificates'] === 'true');
+            form.find('.chk-show-thumbnail').prop('checked', dataAttributes['data-show-thumbnail'] === 'true');
         }
     };
 })(jQuery);
