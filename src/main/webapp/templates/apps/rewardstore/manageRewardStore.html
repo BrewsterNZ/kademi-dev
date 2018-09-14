@@ -590,20 +590,23 @@
                 var query = $("#product-query").val();
                 var categoryName = $(".category").val();
                 flog("doSearch", query, orgId);
-                var sortfield = getSearchValue(window.location.search, 'sortfield');
-                var sortdir = getSearchValue(window.location.search, 'sortdir');
+                var uri = new URI(window.location);
+                uri.setSearch('q', query);
+                uri.setSearch('categoryName', categoryName);
+                // var sortfield = getSearchValue(window.location.search, 'sortfield');
+                // var sortdir = getSearchValue(window.location.search, 'sortdir');
 
-                var newUrl = window.location.pathname + "?q=" + query + "&categoryName=" + categoryName;
-                if (sortfield && sortdir) {
-                    newUrl += "&sortfield=" + sortfield + "&sortdir=" + sortdir;
-                }
-
+                // var newUrl = window.location.pathname + "?q=" + query + "&categoryName=" + categoryName;
+                // if (sortfield && sortdir) {
+                //     newUrl += "&sortfield=" + sortfield + "&sortdir=" + sortdir;
+                // }
+                var newUrl = uri.toString();
                 window.history.replaceState("", "", newUrl);
                 $.ajax({
                     type: 'GET',
                     url: newUrl,
                     success: function (data) {
-                        flog("success", data);
+                        flog("success");
                         var fragment = $(data).find("#searchResults");
                         $("#searchResults").replaceWith(fragment);
                     },
