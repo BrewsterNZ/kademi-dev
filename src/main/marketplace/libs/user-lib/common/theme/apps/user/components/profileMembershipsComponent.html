@@ -49,9 +49,11 @@
                 <input type="hidden" name="groupName" value="$group.name" />
                 <input type="hidden" name="orgId" value="" />
                 <div class="modal-body modal-overflow"  id="changeOrgModalBody">
-                    <p>Please enter the $orgType you want to join</p>
-                    <input class="required form-control" type="text" name="orgTitleSearch" autocomplete="off" placeholder="Choose your $orgType" />
-                    <br>
+                    <div class="clearfix">
+                        <p>Please enter the $orgType you want to join</p>
+                        <input class="required form-control" type="text" name="orgTitleSearch" autocomplete="nope" placeholder="Choose your $orgType" />
+                        <br>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
