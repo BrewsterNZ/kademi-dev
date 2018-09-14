@@ -52,6 +52,14 @@
                     <ul class="dropdown-menu">
                         #set ($teamToArr = $params.team.split(","))
                         #set( $teamOrgType = $applications.team.selectedOrgType )
+
+                        <li>
+                            <a data-filter="team" class="btn-select-org $formatter.ifTrue($teamToArr.contains('ALL'), 'filterSelected', '')" href="ALL">
+                                <span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($teamToArr.contains('ALL'), '', 'hide')"></i></span>
+                                All teams
+                            </a>
+                        </li>
+
                         #foreach($o in $services.teamManager.teamsForUser($user, $teamOrgType))
                         <li>
                             <a data-filter="team" class="btn-select-org $formatter.ifTrue($teamToArr.contains($o.orgId.toString()), 'filterSelected', '')" href="$o.orgId">

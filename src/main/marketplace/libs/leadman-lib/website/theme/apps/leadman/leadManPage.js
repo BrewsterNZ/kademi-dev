@@ -366,12 +366,17 @@
             var groupId = $(this).find('a').attr('href');
             if (searchOptions.hasOwnProperty(filterName) && Array.isArray(searchOptions[filterName])) {
                 if (groupId == "ALL" || groupId == "NONE"){
-                    searchOptions[filterName] = [groupId];
                     $(this).parent('ul').find('li').not(this).each(function () {
                         var li = $(this);
                         li.find('a').removeClass('filterSelected');
                         li.find('i').addClass('hide');
-                    })
+                    });
+
+                    if (searchOptions[filterName].indexOf(groupId) != -1){
+                        searchOptions[filterName] = [];
+                    } else {
+                        searchOptions[filterName] = [groupId];
+                    }
                 } else {
                     var index = searchOptions[filterName].indexOf(groupId);
                     if ($(this).find('a').hasClass('filterSelected')) {
