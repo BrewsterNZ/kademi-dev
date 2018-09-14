@@ -73,8 +73,20 @@
                         <i class="fa fa-caret-down"></i>
                     </button>
                     #set ($assignedToArr = $params.assignedTo.split(","))
+                    #if ($assignedToArr.contains("ALL"))
+                        #set ($assignedToArr = ["ALL"])
+                    #end
+                    #if ($assignedToArr.contains("NONE"))
+                        #set ($assignedToArr = ["NONE"])
+                    #end
                     #set( $teamOrgType = $applications.team.selectedOrgType )
                     <ul class="dropdown-menu" aria-labelledby="assingedToDrop">
+                        <li>
+                            <a data-filter="assignedTo" class="$formatter.ifTrue($assignedToArr.contains('ALL'), 'filterSelected', '')" href="ALL"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($assignedToArr.contains('ALL'), '', 'hide')"></i></span> Any assignment</a>
+                        </li>
+                        <li>
+                            <a data-filter="assignedTo" class="$formatter.ifTrue($assignedToArr.contains('NONE'), 'filterSelected', '')" href="NONE"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($assignedToArr.contains('NONE'), '', 'hide')"></i></span> Assigned to nobody</a>
+                        </li>
                         #foreach($t in $services.teamManager.teamMembers($user, $teamOrgType))
                         <li>
                             <a data-filter="assignedTo" class="$formatter.ifTrue($assignedToArr.contains($t.id.toString()), 'filterSelected', '')" href="$t.id"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($assignedToArr.contains($t.id.toString()), '', 'hide')"></i></span> $!t.formattedName $formatter.ifEqual("<i>(you)</i>", "", $t.name, $userResource.name)</a>

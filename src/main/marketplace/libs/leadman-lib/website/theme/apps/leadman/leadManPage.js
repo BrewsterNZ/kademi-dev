@@ -365,16 +365,49 @@
             $(this).find('i').toggleClass('hide');
             var groupId = $(this).find('a').attr('href');
             if (searchOptions.hasOwnProperty(filterName) && Array.isArray(searchOptions[filterName])) {
-                var index = searchOptions[filterName].indexOf(groupId);
-                if ($(this).find('a').hasClass('filterSelected')) {
-                    if (index === -1) {
-                        searchOptions[filterName].push(groupId);
-                    }
+                if (groupId == "ALL" || groupId == "NONE"){
+                    searchOptions[filterName] = [groupId];
+                    $(this).parent('ul').find('li').not(this).each(function () {
+                        var li = $(this);
+                        li.find('a').removeClass('filterSelected');
+                        li.find('i').addClass('hide');
+                    })
                 } else {
-                    if (index !== -1) {
-                        searchOptions[filterName].splice(index, 1);
+                    var index = searchOptions[filterName].indexOf(groupId);
+                    if ($(this).find('a').hasClass('filterSelected')) {
+                        if (index === -1) {
+                            searchOptions[filterName].push(groupId);
+                        }
+                    } else {
+                        if (index !== -1) {
+                            searchOptions[filterName].splice(index, 1);
+                        }
+                    }
+                    if (searchOptions[filterName].indexOf('ALL') != -1){
+                        var idx = searchOptions[filterName].indexOf('ALL');
+                        searchOptions[filterName].splice(idx, 1);
+                        $(this).siblings('li').each(function () {
+                            if ($(this).find('a').attr('href') == 'ALL') {
+                                var li = $(this);
+                                li.find('a').removeClass('filterSelected');
+                                li.find('i').addClass('hide');
+                            }
+                        })
+                    }
+
+                    if (searchOptions[filterName].indexOf('NONE') != -1){
+                        var idx = searchOptions[filterName].indexOf('NONE');
+                        searchOptions[filterName].splice(idx, 1);
+                        $(this).siblings('li').each(function () {
+                            if ($(this).find('a').attr('href') == 'NONE') {
+                                var li = $(this);
+                                li.find('a').removeClass('filterSelected');
+                                li.find('i').addClass('hide');
+                            }
+                        })
                     }
                 }
+
                 doSearch();
             }
 
