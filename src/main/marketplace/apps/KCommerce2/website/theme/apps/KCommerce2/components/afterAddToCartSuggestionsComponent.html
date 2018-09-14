@@ -1,22 +1,26 @@
-<a href="/$page.attributes.store.name/cart" class="btn btn-success">
-    <i class="fa fa-shopping-cart"></i>
-    Checkout
-</a>
+<a href="/$page.attributes.store.name/cart" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Checkout</a>
 <hr/>
 #set( $prodInStore = $page.attributes.productInStore )
 #set( $store = $prodInStore.store  )
 #set( $prods = $formatter.newArrayList()  )
-#foreach( $otherPic in $prodInStore.product.productInCategorys )
-    #if( !$prods.contains($otherPic.product) )
-        #if( $store.contains( $otherPic.product ) )
-            #if( $prods.add( $otherPic.product ) ) #end
+#foreach( $thisPic in $prodInStore.product.productInCategorys )
+    #set( $category = $thisPic.category )
+    #foreach( $otherPic in $category.productInCategorys )
+        #if( $prodInStore.product.id != $otherPic.product.id &&  !$prods.contains($otherPic.product) )
+            #if( $store.contains( $otherPic.product ) )
+                #if( $prods.add( $otherPic.product ) ) #end
 
-            #if( $prods.size() > 10 )
-                #break
+                #if( $prods.size() > 10 )
+                    #break
+                #end
             #end
         #end
     #end
+    #if( $prods.size() > 10 )
+        #break
+    #end
 #end
+
 
 <div class="row">
     #foreach( $otherProd in $prods )
