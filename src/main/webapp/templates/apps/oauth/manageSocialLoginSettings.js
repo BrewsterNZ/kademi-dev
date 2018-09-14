@@ -42,6 +42,7 @@
                     addProviderModal.find('textarea[name=permissionScopes]').val(template.permissionScopes.join(','));
                 }
                 addProviderModal.find('input[name=displayNamePath]').val(template.displayNamePath);
+                addProviderModal.find('input[name=remoteUserIdPath]').val(template.remoteUserIdPath);
 
             }
         });
@@ -107,6 +108,7 @@
             add_provider_modal.find('input[name=tokenLocation]').val(data.tokenLocation);
             add_provider_modal.find('input[name=profileLocation]').val(data.profileLocation);
             add_provider_modal.find('input[name=displayNamePath]').val(data.displayNamePath);
+            add_provider_modal.find('input[name=remoteUserIdPath]').val(data.remoteUserIdPath);
             add_provider_modal.find('input[name=redirectURI]').val(data.redirectURI);
             add_provider_modal.find('input[name=accountId]').val(data.accountId);
             if (data.permissionScopes) {
