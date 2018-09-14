@@ -34,7 +34,7 @@
             <td style="$!baseStyles">
                 #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
                 #if( $productImage )
-                #set($bg = "http://${rootFolder.domainName}${formatter.portString}${productImage}")
+                #set($bg = "http://${rootFolder.domainName}${formatter.portString}${productImage}/alt-300-300.png")
                 #end
                 <a title="$productTitle" href="$!{productUrl}">
                     <img src="$!bg" width="$!width" height="auto" alt="$productTitle" style="display: block; border: 0;" />
@@ -56,7 +56,7 @@
         </tr>
         <tr>
             <td style="$!baseStyles">
-                $!formatter.truncate( $formatter.toPlain( $productDesc ), 100)
+                $!formatter.truncate( $formatter.textFromHtml( $productDesc ), 100)
             </td>
         </tr>
         <tr>
