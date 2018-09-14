@@ -437,29 +437,29 @@ function initNewUserForm() {
     });
 
     form.forms({
-        validate: function () {
-            var newUserEmail = $('#newUserEmail');
-            var newUserEmailStr = newUserEmail.val();
-
-            if (newUserEmailStr == null || newUserEmailStr == "") {
-                return true; // blank is ok now!
-            }
-
-            var error = 0;
-
-            if (!validateFuseEmail(newUserEmailStr)) {
-                error++;
-                showErrorField(newUserEmail);
-            }
-
-            if (error === 0) {
-                return true;
-            } else {
-                showMessage('Email address is invalid!', form);
-
-                return false;
-            }
-        },
+        // validate: function () {
+        //     var newUserEmail = $('#newUserEmail');
+        //     var newUserEmailStr = newUserEmail.val();
+        //
+        //     if (newUserEmailStr == null || newUserEmailStr == "") {
+        //         return true; // blank is ok now!
+        //     }
+        //
+        //     var error = 0;
+        //
+        //     if (!validateFuseEmail(newUserEmailStr)) {
+        //         error++;
+        //         showErrorField(newUserEmail);
+        //     }
+        //
+        //     if (error === 0) {
+        //         return true;
+        //     } else {
+        //         showMessage('Email address is invalid!', form);
+        //
+        //         return false;
+        //     }
+        // },
         onSuccess: function (resp) {
             flog('done new user', resp);
 

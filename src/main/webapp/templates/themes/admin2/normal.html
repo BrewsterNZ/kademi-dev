@@ -436,7 +436,7 @@
                                     <label class="control-label col-md-3" for="newUserEmail">Email</label>
 
                                     <div class="col-md-9">
-                                        <input type="text" name="email" id="newUserEmail" class="form-control" />
+                                        <input type="text" name="email" id="newUserEmail" class="form-control email required-if" />
                                         <em class="help-block small text-muted">Eg. Joe Blogs &lt;joebloggs@somewhere.com&gt;. Will use
                                             <b>Joe Blogs</b> as First name and Surname if
                                             <b>First name</b> and <b>Surname</b> are blank</em>
@@ -452,7 +452,7 @@
                                         <label class="control-label col-md-2" for="newUserGroupSelect">Group</label>
 
                                         <div class="col-md-10">
-                                            <select name="group" id="newUserGroupSelect" data-placeholder="Select a group" class="form-control" style="width: 100%">
+                                            <select name="group" id="newUserGroupSelect" data-placeholder="Select a group" class="form-control required" style="width: 100%">
                                                 <option></option>
                                                 #foreach($group in $groups )
                                                     $formatter.option($group.name, $group.name, false)
