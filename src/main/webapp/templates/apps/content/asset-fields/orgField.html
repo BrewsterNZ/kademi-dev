@@ -12,5 +12,5 @@
         <input type="text" name="$fieldDef.name" value="" class="form-control entity-select" data-entity-type="organisation" />
     </div>
 #else
-    <input type="text" name="$fieldDef.name" value="$fieldValue" />
+    <input class="form-control entity-select" type="text" name="$fieldDef.name" value="$!fieldValue"  data-entity-type="organisation"/>
 #end
