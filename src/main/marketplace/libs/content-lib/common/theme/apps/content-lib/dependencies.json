@@ -107,6 +107,12 @@
                 "group": "main",
                 "path": "/theme/apps/content/simpleOrgSelector.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/jquery.assetFinder/1.0.0/jquery.assetFinder-1.0.0.js"
+            }
         }
     ]
 }

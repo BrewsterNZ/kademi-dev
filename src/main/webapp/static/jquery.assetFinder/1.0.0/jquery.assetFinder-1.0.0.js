@@ -28,6 +28,9 @@
         var options = self.options;
         var element = self.element;
 
+        var myVal = $(this.element).val();
+
+        flog("assetFinder init ", this, myVal);
         var holder = self.holder = $('<input type="text" class="form-control " value="' + (element.attr('data-asset-name') || '') + '" placeholder="' + (element.attr('placeholder') || '') + '" />');
         element.css('display', 'none').after(holder);
 
@@ -72,8 +75,23 @@
             templates: {
                 empty: '<div class="empty-message">No asset match your search</div>',
                 suggestion: function (data) {
-                    return '<div>' + data.name + '</div>'
+                    if( data.language && data.language.length > 0 ) {
+                        return '<div>' + data.name + '(' + data.language + ')</div>';
+                    } else {
+                        return '<div>' + data.name + '</div>';
+                    }
                 }
+            }
+        });
+
+        holder.typeahead('val', myVal);
+        flog("lookup asst name", myVal);
+        $.ajax({
+            url: "/assets/" + myVal + "?asJson",
+            type: 'get',
+            dataType: 'json',
+            success: function (resp) {
+                holder.typeahead('val', resp.name);
             }
         });
 

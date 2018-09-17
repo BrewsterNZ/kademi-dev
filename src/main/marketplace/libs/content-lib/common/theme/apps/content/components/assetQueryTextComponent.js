@@ -45,8 +45,8 @@
 
             form.find('#asset-query-select').val(dataAttributes['data-query'] || '');
             form.find('#asset-single-select').val(dataAttributes['data-asset-id'] || '');
-            
 
+            form.find('.select-asset').assetFinder();
         }
     };
 

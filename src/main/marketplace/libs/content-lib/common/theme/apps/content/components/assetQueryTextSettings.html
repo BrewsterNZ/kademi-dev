@@ -14,17 +14,7 @@
     <div class="form-group">
         <label class="col-sm-12">Single asset</label>
         <div class="col-sm-12">
-            <select class="form-control" id="asset-single-select">
-                <option value="">None</option>
-                #foreach( $asset in $services.assetManager.search("text", null, null) )
-                    <option data-target-type="$!asset.targetAssetType" value="$asset.uniqueId">
-                        $asset.name
-                        #if( $asset.language )
-                        ($asset.language)
-                        #end
-                    </option>
-                #end
-            </select>
+            <input type="text" class="select-asset select-asset-text form-control" id="asset-single-select" data-asset-name="" />
         </div>
     </div>
 </form>
