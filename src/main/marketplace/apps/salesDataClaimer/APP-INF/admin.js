@@ -80,7 +80,34 @@ function getAllClaims(page, params) {
     if (!params.claimId) {
         var db = getDB(page);
 
-        page.attributes.claims = db.findByType(TYPE_RECORD);
+        var claimsQuery = {
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "range": {
+                                "enteredDate": {
+                                    "gte": services.queryManager.commonStartDate.time,
+                                    "lte": services.queryManager.commonFinishDate.time
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        };
+
+
+        var claimsQueryResp = db.search(JSON.stringify(claimsQuery));
+        var claims = formatter.newArrayList();
+        formatter.foreach(claimsQueryResp.hits.hits, function (hit) {
+            log.info("Add claim", hit, hit.source.id);
+            var record = db.child(hit.id);
+            claims.add(record);
+        });
+
+
+        page.attributes.claims = claims;
         page.attributes.settings = getAppSettings(page);
     }
 }

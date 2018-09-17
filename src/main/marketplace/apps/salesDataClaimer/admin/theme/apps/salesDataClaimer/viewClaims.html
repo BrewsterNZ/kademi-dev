@@ -580,9 +580,17 @@
             });
         }
 
+        function initDateSearch() {
+            $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+                var claimsTable = $("#table-claims");
+                claimsTable.reloadFragment();
+            });
+        }
+
         // Init
         $(function () {
             initProcessClaim();
+            initDateSearch();
         });
     </script>
 </body>
