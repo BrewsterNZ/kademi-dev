@@ -669,9 +669,14 @@ function initSort() {
         var field = a.attr('id');
 
         var dir = 'asc';
-        if (field == getSearchValue(window.location.search, 'sortfield')
-            && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
+        var selectedField = getSearchValue(window.location.search, 'sortfield');
+        selectedField = selectedField.replace("%2C", ",");
+        flog("selectedField", selectedField);
+        if (field == selectedField && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
             dir = 'desc';
+            flog("search desc");
+        } else {
+            flog("search asc");
         }
         uri.setSearch('sortfield', field);
         uri.setSearch('sortdir', dir);
