@@ -248,6 +248,9 @@
                                     #end
                                 </tbody>
                             </table>
+                            #foreach($field in $page.dataCaptureFields.entrySet())
+                            $field.value <br/>
+                            #end
                         </div>
                     </div>
 
@@ -541,6 +544,7 @@
                                     <select id="fieldType" name="fieldType" >
                                         <option value="">Text</option>
                                         <option value="org-sel">Organisation selection</option>
+                                        <option value="group-sel">Group selection</option>
                                         <option value="fileUpload">Select file</option>
                                         <option value="prof-id">Profile Identifier</option>
                                     </select>
