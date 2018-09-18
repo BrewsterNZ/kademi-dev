@@ -108,7 +108,11 @@
                                 #else
                                     #foreach($page in $pages)
                                         <article class="page">
+                                            #if( $page.name == "index.html" )
+                                            <i class="fa fa-home"></i>
+                                            #else
                                             <i class="clip-file-2"></i>
+                                            #end
                                             <span class="article-name">
                                                 #if( $page.title.length() > 0 )
                                                 $page.title
@@ -116,7 +120,6 @@
                                                 No title
                                                 #end
                                             </span>
-                                            <small class="text-muted" style="padding-left: 20px">$page.name</small>
                                             <aside class="article-action">
                                                 <div class="btn-group btn-group-sm">
                                                     #if ($isKEditor)
@@ -143,6 +146,10 @@
                                                     </ul>
                                                 </div>
                                             </aside>
+                                            <small class="text-muted pull-right" style="padding-right: 20px;">
+                                                $page.name /
+                                                $formatter.getFileName($page.html.template)
+                                            </small>
                                         </article>
                                     #end
                                 #end
