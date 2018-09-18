@@ -2,21 +2,21 @@ var win = $(window);
 
 function initEdmEditorPage(options) {
     flog('initEdmEditorPage', options.fileName);
-    
+
     Msg.iconMode = 'fa';
-    
+
     var basePath = window.location.pathname.replace('edmeditor', '');
     if (options.pagePath) {
         basePath = options.pagePath;
     }
-    
+
     // Stop prevent reloading page or redirecting to other pages
     $(document.body).on('click', '.keditor-component-content a', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         e.stopPropagation();
     });
-    
+
     var allGroups;
     $.ajax({
         url: '/edmEditor-lib/getAllGroups',
@@ -34,7 +34,7 @@ function initEdmEditorPage(options) {
             $('#edm-editor').edmEditor({
                 snippetsUrl: options.snippetsUrl,
                 snippetsHandlersUrl: options.snippetsHandlersUrl,
-                allGroups: options.allGroups,
+                allGroups: allGroups,
                 basePath: basePath,
                 pagePath: basePath,
                 onReady: function () {
@@ -44,21 +44,21 @@ function initEdmEditorPage(options) {
             });
         }
     });
-    
+
     initSaveFile(options.fileName);
 }
 
 function initSaveFile(fileName) {
     flog('initSaveFile', fileName);
-    
+
     var body = $(document.body);
-    
+
     var btnSave = $('.btn-save-file');
     btnSave.on('click', function (e) {
         e.preventDefault();
-        
+
         showLoadingIcon();
-        
+
         $.ajax({
             url: fileName,
             type: 'POST',
@@ -76,7 +76,7 @@ function initSaveFile(fileName) {
             }
         })
     });
-    
+
     win.on({
         keydown: function (e) {
             if (e.ctrlKey && e.keyCode === keymap.S) {
