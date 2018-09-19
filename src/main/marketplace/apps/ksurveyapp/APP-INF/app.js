@@ -195,35 +195,35 @@ controllerMappings.journeyFieldsFunction(loadSurveyFields);
 function loadSurveyFields(rootFolder, fields) {
     log.info('KSurvey: loadSurveyFields');
     var jsonDB = applications.KongoDB.findDatabase(DB_NAME);
-    log.info('jsondb is {}', jsonDB);
+    //log.info('jsondb is {}', jsonDB);
     var questions = jsonDB.findByType(RECORD_TYPES.QUESTION);
-    log.info('questions count {}', questions.length);
+    //log.info('questions count {}', questions.length);
     questions.forEach(function (q) {
-        log.info('question {}', q);
+        //log.info('question {}', q);
         var surveyId = q.jsonObject.surveyId;
 
         if (q.jsonObject.type == 1) {
             // Plain text question
             fields.addTextJourneyField("ksurvey-" + q.name, "KSurvey: " + q.jsonObject.title, function () {
-                log.info('callback function {}', arguments);
-                log.info('question name {}', q.name);
+                //log.info('callback function {}', arguments);
+                //log.info('question name {}', q.name);
 
                 var lead = arguments[0];
                 var profileId = lead.profile === undefined ? lead.name : lead.profile.name;
-                log.info("loadSurveyFields: profileid={}", profileId);
+                //log.info("loadSurveyFields: profileid={}", profileId);
                 return getKsurveyFields(profileId, q.name, surveyId, true);
             });
 
         } else {
             var answers = getAnswersByQuestion(q.name, surveyId);
             fields.addSelectJourneyField("ksurvey-" + q.name, "KSurvey: " + q.jsonObject.title, 'string', answers, ['contains', 'not_contains'], function () {
-                log.info('callback function {}', arguments);
-                log.info('question name {}', q.name);
+                //log.info('callback function {}', arguments);
+                //log.info('question name {}', q.name);
 
                 var lead = arguments[0];
                 var profileId = lead.profile === undefined ? lead.name : lead.profile.name;
 
-                log.info("loadSurveyFields: profileid={}", profileId);
+                //log.info("loadSurveyFields: profileid={}", profileId);
                 return getKsurveyFields(profileId, q.name, surveyId, false);
             });
         }
