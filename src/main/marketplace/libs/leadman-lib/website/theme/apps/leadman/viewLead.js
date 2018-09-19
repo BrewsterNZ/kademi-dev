@@ -737,23 +737,21 @@
 
         function doAddTag(tagId) {
             flog("doAddTag", tagId);
-            if (!assignedTags.find('[data-tag-id=' + tagId + ']').length) {
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        addTag: tagId
-                    },
-                    success: function (resp) {
-                        reloadTags();
-                    },
-                    error: function (e) {
-                        Msg.error('Could not add tag');
-                    }
-                });
-            } else {
-                Msg.info('Tag already added');
-            }
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    addTag: tagId
+                },
+                success: function (resp) {
+                    reloadTags();
+                },
+                error: function (e) {
+                    Msg.error('Could not add tag');
+                }
+            });
+
         }
 
         viewLeadTagsInput.on('typeahead:select', function (ev, tag) {
@@ -819,7 +817,7 @@
     function reloadTags() {
         $('#assignedTags, #assignedCompanies').reloadFragment({
             whenComplete: function () {
-                Msg.success('Tags updated');
+                //Msg.success('Tags updated');
             }
         });
     }
