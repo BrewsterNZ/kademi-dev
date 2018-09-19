@@ -56,7 +56,7 @@ controllerMappings.addComponent("kfeedback", "kfeedbackForm", "html", "Shows kfe
 controllerMappings.addTextJourneyField("kfeedback-result", "KFeedback result", "getLastFeedbackResult"); // see function below
 
 
-//TODO: finish implementation and uncomment 
+//TODO: finish implementation and uncomment
 //controllerMappings.addEngagementScoringFactorType("kFeedbackEngagment", "K Feedback Engagment", "appendQuery", "indexFeedBack", "appendMappings", "getProperties");
 
 function appendQuery(searchRequestBuilder, boosters, boost, factorProperties) {
@@ -71,10 +71,10 @@ function indexFeedBack(funnel, lead, builder) {
     if (lead.getProfile() == null) {
         return;
     }
-    
+
     //TODO: Implement using real data!!!!
     var data =
-            {   
+            {
                 website: "website",
                 survey_id: "survey_id",
                 option_slug: "option_slug",
@@ -145,10 +145,10 @@ function getLastFeedbackResult(lead, exitingNode, funnel, vars) {
 
     // find most recent response from this profile
     var searchResult = db.search(JSON.stringify(queryJson));
-    log.info('search hit {}', searchResult.hits.totalHits);
+    //log.info('search hit {}', searchResult.hits.totalHits);
     if (searchResult.hits.totalHits > 0) {
         var hit = searchResult.hits.hits[0];
-        log.info('option slug return {}', hit.source.option_slug);
+        //log.info('option slug return {}', hit.source.option_slug);
         return hit.source.option_slug;
     }
 }

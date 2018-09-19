@@ -79,7 +79,7 @@ controllerMappings
     .enabled(true)
     .addMethod('GET', 'getSurveysJson')
     .build();
-    
+
 controllerMappings
     .adminController()
     .path('/uploadSurveyImage/')
@@ -261,7 +261,7 @@ function getKsurveyFields(profileId, questionId, surveyId, plainText) {
 
     // find most recent response from this profile
     var searchResult = db.search(JSON.stringify(queryJson));
-    log.info('getKsurveyFields search hit {}', searchResult.hits.totalHits);
+    //log.info('getKsurveyFields search hit {}', searchResult.hits.totalHits);
     if (searchResult.hits.totalHits > 0) {
         if (plainText) {
             var hit = searchResult.hits.hits[0];
@@ -310,7 +310,7 @@ function getAnswersByQuestion(questionId, surveyId) {
     };
     // find most recent response from this profile
     var searchResult = db.search(JSON.stringify(queryJson));
-    log.info('search hit {}', searchResult.hits.totalHits);
+    //log.info('search hit {}', searchResult.hits.totalHits);
     var arr = [];
     for (var i = 0; i < searchResult.hits.hits.length; i++) {
         var hit = searchResult.hits.hits[i];
