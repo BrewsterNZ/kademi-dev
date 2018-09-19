@@ -2,16 +2,8 @@
  * Created by Anh on 8/15/2016.
  */
 function initNewProfileLeadForm() {
-    var modal = $('#newLeadProfileModal');
+    var modal = $('#modal-add-profile-lead');
     var form = modal.find('form');
-
-    $(".createProfileLead").click(function (e) {
-        flog("click");
-        e.preventDefault();
-        var funnelName = $(e.target).closest("a").attr("href");
-        form.find("select").val(funnelName);
-        modal.modal("show");
-    });
 
     form.forms({
         onSuccess: function (resp) {
@@ -177,6 +169,7 @@ function initAssignOrg() {
 //     }
 // }
 //
-// $(function () {
-//     initTableProfileLeads();
-// })
+$(function () {
+    // initTableProfileLeads();
+    initNewProfileLeadForm();
+});
