@@ -4,10 +4,13 @@
 function initNewProfileLeadForm() {
     var modal = $('#modal-add-profile-lead');
     var form = modal.find('form');
+    flog("initNewProfileLeadForm", form);
 
     form.forms({
         onSuccess: function (resp) {
             flog('done new user', resp);
+            return ;
+            
             if (resp.nextHref) {
                 window.location.href = resp.nextHref;
             }
