@@ -736,6 +736,7 @@
         });
 
         function doAddTag(tagId) {
+            flog("doAddTag", tagId);
             if (!assignedTags.find('[data-tag-id=' + tagId + ']').length) {
                 $.ajax({
                     type: 'POST',
