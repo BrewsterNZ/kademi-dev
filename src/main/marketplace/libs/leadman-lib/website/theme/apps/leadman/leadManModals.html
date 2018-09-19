@@ -284,7 +284,7 @@
                                         #set($teamMembers = $leadsPage.teamMembers)
                                         #if($teamMembers && $teamMembers.size() > 0)
                                         #foreach($user in $teamMembers)
-                                        <option value="$user.name">$!user.firstName $!user.surName</option>
+                                        <option value="$user.name">$user.formattedName</option>
                                         #end
                                         #end
                                     </select>
