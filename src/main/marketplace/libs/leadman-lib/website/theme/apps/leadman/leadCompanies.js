@@ -6,12 +6,12 @@ $(function () {
 });
 function initLeadCompaniesTable() {
     if ($('#leadCompaniesTable').length){
+        flog("initLeadCompaniesTable");
         var dataTable = $('#leadCompaniesTable').DataTable({
             paging: false,
             searching: false,
             destroy: true,
-            ordering: false,
-            ordering: false,
+            ordering: true,
             info: false,
             initComplete: function(settings, json) {
                 $('#leadCompaniesTable').closest('.row').siblings('.row').remove();
