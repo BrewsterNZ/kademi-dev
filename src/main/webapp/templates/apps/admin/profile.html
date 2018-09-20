@@ -78,9 +78,9 @@
                 #end
 
                 #if( $page.profile.enabled )
-                <a class="fa fa-check text-success profileDisable" title="Profile is enabled, click to disable"></a>
+                <a href="javascript:void (0)" style="text-decoration: none;" class="fa fa-check-circle text-success profileDisable" title="Profile is enabled, click to disable" data-toggle="tooltip" data-placement="top" ></a>
                 #else
-                <a class="fa fa-times text-danger profileEnable" title="This account is disabled/removed. Click to enable"></a>
+                <a href="javascript:void (0)" style="text-decoration: none;" class="fa fa-times-circle text-danger profileEnable" title="This account is disabled/removed. Click to enable" data-toggle="tooltip" data-placement="top" ></a>
                 #end
             </h2>
 
@@ -726,6 +726,7 @@
                 initRemoveOAuthCred();
                 initOrgFinder();
                 initEditMemberships();
+                $('[data-toggle="tooltip"]').tooltip()
             });
         </script>
 
