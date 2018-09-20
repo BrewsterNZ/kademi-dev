@@ -673,8 +673,8 @@
                         #set ($memHref = $page.path + "/" + $params.membershipName)
                         #set ($m = $page.find($memHref))
                         <div class="well">
-                            <h3 title="$m.groupName in $m.orgName, created $formatter.formatDateTime($m.createdDate)">
-                                <a href="/groups/$m.groupName/">$m.groupName</a>
+                            <h3 title="$m.groupTitle in $m.orgName, created $formatter.formatDateTime($m.createdDate)">
+                                <a href="/groups/$m.groupName/">$m.groupTitle</a>
                                 in
                                 <a id="changeOrgFinder" href="/organisations/$m.withinOrgId/viewDetails">$m.orgName</a>
                                 <input type="hidden" name="newOrgId" value="" class="newOrgId">
