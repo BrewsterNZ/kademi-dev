@@ -31,21 +31,26 @@ function initEdmEditorPage(options) {
             flog('Error when getting all groups', jqXhr, statusText, errorThrown);
         },
         complete: function () {
-            $('#edm-editor').edmEditor({
-                snippetsUrl: options.snippetsUrl,
-                snippetsHandlersUrl: options.snippetsHandlersUrl,
-                allGroups: allGroups,
-                basePath: basePath,
-                pagePath: basePath,
-                onReady: function () {
-                    $('#editor-loading').addClass('loading').find('.loading-text').html('Saving...');
-                    hideLoadingIcon();
-                }
-            });
+            initEdmEditor(options, allGroups, basePath);
         }
     });
 
     initSaveFile(options.fileName);
+}
+
+function initEdmEditor(options, allGroups, basePath) {
+    $('#edm-editor').edmEditor({
+        snippetsUrl: options.snippetsUrl,
+        snippetsHandlersUrl: options.snippetsHandlersUrl,
+        allGroups: allGroups,
+        basePath: basePath,
+        pagePath: basePath,
+        externalUrl : options.externalUrl,
+        onReady: function () {
+            $('#editor-loading').addClass('loading').find('.loading-text').html('Saving...');
+            hideLoadingIcon();
+        }
+    });
 }
 
 function initSaveFile(fileName) {

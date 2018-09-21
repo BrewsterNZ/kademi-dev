@@ -1,3 +1,6 @@
+var KEDITOR_EXTERNAL_URL = "";
+
+
 (function ($) {
     var EDITOR_PATH = '/theme/apps/edmEditor-lib/';
 
@@ -25,6 +28,7 @@
         allGroups: [],
         pagePath: null,
         basePath: null,
+        externalUrl : null,
         edmBackground: '#fafafa',
         edmPaddingTop: '20',
         edmPaddingBottom: '20',
@@ -804,6 +808,7 @@
                         $('head').append('<style type="text/css" id="edm-base-style">' + (edmStyle || edmEditor.defaultStyles) + '</style>');
                     }
 
+
                     target.keditor({
                         ckeditorOptions: {
                             title: false,
@@ -908,9 +913,12 @@
                         containerSettingInitFunction: edmEditor.initContainerSettings,
                         containerSettingShowFunction: edmEditor.showContainerSettings,
                         pagePath: options.pagePath,
-                        basePath: options.basePath
+                        basePath: options.basePath,
+                        externalUrl : options.externalUrl
                     });
                 });
+
+                KEDITOR_EXTERNAL_URL = options.externalUrl;
 
                 target.data('edmEditorOptions', options);
             });

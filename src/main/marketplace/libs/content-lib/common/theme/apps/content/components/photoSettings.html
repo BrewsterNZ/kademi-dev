@@ -153,10 +153,15 @@
             <input type="checkbox" id="photo-linkable" />
         </div>
     </div>
-    <div class="form-group">
-        <label for="photo-height" class="col-sm-12">Link</label>
+    <div class="form-group button-link">
+        <label for="button-link" class="col-sm-12">Link</label>
         <div class="col-sm-12">
-            <input type="text" id="photo-link" class="form-control" disabled="disabled" />
+            <div class="input-group">
+                <input id="button-link" class="form-control" type="text">
+                <span class="input-group-btn">
+                    <button class="btn btn-default btn-browse-file" type="button" title="Browse"><i class="fa fa-folder-open-o"></i></button>
+                </span>
+            </div>
         </div>
     </div>
     <div class="form-group">
