@@ -2,4 +2,5 @@
     <source>/APP-INF/app.js</source>  
     <source>/APP-INF/mappings.js</source>
     <source>/APP-INF/search.js</source>
+    <browseResourcesFunction class="string">browseResources</browseResourcesFunction>
 </controllers> 

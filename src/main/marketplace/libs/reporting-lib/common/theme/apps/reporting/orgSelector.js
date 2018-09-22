@@ -79,6 +79,10 @@ $(function () {
         });
     }
 
-    initOrgSelector();
-    initOrgSelectorSearch();
+    try {
+        initOrgSelector();
+        initOrgSelectorSearch();
+    } catch (e) {
+        flog("EXCEPTION: initialising org selection " + e);
+    }
 });

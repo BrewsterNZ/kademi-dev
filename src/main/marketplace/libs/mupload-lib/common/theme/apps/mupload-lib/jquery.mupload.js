@@ -187,6 +187,7 @@
                 container.append(button);
 
                 // Initialize the jQuery File Upload widget:
+                flog("mupload: actionUrl=", actionUrl);
                 var fileUpload = button.fileupload({
                     url: actionUrl,
                     dataType: 'json',
@@ -218,9 +219,12 @@
                 container.data('fileUpload', fileUpload);
             });
         },
-        setUrl: function (url) {
-            //flog('[jquery.milton-upload] setUrl', this, url);
+        setUrl: function (url) {            
             var newAction = url + '_DAV/PUT?overwrite=true';
+            flog('[jquery.milton-upload] setUrl', url, "new url=", newAction);
+            
+            flog("mupload old url=", this.find('form').attr('action'));
+            flog("mupload options=", this.options);
             this.find('form').attr('action', newAction);
         }
     };

@@ -14,11 +14,11 @@ controllerMappings.addComponent("KCommerce2/components", "featuredProductList", 
 controllerMappings.addComponent("ecommerce/components", "ecomProduct", "html", "Display ecom product details", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "orderHistoryECom", "html", "Shows the current user's orders and status", "E-commerce App component");
 
-controllerMappings.addTemplate("theme/apps/KCommerce2/","viewStore","Home page for an ecom store", false);
-controllerMappings.addTemplate("theme/apps/KCommerce2/","viewCategory","Category home page for an ecom store", false);
-controllerMappings.addTemplate("theme/apps/KCommerce2/","viewProduct","Product detail page for an ecom store", false);
-controllerMappings.addTemplate("theme/apps/KCommerce2/","viewProduct","Product detail page for an ecom store", false);
-controllerMappings.addTemplate("theme/apps/KCommerce2/","storeCheckout","Checkout page for an ecom store", false);
+controllerMappings.addTemplate("theme/apps/KCommerce2/", "viewStore", "Home page for an ecom store", false);
+controllerMappings.addTemplate("theme/apps/KCommerce2/", "viewCategory", "Category home page for an ecom store", false);
+controllerMappings.addTemplate("theme/apps/KCommerce2/", "viewProduct", "Product detail page for an ecom store", false);
+controllerMappings.addTemplate("theme/apps/KCommerce2/", "viewProduct", "Product detail page for an ecom store", false);
+controllerMappings.addTemplate("theme/apps/KCommerce2/", "storeCheckout", "Checkout page for an ecom store", false);
 
 controllerMappings
         .websitePortletController()
@@ -89,7 +89,7 @@ function initKCommerce2App(orgRoot, webRoot, enabled) {
                 catalogManager.addToStore("p6", ecommerceStoreName);
                 didAdd = true;
             }
-            if( didAdd ) {
+            if (didAdd) {
                 alertsApp.createAdminAlert("Ecommerce Store", "We've added some products and categories for you.");
             }
         }
@@ -97,3 +97,28 @@ function initKCommerce2App(orgRoot, webRoot, enabled) {
         log.info("I'm in an organisation");
     }
 }
+
+function browseResources(websiteRoot, path, list) {
+    log.info("browseResources path={} list={}", path, list);
+    if (path.root) {
+        log.info("browseResources: is root, list stores");
+        var stores = services.criteriaBuilders.get("ecommerceStore")
+                .eq("website", websiteRoot.website)
+                .execute(100);
+        formatter.foreach(stores, function(store){
+            list.addFolder(store.name, store.title, "/" + store.name + "/");
+        });
+        
+    } else {
+        var possibleStoreName = path.first;
+        var store = services.criteriaBuilders.get("ecommerceStore")
+                .eq("name", possibleStoreName)
+                .eq("website", websiteRoot.website)
+                .executeSingle();
+        if (store != null) {
+            // add root categories for the store
+            log.info("browseResources: found store {}", store.name);
+        }
+    }
+}
+

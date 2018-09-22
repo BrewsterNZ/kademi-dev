@@ -304,10 +304,12 @@
                                     data = resp;
                                 }
                                 $.each(data, function (index, item) {
-                                    flog("item: ", index, item);
+                                    flog("MTree - item: ", item.iscollection, options.onlyFolders);
                                     if (item.iscollection || !options.onlyFolders) {
                                         if ( self.isDisplayable(item)) {
                                             treeData.push(self.generateItemData(item, index));
+                                        } else {
+                                            flog("MTree - not displayable", item); 
                                         }
                                     }
                                 });
@@ -667,14 +669,17 @@
                 }
 
                 if (!isCorrectType) {
+                    flog("MTree - incorrect type", item.contentType, options.includeContentType);
                     return false;
                 }
             }
         }
 
         if (self.isExcluded(item.href)) {
+            flog("MTree - excluded href", item.href);
             return false;
         } else if (!self.isDisplayableFileHref(item.href)) {
+            flog("MTree - not displayable href", item.href);
             return false;
         }
 

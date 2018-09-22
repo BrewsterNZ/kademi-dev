@@ -809,9 +809,10 @@
 
                 // Collect data from fields.
                 this.commitContent(data);
+                flog("link.js: onOk data=", data);
 
-                var selection = editor.getSelection(),
-                    attributes = plugin.getLinkAttributes(editor, data);
+                var selection = editor.getSelection();
+                var attributes = plugin.getLinkAttributes(editor, data);
 
                 if (!this._.selectedElement) {
                     var range = selection.getRanges()[0];
@@ -819,8 +820,7 @@
                     // Use link URL as text with a collapsed cursor.
                     if (range.collapsed) {
                         // Short mailto link text view (#5736).
-                        var text = new CKEDITOR.dom.text(data.type == 'email' ?
-                            data.email.address : attributes.set['data-cke-saved-href'], editor.document);
+                        var text = new CKEDITOR.dom.text(data.type == 'email' ? data.email.address : attributes.set['data-cke-saved-href'], editor.document);
                         range.insertNode(text);
                         range.selectNodeContents(text);
                     }
@@ -836,18 +836,18 @@
                     range.select();
                 } else {
                     // We're only editing an existing link, so just overwrite the attributes.
-                    var element = this._.selectedElement,
-                        href = element.data('cke-saved-href'),
-                        textView = element.getHtml();
+                    var element = this._.selectedElement;
+                    var href = element.data('cke-saved-href');
+                    var textView = element.getHtml();
 
                     element.setAttributes(attributes.set);
                     element.removeAttributes(attributes.removed);
 
                     // Update text view when user changes protocol (#4612).
+                    flog("link.js: set href=", href);
                     if (href == textView || data.type == 'email' && textView.indexOf('@') != -1) {
                         // Short mailto link text view (#5736).
-                        element.setHtml(data.type == 'email' ?
-                            data.email.address : attributes.set['data-cke-saved-href']);
+                        element.setHtml(data.type == 'email' ? data.email.address : attributes.set['data-cke-saved-href']);
 
                         // We changed the content, so need to select it again.
                         selection.selectElement(element);
@@ -878,9 +878,19 @@
                             selectedUrl = KEDITOR_EXTERNAL_URL + url;
                         }
                         //var selectedUrl = isAsset ? url : '/_hashes/files/' + hash;
-
-                        that.getContentElement('info', 'url').setValue(selectedUrl);
-                        that.getContentElement('info', 'protocol').setValue('');
+                        
+                        if( selectedUrl.indexOf("http") > 0 ) {
+                            var protocol;
+                            if( selectedUrl.indexOf("https") > 0 ) {
+                                protocol = "https://";
+                            } else {
+                                protocol = "http://";
+                            }                                
+                            that.getContentElement('info', 'protocol').setValue(protocol);
+                        } else {
+                            that.getContentElement('info', 'protocol').setValue('');
+                        }                        
+                        that.getContentElement('info', 'url').setValue(selectedUrl);                                               
                     }
                 };
 
