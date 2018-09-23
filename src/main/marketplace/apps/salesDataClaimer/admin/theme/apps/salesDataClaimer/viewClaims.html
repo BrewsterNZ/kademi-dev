@@ -199,7 +199,7 @@
         </div>
 
         #macro (renderClaim $hit)
-        #set( $enteredBy = $services.userManager.findById($formatter.toLong($hit.enteredById)) )
+        #set( $enteredBy = $services.userManager.findById($formatter.toLong($hit.enteredUser)) )
         #set( $team = $services.organisationManager.findOrg($hit.salesTeamOrgId) )
     <tr>
         <td class="fa-2x text-center">
@@ -225,7 +225,7 @@
             </abbr>
         </td>
         <td>
-            <a href="/manageUsers/$hit.enteredById/">$enteredBy.formattedName</a>
+            <a href="/manageUsers/$hit.enteredUser/">$enteredBy.formattedName</a>
         </td>
         <td>
             #if( $team )
@@ -580,17 +580,9 @@
             });
         }
 
-        function initDateSearch() {
-            $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
-                var claimsTable = $("#table-claims");
-                claimsTable.reloadFragment();
-            });
-        }
-
         // Init
         $(function () {
             initProcessClaim();
-            initDateSearch();
         });
     </script>
 </body>
