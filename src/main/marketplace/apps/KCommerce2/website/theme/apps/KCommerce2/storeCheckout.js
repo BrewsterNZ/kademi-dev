@@ -511,10 +511,22 @@ function initCountryList() {
     });
 }
 
+function initSelectAddress(){
+    $(document).on('change', '#kcom2ShippingForm [name=addressType]', function () {
+        $('#kcom2ShippingForm').reloadFragment({
+            url: window.location.pathname + '?' + $.param({addressType: this.value}),
+            whenComplete: function () {
+                initCountryList();
+                initKcom2CheckoutForm();
+            }
+        })
+    })
+}
+
 $(function () {
     initKcom2CheckoutForm();
     initCountryList();
-
+    initSelectAddress();
     if ($('.store-checkout-page').length > 0) {
         initEcommerceCheckout();
     }
