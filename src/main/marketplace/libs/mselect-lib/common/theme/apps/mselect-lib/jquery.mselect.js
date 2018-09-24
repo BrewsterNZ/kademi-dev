@@ -206,8 +206,11 @@
                 fileType = 'image';
             } else if (this.isAudio(fileUrl)) {
                 fileType = 'audio';
+            } else if( fileUrl.endsWith('.html')) {
+                fileType = 'html';
             }
         }
+
 
         return fileType;
     };
@@ -243,7 +246,7 @@
                 flog('[MSelect] Select node', node, selectedUrl, hash, isAsset);
 
                 if (!isAsset) {
-                    var selectFolder = this.getSelectedFolderUrl();                    
+                    var selectFolder = this.getSelectedFolderUrl();
                     var newUrl = options.basePath + selectFolder;
                     flog('[MSelect] setUrl', selectFolder, options.basePath);
                     btnUploadFile.mupload('setUrl', newUrl);
@@ -306,10 +309,15 @@
                         break;
 
                     default:
-                        previewContainer.html('<div class="alert alert-warning">Unsupported preview file</div>');
-
-                        if (typeof options.onPreviewFile === 'function') {
-                            options.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                        if( fileType == "html" || type == "folder") {
+                            flog("show folder previoew", fileType, type, selectedUrl);
+                            previewContainer.html('<iframe src="' + selectedUrl + '" style="width: 100%; height: 100%; border: 0" />');
+                            if (typeof options.onPreviewFile === 'function') {
+                                options.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                            }
+                        } else {
+                            flog("unsupported file type", fileType, type, selectedUrl);
+                            previewContainer.html('<div class="alert alert-warning">Unsupported preview file</div>');
                         }
                         progressBar.hide();
                 }

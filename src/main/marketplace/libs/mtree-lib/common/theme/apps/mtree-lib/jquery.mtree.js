@@ -42,7 +42,9 @@
     };
 
     function MTree(target, options) {
-        log('Initialize', target, options);
+        log('Initialize', target, "basePath=", options.basePath);
+
+        console.trace()
 
         $.getStyleOnce('/theme/apps/mtree-lib/jstree/dist/themes/default/style.min.css');
         $.getStyleOnce('/theme/apps/mtree-lib/jquery.mtree.css');
@@ -309,7 +311,7 @@
                                         if ( self.isDisplayable(item)) {
                                             treeData.push(self.generateItemData(item, index));
                                         } else {
-                                            flog("MTree - not displayable", item); 
+                                            flog("MTree - not displayable", item);
                                         }
                                     }
                                 });
@@ -393,7 +395,7 @@
         var options = self.options;
         var isAsset = path ? path.indexOf('/assets/') === 0 : false;
 
-        log('addNode', path, name, isAsset);
+        log('addNode.1', path, name, isAsset);
 
         if (isAsset) {
             $.ajax({
@@ -406,7 +408,7 @@
                     newNodeData.format = newNodeData.contentType;
                     newNodeData.name = name;
                     var item = self.generateItemData(newNodeData);
-                    log('Data for new node', item);
+                    log('addNode.2: Data for new node', item);
 
                     self.jstreeAssets.create_node('#', item, 'first', function () {
                         var newNode = self.treeAssets.find('#' + item.id);
@@ -418,41 +420,51 @@
                         self.deselectNode(true);
                         self.jstreeAssets.select_node(newNode);
                     });
+                } else {
+                    log("addNode.3. No data");
                 }
             });
         } else {
             var parentPath = self.getParentFolderUrl(path);
 
+            log('addNode.20', parentPath);
+
             self.openPath(parentPath, function (parentNode) {
                 var parentId = parentNode ? parentNode.attr('id') : null;
 
                 setTimeout(function () {
+                    var fileDetailsPath = self.getFileDetailsUrl(path);
+                    log('addNode.21 get file details', fileDetailsPath);
                     $.ajax({
-                        url: self.getPropFindUrl(path),
+                        url: fileDetailsPath,
                         cache: false
                     }).done(function (data) {
-                        if (data && data[0]) {
-                            var item = self.generateItemData(data[0]);
-                            log('Data for new node', item);
+                        if (data.data) {
+                            var item = self.generateItemData(data.data);
+                            log('addNode.22 - Data for new node', item);
 
                             var existingNode = self.treeFiles.find('.mtree-node[href="' + path + '"]');
 
                             if (existingNode && existingNode.length > 0) {
-                                log('Delete old node', existingNode);
+                                log('addNode.23 - Delete old node', existingNode);
                                 self.jstreeFiles.delete_node(existingNode);
                             }
 
-                            log('Add new node to parent id: ' + parentId);
+                            log('addNode.24 - Add new node to parent id: ' + parentId);
                             self.jstreeFiles.create_node(parentId, item, 'first', function () {
                                 var newNode = self.treeFiles.find('#' + item.id);
 
                                 if (typeof options.onCreate === 'function') {
+                                    log('addNode.25 - onCreate');
                                     options.onCreate.call(self, newNode, parentNode, item.type);
                                 }
 
                                 self.deselectNode();
+                                log('addNode.26 - select_node');
                                 self.jstreeFiles.select_node(newNode);
                             });
+                        } else {
+                            log('addNode.27', "no data");
                         }
                     });
                 })
@@ -514,6 +526,16 @@
         var self = this;
         flog("getPropFindUrl: base url", url, this.options.basePath);
         var href = this.options.basePath + "_browse?browseHref=" + url;
+        return href;
+        //url = self.getCleanUrl(url + '/');
+        //url = url + '_DAV/PROPFIND?fields=name,milton:hash,getcontenttype>contentType,href,iscollection&depth=1';
+        //return url;
+    };
+
+    MTree.prototype.getFileDetailsUrl = function (url) {
+        var self = this;
+        flog("getFileDetailsUrl: base url", url, this.options.basePath);
+        var href = this.options.basePath + "_browse?itemHref=" + url;
         return href;
         //url = self.getCleanUrl(url + '/');
         //url = url + '_DAV/PROPFIND?fields=name,milton:hash,getcontenttype>contentType,href,iscollection&depth=1';

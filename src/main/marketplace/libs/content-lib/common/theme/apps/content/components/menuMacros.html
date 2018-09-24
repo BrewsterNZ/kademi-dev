@@ -114,7 +114,12 @@
         <label class="col-sm-12"><strong>Path</strong></label>
 
         <div class="col-sm-12">
-            <input type="text" name="href" class="form-control input-sm" />
+            <div class="input-group">
+                <input class="form-control input-sm" name="href" type="text">
+                <span class="input-group-btn">
+                    <button class="btn btn-default btn-sm btn-browse-file" type="button" title="Browse"><i class="fa fa-folder-open-o"></i></button>
+                </span>
+            </div>
         </div>
     </div>
     <div class="form-group">
@@ -181,7 +186,6 @@
                     </a>
                 #end
             </span>
-
             <span class="menuItemIcon"><i class="$!menuItem.cssClass"></i></span>
             <span class="menuItemText">#if ($menuItem.text) $!menuItem.text #else Root Menu Item #end</span>
         </div>

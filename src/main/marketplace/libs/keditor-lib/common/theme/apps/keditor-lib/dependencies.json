@@ -2,15 +2,15 @@
     "appDependencies": [
         {
             "appId": "mupload-lib",
-            "branch": "1.0.2"
+            "branch": "1.0.4"
         },
         {
             "appId": "mselect-lib",
-            "branch": "1.0.7"
+            "branch": "1.0.8"
         },
         {
             "appId": "ckeditor-lib",
-            "branch": "4.5.6.6"
+            "branch": "4.5.6.7"
         }
     ],
     "dependencies": [

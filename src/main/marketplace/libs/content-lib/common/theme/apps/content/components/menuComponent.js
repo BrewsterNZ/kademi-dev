@@ -15,7 +15,9 @@
                 dataType: 'HTML',
                 success: function (resp) {
                     form.html(resp);
-                    
+
+                    initFileBrowsing(keditor, form);
+
                     contentEditor.initDefaultMenuControls(form, keditor);
                 }
             });
@@ -25,7 +27,7 @@
 
             contentEditor.showDefaultMenuControls(form, component, keditor);
         }
-        
+
     };
 
 })(jQuery);

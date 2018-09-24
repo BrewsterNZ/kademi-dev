@@ -2,7 +2,7 @@
     "appDependencies": [
         {
             "appId": "contentEditor-lib",
-            "branch": "1.2.6"
+            "branch": "1.2.8"
         },
         {
             "appId": "edmEditor-lib",

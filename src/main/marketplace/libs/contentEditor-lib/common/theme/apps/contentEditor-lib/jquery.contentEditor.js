@@ -1040,13 +1040,13 @@
         itemHtml += '<li>';
         itemHtml += '    <div data-id="' + menuItem.id + '" data-href="' + (menuItem.href || '') + '" data-hidden="' + (menuItem.hidden || 'false') + '" class="menuItem">';
         itemHtml += '        <span class="btn-group btn-group-xs small">';
-        itemHtml += '            <a class="btn btn-success btnAddMenuItem" href="#">';
+        itemHtml += '            <a class="btn btn-success btnAddMenuItem btn-xs" href="#">';
         itemHtml += '                <span class="fa fa-plus small"></span>';
         itemHtml += '            </a>';
-        itemHtml += '            <a class="btn btn-info btnSortMenuItem" href="#">';
+        itemHtml += '            <a class="btn btn-info btnSortMenuItem btn-xs" href="#">';
         itemHtml += '                <span class="fa fa-sort small"></span>';
         itemHtml += '            </a>';
-        itemHtml += '            <a class="btn btn-primary btnEditMenuItem" href="#">';
+        itemHtml += '            <a class="btn btn-primary btnEditMenuItem btn-xs" href="#">';
         itemHtml += '                <span class="fa fa-pencil small"></span>';
         itemHtml += '            </a>';
         itemHtml += '        </span>';
@@ -1111,7 +1111,7 @@
             var btnAddHtml = '';
 
             if (isRootChild) {
-                btnAddHtml += '<a class="btn btn-success btnAddMenuItem" href="#">';
+                btnAddHtml += '<a class="btn btn-success btnAddMenuItem btn-xs" href="#">';
                 btnAddHtml += '     <span class="fa fa-plus small"></span>';
                 btnAddHtml += '</a>';
             }
@@ -1121,10 +1121,10 @@
                 '<li>' +
                 '   <div data-id="' + newId + '" class="menuItem">' +
                 '       <span class="btn-group btn-group-xs small">' + btnAddHtml +
-                '           <a class="btn btn-info btnSortMenuItem" href="#">' +
+                '           <a class="btn btn-info btnSortMenuItem btn-xs" href="#">' +
                 '               <span class="fa fa-sort small"></span>' +
                 '           </a>' +
-                '           <a class="btn btn-primary btnEditMenuItem" href="#">' +
+                '           <a class="btn btn-primary btnEditMenuItem btn-xs" href="#">' +
                 '               <span class="fa fa-pencil small"></span>' +
                 '           </a>' +
                 '       </span>' +

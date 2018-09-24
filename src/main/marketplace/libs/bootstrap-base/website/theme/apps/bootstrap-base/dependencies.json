@@ -30,11 +30,11 @@
         },
         {
             "appId": "ckeditor-lib",
-            "branch": "4.5.6.6"
+            "branch": "4.5.6.7"
         },
         {
             "appId": "contentEditor-lib",
-            "branch": "1.2.6"
+            "branch": "1.2.8"
         },
         {
             "appId": "bootstrap-msg-lib",

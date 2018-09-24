@@ -2,7 +2,7 @@
     "appDependencies": [
         {
             "appId": "keditor-lib",
-            "branch": "1.2.5"
+            "branch": "1.2.7"
         }
     ],
     "dependencies": [

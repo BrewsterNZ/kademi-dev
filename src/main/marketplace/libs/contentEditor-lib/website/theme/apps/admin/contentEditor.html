@@ -68,6 +68,7 @@
     #end
 
     <body id="contentEditorPageBody" style="$!bodyCssBgColor $!bodyCssBgImg" class="content-editor-page #if($params.url) iframe-mode #end">
+       
         <nav class="content-editor-nav">
             <a href="" class="content-editor-toggle" title="Close navbar">
                 <i class="fa fa-angle-double-up"></i>
@@ -329,7 +330,9 @@
                         snippetsHandlersUrl: '$snippetsHandlersUrl',
                         pagePath: '$!pagePath',
                         isCustomApp: $isCustomApp,
-                        originalUrl: '$!params.url'
+                        originalUrl: '$!params.url',
+                        basePath: '/',
+                        externalUrl : '$page.parent.externalUrl'
                     });
                 });
             </script>
