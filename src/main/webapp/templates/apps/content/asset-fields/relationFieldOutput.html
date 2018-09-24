@@ -9,7 +9,9 @@
             #set( $assetRes = $services.assetManager.newAssetDeliveryResource($asset) )
 $assetRes.href
         #elseif ($fieldDef.contentType.startsWith("text"))
-            $asset.text
+
+            $services.templatingManager.evaluateDynamicComponents($asset.text, $page)
+
         #else
             <a href="/asset-manager/$sset.uniqueId">$asset.name</a>
         #end
