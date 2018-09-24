@@ -106,11 +106,12 @@
                     var value = decodeURIComponent(pair[1]).replace(/\+/g, ' ');
                     newData[key] = value;
                 }
+                form.trigger("onBeforeCheckout", [newData, form]);
 
                 return $.param(newData);
             },
             onSuccess: function (resp) {
-                if (resp.status) {                    
+                if (resp.status) {
                     $('#cart-form, #cart-link, #cart-checkout-data').reloadFragment({
                         whenComplete: function () {
                             $('#cart-form').hide('fast');
