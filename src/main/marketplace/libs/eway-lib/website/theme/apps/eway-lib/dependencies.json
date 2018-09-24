@@ -10,7 +10,7 @@
         },
         {
             "js": {
-                "group": "main",
+                "group": "",
                 "path": "https://secure.ewaypayments.com/scripts/eCrypt.js"
             }
         }
