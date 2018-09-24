@@ -2,17 +2,17 @@
 #set($firstPo = false)
 #set($paymentAps = $services.cartManager.paymentProviders)
 #foreach($pApp in $paymentAps)
-#set($f1 = $foreach)
-#foreach($po in $pApp.paymentOptions)
-#if($f1.first && $foreach.first)
-#set($firstApp = $pApp)
-#set($firstPo = $po)
-#end
-#end
+    #set($f1 = $foreach)
+    #foreach($po in $pApp.paymentOptions)
+        #if($f1.first && $foreach.first)
+            #set($firstApp = $pApp)
+            #set($firstPo = $po)
+        #end
+    #end
 #end
 
 #set( $checkoutItems = $services.cartManager.checkoutItems )
-#if( $checkoutItems )
+#if( $checkoutItems && $page)
 
 #set ($cart = $checkoutItems.cart)
 #set ($shippingProviders = $services.priceManager.availableShippingProviders($cart))
@@ -229,10 +229,36 @@
         </div>
     </form>
 </div>
-#if ($shippingProviders)
+
+
+#if ($formatter.isNull($successMessage))
+#set ($successMessage = "Your order has been successfully placed")
+#end
+<div id="modal-success-message" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Checkout</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-success">
+                    $!successMessage
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="/" class="btn btn-primary">Continue shopping</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 #end
 
-<form id="cart-form" method="POST" action="$page.href" class="hide">
+#set ($billForm = "hide")
+#if (!$page)
+#set ($billForm = "")
+#end
+<form id="cart-form" method="POST" action="$page.href" class="$!billForm">
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">
@@ -301,7 +327,7 @@
                     </div>
                 </div>
 
-                
+
                 <div class="form-horizontal collapse" id="billingAddress">
                     <div class="form-group">
                         <div class="col-md-12">
@@ -344,5 +370,3 @@
         </div>
     </div>
 </form>
-
-#end

@@ -116,7 +116,8 @@
                         whenComplete: function () {
                             $('#cart-form').hide('fast');
                             $('#cart-items').hide('fast');
-                            $('#successfull-div').show('slow');
+                            $('#modal-success-message').modal('show');
+                            $.cookie('ecommerceCartId', '');
                         }
                     });
                 } else {
