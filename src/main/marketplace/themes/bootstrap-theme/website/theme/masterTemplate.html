@@ -34,12 +34,24 @@
         #end
         <!-- End injected CSS sources -->
 
-        <!-- Injected JS sources -->
+        <!-- Injected JS sources - grouped -->
         #foreach($groupEntry in $templater.jsSources.entrySet())
+            #if( $formatter.isNotEmpty($groupEntry.key) )
             #foreach($path in $templater.getCombinedJsPaths($groupEntry.key))
             <script src="$path" type="text/javascript">//</script>
             #end
+            #end
         #end
+
+        <!-- Injected JS sources - NOT grouped -->
+        #foreach($groupEntry in $templater.jsSources.entrySet())
+            #if( $formatter.isEmpty($groupEntry.key) )
+                #foreach($source in $groupEntry.value)
+                <script src="$source" type="text/javascript">//</script>
+                #end
+            #end
+        #end
+
         <!-- End injected JS sources -->
 
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
