@@ -39,10 +39,12 @@
                 </div>
             #end
 
+            #set( $displayAdd = $formatter.ifTrue($singleClaim, "none", "") )
+
             <div class="claim-items">
                 <div class="claim-items-body"></div>
 
-                <button class="btn btn-primary btn-block" type="button" data-action="add-claim-item"><i class="fa fa-plus"></i> Add claim item</button>
+                <button class="btn btn-primary btn-block" type="button" data-action="add-claim-item" style="display: $displayAdd"><i class="fa fa-plus"></i> Add claim item</button>
             </div>
 
             #foreach($xf in $app.call("getSalesDataExtreFields", $page))
@@ -55,6 +57,7 @@
             </div>
             #end
             <input type="hidden" name="claimType" value="$!claimType" />
+
             <div class="form-group">
                 <label class="control-label sr-only">Receipt</label>
 
@@ -64,9 +67,13 @@
                             <img src="/static/images/photo_holder.png" class="img-responsive" />
                         </p>
                     #end
+
+                    #if( $formatter.toBool($hideUploadReceipt) )
+                    #else
                     <button type="button" class="btn btn-sm btn-info btn-upload-receipt btn-block"><i class="fa fa-file-picture-o"></i> <span>Upload receipt</span></button>
 
                     <input type="file" name="receiptImage" accept="image/*,text/csv, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="form-control" style="display: none !important;" />
+                    #end
                 </div>
             </div>
             <button class="btn btn-primary btn-block" type="submit">Save claim</button>

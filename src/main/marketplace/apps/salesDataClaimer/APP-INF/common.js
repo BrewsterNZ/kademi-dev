@@ -173,7 +173,7 @@ function getClaimOCRFile(page, params) {
     return views.jsonObjectView(JSON.stringify(result));
 }
 
-function createClaim(page, params, files) {
+function createClaim(page, params, files, form) {
     log.info('createClaim > page={}, params={}', page, params);
 
     var result = {
@@ -290,26 +290,28 @@ function createClaim(page, params, files) {
 
                 var claimItems = [];
 
-                for (counter = 0; counter < params.claimItemsLength; counter++) {
+                for (var counter = 0; counter < params.claimItemsLength; counter++) {
                     var params_amount = params['amount.' + counter];
-                    var params_productSku = params['productSku.' + counter] || '';
-                    var params_soldDate = params['soldDate.' + counter];
+                    if( formatter.isNotEmpty(params_amount)) {
+                        var params_productSku = params['productSku.' + counter] || '';
+                        var params_soldDate = params['soldDate.' + counter];
 
-                    log.info('params_amount={}, params_productSku={}, params_soldDate={}', params_amount, params_productSku, params_soldDate);
+                        log.info('params_amount={}, params_productSku={}, params_soldDate={}', params_amount, params_productSku, params_soldDate);
 
-                    var amount = +params_amount;
-                    if (isNaN(amount)) {
-                        result.status = false;
-                        result.messages = ['Amount must be digits'];
-                        return views.jsonObjectView(JSON.stringify(result));
+                        var amount = +params_amount;
+                        if (isNaN(amount)) {
+                            result.status = false;
+                            result.messages = ['Amount must be digits'];
+                            return views.jsonObjectView(JSON.stringify(result));
+                        }
+
+                        var tempDateTime = params_soldDate;
+                        var soldDateTmp = formatter.parseDate(tempDateTime);
+                        var soldDate = formatter.formatDateISO8601(soldDateTmp, org.timezone);
+                        log.info('createClaim > soldDate={}', soldDate);
+
+                        claimItems.push({amount: amount, productSku: params_productSku, soldDate: soldDate, soldBy: soldBy, soldById: soldById});
                     }
-
-                    var tempDateTime = params_soldDate;
-                    var soldDateTmp = formatter.parseDate(tempDateTime);
-                    var soldDate = formatter.formatDateISO8601(soldDateTmp, org.timezone);
-                    log.info('createClaim > soldDate={}', soldDate);
-
-                    claimItems.push({amount: amount, productSku: params_productSku, soldDate: soldDate, soldBy: soldBy, soldById: soldById});
                 }
 
                 createOrUpdateClaimItem(claim, obj, claimItems);

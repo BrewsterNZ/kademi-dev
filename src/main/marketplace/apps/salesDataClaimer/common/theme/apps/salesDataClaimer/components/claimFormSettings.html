@@ -1,5 +1,5 @@
 <form class="form-horizontal">
-    #set( $claimTypes = $applications.get('salesDataClaimer').getAppSettings(null, null).claimTypes.split('\n'))    
+    #set( $claimTypes = $applications.get('salesDataClaimer').getAppSettings(null, null).claimTypes.split('\n'))
     <div class="form-group">
         <label class="col-sm-12">Form background</label>
         <div class="col-sm-12">
@@ -30,16 +30,39 @@
                     <option value="" selected="selected">- None -</option>
                     #foreach( $claimType in $claimTypes )
                         $formatter.option($claimType.trim(), $claimType.trim(), null)
-                    #end    
+                    #end
             </select>
         </div>
     </div>
+
     <div class="form-group">
         <label class="col-sm-12">Hide preview receipt</label>
         <div class="col-sm-12">
             <div class="checkbox">
                 <label>
                     <input type="checkbox" class="chk-hide-preview-receipt" />
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Hide receipt upload</label>
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="chk-hide-upload-receipt" />
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Single claim only</label>
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="chk-single-claim" />
                 </label>
             </div>
         </div>
