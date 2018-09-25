@@ -253,7 +253,7 @@ function createClaim(page, params, files, form) {
             var ex = extraFields[i];
             var fieldName = 'field_' + ex.name;
 
-            obj[fieldName] = params.get(fieldName) || '';
+            obj[fieldName] = params.get(ex.name) || '';
         }
 
         // Upload receipt
