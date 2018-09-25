@@ -373,7 +373,7 @@ function updateClaim(page, params, files) {
                 var ex = extraFields[i];
                 var fieldName = 'field_' + ex.name;
 
-                claimJson[fieldName] = params.get(fieldName) || '';
+                claimJson[fieldName] = params.get(ex.name) || '';
             }
 
             // Upload receipt

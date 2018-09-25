@@ -141,6 +141,13 @@
             $this.$elem.find('.btn-upload-receipt span').html('Upload other receipt');
             $this.$elem.find('.btn-upload-receipt i').attr('class', 'fa fa-check');
         }
+
+        // Populate extra fields
+        for (var key in data){
+            if (key.indexOf("field_") == 0){
+                $this.$elem.find('[name='+key.replace('field_', '')+']').val(data[key]);
+            }
+        }
     };
 
     salesDataClaimForm.prototype.reset = function () {
