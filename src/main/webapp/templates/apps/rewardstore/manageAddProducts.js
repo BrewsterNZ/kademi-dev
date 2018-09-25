@@ -85,7 +85,7 @@
 
             txtQuery.val(newQuery.join(' '));
 
-            doProductSearch();
+            doProductSearch(true);
         });
 
         $(document.body).on('change', '#search-library', function (e) {
