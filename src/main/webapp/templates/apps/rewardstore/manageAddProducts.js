@@ -120,7 +120,7 @@
         var orgId = $('#search-library').val();
 
         flog('doSearch', query, orgId);
-        var uri = new URI(window.location);
+        var uri = new URI(window.location.pathname);
         uri.setSearch('addProducts', "");
         uri.setSearch('q', query);
         uri.setSearch('l', orgId);
