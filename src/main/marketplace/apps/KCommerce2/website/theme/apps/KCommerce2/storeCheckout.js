@@ -512,14 +512,27 @@ function initCountryList() {
 }
 
 function initSelectAddress(){
-    $(document).on('change', '#kcom2ShippingForm [name=addressType]', function () {
-        $('#kcom2ShippingForm').reloadFragment({
-            url: window.location.pathname + '?' + $.param({addressType: this.value}),
-            whenComplete: function () {
-                initCountryList();
-                initKcom2CheckoutForm();
+    $(document).on('click', '#kcom2ShippingForm .address-type-drop a', function (e) {
+        e.preventDefault();
+
+        var value = $(this).attr('href');
+        if (window.profileAddrs && Object.keys(window.profileAddrs).length > 0){
+            var selected = window.profileAddrs[value];
+            flog(selected);
+            var kcom2ShippingForm = $('#kcom2ShippingForm');
+            kcom2ShippingForm.find('[name=addressLine1]').val(selected.addressLine1);
+            kcom2ShippingForm.find('[name=addressLine2]').val(selected.addressLine2);
+            kcom2ShippingForm.find('[name=addressState]').val(selected.addressState);
+            kcom2ShippingForm.find('[name=city]').val(selected.city);
+            kcom2ShippingForm.find('[name=postcode]').val(selected.postcode);
+            kcom2ShippingForm.find('[name=country]').val(selected.country);
+            var sel = getCountries().filter(function (item) {
+                return item.iso_code === selected.country;
+            });
+            if (sel.length){
+                kcom2ShippingForm.find('.country-typeahead').typeahead('val', sel[0].name);
             }
-        })
+        }
     })
 }
 

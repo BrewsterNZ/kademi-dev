@@ -140,16 +140,23 @@
     #set ($shippingFormState = '')
     #set ($addrs = $services.userManager.findAddresses($user))
     #if ($addrs && $addrs.size() > 0)
-        #if ($formatter.isNotNull($params.addressType))
+        <script>
+            var profileAddrs = {};
             #foreach ($addr in $addrs)
-                #if ($addr.addressType == $params.addressType)
-                    #set ($defaultAddr = $addr)
-                    #break
-                #end
+                var addr = {
+                    addressLine1: "$!addr.address.addressLine1",
+                    addressLine2: "$!addr.address.addressLine2",
+                    addressState: "$!addr.address.addressState",
+                    city: "$!addr.address.city",
+                    postcode: "$!addr.address.postcode",
+                    country: "$!addr.address.country",
+                };
+                var addressType = '$!addr.addressType';
+                if (addressType) {
+                    profileAddrs[addressType] = addr;
+                }
             #end
-        #else
-            #set ($defaultAddr = $addrs[0])
-        #end
+        </script>
     #end
 #end
 
@@ -165,36 +172,41 @@
                 <div class="form-horizontal">
                     <div class="form-group">
                         <div class="col-md-12">
-                        <select type="text" name="addressType" class="form-control">
-                            #foreach ($addr in $addrs)
-                            $formatter.option($addr.addressType, $addr.addressType, $defaultAddr.addressType)
-                            #end
-                        </select>
+                            <div class="btn-group address-type-drop">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Select address <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    #foreach ($addr in $addrs)
+                                    <li><a href="$addr.addressType">$addr.addressType</a></li>
+                                    #end
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-12">
-                            <input name="addressLine1" placeholder="Address line 1" type="text" class="form-control required" value="$formatter.ifNull($!cart.addressLine1, $!defaultAddr.address.addressLine1)" />
+                            <input name="addressLine1" placeholder="Address line 1" type="text" class="form-control required" value="$!cart.addressLine1" />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-12">
-                            <input name="addressLine2" placeholder="Address line 2" type="text" class="form-control" value="$formatter.ifNull($!cart.addressLine2, $!defaultAddr.address.addressLine2)" />
+                            <input name="addressLine2" placeholder="Address line 2" type="text" class="form-control" value="$!cart.addressLine2" />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-12">
-                            <input name="state" placeholder="State" type="text" class="form-control required"  value="$formatter.ifNull($!cart.addressState, $!defaultAddr.address.addressState)" />
+                            <input name="state" placeholder="State" type="text" class="form-control required"  value="$!cart.addressState" />
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-12">
-                            <input name="postcode" placeholder="Postcode" type="text" class="form-control required"  value="$formatter.ifNull($!cart.postcode, $!defaultAddr.address.postcode)" />
+                            <input name="postcode" placeholder="Postcode" type="text" class="form-control required"  value="$!cart.postcode" />
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <input type="hidden" name="country" value="$formatter.ifNull($!cart.country, $!defaultAddr.address.country)" />
+                        <input type="hidden" name="country" value="$!cart.country" />
                         <div class="col-md-12">
                             <input autocomplete="off" placeholder="Country" type="text" class="form-control country-typeahead required" />
                         </div>
