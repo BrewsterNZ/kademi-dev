@@ -61,7 +61,7 @@
         txtQuery.keyup(function () {
             typewatch(function () {
                 updateCategory();
-                doProductSearch();
+                doProductSearch(true);
             }, 500);
         });
 
@@ -89,7 +89,7 @@
         });
 
         $(document.body).on('change', '#search-library', function (e) {
-            doProductSearch();
+            doProductSearch(true);
         });
     }
 
@@ -114,7 +114,7 @@
         });
     }
 
-    function doProductSearch() {
+    function doProductSearch(changed) {
         flog('doProductSearch');
         var query = $('#product-query').val();
         var orgId = $('#search-library').val();
@@ -124,10 +124,9 @@
         uri.setSearch('addProducts', "");
         uri.setSearch('q', query);
         uri.setSearch('l', orgId);
-        if (query || orgId){
-            uri.removeSearch('startPos');
+        if (changed){
+            uri.setSearch('startPos', 0);
         }
-
         var sortfield = getSearchValue(window.location.search, 'sortfield');
         var sortdir = getSearchValue(window.location.search, 'sortdir');
 
