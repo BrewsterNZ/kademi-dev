@@ -1,4 +1,5 @@
 <controllers>
     <source>/APP-INF/app.js</source>
+    <source>/APP-INF/shoppingCartReport.js</source>
 </controllers>
             
