@@ -1,3 +1,7 @@
+#set($app = $applications.salesDataClaimer )
+#if ($formatter.isNull($showExtraFields))
+    #set ($showExtraFields = "true")
+#end
 #if ($user)
 <div class="claims-list-component">
     <div class="row">
@@ -33,13 +37,18 @@
                 <th>Amount</th>
                 <th>Sold Date</th>
                 <th>SKU Entered</th>
+                #if ($showExtraFields == "true")
+                    #foreach($xf in $app.call("getSalesDataExtreFields", $rootFolder))
+                    <th>$formatter.firstNotNull($xf.title, $xf.name)</th>
+                    #end
+                #end
                 <th width="90"></th>
                 <th width="30"><input type="checkbox" class="chk-all" /></th>
             </tr>
         </thead>
         <tbody id="table-claims-body">
             #if ($page)
-            #set($app = $applications.salesDataClaimer )
+
             #set($searchResult = $app.call('getOwnClaims', $page, $request.params))
             #if ($searchResult.hits.hits.size() > 0)
             #foreach($hit in $searchResult.hits.hits)
@@ -72,6 +81,12 @@
                     </abbr>
                 </td>
                 <td>PROD-1</td>
+
+                #if ($showExtraFields == "true")
+                    #foreach($xf in $app.call("getSalesDataExtreFields", $rootFolder))
+                    <td>sample</td>
+                    #end
+                #end
                 <td><button type="button" class="btn btn-sm btn-link btn-edit-claim"><i class="fa fa-edit"></i> Edit</button></td>
                 <td><input type="checkbox" value="" /></td>
             </tr>
@@ -89,6 +104,11 @@
                     </abbr>
                 </td>
                 <td>PROD-1</td>
+                 #if ($showExtraFields == "true")
+                    #foreach($xf in $app.call("getSalesDataExtreFields", $rootFolder))
+                    <td>sample</td>
+                    #end
+                #end
                 <td><button type="button" class="btn btn-sm btn-link btn-view-claim"><i class="fa fa-eye"></i> View</button></td>
                 <td><input type="checkbox" value="" disabled="disabled" title="This claim is already approved. You can't delete this." /></td>
             </tr>
@@ -106,6 +126,13 @@
                     </abbr>
                 </td>
                 <td>PROD-1</td>
+
+                #if ($showExtraFields == "true")
+                    #foreach($xf in $app.call("getSalesDataExtreFields", $rootFolder))
+                    <td>sample</td>
+                    #end
+                #end
+
                 <td><button type="button" class="btn btn-sm btn-link btn-view-claim"><i class="fa fa-eye"></i> View</button></td>
                 <td><input type="checkbox" value="" disabled="disabled" title="This claim is already rejected. You can't delete this." /></td>
             </tr>
@@ -159,6 +186,13 @@
             #end
         #end
     </td>
+
+    #if ($showExtraFields == "true")
+        #foreach($xf in $app.call("getSalesDataExtreFields", $page))
+        <td>$!hit.source["field_${xf.name}"]</td>
+        #end
+    #end
+
     <td>
         #if ($hit.source.status == 0)
         <button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.source.recordId"><i class="fa fa-edit"></i> Edit</button>
@@ -202,7 +236,7 @@
                         <button class="btn btn-primary btn-block" type="button" data-action="add-claim-item"><i class="fa fa-plus"></i> Add claim item</button>
                     </div>
 
-                    #foreach($xf in $app.call("getSalesDataExtreFields", $page))
+                    #foreach($xf in $app.call("getSalesDataExtreFields", $rootFolder))
                     <div class="form-group">
                         <label for="field_${xf.name}" class="control-label sr-only">$formatter.firstNotNull($xf.title, $xf.name)</label>
 
@@ -257,7 +291,7 @@
                         </tbody>
                     </table>
 
-                    #foreach($xf in $app.call("getSalesDataExtreFields", $page))
+                    #foreach($xf in $app.call("getSalesDataExtreFields", $rootFolder))
                     <div class="form-group">
                         <label class="control-label col-md-4">$formatter.firstNotNull($xf.title, $xf.name)</label>
 
