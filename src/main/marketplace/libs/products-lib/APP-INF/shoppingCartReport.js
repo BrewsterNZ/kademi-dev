@@ -1,9 +1,9 @@
 // String reportId, String title, String description, String reportTemplate, String function, String attachmentContentType, String attachmentExtension
 
 controllerMappings.addReport(
-        'shoppingCartReport',
-        'Shopping Cart Report',
-        'Shopping Cart Report',
+        'ordersReport',
+        'Orders Report',
+        'Orders Report',
         '/theme/apps/products/shoppingCartReport.html',
         'generateShoppingCartReport',
         'text/csv',
