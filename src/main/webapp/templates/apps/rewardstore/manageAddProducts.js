@@ -124,6 +124,9 @@
         uri.setSearch('addProducts', "");
         uri.setSearch('q', query);
         uri.setSearch('l', orgId);
+        if (query || orgId){
+            uri.removeSearch('startPos');
+        }
 
         var sortfield = getSearchValue(window.location.search, 'sortfield');
         var sortdir = getSearchValue(window.location.search, 'sortdir');
