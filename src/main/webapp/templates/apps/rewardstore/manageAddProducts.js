@@ -120,14 +120,19 @@
         var orgId = $('#search-library').val();
 
         flog('doSearch', query, orgId);
-        var newUrl = window.location.pathname + '?addProducts&q=' + query + '&l=' + orgId;
+        var uri = new URI(window.location);
+        uri.setSearch('addProducts', "");
+        uri.setSearch('q', query);
+        uri.setSearch('l', orgId);
 
         var sortfield = getSearchValue(window.location.search, 'sortfield');
         var sortdir = getSearchValue(window.location.search, 'sortdir');
 
         if (sortfield && sortdir) {
-            newUrl += '&sortfield=' + sortfield + '&sortdir=' + sortdir;
+            uri.setSearch('sortfield', sortfield);
+            uri.setSearch('sortdir', sortdir);
         }
+        var newUrl = uri.toString();
 
         window.history.replaceState('', '', newUrl);
         $.ajax({
