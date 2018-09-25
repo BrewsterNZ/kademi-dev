@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>$page.title</title>
+    </head>
+    <body>
+        <h1>Shopping Cart Report</h1>
+        
+        #set( $app =  $applications.get("products-lib") )
+        #set( $headers = $app.call("getShoppingCartCSVHeaders") )
+        #set( $headerSize = $headers.size() - 1 )
+        #set( $rows = $app.call("getShoppingCartCSV") )
+        
+        <div class="panel panel-default panel-query-table" style="min-height: 0; overflow-y: auto" data-items-per-page="$itemsPerPage" data-queryname="$query" data-querytype="$queryType">
+            <div class="panel-heading">
+                <i class="fa fa-table"></i> Shopping Carts
+                <a download="shoppingCartReport.csv" href="/reporting/shoppingCartReport.csv" class="pull-right"><i class="fa fa-download"></i> CSV</a>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                #foreach( $field in $headers )
+                                <th data-field="$field">$field</th>
+                                #end
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                            #if($rows.size() > 0)
+                            #foreach($row in $rows)
+                            <tr>
+                                #foreach( $i in [0..${headerSize}] )
+                                <td>$!formatter.safeGet($row, $i)</td>
+                                #end
+                            </tr>
+                            #end
+                            #else
+                            <tr>
+                                <td colspan="99">No Shopping carts</td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
