@@ -158,7 +158,6 @@
         form.forms({
             onSuccess: function () {
                 reloadClaimsList(function () {
-                    debugger;
                     Msg.success('Claim is ' + (action.attr('name') === 'rejectClaims' ? 'rejected' : 'approved') + '!');
                     modal.modal('hide');
                 });
