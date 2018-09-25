@@ -61,7 +61,7 @@
         txtQuery.keyup(function () {
             typewatch(function () {
                 updateCategory();
-                doProductSearch();
+                doProductSearch(true);
             }, 500);
         });
 
@@ -85,11 +85,11 @@
 
             txtQuery.val(newQuery.join(' '));
 
-            doProductSearch();
+            doProductSearch(true);
         });
 
         $(document.body).on('change', '#search-library', function (e) {
-            doProductSearch();
+            doProductSearch(true);
         });
     }
 
@@ -114,20 +114,27 @@
         });
     }
 
-    function doProductSearch() {
+    function doProductSearch(changed) {
         flog('doProductSearch');
         var query = $('#product-query').val();
         var orgId = $('#search-library').val();
 
         flog('doSearch', query, orgId);
-        var newUrl = window.location.pathname + '?addProducts&q=' + query + '&l=' + orgId;
-
-        var sortfield = getSearchValue(window.location.search, 'sortfield');
-        var sortdir = getSearchValue(window.location.search, 'sortdir');
-
-        if (sortfield && sortdir) {
-            newUrl += '&sortfield=' + sortfield + '&sortdir=' + sortdir;
+        var uri = new URI(window.location.href);
+        uri.setSearch('addProducts', "");
+        uri.setSearch('q', query);
+        uri.setSearch('l', orgId);
+        if (changed){
+            uri.setSearch('startPos', 0);
         }
+        // var sortfield = getSearchValue(window.location.search, 'sortfield');
+        // var sortdir = getSearchValue(window.location.search, 'sortdir');
+        //
+        // if (sortfield && sortdir) {
+        //     uri.setSearch('sortfield', sortfield);
+        //     uri.setSearch('sortdir', sortdir);
+        // }
+        var newUrl = uri.toString();
 
         window.history.replaceState('', '', newUrl);
         $.ajax({

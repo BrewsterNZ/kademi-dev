@@ -145,7 +145,7 @@
 
         modal.find('.btn-reject-claim').on('click', function (e) {
             e.preventDefault();
-
+            debugger;
             action.attr('name', 'rejectClaims');
             form.trigger('submit');
         });
@@ -158,7 +158,7 @@
         form.forms({
             onSuccess: function () {
                 reloadClaimsList(function () {
-                    Msg.success('Claim is ' + (action === 'rejectClaims' ? 'rejected' : 'approved') + '!');
+                    Msg.success('Claim is ' + (action.attr('name') === 'rejectClaims' ? 'rejected' : 'approved') + '!');
                     modal.modal('hide');
                 });
             }

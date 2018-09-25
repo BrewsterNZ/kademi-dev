@@ -9,13 +9,14 @@ function initNewProfileLeadForm() {
     form.forms({
         onSuccess: function (resp) {
             flog('done new user', resp);
-            return ;
-            
-            if (resp.nextHref) {
-                window.location.href = resp.nextHref;
-            }
+
+            // if (resp.nextHref) {
+            //     window.location.href = resp.nextHref;
+            // }
             Msg.info('Saved');
             modal.modal("hide");
+
+            $("#tableProfileLeads").reloadFragment();
         }
     });
 }
