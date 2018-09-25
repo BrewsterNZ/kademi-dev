@@ -265,6 +265,7 @@ function saveAddress(page, params, files, form) {
         cart.addressLine2 = form.cleanedParam("addressLine2");
         cart.addressState = form.cleanedParam("state");
         cart.country = form.cleanedParam("country");
+        cart.city = form.cleanedParam("city");
         cart.postcode = form.cleanedParam("postcode");
         services.criteriaBuilders.getBuilder("cart").save(cart);
     });

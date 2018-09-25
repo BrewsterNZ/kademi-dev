@@ -1,0 +1,131 @@
+#set( $encKey = $applications.eWayPaymentApp.encryptionKey )
+<input type="hidden" name="encKey" value="$encKey"/>
+<div class="form-group">
+    <div class="col-md-12">
+        <input type="text" name="cardnumber" class="form-control required-if-shown" value="" placeholder="Credit Card #" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4">
+        <div class="form-group">
+            <div class="col-md-12">
+                <select name="cardmonth" class="form-control required-if-shown margin-bottom-mobile">
+                    <option value="">- Month -</option>
+                    #foreach($i in [1..12])
+                        <option value="$formatter.padWith("0", $i, 2)">$formatter.padWith("0", $i, 2)</option>
+                    #end
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <div class="col-md-12">
+                <select name="cardyear" class="form-control required-if-shown margin-bottom-mobile">
+                    <option value="">- Year -</option>
+                    #set($now = $formatter.now)
+                    #set($year = $formatter.getYear($now))
+                    #foreach($i in [0..10])
+                        #set($y = $year + $i)
+                        <option value="$y">$y</option>
+                    #end
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <div class="col-md-12">
+                <input type="text" maxlength="3" name="cardcvn" class="form-control required-if-shown" value="" placeholder="CVV" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
+             <div class="col-md-12">
+                <input type="text" name="firstName" class="form-control required-if-shown margin-bottom-mobile" value="$!user.firstName" placeholder="First Name" />
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            <div class="col-md-12">
+                <input type="text" name="surName" class="form-control required-if-shown" value="$!user.surName" placeholder="Last Name" />
+            </div>
+        </div>
+    </div>
+</div>
+#if( $isMember )
+#else
+<div class="form-group">
+    <div class="col-md-12">
+        <input type="text" name="phone" class="form-control required-if-shown" value="$!user.phone" placeholder="Phone number" />
+    </div>
+</div>
+#end
+
+#set( $checkoutItems = $services.cartManager.checkoutItems )
+#set ($cart = $checkoutItems.cart)
+<div class="form-group">
+    <div class="col-md-12">
+        <input type="text" name="addressLine1" class="form-control required-if-shown" value="$!cart.addressLine1" placeholder="Address 1" />
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-12">
+        <input type="text" name="addressLine2" class="form-control" value="$!cart.addressLine2" placeholder="Address 2 (Optional)" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
+            <div class="col-md-12">
+                <input type="text" name="postcode" class="form-control required-if-shown margin-bottom-mobile" value="$!cart.postcode" placeholder="Zip/Postcode" />
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            <div class="col-md-12">
+                <input type="text" name="city" class="form-control required-if-shown" value="$!cart.city" placeholder="City" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="form-group">
+            <div class="col-md-12">
+                <select id="countryCode" name="countryCode" class="form-control required-if-shown margin-bottom-mobile">
+                    <option value="">- Country -</option>
+                    #foreach($cc in $formatter.countryCodes.list)
+                    $formatter.option($cc.alpha2Code, $cc.englishShortName, $!cart.country)
+                    #end
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            <div class="col-md-12">
+                <input type="text" name="addressState" class="form-control required-if-shown" value="$!cart.addressState" placeholder="State/Province"/>
+            </div>
+        </div>
+    </div>
+</div>
+#if( $isMember )
+#else
+<div class="form-group">
+    <div class="col-md-12">
+        <input type="text" name="email" class="form-control required-if-shown" value="$!user.email" placeholder="Email (Required)" />
+    </div>
+</div>
+#end
+
+<script>
+    $(function () {
+
+    });
+</script>
