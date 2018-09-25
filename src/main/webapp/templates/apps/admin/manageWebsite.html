@@ -204,25 +204,20 @@
                         <div class="panel-body">
 
                             <div class="form-group">
-                                <label for="" class="col-sm-3 control-label">Check</label>
+                                <label for="" class="col-sm-3 control-label">Current theme</label>
                                 <div class="col-sm-9">
+                                    <div class="btn-group">
+                                        <a class="btn btn-info" href="$page.href?goto=&gotoPath=/theme-checker" title="Click here to review all styles" target="_blank">
+                                            #set($theme = $page.currentTheme)
+                                            $theme.title
+                                        </a>    
+                                        <a class="btn btn-info" href="$page.href?goto=&gotoPath=/theme-checker" title="Click here to review all styles" target="_blank">
+                                            Check
+                                            <i class="fa fa-wrench"></i>
+                                        </a>
 
-                                    <a class="btn btn-info" href="$page.href?goto=&gotoPath=/theme-checker" title="Click here to review all styles" target="_blank">
-                                        #set($theme = $page.currentTheme)
-                                        #set($publicTheme = "")
-                                        #if( $theme )
-                                        #if( $theme.previewImage )
-                                        #set($publicTheme = $theme.name)
-                                        <img style="width: 150px" src="/templates/themes/$theme.name/$theme.previewImage" />
-                                        #else
-                                        #set($publicTheme = $theme.name)
-                                        $theme.title
-                                        #end
-                                        #else
-                                        No selected theme
-                                        #end
-                                        <i class="fa fa-check"></i>
-                                    </a>
+                                    </div>
+                                    
                                     <br/>
                                     <small><i>Click here to review all components and styles in the theme</i></small>
 
@@ -235,7 +230,7 @@
 
 
                                     <a class="btn btn-success" href="/marketPlace?websiteBranch=$page.name&websiteName=$page.parent.name&type=theme">
-                                        Browse
+                                        Change theme
                                         <i class="fa fa-arrow-circle-right"></i>
                                     </a>
                                     <br/>
