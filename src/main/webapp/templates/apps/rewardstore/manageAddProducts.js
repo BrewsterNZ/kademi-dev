@@ -127,13 +127,13 @@
         if (changed){
             uri.setSearch('startPos', 0);
         }
-        var sortfield = getSearchValue(window.location.search, 'sortfield');
-        var sortdir = getSearchValue(window.location.search, 'sortdir');
-
-        if (sortfield && sortdir) {
-            uri.setSearch('sortfield', sortfield);
-            uri.setSearch('sortdir', sortdir);
-        }
+        // var sortfield = getSearchValue(window.location.search, 'sortfield');
+        // var sortdir = getSearchValue(window.location.search, 'sortdir');
+        //
+        // if (sortfield && sortdir) {
+        //     uri.setSearch('sortfield', sortfield);
+        //     uri.setSearch('sortdir', sortdir);
+        // }
         var newUrl = uri.toString();
 
         window.history.replaceState('', '', newUrl);
