@@ -1,0 +1,63 @@
+#set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
+#set ($linkStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${linkColor};")
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tbody>
+    <tr>
+        <td class="wrapper" style="padding-left: 10px; padding-right: 10px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tbody>
+                <tr>
+                    <td class="text-wrapper" style="$baseStyles">
+                        <p>
+                            <strong>
+                                #if ($titleText && $titleText != "")
+                                $titleText
+                                #else
+                                Shipping Address
+                                #end
+                            </strong>
+                        </p>
+                        <table style="width: 100%">
+                            <tr>
+                                #if ($event)
+                                <td style="width: 50%;" valign="top">
+                                    <p>
+                                        Name: $!event.attributes.shoppingCart.firstName $!event.attributes.shoppingCart.surName<br />
+                                        Phone: $!event.attributes.shoppingCart.phone
+                                    </p>
+                                </td>
+                                <td style="width: 50%" valign="top">
+                                    <p>
+                                        Address: $!event.attributes.shoppingCart.addressLine1<br />
+                                        Address Line 2: $!event.attributes.shoppingCart.addressLine2<br />
+                                        State: $!event.attributes.shoppingCart.addressState<br />
+                                        Postcode: $!event.attributes.shoppingCart.postcode
+                                    </p>
+                                </td>
+                                #else
+                                <td style="width: 50%" valign="top">
+                                    <p>
+                                        Name: James Bond<br />
+                                        Phone: +61 01 2345 6789
+                                    </p>
+                                </td>
+                                <td style="width: 50%" valign="top">
+                                    <p>
+                                        200 Broadway Av<br />
+                                        WEST BEACH<br />
+                                        SA<br />
+                                        5024
+                                    </p>
+                                </td>
+                                #end
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
