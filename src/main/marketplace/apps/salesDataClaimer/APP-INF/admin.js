@@ -94,7 +94,8 @@ function getAllClaims(page, params) {
                         }
                     ]
                 }
-            }
+            },
+            "size" : "9000"
         };
 
 
