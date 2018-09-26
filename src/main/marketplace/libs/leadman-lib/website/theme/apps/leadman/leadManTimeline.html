@@ -33,12 +33,12 @@
 
                                 #if ($action.itemType == "fa-tasks")
                                 #if ($action.itemTitle != "Task cancelled" && $action.itemTitle != "Task completed")
-                                <span href="${page.href}$!{action.data['taskId']} .taskViewModal" data-target="#modalEditTask" data-toggle="modal" title="Complete this task" class="timeline-btn"><i role="button" class="fa fa-check text-success"></i></span>
+                                <span href="/tasks/$!{action.data['taskId']} .taskViewModal" data-target="#modalEditTask" data-toggle="modal" title="Complete this task" class="timeline-btn"><i role="button" class="fa fa-check text-success"></i></span>
                                 <div class="btn-group timeline-btn">
                                     <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                                     <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a class="timeline-edit-task" href="${page.href}$!{action.data['taskId']} .taskEditModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-pencil"></i> Edit</a></li>
-                                        <li><a class="btnCancelTask" href="${page.href}$!{action.data['taskId']}"><i class="fa fa-ban"></i> Cancel</a></li>
+                                        <li><a class="timeline-edit-task" href="/tasks/$!{action.data['taskId']} .taskEditModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-pencil"></i> Edit</a></li>
+                                        <li><a class="btnCancelTask" href="/tasks/$!{action.data['taskId']}"><i class="fa fa-ban"></i> Cancel</a></li>
                                     </ul>
                                 </div>
                                 #end
