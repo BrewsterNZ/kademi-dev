@@ -22,6 +22,7 @@ controllerMappings.addTemplate("theme/apps/KCommerce2/", "viewProduct", "Product
 controllerMappings.addTemplate("theme/apps/KCommerce2/", "viewProduct", "Product detail page for an ecom store", false);
 controllerMappings.addTemplate("theme/apps/KCommerce2/", "storeCheckout", "Checkout page for an ecom store", false);
 
+
 controllerMappings
         .websitePortletController()
         .portletSection('shoppingCart')
