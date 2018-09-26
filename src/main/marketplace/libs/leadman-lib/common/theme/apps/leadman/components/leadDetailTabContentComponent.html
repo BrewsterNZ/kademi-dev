@@ -125,32 +125,31 @@
             </div>
         </div>
         #set( $prods = $page.lead.leadProducts )
-        <table class="table table-striped" id="table-lead-products">
-            #if( $prods.size() > 0 )
-            <thead>
+        <div class="table-responsive">
+            <table class="table table-striped" id="table-lead-products">
+                #if( $prods.size() > 0 )
+                <thead>
                 <tr>
                     <th>Code</th>
                     <th>Product title</th>
                     <th>Base cost</th>
                 </tr>
-            </thead>
-            <tbody>
-            #foreach( $prod in $prods )
-            <tr>
-                <td>$prod.name</td>
-                <td>$prod.title</td>
-                <td>$!prod.baseCost</td>
-            </tr>
-            #end
-            </tbody>
-            #else
-            <tr>
-                <td>No products have been added yet</td>
-            </tr>
-            #end
-        </table>
+                </thead>
+                <tbody>
+                #foreach( $prod in $prods )
+                <tr>
+                    <td>$prod.name</td>
+                    <td>$prod.title</td>
+                    <td>$!prod.baseCost</td>
+                </tr>
+                #end
+                </tbody>
+                #else
+                <tr>
+                    <td>No products have been added yet</td>
+                </tr>
+                #end
+            </table>
+        </div>
     </div>
-
-
-
 </div>
