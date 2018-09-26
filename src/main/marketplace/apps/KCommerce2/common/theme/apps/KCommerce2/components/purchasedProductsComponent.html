@@ -4,7 +4,12 @@
 #set ($footerBg = '#eeeeee')
 #set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
 
+#set( $cart = $event.attributes.shoppingCart )
 
+#set( $leadCartId = $lead.getFieldValue("cartId") )
+#if( $leadCartId )
+    #set( $cart = $services.criteriaBuilders.cart.get( $formatter.toLong( $leadCartId ) ) )
+#end
 
 <!--[if (gte mso 9)|(IE)]>
 <table cellspacing="0" cellpadding="0" width="$width" border="0">
@@ -40,8 +45,8 @@
                             </tr>
                             </thead>
                             <tbody>
-                            #if ($event)
-                            #foreach( $productOrder in $event.attributes.shoppingCart.productOrders )
+                            #if ($cart)
+                            #foreach( $productOrder in $cart.productOrders )
                             #if( $productOrder.quantity > 0 )
                             <tr bgcolor="${bodyBg}">
                                 #if ($showProductPhoto == "true")
@@ -93,21 +98,26 @@
                             #end
                             </tbody>
                             <tfoot>
-                            #if ($event)
-                            #set( $checkoutItems = $services.cartManager.checkoutItems )
-                            #set( $cart = $checkoutItems.cart )
-                            #set( $items = $checkoutItems.items )
+                            #if ($cart)                            
                             <tr bgcolor="${footerBg}">
+                                #set( $checkoutItems = $services.cartManager.checkoutItems($cart) )
+                                #set( $freight = $formatter.formatCurrency($checkoutItems.freightCost) )
                                 <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top">Subtotal</td>
                                 <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$$formatter.formatCurrency($checkoutItems.subTotal)</td>
                             </tr>
                             <tr bgcolor="${footerBg}">
-                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top">Shipping</td>
-                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$$formatter.formatCurrency($checkoutItems.freightCost)</td>
+                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top">Tax</td>
+                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$$formatter.formatCurrency($checkoutItems.totalTax)</td>
                             </tr>
+                            #if( $freight )
+                            <tr bgcolor="${footerBg}">
+                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top">Shipping</td>
+                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$$formatter.formatCurrency($freight)</td>
+                            </tr>
+                            #end
                             <tr bgcolor="${footerBg}">
                                 <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top">Total</td>
-                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$$formatter.formatCurrency($event.cart.totalCost, false)</td>
+                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$$formatter.formatCurrency($checkoutItems.totalCost, false)</td>
                             </tr>
                             #else
                             <tr bgcolor="${footerBg}">
