@@ -1,6 +1,14 @@
 #set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
 #set ($linkStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${linkColor};")
 
+#set( $cart = $event.attributes.shoppingCart )
+
+#set( $leadCartId = $lead.getFieldValue("cartId") )
+#if( $leadCartId )
+    #set( $cart = $services.criteriaBuilders.cart.get( $formatter.toLong( $leadCartId ) ) )
+#end
+
+
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tbody>
     <tr>
@@ -20,10 +28,7 @@
                         </p>
                         <table style="width: 100%">
                             <tr>
-                                #set( $checkoutItems = $services.cartManager.checkoutItems )
-                                #set( $cart = $checkoutItems.cart )
-                                #set( $items = $checkoutItems.items )
-                                #if ($checkoutItems)
+                                #if ($cart)
                                 <td style="width: 50%;" valign="top">
                                     <p>
                                         Name: $!cart.profile.firstName $!cart.profile.surName<br />
