@@ -20,19 +20,24 @@
                         </p>
                         <table style="width: 100%">
                             <tr>
-                                #if ($event)
+                                #set( $checkoutItems = $services.cartManager.checkoutItems )
+                                #set( $cart = $checkoutItems.cart )
+                                #set( $items = $checkoutItems.items )
+                                #if ($checkoutItems)
                                 <td style="width: 50%;" valign="top">
                                     <p>
-                                        Name: $!event.attributes.shoppingCart.firstName $!event.attributes.shoppingCart.surName<br />
-                                        Phone: $!event.attributes.shoppingCart.phone
+                                        Name: $!cart.profile.firstName $!cart.profile.surName<br />
+                                        Phone: $!cart.profile.phone
                                     </p>
                                 </td>
                                 <td style="width: 50%" valign="top">
                                     <p>
-                                        Address: $!event.attributes.shoppingCart.addressLine1<br />
-                                        Address Line 2: $!event.attributes.shoppingCart.addressLine2<br />
-                                        State: $!event.attributes.shoppingCart.addressState<br />
-                                        Postcode: $!event.attributes.shoppingCart.postcode
+                                        Address: $!cart.addressLine1<br />
+                                        Address Line 2: $!cart.addressLine2<br />
+                                        City: $!cart.city<br />
+                                        State: $!cart.addressState<br />
+                                        Postcode: $!cart.postcode
+                                        Country: $!cart.country
                                     </p>
                                 </td>
                                 #else
