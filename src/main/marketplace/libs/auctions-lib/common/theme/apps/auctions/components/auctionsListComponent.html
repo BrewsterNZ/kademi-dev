@@ -1,16 +1,15 @@
 #set ($clsName = "col-sm-3")
-#if ($itemsPerRow == 1)
+#if ($itemsPerRow == "1")
     #set ($clsName = "col-sm-12")
-#elseif ($itemsPerRow == 2)
+#elseif ($itemsPerRow == "2")
     #set ($clsName = "col-sm-6")
-#elseif ($itemsPerRow == 3)
+#elseif ($itemsPerRow == "3")
     #set ($clsName = "col-sm-4")
-#elseif ($itemsPerRow == 4)
+#elseif ($itemsPerRow == "4")
     #set ($clsName = "col-sm-3")
-#elseif ($itemsPerRow == 6)
+#elseif ($itemsPerRow == "6")
     #set ($clsName = "col-sm-2")
 #end
-
 #if($page)
     #set ($auctionsPage = $page.find("/auctions"))
     <div class="row" id="auctions-list">
@@ -33,7 +32,7 @@
 #else
     <div class="row" id="fake-auctions-list">
         #set($bg = "/theme/img/photo_holder.png")
-        <div class="col-sm-6 col-md-4 auction-item">
+        <div class="$!clsName auction-item">
             <div class="thumbnail auction">
                 <a href="$auction.href">
                     <div class="embed-responsive embed-responsive-4by3">

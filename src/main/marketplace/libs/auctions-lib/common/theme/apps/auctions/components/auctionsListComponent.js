@@ -23,7 +23,7 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
-                    form.find('.items-per-row').on('change', function () {
+                    form.find('.select-items-per-row').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
@@ -38,7 +38,7 @@
             
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.chk-show-description').prop('checked', dataAttributes['data-show-description'] === 'true');
-            form.find('.items-per-row').val(dataAttributes['data-items-per-row'] || '4');
+            form.find('.select-items-per-row').val(dataAttributes['data-items-per-row'] || '4');
         }
     };
     
