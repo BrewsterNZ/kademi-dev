@@ -9,7 +9,7 @@
             <input type="text" id="user-query" class="form-control" placeholder="Search for user here" value="$!params.q" />
         </div>
     </div>
-    <div class="col-lg-8">
+    <div class="col-lg-8 hidden-xs">
         #if( $userResource.hasRole("SalesTeamViewer") || $userResource.hasRole("Administrator") )
         <a href="#importerWizard" class="btn btn-success importerWizard hide" data-toggle="collapse" ><i class="fa fa-cloud-upload"></i> Import</a>
         <button type="button" class="btn btn-danger deleteCust pull-right">
