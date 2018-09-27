@@ -74,7 +74,7 @@ $(function () {
                 startPriceMap.push(startprice);
 
             }
-            endprice = item.data('endprice');
+            var endprice = item.data('endprice');
             if( !isEmpty(endprice)) {
                 endPriceMap.push(endprice);
             }
