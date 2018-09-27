@@ -33,7 +33,9 @@
         useModal: true,
         useCrop: true,
         showAssets: true,
-        showFiles: true
+        showFiles: true,
+        forceHideFiles: false,
+        forceHideAssets: false
     };
 
     function MSelect(target, options) {
@@ -69,6 +71,14 @@
         } else {
             options.showFiles = true;
             options.showAssets = true;
+        }
+
+        if (options.forceHideFiles){
+            options.showFiles = false;
+        }
+
+        if (options.forceHideAssets){
+            options.showAssets = false;
         }
 
         if (options.useModal) {
