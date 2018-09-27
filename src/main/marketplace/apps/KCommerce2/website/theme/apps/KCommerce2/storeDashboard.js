@@ -22,7 +22,6 @@ $(function () {
             if (item.hasClass('selected')) {
                 item.removeClass('selected');
             } else {
-                // pointRangeItems.filter('.selected').removeClass('selected');
                 item.addClass('selected');
             }
 
@@ -65,22 +64,36 @@ $(function () {
         var input = $(".ecom-search-input");
         newUrl.setSearch('q', input.val().trim());
 
+        var attrNameMap = {};
+        var startPriceMap = [];
+        var endPriceMap = [];
         $('.facetSearchTerm a.list-group-item.selected').each(function(i, n) {
             var item = $(n);
-            var price = item.data('startprice');
-            if( !isEmpty(price)) {
-                newUrl.setSearch('startPrice', price);
+            var startprice = item.data('startprice');
+            if( !isEmpty(startprice)) {
+                startPriceMap.push(startprice);
+
             }
-            price = item.data('endprice');
-            if( !isEmpty(price)) {
-                newUrl.setSearch('endprice', price);
+            endprice = item.data('endprice');
+            if( !isEmpty(endprice)) {
+                endPriceMap.push(endprice);
             }
             var attName = item.data("attname");
             if( !isEmpty(attName)) {
                 var attVal = item.data("attvalue");
-                newUrl.setSearch(attName, attVal);
+                if (attrNameMap[attName] && Array.isArray(attrNameMap[attName])){
+                    attrNameMap[attName].push(attVal);
+                } else {
+                    attrNameMap[attName] = [attVal];
+                }
             }
         });
+
+        newUrl.setSearch('startPrice', startPriceMap);
+        newUrl.setSearch('endPrice', endPriceMap);
+        for (var key in attrNameMap){
+            newUrl.setSearch(key, attrNameMap[key]);
+        }
 
         window.history.pushState("", document.title, newUrl.toString());
 
@@ -88,7 +101,7 @@ $(function () {
 
         $.ajax({
             type: 'GET',
-            url: window.location.href,
+            url: newUrl.toString(),
             success: function (data) {
                 flog("success");
                 var breadcrumb = $(data).find(".breadcrumb");

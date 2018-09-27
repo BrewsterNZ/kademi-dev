@@ -109,10 +109,12 @@ function doEcomList(page, params) {
 
 function doProductSearch(page, store, category, params) {
     var query = params.q;
+    var priceRanges = findPriceRanges(params);
+    log.info('priceRanges BBBBBBBBBBBBBBBBBBBBBBBB {}', JSON.stringify(priceRanges));
     var attributePairs = findAttsInParams(params);
     var otherCats = findOtherCatsInParams(params)
     var brands = findBrandsInParams(params);
-    var searchResults = productSearch(page, store, category, query, attributePairs, otherCats, brands, params.pageFrom, params.pageSize);
+    var searchResults = productSearch(page, store, category, query, attributePairs, otherCats, brands, priceRanges, params.pageFrom, params.pageSize);
     page.attributes.searchResults = searchResults; // make available to templates
     page.attributes.categories = listCategories(store, page.attributes.category);
     page.attributes.brands = listBrands(store, page.attributes.searchAggs);
@@ -169,7 +171,7 @@ function findAttsInParams(params) {
 
 function findBrandsInParams(params) {
     var brands = formatter.newArrayList();
-    var idsList = formatter.toList(formatter.split(params.brands));
+    var idsList = formatter.toList(formatter.split(params.brandId));
     formatter.foreach(idsList, function(sId) {
         log.info("findBrandsInParams: id={}", sId);
         var id = formatter.toLong(sId);
@@ -181,6 +183,26 @@ function findBrandsInParams(params) {
         }
     });
     return brands;
+}
+
+function findPriceRanges(params) {
+    log.info('findPriceRanges CCCCCCCCCCCCCCCCCCCC {}', params);
+    var priceRanges = [];
+    var startPriceList = formatter.toList(formatter.split(params.startPrice));
+    var endPriceList = formatter.toList(formatter.split(params.endPrice));
+    log.info('findPriceRanges DDDDDDDDDDDDDDDDD {}', startPriceList);
+    log.info('findPriceRanges EEEEEEEEEEEEEEE {}', endPriceList);
+    var currIdx = -1;
+    formatter.foreach(startPriceList, function(sStartPrice) {
+        log.info("findPriceRanges: startPrice={}", sStartPrice);
+        currIdx ++;
+        var startPrice = formatter.toLong(sStartPrice);
+        if (endPriceList[currIdx] && !isNaN(endPriceList[currIdx])){
+            var endPrice = formatter.toLong(endPriceList[currIdx]);
+            priceRanges.push({startPrice: startPrice, endPrice: endPrice});
+        }
+    });
+    return priceRanges;
 }
 
 function findOtherCatsInParams(params) {

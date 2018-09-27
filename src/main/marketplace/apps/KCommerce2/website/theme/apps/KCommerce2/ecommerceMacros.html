@@ -27,9 +27,9 @@
             #if( $page.attributes.brands.size() > 0 )
             <div class="list-group list-group-root facetSearchTerm">
                 <span href="#" class="list-group-item heading-item">Browse by brand</span>
-
+                #set ($brandIdsArr = $formatter.toList($formatter.split($params.brandId)))
                 #foreach($brand in $page.attributes.brands)
-                <a href="#" class="list-group-item" data-attname="brandId" data-attvalue="$brand.id">
+                <a href="#" class="list-group-item $formatter.ifTrue($brandIdsArr.contains($brand.id.toString()), 'selected', '')" data-attname="brandId" data-attvalue="$brand.id">
                     $brand.title <i class="fa fa-angle-right  pull-right"></i>
                 </a>
                 #end
@@ -44,10 +44,10 @@
             <div class="list-group list-group-root facetSearchTerm">
                 <span href="#" class="list-group-item heading-item">Refine by $facetField.title</span>
 
-
+                #set ($facetFieldArr = $formatter.toList($formatter.split($params.get($facetField.name) )))
                 #foreach( $attAgg in $facetBucket.buckets )
                     #if( $attAgg.docCount > 0 )
-                    <a href="#" class="list-group-item" data-attname="$facetField.name" data-attvalue="$attAgg.key">
+                    <a href="#" class="list-group-item $formatter.ifTrue($facetFieldArr.contains($attAgg.key), 'selected', '')" data-attname="$facetField.name" data-attvalue="$attAgg.key">
                         $attAgg.key ($attAgg.docCount)
                         <i class="fa fa-angle-right  pull-right"></i>
                     </a>
@@ -61,10 +61,10 @@
             #set ($dataRanges = $page.attributes.attributesSummary.aggregations.asMap.priceRanges.buckets)
             <div class="list-group list-group-root facetSearchTerm">
                 <span href="#" class="list-group-item heading-item">Browse by price</span>
-
+                #set ($startPricesArr = $formatter.toList($formatter.split($params.startPrice)))
                 #foreach( $pointRange in $dataRanges )
                     #if( $pointRange.docCount > 0 )
-                    <a href="#" class="list-group-item" data-startprice="$pointRange.from" data-endprice="$pointRange.to">From $formatter.toLong($pointRange.from) to $formatter.toLong($pointRange.to) ($pointRange.docCount) <i class="fa fa-angle-right  pull-right"></i></a>
+                    <a href="#" class="list-group-item $formatter.ifTrue($startPricesArr.contains($pointRange.from.toString()), 'selected', '')" data-startprice="$pointRange.from" data-endprice="$pointRange.to">From $formatter.toLong($pointRange.from) to $formatter.toLong($pointRange.to) ($pointRange.docCount) <i class="fa fa-angle-right  pull-right"></i></a>
                     #end
                 #end
 
@@ -73,10 +73,10 @@
             #foreach( $attNameBucket in $page.attributes.searchAggs.aggregations.asMap.attNames.buckets)
             <div class="list-group list-group-root facetSearchTerm">
                 <span href="#" class="list-group-item heading-item">Refine by $services.catalogManager.attributeTitle($attNameBucket.key)</span>
-
+                #set ($attNamesArr = $formatter.toList($formatter.split($params.get($attNameBucket.key) )))
                 #foreach( $attAgg in $page.attributes.attributesSummary.aggregations.asMap.get("${attNameBucket.key}Att").buckets )
                     #if( $attAgg.docCount > 0 )
-                    <a href="#" class="list-group-item" data-attname="$attNameBucket.key" data-attvalue="$attAgg.key">
+                    <a href="#" class="list-group-item $formatter.ifTrue($attNamesArr.contains($attAgg.key), 'selected', '')" data-attname="$attNameBucket.key" data-attvalue="$attAgg.key">
                         $services.catalogManager.attributeTitle($attAgg.key) ($attAgg.docCount)
                         <i class="fa fa-angle-right  pull-right"></i>
                     </a>
