@@ -82,7 +82,7 @@ function productSearch(page, store, category, query, attributePairs, otherCats, 
     appendCriteria(queryJson, store, category, query, attributePairs, otherCats, brands, priceRanges);
 
     var queryText = JSON.stringify(queryJson);
-    log.info('Final query aaaaaaaaa {}', queryText);
+    log.info('Final query {}', queryText);
     var results = services.searchManager.search(queryText, 'ecommercestore');
 
     return results;

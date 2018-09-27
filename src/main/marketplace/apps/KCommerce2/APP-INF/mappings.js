@@ -186,12 +186,9 @@ function findBrandsInParams(params) {
 }
 
 function findPriceRanges(params) {
-    log.info('findPriceRanges CCCCCCCCCCCCCCCCCCCC {}', params);
     var priceRanges = [];
     var startPriceList = formatter.toList(formatter.split(params.startPrice));
     var endPriceList = formatter.toList(formatter.split(params.endPrice));
-    log.info('findPriceRanges DDDDDDDDDDDDDDDDD {}', startPriceList);
-    log.info('findPriceRanges EEEEEEEEEEEEEEE {}', endPriceList);
     var currIdx = -1;
     formatter.foreach(startPriceList, function(sStartPrice) {
         log.info("findPriceRanges: startPrice={}", sStartPrice);
