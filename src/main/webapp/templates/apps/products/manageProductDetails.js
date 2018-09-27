@@ -286,6 +286,7 @@ function initProductImages() {
             target.closest('.product-image-thumb').remove();
         });
     });
+
     var curImageHref = '';
     $('.change-image').on('click', function (e) {
         curImageHref = $(this).attr('href');
@@ -309,12 +310,12 @@ function initProductImages() {
                         Msg.success('Done', 'uploadProductImg');
                         $('#product-images').reloadFragment();
                     } else {
-                        Msg.error('An error occured processing the product image', 'uploadProductImg');
+                        Msg.error('An error occurred processing the product image', 'uploadProductImg');
                     }
                     curImageHref = '';
                 },
                 error: function () {
-                    Msg.error('An error occured processing the product image', 'uploadProductImg');
+                    Msg.error('An error occurred processing the product image', 'uploadProductImg');
                     curImageHref = '';
                 }
             })
@@ -328,7 +329,6 @@ function initProductImages() {
             $.ajax({
                 url: window.location.pathname,
                 data: {
-                    addProductImage: true,
                     hash: hash,
                 },
                 dataType: 'json',
@@ -338,11 +338,11 @@ function initProductImages() {
                         Msg.success('Done', 'uploadProductImg');
                         $('#product-images').reloadFragment();
                     } else {
-                        Msg.error('An error occured processing the product image', 'uploadProductImg');
+                        Msg.error('An error occurred processing the product image', 'uploadProductImg');
                     }
                 },
                 error: function () {
-                    Msg.error('An error occured processing the product image', 'uploadProductImg');
+                    Msg.error('An error occurred processing the product image', 'uploadProductImg');
                 }
             })
         }
