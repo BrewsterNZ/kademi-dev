@@ -10,7 +10,7 @@
         },
         {
             "appId": "photoeditor-lib",
-            "branch": "1.0.3"
+            "branch": "1.0.5"
         }
     ],
     "dependencies": [
