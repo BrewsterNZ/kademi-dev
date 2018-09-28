@@ -295,6 +295,7 @@ function initProductImages() {
     $('.change-image').mselect({
         forceHideFiles: true,
         onSelectFile: function () {
+            flog("prod: onSelectFile", arguments);
             var hash = arguments[3];
             // This will update with new product image
             $.ajax({
