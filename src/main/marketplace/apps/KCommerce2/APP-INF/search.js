@@ -8,7 +8,7 @@
  * @param {type} query
  * @returns {unresolved}
  */
-function productSearch(page, store, category, query, attributePairs, otherCats, brands, pageFrom, pageSize) {
+function productSearch(page, store, category, query, attributePairs, otherCats, brands, priceRanges, pageFrom, pageSize) {
     // Do aggregation search
     var aggsQuery = {
         "size": 0,
@@ -41,7 +41,7 @@ function productSearch(page, store, category, query, attributePairs, otherCats, 
         }
     }
 
-    appendCriteria(aggsQuery, store, category, query, null, null, null);
+    appendCriteria(aggsQuery, store, category, query, null, null, null, null);
     var aggsQueryText = JSON.stringify(aggsQuery);
     var aggregationResults = services.searchManager.search(aggsQueryText, 'ecommercestore');
     page.attributes.searchAggs = aggregationResults;
@@ -79,9 +79,10 @@ function productSearch(page, store, category, query, attributePairs, otherCats, 
         "size": pageSize
     };
 
-    appendCriteria(queryJson, store, category, query, attributePairs, otherCats, brands);
+    appendCriteria(queryJson, store, category, query, attributePairs, otherCats, brands, priceRanges);
 
     var queryText = JSON.stringify(queryJson);
+    log.info('Final query {}', queryText);
     var results = services.searchManager.search(queryText, 'ecommercestore');
 
     return results;
@@ -255,7 +256,7 @@ function productInCategorySearch(store, category, query) {
 }
 
 
-function appendCriteria(queryJson, store, category, query, attributePairs, otherCategorys, brands) {
+function appendCriteria(queryJson, store, category, query, attributePairs, otherCategorys, brands, priceRanges) {
     // todo filter by store and category
     var must = [
         {"term": {"storeId": store.id}}
@@ -282,6 +283,7 @@ function appendCriteria(queryJson, store, category, query, attributePairs, other
     }
 
     if (brands != null && brands.size() > 0 )  {
+
         var arrBrandIds = [];
         formatter.foreach(brands, function (brandCat) {
             arrBrandIds.push( brandCat.id );
@@ -289,6 +291,27 @@ function appendCriteria(queryJson, store, category, query, attributePairs, other
         must.push({
             "terms" : { "brandId" : arrBrandIds}
         });
+    }
+
+
+    if (priceRanges != null && priceRanges.length > 0 )  {
+        var should = [];
+        priceRanges.forEach(function (range) {
+            should.push({
+                "range" : {
+                    "finalCost": {
+                        "gte": range.startPrice,
+                        "lte": range.endPrice
+                    }
+                }
+            })
+        })
+        var bool = {
+            "bool": {
+                "should": should
+            }
+        }
+        must.push(bool);
     }
 
     queryJson.query = {

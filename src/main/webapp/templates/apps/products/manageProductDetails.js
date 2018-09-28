@@ -286,36 +286,65 @@ function initProductImages() {
             target.closest('.product-image-thumb').remove();
         });
     });
-    $('#btn-change-ava').upcropImage({
-        buttonContinueText: 'Save',
-        url: window.location.pathname, // this is actually the default value anyway
-        onCropComplete: function (resp) {
-            flog('onCropComplete:', resp, resp.nextHref);
-            $('#product-images').reloadFragment();
-        },
-        onContinue: function (resp) {
-            flog('onContinue:', resp, resp.result.nextHref);
+
+    var curImageHref = '';
+    $('.change-image').on('click', function (e) {
+        curImageHref = $(this).attr('href');
+    });
+
+    $('.change-image').mselect({
+        forceHideFiles: true,
+        onSelectFile: function () {
+            var hash = arguments[3];
+            // This will update with new product image
             $.ajax({
                 url: window.location.pathname,
-                type: 'POST',
-                dataType: 'json',
                 data: {
-                    uploadedHref: resp.result.nextHref,
-                    applyImage: true
+                    hash: hash,
+                    curImageHref: curImageHref
                 },
+                dataType: 'json',
+                type: 'post',
                 success: function (resp) {
-                    flog('success');
-                    if (resp.status) {
-                        Msg.info('Done', 'uploadProductImg');
+                    if (resp && resp.status){
+                        Msg.success('Done', 'uploadProductImg');
                         $('#product-images').reloadFragment();
                     } else {
-                        Msg.error('An error occured processing the product image', 'uploadProductImg');
+                        Msg.error('An error occurred processing the product image', 'uploadProductImg');
+                    }
+                    curImageHref = '';
+                },
+                error: function () {
+                    Msg.error('An error occurred processing the product image', 'uploadProductImg');
+                    curImageHref = '';
+                }
+            })
+        }
+    });
+
+    $('#btn-change-ava').mselect({
+        forceHideFiles: true,
+        onSelectFile: function () {
+            var hash = arguments[3];
+            $.ajax({
+                url: window.location.pathname,
+                data: {
+                    hash: hash,
+                },
+                dataType: 'json',
+                type: 'post',
+                success: function (resp) {
+                    if (resp && resp.status){
+                        Msg.success('Done', 'uploadProductImg');
+                        $('#product-images').reloadFragment();
+                    } else {
+                        Msg.error('An error occurred processing the product image', 'uploadProductImg');
                     }
                 },
                 error: function () {
-                    alert('Sorry, we couldn\'t save your profile image.');
+                    Msg.error('An error occurred processing the product image', 'uploadProductImg');
                 }
-            });
+            })
         }
     });
 }
