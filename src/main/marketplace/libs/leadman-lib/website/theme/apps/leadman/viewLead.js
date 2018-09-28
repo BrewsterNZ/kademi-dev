@@ -885,6 +885,7 @@
         initAddProduct();
         initAddContactCompanies();
         initDeleteContactCompany();
+        initLeadProducts();
     }
 })();
 
@@ -1082,5 +1083,96 @@ function assignContactCompany(orgId, contactUrl) {
         error: function () {
             Msg.error('There was an error occurred. Please contact administrator for details');
         }
+    })
+}
+
+function initLeadProducts() {
+    var productSearch = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote: {
+            url: '/leadProduct?th&q=%QUERY',
+            wildcard: '%QUERY',
+            transform: function(response) {
+                return response.data;
+            }
+        },
+
+    });
+
+    productSearch.initialize();
+    var productSearchField = $('#lead-search-product');
+
+    productSearchField.typeahead({
+        highlight: true
+    },{
+        displayKey: 'title',
+        source: productSearch.ttAdapter(),
+        templates: {
+            empty: '<div class="text-danger" style="padding: 5px 10px;">No insurance types were found</div>',
+            suggestion: Handlebars.compile(
+                '<div>'
+                + '<div>{{title}}</div>'
+                + '</div><hr>')
+        }
+    });
+
+    productSearchField.bind('typeahead:select', function (ev, sug) {
+        var productId = sug.name;
+        var leadId = $(this).attr('data-leadid');
+
+        $.ajax({
+            url: '/leadProduct',
+            data: {
+                leadId: leadId,
+                addProduct: productId
+            },
+            type: 'post',
+            dataType: 'json',
+            success: function (resp) {
+                if (resp && resp.status){
+                    $('#table-lead-products').reloadFragment();
+                    Msg.success('Done');
+                } else {
+                    Msg.warning(resp.messages.join("\n"));
+                }
+                productSearchField.typeahead('val', '');
+            },
+            error: function () {
+                Msg.error('Something went wrong. Please contact administrator for details');
+                productSearchField.typeahead('val', '');
+            }
+        })
+    });
+
+    $(document).on('click', '.leadRemoveProduct', function (e) {
+        e.preventDefault();
+
+        var productId = $(this).attr('href');
+        var leadId = $(this).attr('data-leadid');
+        if (!productId || !leadId){
+            Msg.warning('Product or lead is not available');
+            return;
+        }
+        $.ajax({
+            url: '/leadProduct',
+            data: {
+                leadId: leadId,
+                removeProduct: productId
+            },
+            type: 'post',
+            dataType: 'json',
+            success: function (resp) {
+                if (resp && resp.status){
+                    $('#table-lead-products').reloadFragment();
+                    Msg.success('Done');
+                } else {
+                    Msg.warning(resp.messages.join("\n"));
+                }
+            },
+            error: function () {
+                Msg.error('Something went wrong. Please contact administrator for details');
+            }
+        })
     })
 }

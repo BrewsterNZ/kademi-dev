@@ -114,7 +114,7 @@
                     Add a product
                 </label>
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for a product to add..">
+                    <input data-leadid="$!page.lead.id" id="lead-search-product" type="text" class="form-control" placeholder="Search for a product to add..">
                     <span class="input-group-btn">
                         <button class="btn btn-success btn-add-lead-product" type="button" data-lead-id="$page.lead.id">
                             <i class="fa fa-plus-circle"></i>
@@ -123,33 +123,36 @@
                     </span>
                 </div>
             </div>
-        </div>
-        #set( $prods = $page.lead.leadProducts )
-        <div class="table-responsive">
-            <table class="table table-striped" id="table-lead-products">
-                #if( $prods.size() > 0 )
-                <thead>
-                <tr>
-                    <th>Code</th>
-                    <th>Product title</th>
-                    <th>Base cost</th>
-                </tr>
-                </thead>
-                <tbody>
-                #foreach( $prod in $prods )
-                <tr>
-                    <td>$prod.name</td>
-                    <td>$prod.title</td>
-                    <td>$!prod.baseCost</td>
-                </tr>
-                #end
-                </tbody>
-                #else
-                <tr>
-                    <td>No products have been added yet</td>
-                </tr>
-                #end
-            </table>
+
+            #set( $prods = $page.lead.leadProducts )
+            <div class="table-responsive">
+                <table class="table table-striped" id="table-lead-products">
+                    #if( $prods.size() > 0 )
+                    <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Product title</th>
+                        <th>Base cost</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    #foreach( $prod in $prods )
+                    <tr>
+                        <td>$prod.name</td>
+                        <td>$prod.title</td>
+                        <td>$!prod.baseCost</td>
+                        <td><a data-leadid="$!page.lead.id" href="$!prod.name" class="btn btn-xs btn-danger leadRemoveProduct"><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                    #end
+                    </tbody>
+                    #else
+                    <tr>
+                        <td>No products have been added yet</td>
+                    </tr>
+                    #end
+                </table>
+            </div>
         </div>
     </div>
 </div>

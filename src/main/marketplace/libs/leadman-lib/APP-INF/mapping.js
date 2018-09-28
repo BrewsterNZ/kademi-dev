@@ -26,11 +26,12 @@ controllerMappings
     .enabled(true)
     .isPublic(false)
     .path('/leadProduct')
+    .addMethod("GET", "findLeadProducts", "th")
     .addMethod('POST', 'addProduct', "addProduct")
+    .addMethod("POST", "removeProduct", "removeProduct")
     .postPriviledge("READ_CONTENT")
     .addType("leadManResource") // this is so the SalesRole will apply
     .build();
-
 
 function getLeadOrgTypes(page, params) {
     log.info('getLeadOrgTypes {} {}', page, params);
@@ -119,4 +120,54 @@ function addProduct(page, params, files, form) {
         lp = lead.addProduct(p);
     });
     return views.jsonResult(true, "Added lead product ID=" + lp.id);
+}
+
+function removeProduct(page, params, files, form) {
+    var leadId = form.longParam("leadId");
+    var prodCode = form.cleanedParam("removeProduct");
+    var p = services.catalogManager.findProductByName(prodCode);
+    if( p == null) {
+        return views.jsonResult(false, "Couldnt find product " + prodCode);
+    }
+    var lead = services.criteriaBuilders.getBuilder("lead").get(leadId);
+    if( lead == null ) {
+        return views.jsonResult(false, "Couldnt find lead " + leadId);
+    }
+    transactionManager.runInTransaction(function () {
+        lead.removeProduct(p);
+    });
+    return views.jsonResult(true, "Removed lead product ID=" + p.id);
+}
+
+function findLeadProducts(page, params, files, form) {
+    log.info('findLeadProducts {}');
+    var query = params.q;
+    var queryJson = {
+        query: {
+            "match_all": {}
+        },
+        size: 15
+    };
+    if (query){
+        queryJson.query = {
+            bool: {
+                must: {
+                    "multi_match": {
+                        "query": query,
+                        "fields": ["name^2", "title^2", "webName^3", "supplierTitle"],
+                        "type": "phrase_prefix"
+                    }
+                }
+            }
+        }
+    }
+    var queryText = JSON.stringify(queryJson);
+    log.info('findLeadProducts query {}', queryText);
+    var results = services.searchManager.search(queryText, 'products');
+    var arr = [];
+    for (var i in results.hits.hits){
+        var product = results.hits.hits[i];
+        arr.push({name: product.source.name, id: product.source.id, title: product.source.title, supplier: product.source.supplierTitle});
+    }
+    return views.jsonObjectView(JSON.stringify({status: true, data: arr}));
 }
