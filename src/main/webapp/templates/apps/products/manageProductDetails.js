@@ -287,42 +287,6 @@ function initProductImages() {
         });
     });
 
-    var curImageHref = '';
-    $('.change-image').on('click', function (e) {
-        curImageHref = $(this).attr('href');
-    });
-
-    $('.change-image').mselect({
-        forceHideFiles: true,
-        onSelectFile: function () {
-            flog("prod: onSelectFile", arguments);
-            var hash = arguments[3];
-            // This will update with new product image
-            $.ajax({
-                url: window.location.pathname,
-                data: {
-                    newImageHash : hash,
-                    curImageHref: curImageHref
-                },
-                dataType: 'json',
-                type: 'post',
-                success: function (resp) {
-                    if (resp && resp.status){
-                        Msg.success('Done', 'uploadProductImg');
-                        $('#product-images').reloadFragment();
-                    } else {
-                        Msg.error('An error occurred processing the product image', 'uploadProductImg');
-                    }
-                    curImageHref = '';
-                },
-                error: function () {
-                    Msg.error('An error occurred processing the product image', 'uploadProductImg');
-                    curImageHref = '';
-                }
-            })
-        }
-    });
-
     $('#btn-change-ava').mselect({
         forceHideFiles: true,
         onSelectFile: function () {
@@ -330,7 +294,7 @@ function initProductImages() {
             $.ajax({
                 url: window.location.pathname,
                 data: {
-                    hash: hash,
+                    newImageHash: hash,
                 },
                 dataType: 'json',
                 type: 'post',
