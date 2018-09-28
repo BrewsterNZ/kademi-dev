@@ -294,6 +294,11 @@
                 self.helper.find('.photo-editor-height').val(Math.round(e.detail.height));
             }
         };
+
+        if (options.minContainerWidth && options.minContainerHeight){
+            cropperOptions.minContainerWidth = options.minContainerWidth;
+            cropperOptions.minContainerHeight = options.minContainerHeight;
+        }
         
         self.image.attr('src', url);
         self.image.css('max-height', $(window).height() * 0.7);

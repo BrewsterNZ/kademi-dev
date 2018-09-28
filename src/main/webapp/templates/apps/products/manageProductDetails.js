@@ -295,6 +295,83 @@ function initProductImages() {
         btnPhotoEdit.addClass('hide');
     });
 
+    modalUpload.on('shown.bs.modal', function () {
+        btnPhotoEdit.photoEditor({
+            modalSize: 'modal-lg',
+            minContainerWidth: 700,
+            minContainerHeight: 300,
+            onModalShow: function (modal) {
+                modalUpload.modal('hide');
+                if (modalUpload.data('mupload')){
+                    var href = modalUpload.data('mupload').result.nextHref;
+                    this.setImage(href);
+                } else {
+                    Msg.warning('Image not found. Please try again');
+                }
+            },
+            onCancel: function () {
+                Msg.success('Done', 'uploadProductImg');
+                $('#product-images').reloadFragment();
+            },
+            onSave: function (data) {
+                flog('onSave photoeditor', data);
+
+                var editModal = this.modal;
+                var btns = editModal.find('.btn');
+                btns.prop('disabled', true);
+
+                var ajaxOptions = {
+                    url: '/mselect-lib/storeImage',
+                    type: 'post',
+                    dataType: 'json',
+                    success: function (resp) {
+                        if (resp && resp.status) {
+                            // POST hash to product image
+                            var href = editModal.find('img').attr('src');
+                            if (href){
+                                var imageId = href.trim().split('/').reverse()[0];
+                                if (imageId && !isNaN(imageId)){
+                                    updateProductImage(resp.hash, imageId);
+                                    editModal.modal('hide');
+                                    btns.prop('disabled', false);
+                                    modalUpload.data('mupload', null);
+                                    return;
+                                }
+                            }
+                        }
+
+                        flog('Error when saving image', resp);
+                        Msg.error('Error when saving image. Please contact your administrators to resolve this issue')
+
+                        btns.prop('disabled', false);
+                        modalUpload.data('mupload', null);
+                    },
+                    error: function (jqXhr, textStatus, errorThrow) {
+                        flog('Error when saving image', jqXhr, textStatus, errorThrow);
+                        Msg.error('Error when saving image. Please contact your administrators to resolve this issue')
+                        btns.prop('disabled', false);
+                    }
+                };
+
+                var ajaxData;
+                if (data.croppedImageBlob) {
+                    ajaxData = new FormData();
+                    ajaxData.append('file', data.croppedImageBlob);
+
+                    ajaxOptions.processData = false;
+                    ajaxOptions.contentType = false;
+                } else {
+                    ajaxData = {
+                        file: data.croppedImage
+                    };
+                }
+                ajaxOptions.data = ajaxData;
+
+                $.ajax(ajaxOptions);
+            }
+        });
+    });
+
     btnDone.click(function (e) {
         e.preventDefault();
         modalUpload.modal('hide');
@@ -304,79 +381,7 @@ function initProductImages() {
 
 
     initUploadModal();
-    btnPhotoEdit.photoEditor({
-        modalSize: 'modal-lg',
-        onModalShow: function (modal) {
-            modalUpload.modal('hide');
-            if (modalUpload.data('mupload')){
-                var href = modalUpload.data('mupload').result.nextHref;
-                this.setImage(href);
-            } else {
-                Msg.warning('Image not found. Please try again');
-            }
-        },
-        onCancel: function () {
-            if (modalUpload && modalUpload.length > 0) {
-                modalUpload.modal('show');
-            }
-        },
-        onSave: function (data) {
-            flog('onSave photoeditor', data);
 
-            var editModal = this.modal;
-            var btns = editModal.find('.btn');
-            btns.prop('disabled', true);
-
-            var ajaxOptions = {
-                url: '/mselect-lib/storeImage',
-                type: 'post',
-                dataType: 'json',
-                success: function (resp) {
-                    if (resp && resp.status) {
-                        // POST hash to product image
-                        var href = editModal.find('img').attr('src');
-                        if (href){
-                            var imageId = href.trim().split('/').reverse()[0];
-                            if (imageId && !isNaN(imageId)){
-                                updateProductImage(resp.hash, imageId);
-                                editModal.modal('hide');
-                                btns.prop('disabled', false);
-                                modalUpload.data('mupload', null);
-                                return;
-                            }
-                        }
-                    }
-
-                    flog('Error when saving image', resp);
-                    Msg.error('Error when saving image. Please contact your administrators to resolve this issue')
-
-                    btns.prop('disabled', false);
-                    modalUpload.data('mupload', null);
-                },
-                error: function (jqXhr, textStatus, errorThrow) {
-                    flog('Error when saving image', jqXhr, textStatus, errorThrow);
-                    Msg.error('Error when saving image. Please contact your administrators to resolve this issue')
-                    btns.prop('disabled', false);
-                }
-            };
-
-            var ajaxData;
-            if (data.croppedImageBlob) {
-                ajaxData = new FormData();
-                ajaxData.append('file', data.croppedImageBlob);
-
-                ajaxOptions.processData = false;
-                ajaxOptions.contentType = false;
-            } else {
-                ajaxData = {
-                    file: data.croppedImage
-                };
-            }
-            ajaxOptions.data = ajaxData;
-
-            $.ajax(ajaxOptions);
-        }
-    });
 }
 
 function initUploadModal() {
