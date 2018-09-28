@@ -287,29 +287,111 @@ function initProductImages() {
         });
     });
 
-    $('#btn-change-ava').mselect({
-        forceHideFiles: true,
-        onSelectFile: function () {
-            var hash = arguments[3];
-            $.ajax({
-                url: window.location.pathname,
-                data: {
-                    newImageHash: hash,
-                },
-                dataType: 'json',
+    var btnPhotoEdit = $("#btnPhotoEdit");
+    var btnDone = $("#btnDone");
+    var modalUpload = $("#modal-product-images-upload");
+    modalUpload.on('show.bs.modal', function () {
+        initUploadModal();
+        btnPhotoEdit.addClass('hide');
+    });
+
+    btnDone.click(function (e) {
+        e.preventDefault();
+        modalUpload.modal('hide');
+        Msg.success('Done', 'uploadProductImg');
+        $('#product-images').reloadFragment();
+    });
+
+
+    initUploadModal();
+    btnPhotoEdit.photoEditor({
+        modalSize: 'modal-lg',
+        onModalShow: function (modal) {
+            modalUpload.modal('hide');
+            if (modalUpload.data('mupload')){
+                var href = modalUpload.data('mupload').result.nextHref;
+                this.setImage(href);
+            } else {
+                Msg.warning('Image not found. Please try again');
+            }
+        },
+        onCancel: function () {
+            if (modalUpload && modalUpload.length > 0) {
+                modalUpload.modal('show');
+            }
+        },
+        onSave: function (data) {
+            flog('onSave photoeditor', data);
+
+            var editModal = this.modal;
+            var btns = editModal.find('.btn');
+            btns.prop('disabled', true);
+
+            var ajaxOptions = {
+                url: '/mselect-lib/storeImage',
                 type: 'post',
+                dataType: 'json',
                 success: function (resp) {
-                    if (resp && resp.status){
-                        Msg.success('Done', 'uploadProductImg');
-                        $('#product-images').reloadFragment();
-                    } else {
-                        Msg.error('An error occurred processing the product image', 'uploadProductImg');
+                    if (resp && resp.status) {
+                        // POST hash to product image
+                        var href = editModal.find('img').attr('src');
+                        if (href){
+                            var imageId = href.trim().split('/').reverse()[0];
+                            if (imageId && !isNaN(imageId)){
+                                updateProductImage(resp.hash, imageId);
+                                editModal.modal('hide');
+                                btns.prop('disabled', false);
+                                modalUpload.data('mupload', null);
+                                return;
+                            }
+                        }
                     }
+
+                    flog('Error when saving image', resp);
+                    Msg.error('Error when saving image. Please contact your administrators to resolve this issue')
+
+                    btns.prop('disabled', false);
+                    modalUpload.data('mupload', null);
                 },
-                error: function () {
-                    Msg.error('An error occurred processing the product image', 'uploadProductImg');
+                error: function (jqXhr, textStatus, errorThrow) {
+                    flog('Error when saving image', jqXhr, textStatus, errorThrow);
+                    Msg.error('Error when saving image. Please contact your administrators to resolve this issue')
+                    btns.prop('disabled', false);
                 }
-            })
+            };
+
+            var ajaxData;
+            if (data.croppedImageBlob) {
+                ajaxData = new FormData();
+                ajaxData.append('file', data.croppedImageBlob);
+
+                ajaxOptions.processData = false;
+                ajaxOptions.contentType = false;
+            } else {
+                ajaxData = {
+                    file: data.croppedImage
+                };
+            }
+            ajaxOptions.data = ajaxData;
+
+            $.ajax(ajaxOptions);
+        }
+    });
+}
+
+function initUploadModal() {
+    var btnPhotoEdit = $("#btnPhotoEdit");
+    var modalUpload = $("#modal-product-images-upload");
+    $('#muploadWrap').html('').mupload({
+        url: window.location.pathname,
+        useJsonPut: false, // Just do a POST
+        maxFiles: 1,
+        useDropzone: true,
+        acceptedFiles: 'image/*',
+        oncomplete: function (data, name, href) {
+            var href = data.result.nextHref;
+            modalUpload.data('mupload', data);
+            btnPhotoEdit.removeClass('hide');
         }
     });
 }
@@ -321,6 +403,29 @@ function toggleOrderInfo() {
     } else {
         $('.ordering').hide();
     }
+}
+
+function updateProductImage(hash, imageId) {
+    $.ajax({
+        url: window.location.pathname,
+        data: {
+            newImageHash: hash,
+            imageId: imageId
+        },
+        dataType: 'json',
+        type: 'post',
+        success: function (resp) {
+            if (resp && resp.status){
+                Msg.success('Done', 'uploadProductImg');
+                $('#product-images').reloadFragment();
+            } else {
+                Msg.error('An error occurred processing the product image', 'uploadProductImg');
+            }
+        },
+        error: function () {
+            Msg.error('An error occurred processing the product image', 'uploadProductImg');
+        }
+    })
 }
 
 function doCreateProductParameter(newTitle) {
