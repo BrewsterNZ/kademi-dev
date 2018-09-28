@@ -301,7 +301,7 @@ function initProductImages() {
             $.ajax({
                 url: window.location.pathname,
                 data: {
-                    hash: hash,
+                    newImageHash : hash,
                     curImageHref: curImageHref
                 },
                 dataType: 'json',
