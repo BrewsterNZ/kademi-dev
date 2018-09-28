@@ -132,7 +132,7 @@
                             #foreach($v in $page.searchResults)
                             <tr>
                                 #genStatus($v)
-                                <td><a href="/manageUsers/$v.cart.profile.id" target="_blank">$v.cart.profile.formattedName</a></td>
+                                <td><a href="/manageUsers/$!v.cart.profile.id" target="_blank">$!v.cart.profile.formattedName</a></td>
                                 <td><abbr class="timeago" title="$formatter.formatDateISO8601($v.cart.orderedDate, $rootFolder.organisation.timezone)">$!formatter.formatDateTime($v.cart.orderedDate, $rootFolder.organisation.timezone)</abbr></td>
                                 <td class="clickable" data-href="$v.href">$v.description</td>
                                 <td class="text-center">$formatter.toDecimal($v.totalItems, 0)</td>
