@@ -31,8 +31,9 @@
                                 </span>
                                 #end
 
+
                                 #if ($action.itemType == "fa-tasks")
-                                #if ($action.itemTitle != "Task cancelled" && $action.itemTitle != "Task completed")
+                                #if( $formatter.isEmpty($action.data['task'].completedDate) )
                                 <span href="/tasks/$!{action.data['taskId']} .taskViewModal" data-target="#modalEditTask" data-toggle="modal" title="Complete this task" class="timeline-btn"><i role="button" class="fa fa-check text-success"></i></span>
                                 <div class="btn-group timeline-btn">
                                     <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
@@ -43,6 +44,7 @@
                                 </div>
                                 #end
                                 #end
+
                                 #if ($action.data && $action.data["noteId"])
                                 <div class="btn-group timeline-btn">
                                     <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
