@@ -54,11 +54,19 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="input-group col-md-6">
+                        <div class="col-md-6">
                             <select id="searchFulfillmentState" class="form-control">
                                 <option value="">Any fulfillment state</option>
                                 #foreach( $statusEntry in $page.fulfilmentStatuses.entrySet() )
                                 <option value="$statusEntry.key">$statusEntry.key - $statusEntry.value</option>
+                                #end
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <select id="searchCartState" class="form-control">
+                                <option value="">Any cart state</option>
+                                #foreach( $cartStateEntry in $page.cartStates.entrySet() )
+                                <option value="$cartStateEntry.key">$cartStateEntry.key - $cartStateEntry.value</option>
                                 #end
                             </select>
                         </div>
@@ -363,20 +371,30 @@
             });
         </script>
         #macro(genStatus $v)
-        #set($statusMsg = $v.cart.fulfilmentState)
-        #set($statusClass = false)
-        #if($statusMsg == "N")
-        #set($statusMsg = "Not fulfilled")
-        #set($statusClass = "fa fa-exclamation text-info")
-        #elseif($statusMsg == "C")
-        #set($statusMsg = "Fulfilled")
-        #set($statusClass = "fa fa-check-circle text-success")
-        #end
+            #set($statusMsg = $v.cart.fulfilmentState)
+            #set($statusClass = false)
+
+            #if($statusMsg == "N")
+                #set($statusMsg = "Not fulfilled")
+                #set($statusClass = "fa fa-exclamation text-info")
+            #elseif($statusMsg == "C")
+                #set($statusMsg = "Fulfilled")
+                #set($statusClass = "fa fa-check-circle text-success")
+            #else
+                #set($statusMsg = "Pending")
+                #set($statusClass = "fa fa-pause-circle text-info")
+            #end
         <td class="icon clickable" data-href="$v.href" title="$statusMsg">
             #if($statusClass)
             <i class="$statusClass"></i>
             #else
-            <i class="badge badge-info">$v.cart.fulfilmentState</i>
+            <i class="badge badge-info">
+                #if( $v.cart.fulfilmentState )
+                $v.cart.fulfilmentState
+                #else
+                P
+                #end
+            </i>
             #end
         </td>
         #end

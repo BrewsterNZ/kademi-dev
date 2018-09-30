@@ -1,11 +1,6 @@
-var searchOptions = {
-    searchFulfillment: null,
-    startDate: null,
-    endDate: null
-};
 
 function initManageShoppingCarts() {
-    initHistorySearch();
+    initCartSearch();
     initButtons();
     $("abbr.timeago").timeago();
     initUploadOrdersCsv();
@@ -91,10 +86,6 @@ function initButtons() {
             markFulfilled(listToFulfill.join(','), statusCode);
         }
     });
-    $(document.body).on('change', '#searchFulfillmentState', function (e) {
-        e.preventDefault();
-        doSearch()
-    });
 }
 
 
@@ -112,7 +103,7 @@ function markFulfilled(listToFulfill, statusCode) {
         url: window.location.pathname,
         data: {
             fulfill: listToFulfill,
-            status : statusCode
+            status: statusCode
         },
         success: function (content) {
             flog('response', content);
@@ -121,15 +112,17 @@ function markFulfilled(listToFulfill, statusCode) {
     });
 }
 
-function initHistorySearch() {
+function initCartSearch() {
+    $(document.body).on('change', '#searchFulfillmentState,#searchCartState', function (e) {
+        e.preventDefault();
+        doSearch()
+    });
+
     $(document.body).on('pageDateChanged', function (e, startDate, endDate, text, trigger, initial) {
         if (initial) {
             flog("Ignore initial");
             return;
         }
-
-        searchOptions.startDate = startDate;
-        searchOptions.endDate = endDate;
 
         doSearch();
     });
@@ -137,43 +130,28 @@ function initHistorySearch() {
 
 
 function doSearch() {
-    var href = "?";
-    if (searchOptions.searchFulfillment !== null && searchOptions.searchFulfillment !== "") {
-        href = href + "fulfillment=" + searchOptions.searchFulfillment;
-    }
-    if (searchOptions.startDate !== null && searchOptions.startDate !== "") {
-        href = href + "&startDate=" + searchOptions.startDate;
-    }
-    if (searchOptions.endDate !== null && searchOptions.endDate !== "") {
-        href = href + "&finishDate=" + searchOptions.endDate;
-    }
-    $("#cartCSV").attr("href", "carts.csv" + href);
-    history.pushState(null, null, window.location.pathname + href);
-    doHistorySearch(searchOptions.startDate, searchOptions.endDate);
-}
-
-
-function doHistorySearch(startDate, endDate) {
     var f = $("#searchFulfillmentState").val();
+    var cartState = $("#searchCartState").val();
+    flog("doSearch: f=", f, "cartstate=", cartState );
 
-    var data = {
-        startDate: formatDate(startDate),
-        finishDate: formatDate(endDate),
-        fulfillment: f
-    };
-    flog('doHistorySearch', startDate, endDate, f);
-    var target = $("#shoppingCartList");
-    $.ajax({
-        type: "GET",
-        url: window.location.pathname,
-        dataType: 'html',
-        data: data,
-        success: function (content) {
-            flog('response', content);
-            var newBody = $(content).find("#shoppingCartList");
-            flog("newBody", newBody);
-            target.replaceWith(newBody);
-            jQuery("abbr.timeago").timeago();
+    var thisUri = new URI(window.location);
+    thisUri.setSearch("fulfillment", f);
+    thisUri.setSearch("cartState", cartState);
+    var newThisHref = thisUri.toString();
+
+    var csvUri = new URI("carts.csv");
+    csvUri.setSearch("fulfillment", f);
+    csvUri.setSearch("cartState", cartState);
+    var newCsvHref = csvUri.toString();
+
+    $("#cartCSV").attr("href", newCsvHref);
+    history.pushState(null, null, newThisHref);
+
+
+    $("#shoppingCartList").reloadFragment({
+        url : newThisHref,
+        whenComplete : function() {
+            $("abbr.timeago").timeago();
         }
     });
 }
@@ -278,38 +256,38 @@ function initAddNewOrder() {
 
         var append = $("#selectedProducts").find(".form-group").length > 0;
 
-        var html = $.parseHTML(`<div class='form-group' id='product_` + id + `'>
-                        <div class='col-sm-9'>
-                            <select class='form-control'>
-                            </select>
-                        </div>
-                        <div class='col-sm-2'><input type='number' data-id='` + id + `' value='1' class='form-control changeQuantity'></div>
-                        <div class='col-sm-1' style='padding-left:0px'><button type='button' data-id='` + id + `' class='btn btn-sm btn-danger removeSelectedProduct'><i class='glyphicon glyphicon-trash'></i></button></div>
-                    </div>`);
+        var html = $.parseHTML(` < div class = 'form-group' id = 'product_` + id + `' >
+                < div class = 'col-sm-9' >
+                < select class = 'form-control' >
+                < /select>
+                < /div>
+                < div class = 'col-sm-2' > < input type = 'number' data - id = '` + id + `' value = '1' class = 'form-control changeQuantity' > < /div>
+                < div class = 'col-sm-1' style = 'padding-left:0px' > < button type = 'button' data - id = '` + id + `' class = 'btn btn-sm btn-danger removeSelectedProduct' > < i class = 'glyphicon glyphicon-trash' > < /i></button > < /div>
+                < /div>`);
 
-        $.ajax({
-            type: "GET",
-            url: '/products/' + id + '/?variants',
-            dataType: 'json',
-            success: function (resp) {
-                if (resp.status) {
-                    var select = $(html).find("select");
-                    var empty = true;
-                    var data = resp.data;
-                    flog('data', data);
-                    $.map(data, function (val, key) {
-                        flog(val, " ", key);
-                        $(select).attr("name", "product_" + id + "-" + key);
-                        $(select).append($('<option></option>').val(1).html(title + " - " + val));
-                        empty = false;
-                    });
-                    if (empty) {
-                        $(select).attr("name", "product_" + id);
-                        $(select).append($('<option></option>').val(1).html(title));
+                $.ajax({
+                    type: "GET",
+                    url: '/products/' + id + '/?variants',
+                    dataType: 'json',
+                    success: function (resp) {
+                        if (resp.status) {
+                            var select = $(html).find("select");
+                            var empty = true;
+                            var data = resp.data;
+                            flog('data', data);
+                            $.map(data, function (val, key) {
+                                flog(val, " ", key);
+                                $(select).attr("name", "product_" + id + "-" + key);
+                                $(select).append($('<option></option>').val(1).html(title + " - " + val));
+                                empty = false;
+                            });
+                            if (empty) {
+                                $(select).attr("name", "product_" + id);
+                                $(select).append($('<option></option>').val(1).html(title));
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
 
         if (append) {
             $("#selectedProducts").append(html);
