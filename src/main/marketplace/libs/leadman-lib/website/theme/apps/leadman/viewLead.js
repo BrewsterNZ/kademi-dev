@@ -586,6 +586,7 @@
             $('#leadDetailActivities').reloadFragment({
                 whenComplete: function () {
                     $('abbr.timeago').timeago();
+                    initNotesDotDotDot();
                 }
             });
         })
