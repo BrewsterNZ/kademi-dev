@@ -338,6 +338,7 @@
     }
 
     function applyPromoCodes(codes, cartHref) {
+        var actors = $('.btn-decrease-quantity, .btn-increase-quantity, .ecom-txt-quantity, .btn-ecom-remove-item');
         flog("applyPromoCodes", codes, cartHref);
         $.ajax({
             type: 'POST',
