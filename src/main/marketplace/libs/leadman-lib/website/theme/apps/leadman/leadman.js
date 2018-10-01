@@ -1333,16 +1333,18 @@ function reloadTasks() {
             }
         });
     } else if ($(".tasksDashList").length){
-        $(".tasksDashList").first().reloadFragment({
-            whenComplete: function (doc) {
-                var tasksDashList = doc.find('.tasksDashList');
-                $(".tasksDashList").each(function (index) {
-                    $(this).replaceWith(tasksDashList[index]);
-                });
+        setTimeout(function () {
+            $(".tasksDashList").first().reloadFragment({
+                whenComplete: function (doc) {
+                    var tasksDashList = doc.find('.tasksDashList');
+                    $(".tasksDashList").each(function (index) {
+                        $(this).replaceWith(tasksDashList[index]);
+                    });
 
-                $('.timeago').timeago();
-            }
-        })
+                    $('.timeago').timeago();
+                }
+            })
+        }, 800);
     }
 
     reloadTimeline();
@@ -2049,7 +2051,7 @@ function initReloadLeads() {
     function reloadLeads(){
         setTimeout(function () {
             $('#leadsList').reloadFragment();
-        }, 300);
+        }, 800);
     }
     $(document).on('leadClosed', reloadLeads);
     $(document).on('leadsRefresh', reloadLeads);
