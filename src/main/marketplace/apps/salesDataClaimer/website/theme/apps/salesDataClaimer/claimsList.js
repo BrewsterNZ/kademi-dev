@@ -405,6 +405,7 @@
                     }
                     reader.readAsDataURL(file);
                 }
+                form.trigger('submit');
             });
 
             btnUpload.on('click', function (e) {
