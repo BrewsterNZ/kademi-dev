@@ -154,7 +154,7 @@
                                         <div class="radio">
                                             <label>
                                                 <input type="radio" name="group" value="$g.id" />
-                                                $g.name
+                                                $formatter.ifNull($g.title, $g.name)
                                             </label>
                                         </div>
                                     </div>

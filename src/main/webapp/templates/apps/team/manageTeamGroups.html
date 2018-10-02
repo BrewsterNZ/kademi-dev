@@ -114,7 +114,7 @@
                 #foreach($g in $page.selectedGroups)
                 <div class="alert alert-info">
                     <span class="fa fa-users"></span>
-                    <a href="/groups/$g.name/members">$g.name</a>
+                    <a href="/groups/$g.name/members">$formatter.ifNull($g.title, $g.name)</a>
                     #if( $g.groupType == "P" )
                     - Primary group
                     #elseif( $g.groupType == "M" )
@@ -152,7 +152,7 @@
                         <td>
                             <div class="col-sm-offset-3">
                                 <label class="checkbox-inline">
-                                    $formatter.checkbox($g.name, $page.isSelected($g) ) $g.name
+                                    $formatter.checkbox($g.name, $page.isSelected($g) ) $formatter.ifNull($g.title, $g.name)
                                 </label>
                             </div>
                         </td>

@@ -9,6 +9,7 @@ controllerMappings
     .defaultView(views.templateView('/theme/apps/team/viewMember.html'))
     .addMethod('GET', 'getTeamMember')
     .addMethod('POST', 'saveMember')
+    .addType("leadManResource") // this is so the SalesRole will apply
     .build();
 
 controllerMappings

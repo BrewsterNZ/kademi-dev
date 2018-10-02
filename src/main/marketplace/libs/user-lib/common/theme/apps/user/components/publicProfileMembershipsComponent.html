@@ -1,8 +1,8 @@
 <div class="details">                        
-    <h4>${page.displayName}'s memberships</h4>                                
+    <h4>${page.displayName}'s <span class="trans-lookup" data-transcode="memberships">memberships</span></h4>                                
     <ul>
         #if( $page.localMemberships.isEmpty() )
-        <li>No visible memberships</li>
+        <li class="trans-lookup" data-transcode="public-profile-memberships-no-visible">No visible memberships</li>
         #else
         #foreach($m in $page.localMemberships)
         <li>$m.groupEntity.name in $m.withinOrg.title</li>
