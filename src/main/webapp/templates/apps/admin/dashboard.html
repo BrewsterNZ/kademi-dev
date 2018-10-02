@@ -166,6 +166,15 @@
 
                 #portlets("adminDashboardMiddle")
 
+                <div class="text-right text-muted">
+                    <hr/>
+                    #set( $start = $services.queryManager.commonStartDate )
+                    #set( $finish = $services.queryManager.commonFinishDate )
+                    <i>
+                    Statistics for selected period $formatter.formatDate($start) - $formatter.formatDate($finish)
+                    </i>
+                </div>
+
                 <div class="ktile-container row">
                     <div class="ktile-sizer col-md-1 col-lg-1 col-sm-1"></div>
 

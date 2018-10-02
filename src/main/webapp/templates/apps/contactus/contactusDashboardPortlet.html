@@ -1,4 +1,3 @@
-#set( $start = $formatter.addDays( $formatter.now, -7 ) )
 <div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
     <div class="ktile">
         <div class="ktile-inner">
@@ -10,10 +9,13 @@
                                 <i class="fa fa-users fa-4x"></i>
                             </div>
                             <div class="ktile-single-value-text">
-                                #set( $numContactRequests = $rootFolder.find("/manageContacts").dbCount($start) )
+                                #set( $start = $services.queryManager.commonStartDate )
+                                #set( $finish = $services.queryManager.commonFinishDate )
+
+                                #set( $numContactRequests = $rootFolder.find("/manageContacts").dbCount($start, $finish) )
                                 #if( $numContactRequests > 0 )
-                                    <div class="lead">$rootFolder.find("/manageContacts").dbCount($start)</div>
-                                    <div class="small">contacts in 7 days</div>
+                                    <div class="lead">$numContactRequests</div>
+                                    <div class="small">contact requests</div>
                                 #else
                                     <div>Learn about forms</div>
                                 #end
