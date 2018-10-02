@@ -1,5 +1,5 @@
 <div class="well well-avatar profilePic">
-    <p class="confirm">Your profile photo has been updated</p>
+    <p class="confirm trans-lookup" data-transcode="profile-avatar-confirm">Your profile photo has been updated</p>
     <div>
         #set ($ava = '/theme/apps/user/profile.png')
         #set ($bgsize = "background-size: cover;")
@@ -7,8 +7,8 @@
             #set ($ava = $page.photoHref)
         #end
         <span class="avatar img-circle" id="profile-avatar" style="background: url($ava) no-repeat center; $!bgsize"></span>
-        <h4>Update profile image</h4>
-        <p>Update your profile image below. This must be less then 10Mb.</p>
+        <h4 class="trans-lookup" data-transcode="profile-avatar-title">Update profile image</h4>
+        <p class="trans-lookup" data-transcode="profile-avatar-file-size">Update your profile image below. This must be less then 10Mb.</p>
     </div>
-    <button id="btn-change-ava" class="btn btn-success">Change image</button>
+    <button id="btn-change-ava" class="btn btn-success trans-lookup" data-transcode="profile-avatar-change-image">Change image</button>
 </div>

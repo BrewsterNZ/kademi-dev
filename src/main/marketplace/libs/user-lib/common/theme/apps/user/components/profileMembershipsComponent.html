@@ -5,7 +5,7 @@
     <ul class='list-unstyled memberships' id="profile-memberships">
         #foreach($membership in $profile.primaryMemberships())
         <li>
-            Member of the <b>$membership.groupTitle</b> group
+            <span class="trans-lookup" data-transcode="profile-memberships-of">Member of the</span> <b>$membership.groupTitle</b> <span class="trans-lookup" data-transcode="profile-memberships-group">group</span>
             #if( $membership.org.isAdminDomain() )
             #else
             in
@@ -13,7 +13,7 @@
             #end
 
         <acronym title='Remove this membership'>
-            <a href='$membership.id' class='membership-remove'><i class="fa fa-times"></i><span>Remove</span></a>
+            <a href='$membership.id' class='membership-remove'><i class="fa fa-times"></i><span class="trans-lookup" data-transcode="profile-memberships-group-remove">Remove</span></a>
         </acronym>
         </li>
         #end
@@ -26,7 +26,7 @@
     #if( !$group.closedGroup )
     <button class="btn btn-primary" data-toggle="modal" data-target="#profile-add-org-$group.name">
         <i class="fa fa-plus"></i>
-        Join $group.title
+        <span class="trans-lookup" data-transcode="profile-memberships-group-join">Join</span> $group.title
     </button>
     #end
     #end
@@ -43,21 +43,21 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">New $group.title membership</h4>
+                <h4 class="modal-title"><span class="trans-lookup" data-transcode="profile-memberships-group-new">New</span> $group.title membership</h4>
             </div>
             <form method="POST" action="/profile-memberships">
                 <input type="hidden" name="groupName" value="$group.name" />
                 <input type="hidden" name="orgId" value="" />
                 <div class="modal-body modal-overflow"  id="changeOrgModalBody">
                     <div class="clearfix">
-                        <p>Please enter the $orgType you want to join</p>
-                        <input class="required form-control" type="text" name="orgTitleSearch" autocomplete="nope" placeholder="Choose your $orgType" />
+                        <p><span class="trans-lookup" data-transcode="profile-memberships-group-enter-org-1">Please enter the</span> $orgType <span class="trans-lookup" data-transcode="profile-memberships-group-enter-org-2">you want to join</span></p>
+                        <input class="required form-control trans-lookup" type="text" name="orgTitleSearch" autocomplete="nope" placeholder="Choose your $orgType" />
                         <br>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                    <button class="btn btn-primary btn-save" type="submit">Save changes</button>
+                    <button class="btn trans-lookup" data-dismiss="modal" aria-hidden="true">Close</button>
+                    <button class="btn btn-primary btn-save trans-lookup" type="submit">Save changes</button>
                 </div>
             </form>
         </div>
@@ -72,14 +72,14 @@
 #else
 <div class="well">
 
-    <h4>Membership applications</h4>
+    <h4 class="trans-lookup" data-transcode="membership-applications">Membership applications</h4>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Group</th>
-                <th>Organisation</th>
-                <th>Status</th>
-                <th>Submitted date  </th>
+                <th class="trans-lookup" data-transcode="membership-applications-list-group">Group</th>
+                <th class="trans-lookup" data-transcode="membership-applications-list-organisation">Organisation</th>
+                <th class="trans-lookup" data-transcode="membership-applications-list-status">Status</th>
+                <th class="trans-lookup" data-transcode="membership-applications-list-submitted-date">Submitted date  </th>
             </tr>
         </thead>
         #foreach( $gma in $gmas )
