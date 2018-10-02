@@ -1,13 +1,13 @@
 <div class="well well-unsubscribe">
     <form action="$request.absolutePath" method="POST" class="form-inline form-unsubscribe">
         <img class='ajax-loader' src='/static/common/loading.gif'/>
-        <h4>Unsubscribe</h4>
-        <p>Unsubscribe from this site. You will no longer receive any email communications, and you will not be able to login.</p>
+        <h4 class="trans-lookup" data-transcode="unsubscribe">Unsubscribe</h4>
+        <p class="trans-lookup" data-transcode="profile-unsubscribe-notice">Unsubscribe from this site. You will no longer receive any email communications, and you will not be able to login.</p>
         <input type="hidden" name="unsubscribe" value="true"/>
         #if("$!page.profile.email" == "")
-            <button class="btn btn-danger">Unsubscribe</button>
+            <button class="btn btn-danger trans-lookup" data-transcode="unsubscribe">Unsubscribe</button>
         #else
-            <button class="btn btn-danger">Unsubscribe - $!page.profile.email</button>
+            <button class="btn btn-danger"> <span class="trans-lookup" data-transcode="unsubscribe">Unsubscribe</span> - $!page.profile.email</button>
         #end
 
     </form>
