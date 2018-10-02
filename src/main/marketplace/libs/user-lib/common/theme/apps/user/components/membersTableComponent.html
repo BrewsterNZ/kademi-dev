@@ -15,7 +15,7 @@
 #set ($columns = $columns.split(","))
 <div class="panel panel-default" style="height: $!{height}px; min-height: 0; overflow-y: auto" data-items-per-page="$!itemsPerPage">
     <div class="panel-heading">
-        <i class="fa fa-table"></i> $title
+        <i class="fa fa-table"></i> <span class="trans-lookup" data-transcode="member-table-title">$title</span>  
     </div>
     <div class="panel-body">
         <div class="table-responsive">
@@ -172,7 +172,7 @@
 
                 #end
                 #if ($showCustLink == "true")
-                <td><a class="btn btn-primary btn-xs" href="/custs/$!row.source.get('userName')"><i class="fa fa-info-circle"></i> View</a></td>
+                <td><a class="btn btn-primary btn-xs trans-lookup" href="/custs/$!row.source.get('userName')"><i class="fa fa-info-circle"></i> View</a></td>
                 #end
             </tr>
             #end
