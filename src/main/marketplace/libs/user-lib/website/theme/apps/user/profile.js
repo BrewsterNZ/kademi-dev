@@ -1,10 +1,14 @@
 function initProfile() {
-    $('#maincontentContainer form.profile-panel').not('.form-unsubscribe').forms({
-        onSuccess: function (resp, form) {
-            flog('done');
-            Msg.info('Saved ok');
-        }
-    });
+    var forms = $('#maincontentContainer form.profile-panel').not('.form-unsubscribe');
+    flog("initProfile found forms=", forms.length);
+    if( forms.length > 0 ) {
+        forms.forms({
+            onSuccess: function (resp, form) {
+                flog('done');
+                Msg.info('Saved ok');
+            }
+        });
+    }
 
     $('.profile-add-membership form').forms({
         onSuccess: function (resp, form) {
