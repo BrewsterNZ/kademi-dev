@@ -83,6 +83,14 @@
                         component.attr('data-single-claim', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('.chk-hide-submit-button').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-hide-submit-button', this.checked);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -99,6 +107,7 @@
             form.find('.chk-hide-preview-receipt').prop('checked', dataAttributes['data-hide-preview-receipt'] === 'true');
             form.find('.chk-hide-upload-receipt').prop('checked', dataAttributes['data-hide-upload-receipt'] === 'true');
             form.find('.chk-single-claim').prop('checked', dataAttributes['data-single-claim'] === 'true');
+            form.find('.chk-hide-submit-button').prop('checked', dataAttributes['data-hide-submit-button'] === 'true');
         }
     };
 
