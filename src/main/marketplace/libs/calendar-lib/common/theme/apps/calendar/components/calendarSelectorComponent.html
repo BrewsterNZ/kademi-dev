@@ -14,14 +14,14 @@
 
 <div class="btn-group">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-        No calendars <span class="caret"></span>
+        <span class="trans-lookup" data-transcode="no-calendars">No calendars</span> <span class="caret"></span>
     </button>
 </div>
 
 #else
 <div class="btn-group">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-        Select a calendar <span class="caret"></span>
+        <span class="trans-lookup" data-transcode="select-a-calendar">Select a calendar</span> <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu">
         #foreach($cal in $cals)
@@ -32,7 +32,7 @@
             #foreach($cal in $page.find($calPage).children.ofType.calendar)
                 #if($foreach.first)
                     <li class="divider"></li>
-                    <li class="dropdown-header"><strong>Personal calendars</strong></li>
+                    <li class="dropdown-header"><strong  class="trans-lookup" data-transcode="personal-calendar">Personal calendars</strong></li>
                 #end
                 <li><a href="$cal.href">$cal.title</a></li>
             #end
