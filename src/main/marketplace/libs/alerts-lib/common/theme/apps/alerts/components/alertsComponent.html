@@ -14,7 +14,7 @@
         #if( $msg.id )
             #if( $msg.allowDismiss && (!$whatToShow || $whatToShow == 'unacknowledged') )
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <a class="hide msg trans-lookup" href="javascript:void(0);" data-id="$msg.id" data-transcode="Ack">Ack</a>
+            <a class="hide msg trans-lookup" href="javascript:void(0);" data-id="$msg.id" data-transcode="ack">Ack</a>
             #end
         #end
         $msg.body
@@ -23,7 +23,7 @@
 #else
 <div class="dashboard-alert alert alert-info">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <a class="hide msg trans-lookup" href="#" data-transcode="Ack">Ack</a>
+    <a class="hide msg trans-lookup" href="#" data-transcode="ack">Ack</a>
     Example ${formatter.ifNull($position, "top")} alert message.
 </div>
 #end
