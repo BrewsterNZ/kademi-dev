@@ -625,7 +625,7 @@ function initNewLeadForm() {
                 var btn = form.find(".clicked");
 
                 if (btn.hasClass("btnCreateAndClose")) {
-                    Msg.info('Saved new lead');
+                    Msg.info('Saved');
                     modal.modal("hide");
 
                     $('#source-frm').val('').trigger("change");
@@ -658,7 +658,7 @@ function initNewLeadForm() {
 
                     $(document).trigger('leadsRefresh');
                 } else {
-                    Msg.info('Saved, going to the new lead');
+                    Msg.info('Saved, going to its details page');
                     if (resp.nextHref) {
                         window.location.href = resp.nextHref;
                     }
