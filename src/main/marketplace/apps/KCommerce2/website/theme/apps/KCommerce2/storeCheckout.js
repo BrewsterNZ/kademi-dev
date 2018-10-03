@@ -350,6 +350,7 @@
                 $("#ecomItemsTable, #cart-link, #cart-checkout-data").reloadFragment({
                     whenComplete: function (resp) {
                         Msg.info("Updated item in your shopping cart");
+                        var actors = $('.btn-decrease-quantity, .btn-increase-quantity, .ecom-txt-quantity, .btn-ecom-remove-item');
                         actors.prop('disabled', false);
                     }
                 });

@@ -2,12 +2,12 @@
     <div class="page-header">
         #if($page && $page.is("auction"))
             <h2>$page.title <br />
-                <small>Created By <a href="$page.createdBy.href">$page.createdBy.name</a></small>
+                <small><span  class="trans-lookup"  data-transcode="created-by">Created By</span> <a href="$page.createdBy.href">$page.createdBy.name</a></small>
             </h2>
         #else
             #if ($page && !$page.is("auction"))
             #else
-            <h2>Page title <br />
+            <h2><span  class="trans-lookup"  data-transcode="page-title">Page title</span> <br />
                 <small>Created By <a href="javascript:void(0)">admin</a></small>
             </h2>
             #end

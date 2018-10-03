@@ -23,7 +23,7 @@
             <tr class="clickable" data-href="/shopping-carts/$c.id/">
                 #genStatus($c)
                 <td><abbr class="timeago" title="$formatter.formatDateISO8601($c.orderedDate)">$c.orderedDate</abbr></td>
-                <td>$c.cartId</td>
+                <td>$!c.cartId</td>
                 <td>$applications.shoppingCart.getDescription($c)</td>
                 #getCountCost($c)
             </tr>
@@ -56,7 +56,7 @@
         #set($totalPoCount = $totalPoCount + $po.quantity)
         #set($totalPoCost = $po.quantity * $po.unitCost)
     #end
-    
+
     <td>$formatter.toDecimal($totalPoCount, 0)</td>
     <td>$formatter.formatCurrency($totalPoCost)</td>
 #end

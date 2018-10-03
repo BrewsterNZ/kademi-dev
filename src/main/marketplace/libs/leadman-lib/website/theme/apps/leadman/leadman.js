@@ -625,7 +625,7 @@ function initNewLeadForm() {
                 var btn = form.find(".clicked");
 
                 if (btn.hasClass("btnCreateAndClose")) {
-                    Msg.info('Saved new lead');
+                    Msg.info('Saved');
                     modal.modal("hide");
 
                     $('#source-frm').val('').trigger("change");
@@ -658,7 +658,7 @@ function initNewLeadForm() {
 
                     $(document).trigger('leadsRefresh');
                 } else {
-                    Msg.info('Saved, going to the new lead');
+                    Msg.info('Saved, going to its details page');
                     if (resp.nextHref) {
                         window.location.href = resp.nextHref;
                     }
@@ -1333,16 +1333,18 @@ function reloadTasks() {
             }
         });
     } else if ($(".tasksDashList").length){
-        $(".tasksDashList").first().reloadFragment({
-            whenComplete: function (doc) {
-                var tasksDashList = doc.find('.tasksDashList');
-                $(".tasksDashList").each(function (index) {
-                    $(this).replaceWith(tasksDashList[index]);
-                });
+        setTimeout(function () {
+            $(".tasksDashList").first().reloadFragment({
+                whenComplete: function (doc) {
+                    var tasksDashList = doc.find('.tasksDashList');
+                    $(".tasksDashList").each(function (index) {
+                        $(this).replaceWith(tasksDashList[index]);
+                    });
 
-                $('.timeago').timeago();
-            }
-        })
+                    $('.timeago').timeago();
+                }
+            })
+        }, 800);
     }
 
     reloadTimeline();
@@ -2049,7 +2051,7 @@ function initReloadLeads() {
     function reloadLeads(){
         setTimeout(function () {
             $('#leadsList').reloadFragment();
-        }, 300);
+        }, 800);
     }
     $(document).on('leadClosed', reloadLeads);
     $(document).on('leadsRefresh', reloadLeads);

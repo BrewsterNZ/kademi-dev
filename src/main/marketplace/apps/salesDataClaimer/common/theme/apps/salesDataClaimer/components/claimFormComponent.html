@@ -7,142 +7,90 @@
     #set($isAnonymousAllowed = $app.call("isAnonymousAllowed", $page))
 
     #if ($user || $isAnonymousAllowed)
-        <form class="form-horizontal form-new-claim #if ($bgTransparent == "true") #else well #end" action="/salesDataClaims/" method="post" enctype="multipart/form-data" style="background-color: $formBgColor;">
-            #if ($formTitle && $formTitle != "")
-                <h3>$formTitle</h3>
-            #end
-            #if ($formDescription && $formDescription != "")
-                <p>$formDescription</p>
-            #end
-            <div class="form-message alert alert-danger" style="display: none;"></div>
-            <input type="hidden" name="createClaim" value="true" />
-            <input type="hidden" name="claimItemsLength" value="0" />
-
-
-            #if ($user)
-                <input type="hidden" name="soldBy" value="$!userResource.name" />
-                <input type="hidden" name="soldById" value="$!userResource.userId" />
-            #else
-                <div class="form-group">
-                    <label for="salesDataClaimer-firstName" class="control-label sr-only">First name</label>
-
-                    <div class="col-sm-12">
-                        <input type="text" id="salesDataClaimer-firstName" class="form-control required" name="firstName" placeholder="First name" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="salesDataClaimer-email" class="control-label sr-only">First name</label>
-
-                    <div class="col-sm-12">
-                        <input type="text" id="salesDataClaimer-email" class="form-control required" name="email" placeholder="Email Address" />
-                    </div>
-                </div>
-            #end
-
-            #set( $displayAdd = $formatter.ifTrue($singleClaim, "none", "") )
-
-            <div class="claim-items">
-                <div class="claim-items-body"></div>
-
-                <button class="btn btn-primary btn-block" type="button" data-action="add-claim-item" style="display: $displayAdd"><i class="fa fa-plus"></i> Add claim item</button>
-            </div>
-
-            #foreach($xf in $app.call("getSalesDataExtreFields", $page))
-            <div class="form-group">
-                <label for="field_${xf.name}" class="control-label sr-only">$formatter.firstNotNull($xf.title, $xf.name)</label>
-
-                <div class="col-sm-12">
-                    $xf.html
-                </div>
-            </div>
-            #end
-            <input type="hidden" name="claimType" value="$!claimType" />
-
-            <div class="form-group">
-                <label class="control-label sr-only">Receipt</label>
-
-                <div class="col-sm-12">
-                    #if ($hidePreviewReceipt != "true")
-                        <p class="thumbnail">
-                            <img src="/static/images/photo_holder.png" class="img-responsive" />
-                        </p>
-                    #end
-
-                    #if( $formatter.toBool($hideUploadReceipt) )
-                    #else
-                    <button type="button" class="btn btn-sm btn-info btn-upload-receipt btn-block"><i class="fa fa-file-picture-o"></i> <span>Upload receipt</span></button>
-
-                    <input type="file" name="receiptImage" accept="image/*,text/csv, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="form-control" style="display: none !important;" />
-                    #end
-                </div>
-            </div>
-            <button class="btn btn-primary btn-block" type="submit">Save claim</button>
-        </form>
-        <div class="sale-claim-success" style="display: none">
-            <p><i class="fa fa-thumbs-up"></i></p>
-            <h2>Congratulations!</h2>
-            <p class="lead">You've just submitted a claim</p>
-            <button type="button" class="btn btn-info btn-submit-other-claim">Submit another</button>
-        </div>
+        #renderClaimForm()
     #end
 #else
-    <div class="form-horizontal form-new-claim #if ($bgTransparent == "true") #else well #end" style="background-color: $formBgColor;">
-        #if ($formTitle && $formTitle != "")
-            <h3>$formTitle</h3>
-        #end
-        #if ($formDescription && $formDescription != "")
-            <p>$formDescription</p>
-        #end
-        <div class="claim-items">
-            <div class="claim-items-body">
-                <div class="claim-item">
-                    <div class="form-group">
-                        <label for="amount" class="control-label sr-only">Amount</label>
+    #renderClaimForm()
+#end
 
-                        <div class="col-sm-12">
-                            <input type="number" id="amount" class="form-control required" placeholder="Sale amount" />
-                        </div>
-                    </div>
+#macro (renderClaimForm )
+    <form class="form-horizontal form-new-claim #if ($bgTransparent == "true") #else well #end" action="/salesDataClaims/" method="post" enctype="multipart/form-data" style="background-color: $formBgColor;">
+    #if ($formTitle && $formTitle != "")
+    <h3>$formTitle</h3>
+    #end
+    #if ($formDescription && $formDescription != "")
+    <p>$formDescription</p>
+    #end
+    <div class="form-message alert alert-danger" style="display: none;"></div>
+    <input type="hidden" name="createClaim" value="true" />
+    <input type="hidden" name="claimItemsLength" value="0" />
 
-                    <div class="form-group">
-                        <label for="soldDate" class="control-label sr-only">Date</label>
 
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <input type="text" id="soldDate" placeholder="Purchase date" data-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker required" />
-                                <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
-                            </div>
-                        </div>
-                    </div>
+    #if ($user)
+    <input type="hidden" name="soldBy" value="$!userResource.name" />
+    <input type="hidden" name="soldById" value="$!userResource.userId" />
+    #else
+    <div class="form-group">
+        <label for="salesDataClaimer-firstName" class="control-label sr-only">First name</label>
 
-                    <div class="form-group">
-                        <label for="productSku" class="control-label sr-only">Product SKU</label>
-
-                        <div class="col-sm-12">
-                            <input id="productSku" class="form-control required" placeholder="Product name" value="" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button class="btn btn-primary btn-block" type="button" data-action="add-claim-item"><i class="fa fa-plus"></i> Add claim item</button>
+        <div class="col-sm-12">
+            <input type="text" id="salesDataClaimer-firstName" class="form-control required" name="firstName" placeholder="First name" />
         </div>
+    </div>
+    <div class="form-group">
+        <label for="salesDataClaimer-email" class="control-label sr-only">Email Address</label>
 
-        <input type="hidden" name="claimType" value="$!claimType" />
-        <div class="form-group">
-            <label class="control-label sr-only">Receipt</label>
-
-            <div class="col-sm-12">
-                #if ($hidePreviewReceipt != "true")
-                    <p class="thumbnail">
-                        <img src="/static/images/photo_holder.png" class="img-responsive" />
-                    </p>
-                #end
-                <button type="button" class="btn btn-sm btn-info btn-upload-receipt btn-block"><i class="fa fa-file-picture-o"></i> <span>Upload receipt</span></button>
-                <span class="text-danger img-error" style="display: none;">Selected file is not image!</span>
-                <input type="file" name="receiptImage" class="form-control" style="display: none !important;" />
-            </div>
+        <div class="col-sm-12">
+            <input type="text" id="salesDataClaimer-email" class="form-control required" name="email" placeholder="Email Address" />
         </div>
-        <button class="btn btn-primary btn-block" type="button">Save claim</button>
+    </div>
+    #end
+
+    #set( $displayAdd = $formatter.ifTrue($singleClaim, "none", "") )
+
+    <div class="claim-items">
+        <div class="claim-items-body"></div>
+
+        <button class="btn btn-primary btn-block" type="button" data-action="add-claim-item" style="display: $displayAdd"><i class="fa fa-plus"></i> Add claim item</button>
+    </div>
+
+    #foreach($xf in $app.call("getSalesDataExtreFields", $page))
+    <div class="form-group">
+        <label for="field_${xf.name}" class="control-label sr-only">$formatter.firstNotNull($xf.title, $xf.name)</label>
+
+        <div class="col-sm-12">
+            $xf.html
+        </div>
+    </div>
+    #end
+    <input type="hidden" name="claimType" value="$!claimType" />
+
+    <div class="form-group">
+        <label class="control-label sr-only">Receipt</label>
+
+        <div class="col-sm-12">
+            #if ($hidePreviewReceipt != "true")
+            <p class="thumbnail">
+                <img src="/static/images/photo_holder.png" class="img-responsive" />
+            </p>
+            #end
+
+            #if( $formatter.toBool($hideUploadReceipt) )
+            #else
+            <button type="button" class="btn btn-sm btn-info btn-upload-receipt btn-block"><i class="fa fa-file-picture-o"></i> <span>Upload receipt</span></button>
+
+            <input type="file" name="receiptImage" accept="image/*,text/csv, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="form-control" style="display: none !important;" />
+            #end
+        </div>
+    </div>
+    #if ($hideSubmitButton != "true")
+    <button class="btn btn-primary btn-block" type="submit">Save claim</button>
+    #end
+    </form>
+    <div class="sale-claim-success" style="display: none">
+        <p><i class="fa fa-thumbs-up"></i></p>
+        <h2>Congratulations!</h2>
+        <p class="lead">You've just submitted a claim</p>
+        <button type="button" class="btn btn-info btn-submit-other-claim">Submit another</button>
     </div>
 #end

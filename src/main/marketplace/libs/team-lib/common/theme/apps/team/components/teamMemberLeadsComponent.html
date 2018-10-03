@@ -1,16 +1,16 @@
 <div class="panel panel-default">
     <div class="panel-body">
-        <h4 class="page-header">Assigned Leads</h4>
+        <h4 class="page-header trans-lookup" data-transcode="assigned-leads">Assigned Leads</h4>
         <div class="panel panel-default panel-kcrm">
             <table class="table table-striped kcrm-table dataTable">
                 <thead>
                 <tr>
                     <th></th>
-                    <th>First name</th>
-                    <th>Surname</th>
-                    <th>Stage</th>
-                    <th>Deal value</th>
-                    <th>Status</th>
+                    <th class="trans-lookup" data-transcode="first-name">First name</th>
+                    <th class="trans-lookup" data-transcode="surname">Surname</th>
+                    <th class="trans-lookup" data-transcode="stage">Stage</th>
+                    <th class="trans-lookup" data-transcode="deal-value">Deal value</th>
+                    <th class="trans-lookup" data-transcode="status">Status</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -28,18 +28,18 @@
                         <td>$!lead.dealAmount</td>
                         <td>
                             #if( $lead.cancelled )
-                            Cancelled
+                            <span class="trans-lookup" data-transcode="cancelled">Cancelled</span>
                             #elseif( $lead.closedDate )
-                            Won
+                            <span class="trans-lookup" data-transcode="won">Won</span>
                             #else
-                            Active
+                            <span class="trans-lookup" data-transcode="active">Active</span>
                             #end
                         </td>
                     </tr>
                     #end
                 #else
                     <tr>
-                        <td colspan="99">No lead found</td>
+                        <td colspan="99" class="trans-lookup" data-transcode="no-lead-found">No lead found</td>
                     </tr>
                 #end
                 </tbody>

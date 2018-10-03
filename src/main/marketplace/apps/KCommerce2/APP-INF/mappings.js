@@ -355,7 +355,8 @@ function applyPromoCodes(page, params, files, form) {
         } else {
             var cart = services.cartManager.shoppingCart(true);
             var store = page.attributes.store;
-            services.cartManager.applyPromoCodes(cart, store, codesList);
+            var promoCodeResults = services.cartManager.applyPromoCodes(cart, store, codesList);
+            // check results to see if any were or were not applied successfuly
             jsonResult = views.jsonView(true, "Applied codes " + promoCodes);
         }
     });

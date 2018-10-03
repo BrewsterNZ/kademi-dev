@@ -3,9 +3,9 @@
         <div class="panel-heading">
             <div class="panel-title">
                 #if(!$page.auctionClosed)
-                    Bid Form
+                    <span  class="trans-lookup"  data-transcode="bid-form">Bid Form</span>
                 #else
-                    Auction is ended
+                    <span  class="trans-lookup"  data-transcode="auction-is-ended"> Auction is ended</span>
                 #end
             </div>
         </div>
@@ -23,7 +23,7 @@
                                 <input class="numeric required form-control" type="number" size="5" name="auctionBidValue" value="$!formatter.toInteger($actionCurrVal)" data-message="Amount bid must be digits" />
                                 <span class="input-group-btn">
                                     <button type="submit" class="btn btn-md btn-primary">
-                                        Place Bid
+                                       <span  class="trans-lookup"  data-transcode="place-bid">Place Bid</span>
                                     </button>
                                 </span>
                             </div>
@@ -34,18 +34,18 @@
                 #if($page.auctionType == "HBA")
                 <p><i class="fa fa-dollar fa-fw"></i>
                     #if($page.currentBidValue)
-                        Current Bid: $<span id="auction-current-bid-value">$!page.currentBidValue</span>
+                        <span  class="trans-lookup"  data-transcode="current-bid"> Current Bid:</span> $<span id="auction-current-bid-value">$!page.currentBidValue</span>
                     #else
-                        Current Bid: $<span id="auction-current-bid-value">$!page.auctionStartValue</span>
+                        <span  class="trans-lookup"  data-transcode="current-bid"> Current Bid:</span> $<span id="auction-current-bid-value">$!page.auctionStartValue</span>
                     #end
                 </p>
                 #end
     
-                <p><i class="fa fa-list-ol fa-fw"></i> Bid Count: <span id="auction-bid-count">$!page.auctionBidCount</span></p>
-    
-                <p><i class="fa fa-clock-o fa-fw"></i> End at: <abbr class="timeago" title="$formatter.formatDateISO8601($page.auctionEndDate)">$!page.auctionEndDate</abbr></p>
+                <p><i class="fa fa-list-ol fa-fw"></i><span  class="trans-lookup"  data-transcode="bid-count"> Bid Count:</span> <span id="auction-bid-count">$!page.auctionBidCount</span></p>
+        
+                <p><i class="fa fa-clock-o fa-fw"></i> <span  class="trans-lookup"  data-transcode="end-at">End at:</span> <abbr class="timeago" title="$formatter.formatDateISO8601($page.auctionEndDate)">$!page.auctionEndDate</abbr></p>
             #else
-                <h3>Won by <a href="/users/$page.wonBy.userName/public" target="_blank">$!page.wonBy.name</a>!</h3>
+                <h3><span  class="trans-lookup"  data-transcode="won-by">Won by</span> <a href="/users/$page.wonBy.userName/public" target="_blank">$!page.wonBy.name</a>!</h3>
             #end
         </div>
     </div>
@@ -54,7 +54,7 @@
     #else
     <div id="panel-auction-bid-form" class="panel panel-default">
         <div class="panel-heading">
-            <div class="panel-title">Bid Form</div>
+            <div class="panel-title"><span  class="trans-lookup"  data-transcode="bid-form">Bid Form</span></div>
         </div>
         <div class="panel-body">
             <form method="POST" action="." class="form-horizontal">
@@ -64,19 +64,19 @@
                     </div>
                     <div class="col-md-4">
                         <button type="submit" class="btn btn-md btn-primary">
-                            Place Bid
+	                        <span  class="trans-lookup"  data-transcode="place-bid"> Place Bid</span>
                         </button>
                     </div>
                 </div>
             </form>
-
+    
             <p><i class="fa fa-dollar fa-fw"></i>
-                Current Bid: $<span id="auction-current-bid-value">0</span>
+                <span  class="trans-lookup"  data-transcode="current-bid">Current Bid:</span> $<span id="auction-current-bid-value">0</span>
             </p>
-
-            <p><i class="fa fa-list-ol fa-fw"></i> Bid Count: <span id="bidCount">10</span></p>
-
-            <p><i class="fa fa-clock-o fa-fw"></i> End at: <abbr class="timeago" title="$formatter.formatDateISO8601($page.auctionEndDate)">$formatter.formatDate($formatter.getCurrentDateService().getNow())</abbr></p>
+    
+            <p><i class="fa fa-list-ol fa-fw"></i> <span  class="trans-lookup"  data-transcode="bid-count">Bid Count:</span> <span id="bidCount">10</span></p>
+    
+            <p><i class="fa fa-clock-o fa-fw"></i> <span  class="trans-lookup"  data-transcode="end-at">End at:</span> <abbr class="timeago" title="$formatter.formatDateISO8601($page.auctionEndDate)">$formatter.formatDate($formatter.getCurrentDateService().getNow())</abbr></p>
         </div>
     </div>
     #end

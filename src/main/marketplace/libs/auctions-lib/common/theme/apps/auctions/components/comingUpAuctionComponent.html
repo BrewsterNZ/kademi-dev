@@ -16,17 +16,17 @@
     #if (!$page)
         <div class="panel panel-default panel-coming-up-auction">
             <div class="panel-heading">
-                <div class="panel-title">Live Auction</div>
+                <div class="panel-title"><span  class="trans-lookup"  data-transcode="live-auction">Live Auction</span></div>
             </div>
             <div class="panel-body">
-                <h3>No coming up auction found</h3>
+                <h3><span  class="trans-lookup"  data-transcode="no-coming-up-auction-found">No coming up auction found</span></h3>
             </div>
         </div>
     #end
 #else
     <div class="panel panel-default panel-coming-up-auction auction">
         <div class="panel-heading">
-            <div class="panel-title">Live Auction</div>
+            <div class="panel-title"><span  class="trans-lookup"  data-transcode="live-auction">Live Auction</span></div>
         </div>
         #set($bg = "/theme/img/photo_holder.png")
         #if( $comingUpAuction.bestSquareImageHref )
@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="auction-info">
-                    <div class="text-center">Current Bid:
+                    <div class="text-center"><span  class="trans-lookup"  data-transcode="current-bid">Current Bid:</span>
                         #if($comingUpAuction.currentBidValue)
                             <strong class="bidUnit">$</strong><strong class="bidValue">$formatter.formatNumeric($comingUpAuction.currentBidValue, "#[[#,###]]#")</strong>
                         #else
@@ -66,7 +66,7 @@
                             <div class="input-group">
                                 <input type="number" class="form-control required regex" value="" id="bidValue" name="auctionBidValue" data-regex="^[0-9-.]+$" data-message="Amount bid must be digits" />
                                 <span class="input-group-btn">
-                                    <button type="submit" class="btn btn-success">Bid</button>
+                                    <button type="submit" class="btn btn-success"><span  class="trans-lookup"  data-transcode="bid">Bid</span></button>
                                 </span>
                             </div>
                         </div>
@@ -82,7 +82,7 @@
                                 <div class="input-group">
                                     <input type="number" class="form-control required regex" value="" id="bidValue" name="auctionBidValue" data-regex="^[0-9-.]+$" data-message="Amount bid must be digits" />
                                     <span class="input-group-btn">
-                                        <button type="submit" class="btn btn-success">Bid</button>
+                                        <button type="submit" class="btn btn-success"><span  class="trans-lookup"  data-transcode="bid">Bid</span></button>
                                     </span>
                                 </div>
                             </div>

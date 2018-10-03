@@ -20,9 +20,9 @@
     #end
     <div class="panel panel-default panel-kcrm-light $!panelClass">
         <div class="panel-body">
-            <h3>$!headerTitle <span class="label $!labelClass pull-right"><small>$tasks.size()</small></span></h3>
-            <br>
             <div class="tasksDashList">
+                <h3>$!headerTitle <span class="label $!labelClass pull-right"><small>$formatter.ifNull($tasks.size(), "0")</small></span></h3>
+                <br>
                 #foreach ($task in $tasks)
                 <div class="taskDashItem panel-kcrm">
                     <h5 class="clearfix">
@@ -36,7 +36,7 @@
                             <div class="btn-group timeline-btn">
                                 <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                                 <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a class="timeline-edit-task" href="/tasks/$task.id/ .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-pencil"></i> Edit</a></li>
+                                    <li><a class="timeline-edit-task" href="/tasks/$task.id/ .taskEditModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-pencil"></i> Edit</a></li>
                                     <li><a class="btnCancelTask" href="/tasks/$task.id/"><i class="fa fa-ban"></i> Cancel</a></li>
                                 </ul>
                             </div>

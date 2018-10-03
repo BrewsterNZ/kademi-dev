@@ -2,7 +2,7 @@
     #if($page.auctionType == "HBA")
     <div class="panel panel-default">
         <div class="panel-heading">
-            <div class="panel-title">Bid History</div>
+            <div class="panel-title"><span  class="trans-lookup"  data-transcode="bid-history">Bid History</span></div>
         </div>
         <table id="auction-bid-history" class="table table-hover table-striped">
             <tbody class="small">
@@ -16,7 +16,7 @@
                     #end
                 #else
                     <tr>
-                        <td colspan="99">No bid history</td>
+                        <td colspan="99"><span  class="trans-lookup"  data-transcode="no-bid-history">No bid history</span></td>
                     </tr>
                 #end
             </tbody>
@@ -28,12 +28,12 @@
     #else
     <div class="panel panel-default">
         <div class="panel-heading">
-            <div class="panel-title">Bid History</div>
+            <div class="panel-title"><span  class="trans-lookup"  data-transcode="bid-history">Bid History</span></div>
         </div>
         <table id="auction-bid-history" class="table table-hover table-striped">
             <tbody class="small">
                 <tr>
-                    <td colspan="99">No bid history</td>
+                    <td colspan="99"><span  class="trans-lookup"  data-transcode="no-bid-history">No bid history</span></td>
                 </tr>
             </tbody>
         </table>

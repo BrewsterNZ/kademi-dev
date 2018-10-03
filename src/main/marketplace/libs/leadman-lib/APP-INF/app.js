@@ -62,6 +62,7 @@ controllerMappings
     .path('/leadSendEmail')
     .addMethod('POST', 'leadDetailSendEmail')
     .postPriviledge("READ_CONTENT")
+    .addType("leadManResource") // this is so the SalesRole will apply
     .build();
 
 function leadDetailSendEmail(page, params) {

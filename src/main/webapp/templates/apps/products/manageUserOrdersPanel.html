@@ -1,0 +1,26 @@
+#set( $start = $services.queryManager.commonStartDate )
+#set( $finish = $services.queryManager.commonFinishDate )
+
+#set( $crit = $services.criteriaBuilders.productOrder.eq("profile", $page.thisProfile) )
+#set( $totalSales = $formatter.toLong($crit.count("id").sum("totalCost").executeSingle()) )
+
+#set( $crit = $services.criteriaBuilders.cart.eq("profile", $page.thisProfile) )
+#set( $numOrders = $formatter.toLong($crit.count("id").count("id").executeSingle()) )
+
+<div class="col-xs-3">
+    <i class="clip-cart fa-4x"></i>
+</div>
+<div class="col-xs-9 text-right">
+    #if( $totalSales )
+    <div class="huge">
+        $$totalSales
+    </div>
+    <div>$numOrders orders</div>
+    #else
+    <div class="huge">
+        Dang it
+    </div>
+    <div>No orders yet</div>
+    #end
+</div>
+

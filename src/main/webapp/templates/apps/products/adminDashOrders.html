@@ -1,0 +1,69 @@
+#set( $start = $services.queryManager.commonStartDate )
+#set( $finish = $services.queryManager.commonFinishDate )
+#set( $crit = $services.criteriaBuilders.productOrder.ge("orderedDate", $start).lt("orderedDate", $finish) )
+#set( $results = $crit.count("id").sum("totalCost").executeSingle() )
+
+#set( $days = $formatter.durationDays($services.queryManager.commonFinishDate, $services.queryManager.commonStartDate) )
+#set( $prevStart = $formatter.addDays($start, $days) )
+
+#set( $crit = $services.criteriaBuilders.productOrder.ge("orderedDate", $prevStart).lt("orderedDate", $start) )
+#set( $resultsPrev = $crit.count("id").sum("totalCost").executeSingle() )
+
+#set( $perc = false )
+#if( $results[0] )
+#if( $resultsPrev[0] )
+    #set( $perc = $formatter.toPercent( $results[0], $resultsPrev[0]) )
+#end
+#end
+
+#if( $results[0] )
+<div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
+    <div class="ktile">
+        <div class="ktile-inner">
+            <div class="ktile-body">
+                <div class="ktile-front ktile-single-value">
+                    <div class="ktile-content">
+                        <a href="/shopping-carts/">
+                            <div class="ktile-single-value-icon">
+                                <i class="fa fa-dollar fa-4x"></i>
+                            </div>
+                            <div class="ktile-single-value-text">
+                                <div class="lead" title="Sales amount of all orders, includes pending carts">$results[0]</div>
+                                <div class="small">
+                                    #if( $perc )
+                                        $perc growth
+                                    #else
+                                        sales
+                                    #end
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+#end
+
+<div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
+    <div class="ktile">
+        <div class="ktile-inner">
+            <div class="ktile-body">
+                <div class="ktile-front ktile-single-value">
+                    <div class="ktile-content">
+                        <a href="/shopping-carts/">
+                            <div class="ktile-single-value-icon">
+                                <i class="fa fa-shopping-cart fa-4x"></i>
+                            </div>
+                            <div class="ktile-single-value-text">
+                                <div class="lead" title="New orders in selected period">$services.cartManager.countOfOrders($start, $finish)</div>
+                                <div class="small">$services.cartManager.countOfUnfulfilledOrders unfilled</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

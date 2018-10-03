@@ -73,7 +73,7 @@
                                 #if ($showCateTag == "true")
                                     <span>
                                         #if($article.featured)
-                                            <span class="label label-info">Featured</span>
+                                            <span class="label label-info trans-lookup" data-transcode="featured">Featured</span>
                                         #end
                                         #if( $article.category )
                                             <span class="label label-info">$article.category</span>
@@ -114,7 +114,7 @@
                         <p class="small"><i class="fa fa-clock-o fa-fw"></i> <abbr class="timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr></p>
                         <div>
                             #if($article.featured)
-                                <span class="label label-success">Featured</span>
+                                <span class="label label-success trans-lookup" data-transcode="featured">Featured</span>
                             #end
                             #if( $article.category )
                                 <span class="label label-primary">$article.category</span>
@@ -169,7 +169,7 @@
                                         #end
                                     #end
                                     #if($article.featured)
-                                        <span class="label label-success">Featured</span>
+                                        <span class="label label-success trans-lookup" data-transcode="featured">Featured</span>
                                     #end
                                 </p>
                             </div>
@@ -188,7 +188,7 @@
                         <div class="blog-article-inner" style="height: ${gridHeight}px;">
                             <div class="blog-article-thumb" style="background-image: url('$bg')"></div>
                             <div class="blog-article-body">
-                                <h4>First sample blog article</h4>
+                                <h4 class="trans-lookup" data-transcode="sample-article-title-1">First sample blog article</h4>
                                 <div class="clearfix">
                                     #if ($showTime == "true")
                                     <small class="blog-article-time"><i class="fa fa-clock-o"></i> <abbr class="timeago" title="10/03/2017 13:43 PM">10/03/2017</abbr>
@@ -196,7 +196,7 @@
                                     #end
                                     #if ($showCateTag == "true")
                                     <span>
-                                        <span class="label label-info">Sample Category</span>
+                                        <span class="label label-info trans-lookup" data-transcode="sample-category">Sample Category</span>
                                     </span>
                                     #end
                                 </div>
@@ -211,7 +211,7 @@
                         <div class="blog-article-inner" style="height: ${gridHeight}px;">
                             <div class="blog-article-thumb" style="background-image: url('$bg')"></div>
                             <div class="blog-article-body">
-                                <h4>Second sample article title</h4>
+                                <h4 class="trans-lookup" data-transcode="sample-article-title-2">Second sample article title</h4>
                                 <div class="clearfix">
                                     #if ($showTime == "true")
                                     <small class="blog-article-time"><i class="fa fa-clock-o"></i> <abbr class="timeago" title="10/03/2017 13:43 PM">10/03/2017</abbr>
@@ -219,7 +219,7 @@
                                     #end
                                     #if ($showCateTag == "true")
                                     <span>
-                                        <span class="label label-info">Sample Category</span>
+                                        <span class="label label-info trans-lookup" data-transcode="sample-category">Sample Category</span>
                                     </span>
                                     #end
                                 </div>
@@ -234,7 +234,7 @@
                         <div class="blog-article-inner" style="height: ${gridHeight}px;">
                             <div class="blog-article-thumb" style="background-image: url('$bg')"></div>
                             <div class="blog-article-body">
-                                <h4>Third sample blog article title</h4>
+                                <h4 class="trans-lookup" data-transcode="sample-article-title-3">Third sample blog article title</h4>
                                 <div class="clearfix">
                                     #if ($showTime == "true")
                                     <small class="blog-article-time"><i class="fa fa-clock-o"></i> <abbr class="timeago" title="10/03/2017 13:43 PM">10/03/2017</abbr>
@@ -242,7 +242,7 @@
                                     #end
                                     #if ($showCateTag == "true")
                                     <span>
-                                        <span class="label label-info">Sample Category</span>
+                                        <span class="label label-info trans-lookup" data-transcode="sample-category">Sample Category</span>
                                     </span>
                                     #end
                                 </div>

@@ -305,6 +305,7 @@ function processImageClaim(page, params, files) {
 
         if (claim !== null && typeof claim !== 'undefined') {
             var claimJson = JSON.parse(claim.json);
+            var enteredBy = services.userManager.findById(claimJson.enteredById);
             var rows = params.rows;
 
             if (isNotNull(rows)) {
@@ -323,6 +324,7 @@ function processImageClaim(page, params, files) {
 
                         var claimItem = {};
 
+                        var didSetAttributedTo = false;
                         for (var o = 0; o < row.cells.length; o++) {
                             var cell = row.cells[o];
 
@@ -344,6 +346,7 @@ function processImageClaim(page, params, files) {
                                 case 'entered':
                                     break;
                                 case 'attributedTo':
+                                    didSetAttributedTo = true;
                                     var participant = findParticipant(cell.value, dataSeries);
                                     if (isNotNull(participant)) {
                                         log.info("processImageClaim: soldById={}", participant.id);
@@ -367,6 +370,10 @@ function processImageClaim(page, params, files) {
                             }
                         }
 
+                        if( !didSetAttributedTo ) {
+                            claimItem.soldBy = enteredBy.name;
+                            claimItem.soldById = claimJson.enteredById;
+                        }
                         if (!claimItem.hasOwnProperty('soldDate')) {
                             claimItem.soldDate = claimJson.enteredDate;
                         }
@@ -477,7 +484,11 @@ function findParticipant(entityName, series) {
 
     if (isNull(st) || st == "SALES_PROFILE") {
         var mr = services.userManager.newProfileMatchRequest();
-        mr.email(entityName).or().userName(entityName);
+        mr
+                .or()
+                .email(entityName)
+                .userName(entityName);
+
         var profileBeans = services.userManager.findMatching(mr);
         if (profileBeans.size() === 0) {
             log.info("findParticipant: not found");
