@@ -5,4 +5,4 @@
 #set($successMessage = $formatter.firstNotNull($successMessage, "Thank you for sharing."))
 #set($successMessage = $formatter.htmlEncode($successMessage))
 
-<button type="button" data-shareurl="$!shareUrl" data-successmsg="$!successMessage" class="btn btn-facebook btn-icon facebookShareButton">&nbsp;Share</button>
+<button type="button" data-shareurl="$!shareUrl" data-successmsg="$!successMessage" class="btn btn-facebook btn-icon facebookShareButton">&nbsp;<span class="trans-lookup" data-transcode="share">Share</span></button>
