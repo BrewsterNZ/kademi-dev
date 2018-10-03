@@ -2,15 +2,15 @@
 
 <div id="voucherContent">
     #if( !$voucherPage.redeemed )
-    <button class="btn btn-success" data-toggle="modal" data-target="#redeemVoucherPageModal">Redeem</button>
-    <button class="btn btn-success" data-toggle="modal" data-target="#allocateVoucherModal">Allocate</button>
-    <button class="btn btn-danger" data-toggle="modal" data-target="#changeStatusModal">Change status</button>
+    <button class="btn btn-success trans-lookup" data-toggle="modal" data-target="#redeemVoucherPageModal" data-transcode="redeem">Redeem</button>
+    <button class="btn btn-success trans-lookup" data-toggle="modal" data-target="#allocateVoucherModal" data-transcode="allocate">Allocate</button>
+    <button class="btn btn-danger trans-lookup" data-toggle="modal" data-target="#changeStatusModal" data-transcode="change-status">Change status</button>
     #else
     <div class="alert alert-info">
-        <button class="btn btn-danger pull-right" data-toggle="modal" data-target="#changeStatusModal">Change status</button>
+        <button class="btn btn-danger pull-right  trans-lookup" data-toggle="modal" data-target="#changeStatusModal" data-transcode="change-status">Change status</button>
         <h3 style="margin-top: 10px">
-            This voucher was redeemed <abbr title="$formatter.formatDateISO8601($voucherPage.statusDate)" class="timeago">$voucherPage.statusDate</abbr>
-            by $voucherPage.changedBy.name
+            <span class="trans-lookup" data-transcode="vourcher-change-status-modal-message-1">This voucher was redeemed</span> <abbr title="$formatter.formatDateISO8601($voucherPage.statusDate)" class="timeago">$voucherPage.statusDate</abbr>
+            <span class="trans-lookup" data-transcode="vourcher-change-status-modal-message-2">by</span> $voucherPage.changedBy.name
         </h3>
     </div>
     #end
@@ -21,15 +21,15 @@
     <div>
         <table class="table table-bordered table-striped">
             <tr>
-                <th>ID</th>
+                <th class="trans-lookup" data-transcode="id">ID</th>
                 <td>$voucherPage.name</td>
             </tr>
             <tr>
-                <th>Status</th>
+                <th class="trans-lookup" data-transcode="status">Status</th>
                 <td>$voucherPage.statusText( $voucherPage.status )</td>
             </tr>
             <tr>
-                <th>Status date</th>
+                <th class="trans-lookup" data-transcode="vourcher-status-date">Status date</th>
                 <td>$!page.statusDate</td>
             </tr>
         </table>
@@ -37,11 +37,11 @@
 
     <hr/>
 
-    <h3>History</h3>
+    <h3 class="trans-lookup" data-transcode="history">History</h3>
 
     <table class="table table-striped">
         <tr>
-            <td>Created</td>
+            <td class="trans-lookup" data-transcode="created">Created</td>
             <td><abbr title="$formatter.formatDateISO8601($voucherPage.createdDate)" class="timeago">$voucherPage.createdDate</abbr></td>
             <td><a href="$voucherPage.createdBy.href">$voucherPage.createdBy.name</a></td>
             <td></td>
@@ -61,20 +61,20 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Redeem voucher</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only trans-lookup" data-transcode="close">Close</span></button>
+                <h4 class="modal-title trans-lookup" id="myModalLabel" data-transcode="redeem-voucher">Redeem voucher</h4>
             </div>
             <form class="form-horizontal" method="POST" action="$voucherPage.href" id="redeemVoucherPageForm">
                 <div class="modal-body">
-                    <p>Redeeming a voucher means it has been used for a purchase and cannot be used again.</p>
-                    <i>Optional, you may enter any notes here</i>
+                    <p class="trans-lookup" data-transcode="vourcher-redeem-notice">Redeeming a voucher means it has been used for a purchase and cannot be used again.</p>
+                    <i class="trans-lookup" data-transcode="vourcher-note">Optional, you may enter any notes here</i>
                     <textarea name="notes" id="notes" rows="5" style="width: 100%"></textarea>
                     <input type="hidden" name="redeem"/>
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" >Redeem</button>
+                    <button type="button" class="btn btn-default trans-lookup" data-dismiss="modal" data-transcode="close">Close</button>
+                    <button type="submit" class="btn btn-primary trans-lookup"  data-transcode="redeem">Redeem</button>
                 </div>
             </form>
         </div><!-- /.modal-content -->
@@ -86,25 +86,25 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Allocate voucher</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only trans-lookup"  data-transcode="close">Close</span></button>
+                <h4 class="modal-title trans-lookup" id="myModalLabel" data-transcode="allocate-voucher">Allocate voucher</h4>
             </div>
             <form class="form-horizontal" method="POST" action="$voucherPage.href" id="redeemVoucherForm">
                 <div class="modal-body">
-                    <p>Allocating a voucher means it has been purchased by that user and cant be offered to anyone else.</p>
+                    <p  class="trans-lookup" data-transcode="vourcher-allocate-notice">Allocating a voucher means it has been purchased by that user and cant be offered to anyone else.</p>
                     <div class="form-group">
-                        <label for="numVouchers" class="col-sm-3 control-label">Allocated to:</label>
+                        <label for="numVouchers" class="col-sm-3 control-label trans-lookup">Allocated to:</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control regex" id="allocatedToId" name="allocatedToId"  />
-                            <small><i>Optional. If specified, should be a name, email address or member ID</i></small>
+                            <small><i class="trans-lookup" data-transcode="vourcher-allocatedToId">Optional. If specified, should be a name, email address or member ID</i></small>
                         </div>
                     </div>
-                    <i>Optional, you may enter any notes here</i>
+                    <i class="trans-lookup" data-transcode="vourcher-note">Optional, you may enter any notes here</i>
                     <textarea name="notes" id="notes" rows="5" style="width: 100%"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Allocate</button>
+                    <button type="button" class="btn btn-default trans-lookup" data-dismiss="modal"  data-transcode="close">Close</button>
+                    <button type="submit" class="btn btn-primary  trans-lookup" data-transcode="allocate">Allocate</button>
                 </div>
             </form>
         </div><!-- /.modal-content -->
@@ -115,18 +115,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Force status change</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only trans-lookup"  data-transcode="close">Close</span></button>
+                <h4 class="modal-title trans-lookup" id="myModalLabel" data-transcode="force-status-change">Force status change</h4>
             </div>
             <form class="form-horizontal" method="POST" action="$voucherPage.href" id="redeemVoucherForm">
                 <div class="modal-body">
-                    <p>You can fix mistakes or undo transactions by forcing the voucher to a different status. Note that all changes are logged.</p>
+                    <p class="trans-lookup" data-transcode="vourcher-change-status-notice">You can fix mistakes or undo transactions by forcing the voucher to a different status. Note that all changes are logged.</p>
 
                     <div class="form-group">
-                        <label for="status" class="col-sm-3 control-label">New status:</label>
+                        <label for="status" class="col-sm-3 control-label trans-lookup">New status:</label>
                         <div class="col-sm-8">
                             <select name="status" id="status">
-                                <option value="">Not assigned</option>
+                                <option value="" class="trans-lookup" data-transcode="not-assigned">Not assigned</option>
                                 #foreach( $st in $voucherPage.statuses.entrySet() )
                                 <option value="$st.key">$st.value</option>
                                 #end
@@ -135,11 +135,11 @@
                     </div>
 
                     <textarea name="notes" id="notes" rows="5" style="width: 100%"></textarea>
-                    <small><i>Optional, you may enter any notes here</i></small>
+                    <small><i  class="trans-lookup" data-transcode="vourcher-note">Optional, you may enter any notes here</i></small>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Change</button>
+                    <button type="button" class="btn btn-default trans-lookup" data-dismiss="modal" data-transcode="close">Close</button>
+                    <button type="submit" class="btn btn-primary trans-lookup"  data-transcode="change">Change</button>
                 </div>
             </form>
         </div><!-- /.modal-content -->

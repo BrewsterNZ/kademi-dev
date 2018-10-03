@@ -3,13 +3,13 @@
 #if ($vrp)
 <div class="panel panel-default panel-voucherRedemption">
     <div class="panel-heading">
-        <i class="fa fa-cog"></i> Vouchers
+        <i class="fa fa-cog"></i><span class="trans-lookup" data-transcode="vouchers">Vouchers</span>
     </div>
     <div class="panel-body">
         <div class="row">
             <div class="col-lg-6">
                 <div class="input-group" id="voucher-query-container">
-                    <input type="text" id="voucher-query" name="voucherQuery" value="$!request.params.voucher-query" class="form-control" placeholder="Search for a voucher by code" />
+                    <input type="text" id="voucher-query" name="voucherQuery" value="$!request.params.voucher-query" class="form-control trans-lookup" placeholder="Search for a voucher by code" />
                     <span class="input-group-btn">
                         <button class="btn btn-default btnClearQueryVoucher" type="button">
                             <span class="glyphicon glyphicon-remove"></span>
@@ -19,9 +19,9 @@
             </div>
             <div class="col-lg-6">
                 <div class="pull-right">
-                    <button class="btn btn-success" id="redeemVoucherModalBtn">Redeem</button>
+                    <button class="btn btn-success trans-lookup" id="redeemVoucherModalBtn" data-transcode="redeem">Redeem</button>
                     <!--<button class="btn btn-success" data-toggle="modal" data-target="#allocateVoucherModal">Allocate</button>-->
-                    <button class="btn btn-danger" id="pendingVoucherModalBtn">Change status</button>
+                    <button class="btn btn-danger  trans-lookup" id="pendingVoucherModalBtn"  data-transcode="change-status">Change status</button>
                 </div>
             </div>
         </div>
@@ -38,18 +38,18 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                        <th>By</th>
+                        <th class="trans-lookup" data-transcode="id">ID</th>
+                        <th class="trans-lookup" data-transcode="type">Type</th>
+                        <th class="trans-lookup" data-transcode="status">Status</th>
+                        <th class="trans-lookup" data-transcode="date">Date</th>
+                        <th class="trans-lookup" data-transcode="by">By</th>
                         <th><input type="checkbox" name="voucher-ids" class="chk-all" /></th>
                     </tr>
                 </thead>
                 <tbody id="vouchers-table-body">
                     #if( $vrp.vouchers.empty )
                     <tr>
-                        <td colspan="6">No vouchers</td>
+                        <td colspan="6" class="trans-lookup" data-transcode="no-vouchers">No vouchers</td>
                     </tr>
                     #else
                     #foreach($v in $vrp.vouchers)
@@ -76,12 +76,12 @@
             <form class="form-horizontal" method="POST" action="" id="redeemVoucherForm">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">Redeem Voucher</h4>
+                    <h4 class="modal-title trans-lookup" data-transcode="redeem-voucher">Redeem Voucher</h4>
                 </div>
                 <div class="modal-body">
                     <p>
 
-                        Redeeming organisation:
+                        <span class="trans-lookup" data-transcode="redeeming-organisation">Redeeming organisation:</span>
                         <select name="redeemingOrg" class="form-control">
                             #foreach($org in $vrp.redeemingOrgs)
                             <option value="$org.id">$org.title</option>
@@ -89,13 +89,13 @@
                         </select>
                     </p>
                     <input type="hidden" name="redeem" value="redeem"/>
-                    <textarea name="notes" id="notes" rows="5" style="width: 100%" placeholder="Optional notes" ></textarea>
+                    <textarea class="trans-lookup" name="notes" id="notes" rows="5" style="width: 100%" placeholder="Optional notes" ></textarea>
                     <input type="hidden" name="voucher-ids" class="voucher-ids"/>
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Redeem</button>
+                    <button type="button" class="btn btn-default trans-lookup"  data-transcode="close" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary trans-lookup"  data-transcode="redeem">Redeem</button>
                 </div>
             </form>
         </div>
@@ -108,26 +108,26 @@
             <form class="form-horizontal" method="POST" action="" id="pendingVoucherForm">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">Force status change</h4>
+                    <h4 class="modal-title trans-lookup" data-transcode="force-status-change">Force status change</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="status" class="col-sm-3 control-label">New status:</label>
+                        <label for="status" class="col-sm-3 control-label trans-lookup">New status:</label>
                         <div class="col-sm-8">
                             <select name="status"  class="form-control">
-                                <option value="">Not assigned</option>
+                                <option value="" class="trans-lookup" data-transcode="not-assigned">Not assigned</option>
                                 #foreach( $st in $page.statuses.entrySet() )
                                 <option value="$st.key">$st.value</option>
                                 #end
                             </select>
                         </div>
                     </div>
-                    <textarea name="notes" id="notes" rows="5" style="width: 100%" placeholder="Optional notes" ></textarea>
+                    <textarea name="notes" class="trans-lookup" id="notes" rows="5" style="width: 100%" placeholder="Optional notes" ></textarea>
                     <input type="hidden" name="voucher-ids" class="voucher-ids"/>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Change</button>
+                    <button type="button" class="btn btn-default trans-lookup" data-transcode="close" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary trans-lookup" data-transcode="change">Change</button>
                 </div>
             </form>
         </div>
@@ -135,18 +135,18 @@
 </div>
 
 #else
-Vouchers app is not enabled
+<span class="trans-lookup" data-transcode="vouchers-app-not-enabled">Vouchers app is not enabled</span>
 #end
 #else
 <div class="panel panel-default panel-voucherRedemption">
     <div class="panel-heading">
-        <i class="fa fa-cog"></i> Vouchers
+        <i class="fa fa-cog"></i><span class="trans-lookup" data-transcode="vouchers">Vouchers</span>
     </div>
     <div class="panel-body">
         <div class="row">
             <div class="col-lg-6">
                 <div class="input-group" id="voucher-query-container">
-                    <input type="text" id="voucher-query" name="voucherQuery" value="$!request.params.voucher-query" class="form-control" placeholder="Search for a voucher by code" />
+                    <input type="text" id="voucher-query" name="voucherQuery" value="$!request.params.voucher-query" class="form-control trans-lookup" placeholder="Search for a voucher by code" />
                     <span class="input-group-btn">
                         <button class="btn btn-default btnClearQueryVoucher" type="button">
                             <span class="glyphicon glyphicon-remove"></span>
@@ -156,9 +156,9 @@ Vouchers app is not enabled
             </div>
             <div class="col-lg-6">
                 <div class="pull-right">
-                    <button class="btn btn-success" data-toggle="modal" data-target="#redeemVoucherModal">Redeem</button>
+                    <button class="btn btn-success trans-lookup" data-transcode="redeem" data-toggle="modal" data-target="#redeemVoucherModal">Redeem</button>
                     <!--<button class="btn btn-success" data-toggle="modal" data-target="#allocateVoucherModal">Allocate</button>-->
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#pendingVoucherModal">Change status</button>
+                    <button class="btn btn-danger trans-lookup"  data-transcode="change-status" data-toggle="modal" data-target="#pendingVoucherModal">Change status</button>
                 </div>
             </div>
         </div>
@@ -175,17 +175,17 @@ Vouchers app is not enabled
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                        <th>By</th>
+                        <th class="trans-lookup" data-transcode="id">ID</th>
+                        <th class="trans-lookup" data-transcode="type">Type</th>
+                        <th class="trans-lookup" data-transcode="status">Status</th>
+                        <th class="trans-lookup" data-transcode="date">Date</th>
+                        <th class="trans-lookup" data-transcode="by">By</th>
                         <th><input type="checkbox" name="voucher-ids" class="chk-all" /></th>
                     </tr>
                 </thead>
                 <tbody id="vouchers-table-body">
                     <tr>
-                        <td colspan="6">No vouchers</td>
+                        <td colspan="6" class="trans-lookup" data-transcode="no-vouchers">No vouchers</td>
                     </tr>
                 </tbody>
             </table>

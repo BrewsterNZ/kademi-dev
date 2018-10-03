@@ -41,14 +41,14 @@
                 </a>
 
                 <div class="caption">
-                    <h3 class="auction-title" title="#"><a href="#">Example Auction Title</a></h3>
+                    <h3 class="auction-title" title="#"><a href="#"><span  class="trans-lookup"  data-transcode="example-auction-title">Example Auction Title</span></a></h3>
 
                     <p><i class="fa fa-clock-o"></i> <abbr class="timeago" title="">$formatter.formatDate($formatter.getCurrentDateService().getNow())</abbr></p>
 
-                    <p class="auction-content">Example Auction Description</p>
+                    <p class="auction-content"><span  class="trans-lookup"  data-transcode="example-auction-description">Example Auction Description</span></p>
 
                     <div class="auction-actions">
-                        <a href="#" class="btn btn-primary btn-sm" role="button">Bid now</a>
+                        <a href="#" class="btn btn-primary btn-sm" role="button"><span  class="trans-lookup"  data-transcode="bid-now">Bid now</span></a>
                     </div>
                 </div>
             </div>
@@ -95,9 +95,9 @@
                             <p></p>
                             #else
                                 #if($auction.auctionClosed)
-                                    Final Bid:
+                                    <span  class="trans-lookup"  data-transcode="final-bid">Final Bid:</span>
                                 #else
-                                    Current Bid:
+                                    <span  class="trans-lookup"  data-transcode="current-bid">Current Bid:</span>
                                 #end
                                 #if($auction.currentBidValue)
                                     <strong class="bidUnit">$</strong><strong class="bidValue">$formatter.formatNumeric($auction.currentBidValue, "#[[#,###]]#")</strong>
@@ -112,9 +112,9 @@
             <div class="panel-body auction-actions">
                 #if($auction.auctionClosed)
                     #if ($auction.wonBy)
-                        <h3 class="text-center">Won by <a href="/users/$auction.wonBy.userName/public" target="_blank">$!auction.wonBy.name</a>!</h3>
+                <h3 class="text-center"><span  class="trans-lookup"  data-transcode="won-by">Won by</span> <a href="/users/$auction.wonBy.userName/public" target="_blank">$!auction.wonBy.name</a>!</h3>
                     #else
-                        <h3 class="text-center">No winner</h3>
+                <h3 class="text-center"><span  class="trans-lookup"  data-transcode="no-winner">No winner</span></h3>
                     #end
                 #else
                     #if ($showDescription == "true")
@@ -123,9 +123,9 @@
                     <div class="#if ($showDescription == "true") text-right #else text-center #end">
                         <a href="$auction.href" class="btn btn-primary btn-sm" role="button">
                             #if ($auction.auctionState == 'active')
-                                Opening soon
+                                <span  class="trans-lookup"  data-transcode="opening-soon">Opening soon</span>
                             #else
-                                Bid now
+                                <span  class="trans-lookup"  data-transcode="bid-now"> Bid now</span>
                             #end
                         </a>
                     </div>

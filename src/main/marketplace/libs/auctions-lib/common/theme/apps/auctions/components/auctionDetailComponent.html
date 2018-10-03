@@ -2,7 +2,7 @@
     <div class="auction-detail">
         <div class="page-header">
             <h2>$page.title <br />
-                <small>Created By <a href="$page.createdBy.href">$page.createdBy.name</a></small>
+                <small><span  class="trans-lookup"  data-transcode="created-by">Created By </span><a href="$page.createdBy.href">$page.createdBy.name</a></small>
             </h2>
         </div>
 
@@ -43,8 +43,8 @@
 #macro(fakeUI)
 <div class="auction-detail">
     <div class="page-header">
-        <h2>Page title <br />
-            <small>Created By <a href="$page.createdBy.href">admin</a></small>
+        <h2><span  class="trans-lookup"  data-transcode="page-title">Page title </span><br />
+            <small><span  class="trans-lookup"  data-transcode="created-by">Created By</span> <a href="$page.createdBy.href">admin</a></small>
         </h2>
     </div>
 
@@ -72,7 +72,7 @@
     </div>
 
     <div class="clearfix auction-body">
-        Page body
+        <span  class="trans-lookup"  data-transcode="page-body"> Page body</span>
     </div>
 </div>
 #end
