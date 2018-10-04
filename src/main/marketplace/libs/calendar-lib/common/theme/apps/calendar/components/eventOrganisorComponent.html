@@ -11,26 +11,26 @@
     <tbody>
     #if( $calendarEvent.organisor )
     <tr>
-        <td>Organiser</td>
+        <td class="trans-lookup" data-transcode="organiser">Organiser</td>
         <td>$calendarEvent.organisor.formattedName</td>
     </tr>
     #end
 
     #if( $calendarEvent.location )
     <tr>
-        <td>Location</td>
+        <td class="trans-lookup" data-transcode="location">Location</td>
         <td>$calendarEvent.location</td>
     </tr>
     #end
 
     <tr>
-        <td>Start</td>
+        <td class="trans-lookup" data-transcode="start">Start</td>
         <td>
             $formatter.formatDateTime(  $calendarEvent.startDate, $calendarEvent.timezone )
         </td>
     </tr>
     <tr>
-        <td>Finish</td>
+        <td class="trans-lookup" data-transcode="finish">Finish</td>
         <td>$formatter.formatDateTime( $calendarEvent.endDate, $calendarEvent.timezone )</td>
     </tr>
 
@@ -42,19 +42,19 @@
 <table class="table">
     <tbody>
     <tr>
-        <td>Organiser</td>
-        <td>Example Organiser</td>
+        <td class="trans-lookup" data-transcode="organiser">Organiser</td>
+        <td class="trans-lookup" data-transcode="example-organiser">Example Organiser</td>
     </tr>
 
 
     <tr>
-        <td>Start</td>
+        <td class="trans-lookup" data-transcode="start">Start</td>
         <td>
             $formatter.formatDate($formatter.getCurrentDateService().getNow()) 06:00
         </td>
     </tr>
     <tr>
-        <td>Finish</td>
+        <td class="trans-lookup" data-transcode="finish">Finish</td>
         <td>$formatter.formatDate($formatter.getCurrentDateService().getNow()) 16:00</td>
     </tr>
 

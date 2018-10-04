@@ -9,25 +9,25 @@
         #if( $calendarEvent.allowRegistration )
             <div class="eventFormAllowRegistration" data-rsvpStatus="$!calendarEvent.rsvpStatus">
             <div class="well well-rsvp rsvp-nouser">
-                <button class='btn btn-sm btn-info'>Register now</button>
+                <button class='btn btn-sm btn-info trans-lookup' data-transcode="register-now">Register now</button>
             </div>
         
             <div class="well well-rsvp rsvp-yes">
-                <h3>You're attending
+                <h3><span class='trans-lookup' data-transcode="you-are-attending">You're attending</span>
                     #if( $calendarEvent.allowGuests )
                     <span class="num-guests">
-                        with <b class="num-guests-count">$calendarEvent.myGuests.size()</b> guest(s)
+                        <span class='trans-lookup' data-transcode="with">with</span> <b class="num-guests-count">$calendarEvent.myGuests.size()</b> <span class='trans-lookup' data-transcode="guest">guest(s)</span>
                     </span>
                     #end
                 </h3>
-                <p>You've accepted the invitation</p>
-                <button class='btn btn-sm btn-info rsvp-change'>Change</button>
+                <p class='trans-lookup' data-transcode="accepted-invitation">You've accepted the invitation</p>
+                <button class='btn btn-sm btn-info rsvp-change trans-lookup' data-transcode="change">Change</button>
             </div>
         
             <div class="well well-rsvp rsvp-no">
-                <h3>You're not attending</h3>
-                <p>You've indicated that you will not be attending</p>
-                <button class='btn btn-sm btn-info rsvp-change'>Change</button>
+                <h3 class='trans-lookup' data-transcode="not-attending">You're not attending</h3>
+                <p class='trans-lookup' data-transcode="indicated-attending">You've indicated that you will not be attending</p>
+                <button class='btn btn-sm btn-info rsvp-change trans-lookup' data-transcode="change">Change</button>
             </div>
         
             <div class="well well-rsvp rsvp-form">
@@ -35,7 +35,7 @@
                     <div class="radio">
                         <label >
                             <input type="radio" name="rsvp" value="ACCEPTED" />
-                            Yes, I'm coming
+                            <span class='trans-lookup' data-transcode="attending-coming">Yes, I'm coming</span>
                         </label>
                     </div>
         
@@ -43,39 +43,39 @@
         
                     #if( !$user )
                     <div class="form-group">
-                        <label class="control-label col-md-4" for="">Email</label>
+                        <label class="control-label col-md-4 trans-looku" for="email">Email</label>
                         <div class="col-md-8">
                             <input type="text" name="email" value="" class="form-control" />
                         </div>
                     </div>
         
                     <div class="form-group">
-                        <label class="control-label col-md-4" for="firstName">First name</label>
+                        <label class="control-label col-md-4 trans-lookup" for="firstName">First name</label>
                         <div class="col-md-8">
                             <input type="text" id="firstName" name="firstName" value="" class="form-control" />
                         </div>
                     </div>
         
                     <div class="form-group">
-                        <label class="control-label col-md-4" for="surName">Surname</label>
+                        <label class="control-label col-md-4 trans-lookup" for="surName">Surname</label>
                         <div class="col-md-8">
                             <input type="text" id="surName" name="surName" value="" class="form-control" />
                         </div>
                     </div>
                     #end
         
-                    <button class="btn btn-sm btn-primary guests-add pull-right">Add a guest</button>
+                    <button class="btn btn-sm btn-primary guests-add pull-right trans-lookup" data-transcode="add-a-guest">Add a guest</button>
                     #if( $calendarEvent.allowGuests )
                     <div class="guests" style="clear: both">
                         <br/>
-                        <p class='guests-intro'>I'm bringing the following guests:</p>
+                        <p class='guests-intro trans-lookup' data-transcode="bringing-following-guest">I'm bringing the following guests:</p>
                         <ul class="guests">
                             #foreach($guest in $calendarEvent.myGuests)
                             <li>
                                 <a class='pull-right guests-delete' href='#'><span class="glyphicon glyphicon-remove-circle"></span></a>
                                 <a href="#" class="guest-edit">$guest.firstName $guest.surname</a>
                                 #if( $guest.orgName )
-                                of <b>$guest.orgName</b>
+                                <span class='trans-lookup' data-transcode="of">of</span> <b>$guest.orgName</b>
                                 #end
                                 <input type="hidden" name="guestFirstName" value="$!guest.firstName"/>
                                 <input type="hidden" name="guestSurname" value="$!guest.surname"/>
@@ -92,7 +92,7 @@
                     <div class="radio">
                         <label >
                             <input type="radio" name="rsvp" value="DECLINED" />
-                            No, I will not be attending
+                            <span class='trans-lookup' data-transcode="reject-attending">No, I will not be attending</span>
                         </label>
                     </div>
                     #end
@@ -102,7 +102,7 @@
                             <br/>
                             <button type='submit' class="btn btn-sm btn-success">
                                 <span class="glyphicon glyphicon-calendar"></span>
-                                Submit attendance
+                                <span class='trans-lookup' data-transcode="submit-attendance">Submit attendance</span>
                             </button>
                         </div>
                     </div>
@@ -115,29 +115,29 @@
                         <form role="form">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title">Add a guest</h4>
+                                <h4 class="modal-title trans-lookup" data-transcode="add-a-guest">Add a guest</h4>
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <label for="newGuestFirstName">First name</label>
+                                    <label class="trans-lookup" for="newGuestFirstName">First name</label>
                                     <input type="text" class="form-control newGuestFirstName" required='true' c="" placeholder="Guest's first name">
                                 </div>
                                 <div class="form-group">
-                                    <label for="">Surname</label>
+                                    <label class="trans-lookup" for="">Surname</label>
                                     <input type="text" class="form-control newGuestSurname" required='true' id="" placeholder="Guest's surname">
                                 </div>
                                 <div class="form-group">
-                                    <label for="newGuestEmail">Email address</label>
+                                    <label class="trans-lookup" for="newGuestEmail">Email address</label>
                                     <input type="email" class="form-control newGuestEmail" id="" placeholder="Enter email">
                                 </div>
                                 <div class="form-group">
-                                    <label for="newGuestOrg">Organisation</label>
+                                    <label class="trans-lookup" for="newGuestOrg">Organisation</label>
                                     <input type="text" class="form-control newGuestOrg" id="" placeholder="Guest's organisation">
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-sm btn-primary">Add/edit guest</button>
+                                <button type="button" class="btn btn-sm btn-default trans-lookup" data-transcode="close" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-sm btn-primary trans-lookup" data-transcode="add-edit-guest">Add/edit guest</button>
                             </div>
                         </form>
                     </div>
@@ -150,23 +150,23 @@
 #else
     <div class="eventFormAllowRegistration" data-rsvpstatus="ACCEPTED">
         <div class="well well-rsvp rsvp-nouser" style="display: none;">
-            <button class="btn btn-sm btn-info">Register now</button>
+            <button class="btn btn-sm btn-info trans-lookup" data-transcode="register-now">Register now</button>
         </div>
     
         <div class="well well-rsvp rsvp-yes" style="display: block;">
-            <h3>You're attending
+            <h3><span class="trans-lookup" data-transcode="you-are-attending">You're attending</span>
                 <span class="num-guests">
-                    with <b class="num-guests-count">1</b> guest(s)
+                    <span class='trans-lookup' data-transcode="with">with</span> <b class="num-guests-count">1</b> <span class='trans-lookup' data-transcode="guest">guest(s)</span>
                 </span>
             </h3>
-            <p>You've accepted the invitation</p>
-            <button class="btn btn-sm btn-info rsvp-change">Change</button>
+            <p class='trans-lookup' data-transcode="accepted-invitation">You've accepted the invitation</p>
+            <button class="btn btn-sm btn-info rsvp-change trans-lookup" data-transcode="change">Change</button>
         </div>
     
         <div class="well well-rsvp rsvp-no" style="display: none;">
-            <h3>You're not attending</h3>
-            <p>You've indicated that you will not be attending</p>
-            <button class="btn btn-sm btn-info rsvp-change">Change</button>
+            <h3 class='trans-lookup' data-transcode="not-attending">You're not attending</h3>
+            <p  class='trans-lookup' data-transcode="indicated-attending">You've indicated that you will not be attending</p>
+            <button class="btn btn-sm btn-info rsvp-change trans-lookup" data-transcode="change">Change</button>
         </div>
     
         <div class="well well-rsvp rsvp-form" style="display: none;">
@@ -174,42 +174,42 @@
                 <div class="radio">
                     <label>
                         <input type="radio" name="rsvp" value="ACCEPTED">
-                        Yes, I'm coming
+                        <span class='trans-lookup' data-transcode="attending-coming">Yes, I'm coming</span>
                     </label>
                 </div>
     
                 <br>
     
                 <div class="form-group">
-                    <label class="control-label col-md-4" for="">Email</label>
+                    <label class="control-label col-md-4 trans-lookup" for="email">Email</label>
                     <div class="col-md-8">
                         <input type="text" name="email" value="" class="form-control">
                     </div>
                 </div>
     
                 <div class="form-group">
-                    <label class="control-label col-md-4" for="firstName">First name</label>
+                    <label class="control-label col-md-4 trans-lookup" for="firstName">First name</label>
                     <div class="col-md-8">
                         <input type="text" id="firstName" name="firstName" value="" class="form-control">
                     </div>
                 </div>
     
                 <div class="form-group">
-                    <label class="control-label col-md-4" for="surName">Surname</label>
+                    <label class="control-label col-md-4 trans-lookup" for="surName">Surname</label>
                     <div class="col-md-8">
                         <input type="text" id="surName" name="surName" value="" class="form-control">
                     </div>
                 </div>
     
-                <button class="btn btn-sm btn-primary guests-add pull-right">Add a guest</button>
+                <button class="btn btn-sm btn-primary guests-add pull-right trans-lookup"  data-transcode="add-a-guest">Add a guest</button>
                 <div class="guests" style="clear: both">
                     <br>
-                    <p class="guests-intro">I'm bringing the following guests:</p>
+                    <p class="guests-intro trans-lookup" data-transcode="bringing-following-guest" >I'm bringing the following guests:</p>
                     <ul class="guests">
                         <li>
                             <a class="pull-right guests-delete" href="#"><span class="glyphicon glyphicon-remove-circle"></span></a>
-                            <a href="#" class="guest-edit">tan nguyen</a>
-                            of <b>oreganisation</b>
+                            <a href="#" class="guest-edit trans-lookup" data-transcode="guest-edit">tan nguyen</a>
+                            of <b class="guest-edit trans-lookup" data-transcode="oreganisation">oreganisation</b>
                             <input type="hidden" name="guestFirstName" value="tan">
                             <input type="hidden" name="guestSurname" value="nguyen">
                             <input type="hidden" name="guestEmail" value="tannguyen3489@gmail.com">
@@ -225,7 +225,7 @@
                         <br>
                         <button type="submit" class="btn btn-sm btn-success">
                             <span class="glyphicon glyphicon-calendar"></span>
-                            Submit attendance
+                            <span class="trans-lookup" data-transcode="submit-attendance" >Submit attendance</span>
                         </button>
                     </div>
                 </div>
