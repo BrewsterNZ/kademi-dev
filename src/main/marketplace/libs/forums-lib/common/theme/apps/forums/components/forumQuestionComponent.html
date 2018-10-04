@@ -10,7 +10,7 @@
             <abbr title="$formatter.formatDateISO8601($page.postDate)" class="timeago">$page.postDate</abbr>
             #if( $page.numReplies > 0 )
                 <i class="fa fa-comments-o"></i>
-                <strong>$page.numReplies</strong> replies
+            <strong>$page.numReplies</strong> <span class="trans-lookup" data-transcode="replies">replies</span>
             #end
         </div>
         <div class="panel-body">
@@ -22,7 +22,7 @@
     #else
         <div class="panel panel-default">
             <div class="panel-heading">
-                No Questions
+                <span class="trans-lookup" data-transcode="no-questions"> No Questions</span>
             </div>
 
         </div>
@@ -39,11 +39,11 @@
             <img src="/templates/apps/user/profile.png" alt="" width="50" height="50">
         </div>
         <h3></h3>
-        Asked by <em>admin</em>
+        <span class="trans-lookup" data-transcode="asked-by"> Asked by</span> <em>admin</em>
         <abbr title="" class="timeago">$formatter.formatDate($formatter.getCurrentDateService().getNow())</abbr>
     </div>
     <div class="panel-body">
-        Example Question 1
+        <span class="trans-lookup" data-transcode="example-question-1"> Example Question 1</span>
     </div>
 </div>
 #end

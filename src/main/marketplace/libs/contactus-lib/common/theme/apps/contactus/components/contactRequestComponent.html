@@ -13,19 +13,19 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <th>Contacted</th>
+                    <th><span class="trans-lookup" data-transcode="contacted">Contacted</span> </th>
                     <td>$!page.contactRequest.createdDate</td>
                 </tr>
                 <tr>
-                    <th>Website</th>
+                    <th><span class="trans-lookup" data-transcode="website">Website</span></th>
                     <td>$!page.website.name</td>
                 </tr>
                 <tr>
-                    <th>Contact form</th>
+                    <th><span class="trans-lookup" data-transcode="contact-form">Contact form</span></th>
                     <th>$!page.contactRequest.contactForm</th>
                 </tr>
                 <tr>
-                    <th>Email</th>
+                    <th><span class="trans-lookup" data-transcode="email">Email</span></th>
                     <td>
                         #if( $page.contactRequest.email )
                         <a href="mailto:$page.contactRequest.email">$!page.contactRequest.email</a>
@@ -33,21 +33,21 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Phone</th>
+                    <th><span class="trans-lookup" data-transcode="phone">Phone</span></th>
                     <td>$!page.contactRequest.phone</td>
                 </tr>
                 #if( $page.contactRequest.company )
                 <tr>
-                    <th>Company</th>
+                    <th><span class="trans-lookup" data-transcode="company">Company</span></th>
                     <td>$!page.contactRequest.company</td>
                 </tr>
                 #end
                 <tr>
-                    <th>Browser</th>
+                    <th><span class="trans-lookup" data-transcode="browser">Browser</span></th>
                     <td>$!page.contactRequest.userAgent</td>
                 </tr>
                 <tr>
-                    <th>IP Address</th>
+                    <th><span class="trans-lookup" data-transcode="ip-address">IP Address</span></th>
                     <td>$!page.contactRequest.sourceIp</td>
                 </tr>
                 #foreach($field in $page.contactRequest.fields.entrySet() )
@@ -67,15 +67,15 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <i class="clip-clip "></i>
-            Attachments
+            <span class="trans-lookup" data-transcode="attachments">Attachments</span>
         </div>
         <div class="panel-body">
             <div class="table-responsive">
                 <table class="table table-striped table-hover table-condensed">
                     <thead>
                     <tr>
-                        <th>Filename</th>
-                        <th>Type</th>
+                        <th><span class="trans-lookup" data-transcode="filename">Filename</span></th>
+                        <th><span class="trans-lookup" data-transcode="type">Type</span></th>
                     </tr>
                     </thead>
                     <tbody>
