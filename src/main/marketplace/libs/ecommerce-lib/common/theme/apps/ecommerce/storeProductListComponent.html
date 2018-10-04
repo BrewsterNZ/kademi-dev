@@ -142,9 +142,9 @@
                             <div class="media-content clearfix">
                                 <p>$!formatter.truncate( $formatter.toPlain( $p.notes ), 200 )</p>
                                 <div>
-                                    <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
-                                    <a href="$prodUrl" class="btn btn-primary btn-sm btn-ecom-add-to-cart" role="button">Add
-                                        to Cart</a>
+                                    <a href="$prodUrl" class="btn btn-default btn-sm" role="button"> <span class="trans-lookup" data-transcode="view">View</span></a>
+                                    <a href="$prodUrl" class="btn btn-primary btn-sm btn-ecom-add-to-cart" role="button"> <span class="trans-lookup" data-transcode="add-to-card">Add
+                                        to Cart</span></a>
                                 </div>
                             </div>
                         </div>
@@ -156,7 +156,7 @@
 
         #else
             <div class="row products-list">
-            <p>Sorry, we couldnt find any products for you</p>
+                <p> <span class="trans-lookup" data-transcode="not-found-product">Sorry, we couldnt find any products for you</span></p>
             </div>
 
         #end
@@ -196,19 +196,19 @@
                         #set($bg = "/static/images/photo_holder.png")
                         <a title="$p.title" href="$prodUrl" class="embed-responsive-item"
                            style="background: url($bg) no-repeat 50% 50%; background-size: cover;">
-                            <span class="sr-only">Example Title</span>
+                            <span class="sr-only"> <span class="trans-lookup" data-transcode="example-title">Example Title</span></span>
                         </a>
                         <label class="label label-success"
                                style="position: absolute; top: 5px; right: 5px; font-size: 14px;"><i
                                 class="fa fa-usd"></i> 100</label>
                     </div>
                     <div class="caption">
-                        <h4><a title="$p.title" href="$prodUrl">Example Title</a></h4>
-                        <p style="word-wrap: break-word;" class="product-brief">notes</p>
+                        <h4><a title="$p.title" href="$prodUrl"> <span class="trans-lookup" data-transcode="example-title">Example Title</span></a></h4>
+                        <p style="word-wrap: break-word;" class="product-brief"> <span class="trans-lookup" data-transcode="notes">notes</span></p>
                         <div class="text-right">
-                            <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
-                            <a href="$prodUrl" class="btn btn-primary btn-sm btn-ecom-add-to-cart" role="button">Add to
-                                Cart</a>
+                            <a href="$prodUrl" class="btn btn-default btn-sm" role="button"> <span class="trans-lookup" data-transcode="view">View</span></a>
+                            <a href="$prodUrl" class="btn btn-primary btn-sm btn-ecom-add-to-cart" role="button"> <span class="trans-lookup" data-transcode="add-to-cart">Add to
+                                Cart</span></a>
                         </div>
                     </div>
                 </div>
@@ -230,16 +230,16 @@
                 </div>
                 <div class="media-body">
                     <h4 class="media-heading" style="margin-bottom: 10px;">
-                        <a href="$prodUrl">Example Title</a>
+                        <a href="$prodUrl"> <span class="trans-lookup" data-transcode="example-title">Example Title</span></a>
                     </h4>
                     <p><label class="label label-success" style="font-size: 14px;"><i class="fa fa-usd"></i> 100</label>
                     </p>
                     <div class="media-content clearfix">
                         <p>$!formatter.truncate( $formatter.toPlain( $p.notes ), 200 )</p>
                         <div>
-                            <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
-                            <a href="$prodUrl" class="btn btn-primary btn-sm btn-ecom-add-to-cart" role="button">Add to
-                                Cart</a>
+                            <a href="$prodUrl" class="btn btn-default btn-sm" role="button"> <span class="trans-lookup" data-transcode="view">View</span></a>
+                            <a href="$prodUrl" class="btn btn-primary btn-sm btn-ecom-add-to-cart" role="button"> <span class="trans-lookup" data-transcode="add-to-cart">Add to
+                                Cart</span></a>
                         </div>
                     </div>
                 </div>

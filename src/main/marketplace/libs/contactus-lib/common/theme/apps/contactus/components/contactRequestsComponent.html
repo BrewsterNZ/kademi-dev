@@ -9,10 +9,10 @@
         </colgroup>
         <thead>
         <tr class="odd">
-            <th>Date</th>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Email</th>
+            <th><span class="trans-lookup" data-transcode="date">Date</span></th>
+            <th><span class="trans-lookup" data-transcode="name">Name</span></th>
+            <th><span class="trans-lookup" data-transcode="phone">Phone</span></th>
+            <th><span class="trans-lookup" data-transcode="email">Email</span></th>
             <th></th>
         </tr>
         </thead>
@@ -26,7 +26,7 @@
             <td>$!cr.contactRequest.phone</td>
             <td>$cr.contactRequest.email</td>
             <td>
-                <a class="btn btn-success" href="$cr.name"><i class="glyphicon glyphicon-eye-open"></i> View</a>
+                <a class="btn btn-success" href="$cr.name"><i class="glyphicon glyphicon-eye-open"></i> <span class="trans-lookup" data-transcode="view">View</span></a>
             </td>
         </tr>
         #end

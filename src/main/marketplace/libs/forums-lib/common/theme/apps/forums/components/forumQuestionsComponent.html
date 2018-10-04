@@ -3,15 +3,15 @@
     #if( $user )
     <a href="#postForumQuestion" data-toggle="modal" class="btn btn-primary">
         <i class="fa fa-plus"><!----></i>
-        Post a
-        question</a>
+        <span class="trans-lookup" data-transcode="post-a-question"> Post a
+            question</span></a>
     #end
     <p>&nbsp;</p>
 </div>
 <div class="well">
     #set($questions = $page.questions)
     #if( $questions.isEmpty() )
-    <p>No one has posted any questions yet, <a href="#postForumQuestion" data-toggle="modal">be the first to ask</a></p>
+    <p><span class="trans-lookup" data-transcode="no-one-post">No one has posted any questions yet,</span> <a href="#postForumQuestion" data-toggle="modal"><span class="trans-lookup" data-transcode="be-first-to-ask">be the first to ask</span></a></p>
     #else
 
     <ul class="row">
@@ -27,10 +27,10 @@
                         <abbr title="$formatter.formatDateISO8601($post.postDate)" class="timeago">$post.postDate</abbr>
                         &nbsp;
                         <i class="fa fa-comments-o"></i>
-                        <strong>$post.numReplies</strong> replies
+                        <strong>$post.numReplies</strong> <span class="trans-lookup" data-transcode="replies">replies</span>
                     </p>
                     <h4><a href="$post.name">$post.title</a></h4>
-                    <i class="fa fa-user"></i> Posted by <em><a href="#">$post.poster.nickName</a></em>
+                    <i class="fa fa-user"></i> <span class="trans-lookup" data-transcode="posted-by">Posted by</span> <em><a href="#">$post.poster.nickName</a></em>
                     <p class="questionNotes">$!post.notes</p>
 
                 </div>
@@ -46,20 +46,20 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">Ask a question</h4>
+                <h4 class="modal-title"><span class="trans-lookup" data-transcode="ask-a-question">Ask a question</span></h4>
             </div>
             <form method="POST" action="." class="form-horizontal">
                 <div class="modal-body">
 
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="newQuestion">Summary</label>
+                        <label class="control-label col-sm-2 trans-lookup" for="newQuestion">Summary</label>
                         <div class="col-sm-10">
                             <input type="text" placeholder="Enter your question here" value="" name="newQuestion"
                                    class="required form-control"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="comment">Details</label>
+                        <label class="control-label col-sm-2 trans-lookup" for="comment">Details</label>
                         <div class="col-sm-10">
                             <textarea name="comment" placeholder="Leave a comment here" cols="50" rows="8"
                                       class="required form-control"></textarea>
@@ -67,8 +67,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn" data-dismiss="modal" >Close</a>
-                    <button class="btn btn-primary" type="submit">Ask</button>
+                    <a href="#" class="btn" data-dismiss="modal" ><span class="trans-lookup" data-transcode="close">Close</span></a>
+                    <button class="btn btn-primary" type="submit"><span class="trans-lookup" data-transcode="ask">Ask</span></button>
                 </div>
             </form>
         </div>
@@ -77,12 +77,12 @@
 #else
     <div>
         <div class="text-right">
-            <a href="#postForumQuestion" data-toggle="modal" class="btn btn-primary"><i class="fa fa-plus"><!----></i> Post
-                a question</a>
+            <a href="#postForumQuestion" data-toggle="modal" class="btn btn-primary"><i class="fa fa-plus"><!----></i> <span class="trans-lookup" data-transcode="post-a-question">Post
+                a question</span></a>
             <p>&nbsp;</p>
         </div>
         <div class="well">
-            <p>No one has posted any questions yet, <a href="#postForumQuestion" data-toggle="modal">be the first to ask</a>
+            <p><span class="trans-lookup" data-transcode="no-one-post">No one has posted any questions yet,</span> <a href="#postForumQuestion" data-toggle="modal"><span class="trans-lookup" data-transcode="be-first-to-ask">be the first to ask</span></a>
             </p>
         </div>
     </div>

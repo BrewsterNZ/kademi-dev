@@ -16,7 +16,9 @@ function initNewProfileLeadForm() {
             Msg.info('Saved');
             modal.modal("hide");
 
-            $("#tableProfileLeads").reloadFragment();
+            $("#tableProfileLeads").reloadFragment({
+                url: window.location.href
+            });
         }
     });
 }
