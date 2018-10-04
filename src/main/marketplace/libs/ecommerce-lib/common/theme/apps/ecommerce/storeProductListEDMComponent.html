@@ -78,7 +78,7 @@
                                             </tr>
                                             <tr>
                                                 <td style="$baseStyles">
-                                                    <p><a title="$p.title" href="${prodUrl}" style="$linkStyles">View detail</a></p>
+                                                    <p><a title="$p.title" href="${prodUrl}" style="$linkStyles"> <span class="trans-lookup" data-transcode="view-detail">View detail</span></a></p>
                                                 </td>
                                             </tr>
                                         </table>
@@ -150,7 +150,7 @@
                                     <p>
                                         $!formatter.truncate( $formatter.toPlain( $p.notes), 100)
                                     </p>
-                                    <p><a title="$p.title" href="${prodUrl}" style="$linkStyles">Read more</a></p>
+                                    <p><a title="$p.title" href="${prodUrl}" style="$linkStyles"> <span class="trans-lookup" data-transcode="read-more">Read more</span></a></p>
                                 </td>
                             </tr>
                         </table>
@@ -166,5 +166,5 @@
     </table>
     #end
 #else
-<p>Sorry, we couldnt find any products for you</p>
+<p> <span class="trans-lookup" data-transcode="not-found-product">Sorry, we couldnt find any products for you</span></p>
 #end
