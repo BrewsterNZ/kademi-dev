@@ -10,6 +10,22 @@
 #if( $fieldDef.rows && $fieldDef.rows > 0 )
 <textarea name="$fieldDef.name" class="form-control" rows="$fieldDef.rows"  #if( $fieldDef.required) required="true" #end >$!displayVal</textarea>
 #else
-<input name="$fieldDef.name" class="form-control" type="$fieldDef.type" placeholder="$!fieldDef.text" value="$!displayVal" #if( $fieldDef.required) required="true" #end />
+    #if( $fieldDef.type == "datetime-local" )
+    <div class='input-group'>
+        <input type="text" name="$fieldDef.name" data-format="$formatter.dateTimePattern('js')"  placeholder="$!fieldDef.text" value="$!displayVal" #if( $fieldDef.required) required="true" #end class="form-control DateTime" />
+        <span class="input-group-addon">
+            <i class="fa fa-calendar"></i>
+        </span>
+    </div>    
+    #elseif( $fieldDef.type == "date" )
+    <div class='input-group'>
+        <input type="text" name="$fieldDef.name" data-format="$formatter.datePattern('js')"  placeholder="$!fieldDef.text" value="$!displayVal" #if( $fieldDef.required) required="true" #end class="form-control DateTime" />
+        <span class="input-group-addon">
+            <i class="fa fa-calendar"></i>
+        </span>
+    </div>        
+    #else
+<input name="$fieldDef.name" class="form-control asset-input-$fieldDef.type" placeholder="$!fieldDef.text" value="$!displayVal" #if( $fieldDef.required) required="true" #end />
+    #end
 #end
 #end
