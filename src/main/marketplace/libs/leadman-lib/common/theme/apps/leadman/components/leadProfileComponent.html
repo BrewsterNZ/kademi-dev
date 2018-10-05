@@ -5,7 +5,11 @@
         #if ($page.profile.photoHash && $page.profile.photoHash != "/templates/apps/user/profile.png")
         #set ($ava = "/_hashes/files/" + $page.profile.photoHash)
         #end
-        <img src="$ava" class="profile-avatar-img media-object img-circle">
+
+        <a id="btn-change-lead-ava" data-href="/custs/$page.profile.name" href="javascript:void (0)">
+            <img src="$ava" class="profile-avatar-img media-object img-circle">
+        </a>
+
         <br>
         <br>
         <h1 class="leadTitle">
