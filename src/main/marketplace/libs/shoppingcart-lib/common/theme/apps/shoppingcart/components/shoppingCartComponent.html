@@ -6,9 +6,9 @@
 
             <div class="promo-codes-container form-group">
                 <div class="input-group">
-                    <input type="text" class="promo-codes form-control" name="promoCodes" value="$formatter.toCsv($applications.shoppingCart.userPromoCodes)" placeholder="Enter promotion codes" />
+                    <input type="text" class="promo-codes form-control trans-lookup" name="promoCodes" value="$formatter.toCsv($applications.shoppingCart.userPromoCodes)" placeholder="Enter promotion codes" />
                     <span class="input-group-btn">
-                        <button class="apply-promo-codes btn btn-success">Apply</button>
+                        <button class="apply-promo-codes btn btn-success trans-lookup" data-transcode="apply">Apply</button>
                     </span>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                                     <span class="lead">
                                         #set ($subTotal = 0)
                                         #set ($subTotal = $item.totalAmount)
-                                        $formatter.formatCurrency($subTotal, false) Pts
+                                        $formatter.formatCurrency($subTotal, false) <span class="trans-lookup" data-transcode="pts">Pts</span>
                                     </span>
                                 </div>
                             </div>
@@ -90,7 +90,7 @@
                             #set ($subTotal = 0)
                             #set ($subTotal = $item.discountAmount)
                             #set($totalCost = $totalCost + $subTotal)
-                            $formatter.formatCurrency($subTotal, false) Pts
+                            $formatter.formatCurrency($subTotal, false) <span class="trans-lookup" data-transcode="pts">Pts</span>
                         </span>
                         </div>
                     </div>
@@ -105,11 +105,11 @@
         <div class="cart-footer bg-primary">
             <div class="row">
                 <div class="col-xs-6 col-sm-8 text-right">
-                    <span><strong>Total</strong></span>
+                    <span><strong class="trans-lookup" data-transcode="total">Total</strong></span>
                 </div>
                 <div class="col-xs-6 col-sm-4">
                     <div class="bg-info text-center">
-                        <span><strong>$formatter.formatCurrency($totalCost, false) Pts</strong></span>
+                        <span><strong>$formatter.formatCurrency($totalCost, false) <span class="trans-lookup" data-transcode="pts">Pts</span></strong></span>
                     </div>
                 </div>
             </div>
