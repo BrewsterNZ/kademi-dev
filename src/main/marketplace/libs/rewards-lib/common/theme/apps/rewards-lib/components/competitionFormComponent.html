@@ -77,10 +77,10 @@
                 #renderForm()
             #else
                 <div class="entered">
-                    <p class="lead alert alert-success"><i class="fa fa-check-circle"></i> Thank you for entering!</p>
+                    <p class="lead alert alert-success"><i class="fa fa-check-circle"></i> <span class="trans-lookup" data-transcode="thanks-for-entering">Thank you for entering!</span></p>
                     #if($promotionPage.userUploadEnabled )
                         <div class="entryFormItem uploadItem readOnly">
-                            <h3>Photo Gallery</h3>
+                            <h3><span class="trans-lookup" data-transcode="photo-gallery">Photo Gallery</span></h3>
                             <div class="promotion-photos">
                                 <div class="row">
                                     #set ($userPhoto = "/static/images/photo_holder_squared.png")
@@ -89,7 +89,7 @@
                                     #end
                                     <div class="$photoClass promotion-photo promotion-photo-user">
                                         <a href="${uploadPath}/$promotionPage.userAttachmentHash" class="viewUploaded promotion-photo-inner" style="background-image: url('$userPhoto')" target="_blank">
-                                            <span class="promotion-photo-label">My photo</span>
+                                            <span class="promotion-photo-label trans-lookup" data-transcode="my-phone">My photo</span>
                                         </a>
                                     </div>
                                     #if ($showOthersPhoto == "true")
@@ -121,25 +121,25 @@
     #else
         #if ($showFirstName == "true")
         <div class="form-group">
-            <label class="control-label" for="firstName-${randomId}">First name</label>
+            <label class="control-label trans-lookup" for="firstName-${randomId}">First name</label>
             <input type="text" name="firstName" id="firstName-${randomId}" class="required form-control" placeholder="Enter your first name" value="$!user.firstName" />
         </div>
         #end
         #if ($showSurName == "true")
         <div class="form-group">
-            <label class="control-label" for="surName-${randomId}">Surname</label>
+            <label class="control-label trans-lookup" for="surName-${randomId}">Surname</label>
             <input type="text" name="surName" id="surName-${randomId}" class="form-control" placeholder="Enter your surname" value="$!user.surName" />
         </div>
         #end
         #if ($showEmail == "true")
         <div class="form-group">
-            <label class="control-label" for="email-${randomId}">Email</label>
+            <label class="control-label trans-lookup" for="email-${randomId}">Email</label>
             <input type="text" name="email" id="email-${randomId}" class="required form-control" placeholder="Enter your email address" value="$!user.email" />
         </div>
         #end
         #if ($showPhone == "true")
         <div class="form-group">
-            <label class="control-label" for="phone-${randomId}">Phone</label>
+            <label class="control-label trans-lookup" for="phone-${randomId}">Phone</label>
             <input type="text" name="phone" id="phone-${randomId}" class="form-control" placeholder="Enter your best contact number" value="$!user.phone" />
         </div>
         #end
@@ -149,7 +149,7 @@
             <div class="col-sm-12">
                 <div class="checkbox">
                     #foreach($optin in $contactPage.optins)
-                    <label class="col-sm-9" for="optins_${optin.optinGroup.name}-${randomId}">
+                    <label class="col-sm-9 trans-lookup" for="optins_${optin.optinGroup.name}-${randomId}">
                         <input type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}-${randomId}" />
                         $optin.message
                     </label>
@@ -170,7 +170,7 @@
 
     #if( $promotionPage.selectOrg )
     <div class="form-group">
-        <label class="control-label" for="phone">Your Organisation</label>
+        <label class="control-label trans-lookup" for="phone">Your Organisation</label>
         <input type="text" name="relatedOrgTitle" class="relatedOrgTitlePromo form-control required" placeholder="Enter your organisation" value="" />
         <input type="hidden" name="relatedOrg" />
     </div>
@@ -178,7 +178,7 @@
 
     #if( $promotionPage.selectProduct )
     <div class="form-group">
-        <label class="control-label" for="phone">Product</label>
+        <label class="control-label trans-lookup" for="phone">Product</label>
         <input type="text" name="relatedProductSkuTitle" class="relatedProductSkuTitlePromo form-control required reset-on-resubmit" placeholder="Enter the product code" value="" />
         <input type="hidden" class="reset-on-resubmit" name="relatedProductSku">
     </div>
@@ -195,7 +195,7 @@
 
                     <div class="promotion-photo-uploader" data-url="${uploadPath}/">
                         #if (!$page)
-                        <span class="btn btn-success btn-block">Upload a photo</span>
+                        <span class="btn btn-success btn-block trans-lookup" data-transcode="upload-a-photo">Upload a photo</span>
                         #end
                     </div>
                     <input type="hidden" class="reset-on-resubmit" name="userAttachmentHash" value="$!page.userAttachmentHash" />
@@ -212,7 +212,7 @@
                             #if ($entry.rewardEntry.awardedTo == $userResource.thisProfile)
                             <div class="$photoClass promotion-photo promotion-photo-user">
                                 <a href="${uploadPath}/$entry.name" class="promotion-photo-inner" style="background-image: url('${uploadPath}/$entry.name/alt-640-640.png')" target="_blank">
-                                    <span class="promotion-photo-label">My photo</span>
+                                    <span class="promotion-photo-label trans-lookup" data-transcode="my-phone">My photo</span>
                                 </a>
                             </div>
                             #else
@@ -244,13 +244,13 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Terms and conditions</h4>
+                            <h4 class="modal-title"><span class="trans-lookup" data-transcode="terms-and-conditions">Terms and conditions</span></h4>
                         </div>
                         <div class="modal-body">
                             $!promotionPage.terms
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><span class="trans-lookup" data-transcode="close">Close</span></button>
                         </div>
                     </div>
                 </div>
@@ -259,8 +259,8 @@
             <div class="form-group">
                 <label>
                     <input name="terms" required="true" class="required" type="checkbox" />
-                    Please check this box to confirm you have read our terms and conditions*
-                    <a href="#${modalTerms}" target="_blank" data-toggle="modal"> Click here to view full terms and conditions. </a>
+                    <span class="trans-lookup" data-transcode="confirm-text-1">Please check this box to confirm you have read our terms and conditions*</span>
+                    <a href="#${modalTerms}" target="_blank" data-toggle="modal"> <span class="trans-lookup" data-transcode="terms-conditions-text-1">Click here to view full terms and conditions.</span> </a>
                 </label>
             </div>
         #end
@@ -268,7 +268,7 @@
             <button class="enter btn $!buttonSize $!buttonColor $!buttonClass" type="submit">$!submitText</button>
         </div>
     #else
-        <i>Not enterable</i>
+    <i><span class="trans-lookup" data-transcode="not-enterable">Not enterable</span></i>
     #end
 </form>
 #end

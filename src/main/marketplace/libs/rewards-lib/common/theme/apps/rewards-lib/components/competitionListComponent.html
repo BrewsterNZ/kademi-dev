@@ -34,7 +34,7 @@
                     #end
 
                     <div class="product-actions rewardItemActions text-right">
-                        <a href="$reward.href" class="btn btn-default" role="button">View and enter</a>
+                        <a href="$reward.href" class="btn btn-default" role="button"><span class="trans-lookup" data-transcode="view-enter">View and enter</span></a>
                     </div>
                 </div>
             </div>
@@ -72,15 +72,15 @@
                 <div class="$!bgClass rewardItemCaption">
                     <h3 class="product-title rewardItemTitle" title="$reward.title"><a href="$reward.href"><strong>$reward.title</strong></a></h3>
                     #if ($reward.winners)
-                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Winner announced.</div>
+                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> <span class="trans-lookup" data-transcode="winner-announced">Winner announced.</span></div>
                     #else
-                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Closed. Winner pending.</div>
+                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> <span class="trans-lookup" data-transcode="closed-winner-pending">Closed. Winner pending.</span></div>
                     #end
                     <div class="rewardItemActions text-right">
                         #if($reward.winners)
-                        <a href="$reward.href" class="btn btn-default" role="button">View the winner</a>
+                        <a href="$reward.href" class="btn btn-default" role="button"><span class="trans-lookup" data-transcode="view-winner">View the winner</span></a>
                         #else
-                        <a style="visibility: hidden" href="$reward.href" class="btn btn-default" role="button">View the winner</a>
+                        <a style="visibility: hidden" href="$reward.href" class="btn btn-default" role="button"><span class="trans-lookup" data-transcode="view-winner">View the winner</span></a>
                         #end
 
                     </div>
@@ -106,14 +106,14 @@
                 </a>
 
                 <div class="bg-primary rewardItemCaption">
-                    <h3 class="product-title rewardItemTitle" title="$reward.title"><a href="#"><strong>Example Reward Title</strong></a></h3>
+                    <h3 class="product-title rewardItemTitle" title="$reward.title"><a href="#"><strong><span class="trans-lookup" data-transcode="example-reward-title">Example Reward Title</span></strong></a></h3>
                     <div class="product-content rewardItemDate text-italic" style="word-wrap: break-word;">
                         <i class="fa fa-calendar-o"></i>
-                        Closes
-                        <abbr title="2017-10-24" class="timeago">6 days from now</abbr>
+                        <span class="trans-lookup" data-transcode="closes">Closes</span>
+                        <abbr title="2017-10-24" class="timeago"><span class="trans-lookup" data-transcode="6-days-from-noew">6 days from now</span></abbr>
                     </div>
                     <div class="product-actions rewardItemActions text-right">
-                        <a href="#" class="btn btn-default btn-add-to-cart" role="button"><strong><i class="fa fa-arrow-right"></i> View and enter</strong></a>
+                        <a href="#" class="btn btn-default btn-add-to-cart" role="button"><strong><i class="fa fa-arrow-right"></i> <span class="trans-lookup" data-transcode="view-enter">View and enter</span></strong></a>
                     </div>
                 </div>
             </div>
@@ -129,13 +129,13 @@
                 </a>
 
                 <div class="bg-warning rewardItemCaption">
-                    <h3 class="product-title rewardItemTitle" title="$reward.title"><a href="#"><strong>Example Reward Title</strong></a></h3>
-                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Closed. Winner pending.</div>
+                    <h3 class="product-title rewardItemTitle" title="$reward.title"><a href="#"><strong><span class="trans-lookup" data-transcode="example-reward-title">Example Reward Title</span></strong></a></h3>
+                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> <span class="trans-lookup" data-transcode="closed-winner-pending">Closed. Winner pending.</span></div>
                     <div class="rewardItemActions text-right">
                         #if($reward.winners)
-                        <a href="$reward.href" class="btn btn-default" role="button">View the winner</a>
+                        <a href="$reward.href" class="btn btn-default" role="button"><span class="trans-lookup" data-transcode="view-winner">View the winner</span></a>
                         #else
-                        <a style="visibility: hidden" href="$reward.href" class="btn btn-default" role="button">View the winner</a>
+                        <a style="visibility: hidden" href="$reward.href" class="btn btn-default" role="button"><span class="trans-lookup" data-transcode="view-winner">View the winner</span></a>
                         #end
 
                     </div>
@@ -152,18 +152,18 @@
                 </a>
 
                 <div class="bg-info rewardItemCaption">
-                    <h3 class="product-title rewardItemTitle" title="$reward.title"><a href="#"><strong>Example Reward Title</strong></a></h3>
+                    <h3 class="product-title rewardItemTitle" title="$reward.title"><a href="#"><strong><span class="trans-lookup" data-transcode="example-reward-title">Example Reward Title</span></strong></a></h3>
 
                     #if (!$reward.winners)
-                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Winner announced.</div>
+                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> <span class="trans-lookup" data-transcode="winner-announced">Winner announced.</span></div>
                     #else
-                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Closed. Winner pending.</div>
+                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> <span class="trans-lookup" data-transcode="closed-winner-pending">Closed. Winner pending.</span></div>
                     #end
                     <div class="rewardItemActions text-right">
                         #if(!$reward.winners)
-                        <a href="$!reward.href" class="btn btn-default" role="button">View the winner</a>
+                        <a href="$!reward.href" class="btn btn-default" role="button"><span class="trans-lookup" data-transcode="view-winner">View the winner</span></a>
                         #else
-                        <a style="visibility: hidden" href="$reward.href" class="btn btn-default" role="button">View the winner</a>
+                        <a style="visibility: hidden" href="$reward.href" class="btn btn-default" role="button"><span class="trans-lookup" data-transcode="view-winner">View the winner</span></a>
                         #end
 
                     </div>

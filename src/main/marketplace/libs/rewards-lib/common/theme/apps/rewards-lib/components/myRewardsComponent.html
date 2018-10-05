@@ -7,9 +7,9 @@
         </colgroup>
         <thead>
         <tr class="bar">
-            <th class="title">Competitions and rewards</th>
-            <th>Closes</th>
-            <th>Status</th>
+            <th class="title"><span class="trans-lookup" data-transcode="competitions-rewards">Competitions and rewards</span></th>
+            <th><span class="trans-lookup" data-transcode="closes">Closes</span></th>
+            <th><span class="trans-lookup" data-transcode="status">Status</span></th>
             <th></th>
         </tr>
         </thead>
@@ -17,7 +17,7 @@
         #set($rewards = $page.children.ofType.reward)
         #if( $rewards.isEmpty() )
         <tr class="title">
-            <td colspan="4">There are no rewards available</td>
+            <td colspan="4"><span class="trans-lookup" data-transcode="no-reward-available">There are no rewards available</span></td>
         </tr>
         #else
         #foreach($reward in $rewards)
@@ -28,7 +28,7 @@
                 <abbr title="$!formatter.formatDateISO8601($reward.reward.endDate)" class="info timeago">#if($reward.endDate)
                 $reward.endDate
                 #else
-                -No date specified-
+                    <span class="trans-lookup" data-transcode="no-date-specified">-No date specified-</span>
                 #end</abbr>
             </td>
             <td class="">
@@ -37,15 +37,15 @@
             <td class="assessment">
                 #if( $reward.finished )
                 #if( $reward.hasWinner() )
-                <a class="btn btn-primary" href="$formatter.percentEncode($reward.name)">View winner</a>
+                <a class="btn btn-primary" href="$formatter.percentEncode($reward.name)"><span class="trans-lookup" data-transcode="view-winner">View winner</span></a>
                 #end
                 #else
                 #if( $reward.entriesForUser.size() == 0)
                 #if( $reward.isEnterable() )
-                <a class="btn btn-success" href="$formatter.percentEncode($reward.name)">Enter</a>
+                <a class="btn btn-success" href="$formatter.percentEncode($reward.name)"><span class="trans-lookup" data-transcode="enter">Enter</span></a>
                 #end
                 #else
-                <a class="btn btn-primary" href="$formatter.percentEncode($reward.name)"><nobr>View your entry</nobr></a>
+                <a class="btn btn-primary" href="$formatter.percentEncode($reward.name)"><nobr><span class="trans-lookup" data-transcode="view-your-entry">View your entry</span></nobr></a>
                 #end
                 #end
             </td>

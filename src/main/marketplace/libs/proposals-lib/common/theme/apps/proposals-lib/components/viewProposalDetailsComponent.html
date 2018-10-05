@@ -1,12 +1,12 @@
 <div class="proposals-container" id="propsContainer">
 
     #if( $page.accepted )
-    <div class="alert alert-info">This proposal has already been accepted</div>
+    <div class="alert alert-info"> <span class="trans-lookup" data-transcode="proposal-accepted">This proposal has already been accepted</span></div>
     #end
 
-    <h1>Insurance Proposal</h1>
+    <h1> <span class="trans-lookup" data-transcode="proposal-insurance">Insurance Proposal</span></h1>
 
-    <p>Following are the quotations proposed to you based upon your request, please revise carefully and accept the appropriate quotation:</p>
+    <p> <span class="trans-lookup" data-transcode="proposal-text-1">Following are the quotations proposed to you based upon your request, please revise carefully and accept the appropriate quotation:</span></p>
 
     <div class="quotes">
         #foreach($quote in $page.quotes)
@@ -20,7 +20,7 @@
                     #end
                 </ul>
                 <hr />
-                <h2>Attachments</h2>  
+                <h2> <span class="trans-lookup" data-transcode="attachment">Attachments</span></h2>
                 <ul>
                     #if ($quote.attachments.empty)
                     <li style="color: silver !important;">No Attachments</li>
@@ -31,14 +31,14 @@
                     #end
                 </ul>
                 <hr />
-                <h3><span class="total-quotation">Quotation Total</span>$quote.total<!--<span class="currency">NZD</span>--></h3>
+                <h3><span class="total-quotation trans-lookup" data-transcode="quotation-total">Quotation Total</span>$quote.total<!--<span class="currency">NZD</span>--></h3>
                 <hr />
                 #if( $page.accepted && $quote.quoteStatus == 'ACCEPTED' )
-                <button class="btn btn-default pull-right" disabled="">Accepted</button>
+                <button class="btn btn-default pull-right" disabled=""> <span class="trans-lookup" data-transcode="accepted">Accepted</span></button>
                 #elseif( $page.accepted )
-                <button class="btn btn-default pull-right" disabled="">Other Quote Accepted</button>
+                <button class="btn btn-default pull-right" disabled=""> <span class="trans-lookup" data-transcode="other-quote-accepted">Other Quote Accepted</span></button>
                 #else
-                <a href="$page.href" class="btn btn-success proposal-accept-btn pull-right" data-quote="$quote.id">Accept</a>
+                <a href="$page.href" class="btn btn-success proposal-accept-btn pull-right" data-quote="$quote.id"> <span class="trans-lookup" data-transcode="accept">Accept</span></a>
                 #end
             </div>
         </div>
@@ -50,8 +50,8 @@
 
 <div class="proposal-thankyou" style="display: none">
 
-    <h1>Thank you!</h1>
+    <h1> <span class="trans-lookup" data-transcode="thank-you">Thank you!</span></h1>
 
-    <p>We have received your quotation acceptance, we will get back to you shortly.</p>
+    <p> <span class="trans-lookup" data-transcode="quotation-text-2">We have received your quotation acceptance, we will get back to you shortly.</span></p>
 </div>  
 

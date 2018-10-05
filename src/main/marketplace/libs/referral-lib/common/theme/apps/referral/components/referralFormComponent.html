@@ -1,15 +1,15 @@
-<h3 class='lead-text'>Invite a friend or colleague</h3>
+<h3 class='lead-text'><span class="trans-lookup" data-transcode="invite-friend">Invite a friend or colleague</span></h3>
 <hr>
 <div id='referral-content' class="referral-form-component">
     <form action="/referral" method="POST" class="referral form-horizontal" role="form">
         <div class="form-group">
-            <label class="col-sm-3 control-label" for="toName">Your friend's name</label>
+            <label class="col-sm-3 control-label trans-lookup" for="toName">Your friend's name</label>
             <div class="col-sm-9">
                 <input type="text" name="toName" id="toName" class="required form-control" placeholder="Enter your friend's name" value="$!params.toName" />
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label" for="toEmail">Your friend's email</label>
+            <label class="col-sm-3 control-label trans-lookup" for="toEmail">Your friend's email</label>
             <div class="col-sm-9">
                 <input type="text" name="toEmail" id="toEmail" class="form-control" placeholder="Enter your friend's email" value="$!params.toEmail" />
             </div>
@@ -21,11 +21,11 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9">
-                <button type="submit" class="btn btn-primary btn-lg">Send message</button>
+                <button type="submit" class="btn btn-primary btn-lg"> <span class="trans-lookup" data-transcode="send-message">Send message</span></button>
             </div>
         </div>
     </form>
     <div class='thankyou collapse'>
-        <h3>Your message has been sent</h3>
+        <h3> <span class="trans-lookup" data-transcode="your-message-sent">Your message has been sent</span></h3>
     </div>
 </div>
