@@ -13,7 +13,7 @@
     <div class="panel panel-default">
     <div class="panel-heading">
         <i class="fa fa-table"></i>
-        Top $limit balances in $pointsBucket.title
+        <span class="trans-lookup" data-transcode="top">Top</span> $limit <span class="trans-lookup" data-transcode="balances">balances</span> <span class="trans-lookup" data-transcode="in">in</span> $pointsBucket.title
     </div>
     #set( $heightAtt = "" )
     #if( $height )
@@ -28,8 +28,8 @@
             <table class="table table-hover table-striped">
                 <thead>
                 <tr>
-                    <th>Balance</th>
-                    <th>User</th>
+                   <th class="trans-lookup" data-transcode="topblance-table-title-balance">Balance</th>
+                   <th class="trans-lookup" data-transcode="topblance-table-title-user">User</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -48,7 +48,7 @@
                 </tbody>
             </table>
             #else
-            <p>There are no matching participants</p>
+            <p class="trans-lookup" data-transcode="no-matching-participants">There are no matching participants</p>
             #end
         </div>
     </div>
@@ -61,7 +61,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-table"></i>
-                Top $limit balances in example
+                <span class="trans-lookup" data-transcode="top">Top</span> $limit <span class="trans-lookup" data-transcode="balances">balances</span> <span class="trans-lookup" data-transcode="in-example">in example</span>
             </div>
             <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
                 <div class="panel-body" style="overflow-y: auto;">
@@ -69,8 +69,8 @@
                         <table class="table table-hover table-striped">
                             <thead>
                             <tr>
-                                <th>Balance</th>
-                                <th>User</th>
+                                <th class="trans-lookup" data-transcode="topblance-table-title-balance">Balance</th>
+                                <th class="trans-lookup" data-transcode="topblance-table-title-user">User</th>
                             </tr>
                             </thead>
                             <tbody>

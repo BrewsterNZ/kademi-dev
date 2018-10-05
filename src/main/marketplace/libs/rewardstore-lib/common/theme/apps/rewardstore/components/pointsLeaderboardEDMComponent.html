@@ -47,13 +47,13 @@
 <table cellpadding="0" cellspacing="0" width="100%" bgcolor="$!bodyBgColor">
     <thead>
         <tr bgcolor="$!headerBgColor">
-            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Rank</strong></th>
+            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong class="trans-lookup" data-transcode="rank">Rank</strong></th>
             #if($showUsername == "true")
-            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Participant</strong></th>
+            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong class="trans-lookup" data-transcode="participant">Participant</strong></th>
             #else
             <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>&nbsp;</strong></th>
             #end
-            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Points</strong></th>
+            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong class="trans-lookup" data-transcode="points">Points</strong></th>
         </tr>
     </thead>
     #set( $rank = 1 )

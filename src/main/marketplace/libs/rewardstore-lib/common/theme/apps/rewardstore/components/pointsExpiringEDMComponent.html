@@ -22,7 +22,7 @@
                         </tr>
                     #else
                         <tr>
-                            <td colspan="2" style="color: #282828; font-family: Helvetica, Arial, sans-serif, Roboto; font-size: 15px; line-height: 15px; padding-bottom: 12px;">Keep track of your points that are soon to expire.</td>
+                            <td colspan="2" style="color: #282828; font-family: Helvetica, Arial, sans-serif, Roboto; font-size: 15px; line-height: 15px; padding-bottom: 12px;"><span class="trans-lookup" data-transcode="keep-track-of-your-points">Keep track of your points that are soon to expire.</span></td>
                         </tr>
                         #foreach($pg in $pointsMonths.entrySet())
                             <tr>
@@ -37,7 +37,7 @@
                     #end
                 #else
                     <tr>
-                        <td colspan="2" align="center">[No store selected]</td>
+                        <td colspan="2" align="center">[<span class="trans-lookup" data-transcode="no-store-selected">No store selected</span>]</td>
                     </tr>
                 #end
             </table>
@@ -46,8 +46,8 @@
     <tr>
         <td bgcolor="$!{footerBgcolor}" valign="middle" style="background-color: $!{footerBgcolor};padding-left: 20px; padding-right: 20px;" align="center" valign="middle" height="30">
             <span style="font-family: Helvetica, Arial, sans-serif, Roboto; color: #ffffff; font-size: 11px; line-height: 11px; font-weight: 400;">
-                <a href="http://$!{rootFolder.domainName}$!{formatter.portString}/profile/?$!{page.model.login}" target="_blank" style="text-decoration: underline; color: #ffffff">View your account</a>
-                for more information.
+                <a href="http://$!{rootFolder.domainName}$!{formatter.portString}/profile/?$!{page.model.login}" target="_blank" style="text-decoration: underline; color: #ffffff"><span class="trans-lookup" data-transcode="view-your-account">View your account</span></a>
+                <span class="trans-lookup" data-transcode="for-more-information">for more information.</span>
             </span>
         </td>
     </tr>

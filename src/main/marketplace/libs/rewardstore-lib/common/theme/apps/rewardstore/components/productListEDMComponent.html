@@ -61,7 +61,7 @@
                                                 <td height="122" valign="top" style="padding-left: 20px; padding-top: 50px" width="21" bgcolor="#ededed">
                                                     <img src="http://$!{rootFolder.domainName}$!{formatter.portString}/theme/apps/rewardstore/components/productListEDM_view_more.png" width="21" height="33" style="border: 0; display: block;" />
                                                 </td>
-                                                <td height="122" valign="top" style="padding-left: 13px; padding-top: 50px; font-weight: 900; $!linkStyles" bgcolor="#ededed">View more products online.</td>
+                                                <td height="122" valign="top" style="padding-left: 13px; padding-top: 50px; font-weight: 900; $!linkStyles" bgcolor="#ededed"><span class="trans-lookup" data-transcode="view-more-products-online">View more products online.</span></td>
                                             </tr>
                                         </table>
                                     </a>
@@ -142,12 +142,12 @@
                         <h4 style="font-size: ${fontSizeH4}px; line-height: ${lineHeightH4}px;margin-top:0;margin-bottom: 0;">
                             <a href="${productUrl}" style="$linkStyles">$productTitle</a></h4>
                         <p>
-                            <b>Price: $productPrice pts</b>
+                            <b><span class="trans-lookup" data-transcode="price">Price</span>: $productPrice pts</b>
                         </p>
                         <p>
                             $!formatter.truncate( $formatter.toPlain( $productDesc ), 100)
                         </p>
-                        <p><a href="${productUrl}" style="$linkStyles">Read more</a></p>
+                        <p><a href="${productUrl}" style="$linkStyles" class="trans-lookup" data-transcode="read-more">Read more</a></p>
                     </td>
                 </tr>
             </table>

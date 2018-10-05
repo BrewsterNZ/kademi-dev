@@ -7,19 +7,19 @@
 <div class="row">
 	<div class="col-sm-12">
 		<div class="list-group pointsRangeList">
-			<span href="#" class="list-group-item heading-item">Browse by points range</span>
+			<span href="#" class="list-group-item heading-item trans-lookup" data-transcode="browse-by-points-range">Browse by points range</span>
 			#if($dataRanges.size() > 0)
             #if($formatter.toInteger($dataRanges[0]) > 1)
-			<a href="#" class="list-group-item #if($params.endPrice == $dataRanges[0]) selected #end" data-startprice="1" data-endprice="$dataRanges[0]">Below $dataRanges[0] <i class="fa fa-angle-right  pull-right"></i></a>
+			<a href="#" class="list-group-item #if($params.endPrice == $dataRanges[0]) selected #end" data-startprice="1" data-endprice="$dataRanges[0]"><span class="trans-lookup" data-transcode="below">Below</span> $dataRanges[0] <i class="fa fa-angle-right  pull-right"></i></a>
             #end
 
 			#foreach( $pointRange in $dataRanges )
             #if ($foreach.count < $dataRanges.size())
-			<a href="#" class="list-group-item #if($params.endPrice == $dataRanges[$foreach.count] && $params.startPrice == $pointRange) selected #end" data-startprice="$pointRange" data-endprice="$dataRanges[$foreach.count]">From $pointRange to $dataRanges[$foreach.count] <i class="fa fa-angle-right  pull-right"></i></a>
+			<a href="#" class="list-group-item #if($params.endPrice == $dataRanges[$foreach.count] && $params.startPrice == $pointRange) selected #end" data-startprice="$pointRange" data-endprice="$dataRanges[$foreach.count]"><span class="trans-lookup" data-transcode="from">From</span> $pointRange <span class="trans-lookup" data-transcode="to">to</span> $dataRanges[$foreach.count] <i class="fa fa-angle-right  pull-right"></i></a>
 			#end
 			#end
 
-            <a href="#" class="list-group-item #if($params.startPrice == $dataRanges[$lastIndexRange]) selected #end" data-startprice="$dataRanges[$lastIndexRange]" data-endprice="999999999">Above $dataRanges[$lastIndexRange] <i class="fa fa-angle-right  pull-right"></i></a>
+            <a href="#" class="list-group-item #if($params.startPrice == $dataRanges[$lastIndexRange]) selected #end" data-startprice="$dataRanges[$lastIndexRange]" data-endprice="999999999"><span class="trans-lookup" data-transcode="above">Above</span> $dataRanges[$lastIndexRange] <i class="fa fa-angle-right  pull-right"></i></a>
 
 			#end
 		</div>

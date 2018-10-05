@@ -15,7 +15,7 @@
 <div class="panel panel-default debits-activity">
     <div class="panel-heading">
         <i class="fa fa-table"></i>
-        Debits activity #if ($pointsBucket) in $!pointsBucket.title #end
+        <span class="trans-lookup" data-transcode="debits-activity">Debits activity</span> #if ($pointsBucket) <span class="trans-lookup" data-transcode="in">in</span> $!pointsBucket.title #end
     </div>
     <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
         <div id="rewardDebitsActivityChart-${bucketId}" style="height: 100%;">
@@ -35,7 +35,7 @@
 <div class="panel panel-default debits-activity">
     <div class="panel-heading">
         <i class="fa fa-table"></i>
-        Sample Debits activity
+        <span class="trans-lookup" data-transcode="sample-debits-activity">Sample Debits activity</span>
     </div>
     <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
         #set ($randomGuid = $formatter.randomGuid)

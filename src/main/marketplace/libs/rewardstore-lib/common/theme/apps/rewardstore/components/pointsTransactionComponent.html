@@ -29,19 +29,19 @@
     <thead>
     <tr>
         #if (!$txType || $txType == "")
-            <th>Credit</th>
-            <th>Debit</th>
+            <th class="trans-lookup" data-transcode="credit">Credit</th>
+            <th class="trans-lookup" data-transcode="debit">Debit</th>
         #else
-            <th>Amount</th>
+            <th class="trans-lookup" data-transcode="amount">Amount</th>
         #end
-        <th>Date</th>
-        <th>Reason</th>
+        <th class="trans-lookup" data-transcode="date">Date</th>
+        <th class="trans-lookup" data-transcode="reason">Reason</th>
     </tr>
     </thead>
     <tbody>
     #if (!$trans || $trans.size() < 1)
     <tr>
-        <td colspan="99">There are no points transaction yet</td>
+        <td colspan="99" class="trans-lookup" data-transcode="no-points-transaction">There are no points transaction yet</td>
     </tr>
     #else
     #foreach( $t in $trans )

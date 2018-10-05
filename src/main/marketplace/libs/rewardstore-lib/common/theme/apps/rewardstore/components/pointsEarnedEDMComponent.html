@@ -18,9 +18,9 @@
             <span style="font-size: 15px; line-height: 30px;">
                 Earned
                 #if( $months > 1)
-                    in $months months
+                   <span class="trans-lookup" data-transcode="in">in</span> $months <span class="trans-lookup" data-transcode="months">months</span>
                 #else
-                    this month
+                    <span class="trans-lookup" data-transcode="this-month">this month</span>
                 #end
             </span>
         </td>

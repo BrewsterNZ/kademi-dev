@@ -17,7 +17,7 @@
                     <h2>
                         #set($pointsBucket = $applications.rewardStore.findPointsBucket($pointsEarnedStore))
                         #if($formatter.isNull($pointsBucket))
-                            Please select a store
+                            <span class="trans-lookup" data-transcode="please-select-a-store">Please select a store</span>
                         #else
                             #if($pointsBucket.pointsType == "POINTS_PROFILE")
                                 #set($be = $user)
@@ -48,6 +48,6 @@
         </div>
     </div>
     <div class="panel-footer text-center">
-        <span class="">$!label</span>
+        <span class="trans-lookup" data-transcode="point-earned-label">$!label</span>
     </div>
 </div>

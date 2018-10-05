@@ -67,13 +67,13 @@
                             <h4 class="media-heading" style="margin-bottom: 10px;">
                                 <a href="$prodUrl">$p.fields.title.value</a>
                             </h4>
-                            <p><label class="label label-success" style="font-size: 14px;">$p.fields.finalPoints.value Pts</label></p>
+                            <p><label class="label label-success" style="font-size: 14px;">$p.fields.finalPoints.value <span class="trans-lookup" data-transcode="pts">Pts</span></label></p>
                             <div class="media-content clearfix">
                                 <div class="productNotes">
                                     $!p.fields.notes.value
                                 </div>
                                 <div>
-                                    <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
+                                    <a href="$prodUrl" class="btn btn-default btn-sm trans-lookup" data-transcode="view" role="button">View</a>
                                     <!--<a href="$prodUrl" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to Cart</a>-->
                                 </div>
                             </div>
@@ -98,17 +98,17 @@
                 <div class="thumbnail product">
                     <div class="product-info">
                         <h3 class="product-title" title="$p.fields.title.value">
-                            <a class="text-primary" href="/$p.fields.path.value">Example Content</a></h3>
+                            <a class="text-primary trans-lookup" data-transcode="example-content" href="/$p.fields.path.value">Example Content</a></h3>
                         <div class="embed-responsive embed-responsive-4by3">
                             <a href="/$p.fields.path.value" class="embed-responsive-item"
                                style="background-image: url($bg);"></a>
                         </div>
-                        <div class="product-content">Example Content</div>
+                        <div class="product-content trans-lookup" data-transcode="example-content">Example Content</div>
                     </div>
                     <div class="caption">
     
                         <h3 class="text-center product-price bg-info">10
-                            <small>Points</small>
+                            <small class="product-content trans-lookup" data-transcode="points">Points</small>
                         </h3>
     
                         <a href="/$p.fields.path.value" class="btn btn-info" role="button">
