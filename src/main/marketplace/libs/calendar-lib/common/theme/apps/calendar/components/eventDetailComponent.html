@@ -6,7 +6,7 @@
         <small class="author">By <a href="#">admin</a>
         </small>
         <small>
-            Starts 12/06/2017
+            <span class="trans-lookup" data-transcode="starts">Starts</span> 12/06/2017
             (<abbr title="12/06/2017 06:00" class="timeago">12/06/2017 06:00</abbr>)
         </small>
     </div>
@@ -26,7 +26,7 @@
 
     <div class="calendar-event-byline">
         #if( $calendarEvent.organisor )
-        <small class="author">By <a href="/users/$page.organisor.name/public">$calendarEvent.organisor.formattedName</a>
+        <small class="author"><span class="trans-lookup" data-transcode="by">By</span> <a href="/users/$page.organisor.name/public">$calendarEvent.organisor.formattedName</a>
         </small>
         #end
         #if( $calendarEvent.location )

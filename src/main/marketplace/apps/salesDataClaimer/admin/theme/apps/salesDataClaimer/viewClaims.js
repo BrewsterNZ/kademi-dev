@@ -364,6 +364,14 @@
                             modalReview.find('.sales-team').hide();
                         }
 
+                        // Load extra fields
+                        var claimExtraFields = $('#claimExtraFields');
+                        for (var key in resp.data){
+                            if (key.indexOf('field_') === 0){
+                                claimExtraFields.find('[data-field='+key+']').text(resp.data[key]);
+                            }
+                        }
+
                         // Load Claim Items
                         if (resp.data && resp.data.claimItems) {
                             $.each(resp.data.claimItems, function (_, item) {

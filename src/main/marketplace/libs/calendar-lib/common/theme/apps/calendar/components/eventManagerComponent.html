@@ -17,13 +17,13 @@
 
     <div class="event-manager" data-editable="true" data-type="$!editType">
         #if ($editType == "calendar")
-            <button type="button" class="btn btn-primary btn-add-event" data-toggle="modal" data-target="#modal-add-event"><i class="fa fa-plus"></i> Add Event</button>
+            <button type="button" class="btn btn-primary btn-add-event" data-toggle="modal" data-target="#modal-add-event"><i class="fa fa-plus"></i> <span class="trans-lookup" data-transcode="add-event">Add Event</span></button>
         #end
         #if ($editType == "event")
-            <button type="button" class="btn btn-info btn-edit-event"><i class="fa fa-edit"></i> Edit</button>
-            <button type="button" class="btn btn-info btn-delete-event"><i class="fa fa-trash"></i> Delete</button>
-            <button type="button" class="btn btn-primary btn-save-edit-event" style="display: none;"><i class="fa fa-save"></i> Save</button>
-            <button type="button" class="btn btn-default btn-cancel-edit-event" style="display: none;"><i class="fa fa-times"></i> Close</button>
+            <button type="button" class="btn btn-info btn-edit-event"><i class="fa fa-edit"></i> <span class="trans-lookup" data-transcode="edit">Edit</span></button>
+            <button type="button" class="btn btn-info btn-delete-event"><i class="fa fa-trash"></i><span class="trans-lookup" data-transcode="delete"> Delete</span></button>
+            <button type="button" class="btn btn-primary btn-save-edit-event" style="display: none;"><i class="fa fa-save"></i> <span class="trans-lookup" data-transcode="save">Save</span></button>
+            <button type="button" class="btn btn-default btn-cancel-edit-event" style="display: none;"><i class="fa fa-times"></i> <span class="trans-lookup" data-transcode="close">Close</span></button>
         #end
     </div>
 
@@ -33,13 +33,13 @@
                 <div class="tabbable">
                     <ul class="nav nav-tabs tab-bricky">
                         <li class="active">
-                            <a data-toggle="tab" href="#details">Details</a>
+                            <a data-toggle="tab" href="#details" class="trans-lookup" data-transcode="details">Details</a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#confirmation">Confirmation</a>
+                            <a data-toggle="tab" href="#confirmation" class="trans-lookup" data-transcode="confirmation">Confirmation</a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#reminders">Reminders</a>
+                            <a data-toggle="tab" href="#reminders" class="trans-lookup" data-transcode="reminders">Reminders</a>
                         </li>
 
                     </ul>
@@ -48,72 +48,72 @@
                         <div id="details" class="tab-pane panel-body active">
                             <input type="hidden" id="backgroundImageHash" name="backgroundImageHash" value="$!page.backgroundImageHash" />
                             <div class="form-group">
-                                <label class="control-label col-md-4 col-lg-3" for="title">Event title</label>
+                                <label class="control-label col-md-4 col-lg-3 trans-lookup" for="event-title">Event title</label>
                                 <div class="col-md-8 col-lg-6">
-                                    <input type="text" id="title" name="summary" placeholder="Enter a name here" value="$page.title" class="required form-control" />
+                                    <input type="text" id="title" name="summary" placeholder="Enter a name here" value="$page.title" class="required form-control trans-lookup" />
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-4 col-lg-3" for="location">Timezone</label>
+                                <label class="control-label col-md-4 col-lg-3 trans-lookup" for="event-timezone">Timezone</label>
                                 <div class="col-md-8 col-lg-6">
                                     <select name="timezone" class="chosen-select required form-control">
-                                        <option value="">[Please select]</option>
+                                        <option value="">[<span class="trans-lookup" data-transcode="please-select">Please select</span>]</option>
                                         #foreach($tzId in $page.timezoneIdList)
                                             $formatter.option( $tzId, $tzId, $page.timezone )
                                         #end
                                     </select>
-                                    <small>Timezone offset: <b>$page.timeZoneOffsetStr</b> (save and refresh to update)</small>
+                                    <small><span class="trans-lookup" data-transcode="timezone-offset">Timezone offset</span>: <b>$page.timeZoneOffsetStr</b> (<span class="trans-lookup" data-transcode="save-and-refresh">save and refresh to update</span>)</small>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-4 col-lg-3">Dates & times</label>
+                                <label class="control-label col-md-4 col-lg-3 trans-lookup" for="data-time">Dates & times</label>
                                 <div class="col-md-8 col-lg-6">
-                                    <input type="text" placeholder="Choose start and end dates" value="$formatter.formatDateTime(  $page.startDate, $page.timezone ) - $formatter.formatDateTime( $page.endDate, $page.timezone )" class="form-control event-range" />
+                                    <input type="text" placeholder="Choose start and end dates" value="$formatter.formatDateTime(  $page.startDate, $page.timezone ) - $formatter.formatDateTime( $page.endDate, $page.timezone )" class="form-control event-range trans-lookup" />
                                     <input type="hidden" name="startDate" value="$formatter.formatDateTime(  $page.startDate, $page.timezone )" />
                                     <input type="hidden" name="endDate" value="$formatter.formatDateTime( $page.endDate, $page.timezone )" />
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-4 col-lg-3" for="location">Location</label>
+                                <label class="control-label col-md-4 col-lg-3 trans-lookup" for="location">Location</label>
                                 <div class="col-md-8 col-lg-6">
-                                    <input type="text" id="location" name="location" placeholder="38 Boulevarde Ave" value="$!page.location" class="form-control" /></div>
+                                    <input type="text" id="location" name="location" placeholder="38 Boulevarde Ave" value="$!page.location" class="form-control trans-lookup" /></div>
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-4 col-lg-3" for="Organisor">Organisor</label>
+                                <label class="control-label col-md-4 col-lg-3 trans-lookup" for="Organisor">Organisor</label>
                                 <div class="col-md-8 col-lg-6">
-                                    <input type="text" name="organisor" id="Organisor" placeholder="Email address or user id" value="$!page.organisor.email" class="required form-control" />
+                                    <input type="text" name="organisor" id="Organisor" placeholder="Email address or user id" value="$!page.organisor.email" class="required form-control trans-lookup" />
                                 </div>
                             </div>
 
                             <hr />
 
                             <div class="form-group">
-                                <label class="control-label col-md-4 col-lg-3" for="shortPath">Short path</label>
+                                <label class="control-label col-md-4 col-lg-3 trans-lookup" for="shortPath">Short path</label>
                                 <div class="col-md-8 col-lg-6">
-                                    <input type="text" name="shortPath" id="shortPath" placeholder="Eg the-big-day" value="$!page.shortPath" class="form-control" />
-                                    <i>If you would like your event to have a short, clean, path that is easy to type in, enter the path here</i>
+                                    <input type="text" name="shortPath" id="shortPath" placeholder="Eg the-big-day" value="$!page.shortPath" class="form-control trans-lookup" />
+                                    <i class="trans-lookup" data-transcode="event-shortPath-guide">If you would like your event to have a short, clean, path that is easy to type in, enter the path here</i>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-4 col-lg-3" for="externalUrl">External URL</label>
+                                <label class="control-label col-md-4 col-lg-3 trans-lookup" for="externalUrl">External URL</label>
                                 <div class="col-md-8 col-lg-6">
-                                    <input type="text" name="externalUrl" id="externalUrl" placeholder="http://otherevents.com/my-event" value="$!page.externalUrl" class="form-control" />
-                                    <i>If this event is managed by an external event service, provide the link to the external page here</i>
+                                    <input type="text" name="externalUrl" id="externalUrl" placeholder="http://otherevents.com/my-event" value="$!page.externalUrl" class="form-control trans-lookup" />
+                                    <i class="trans-lookup" data-transcode="event-externalUrl-guide">If this event is managed by an external event service, provide the link to the external page here</i>
                                 </div>
                             </div>
 
 
                             <hr />
 
-                            <p class="lead">Create your calendar event content below</p>
+                            <p class="lead trans-lookup" data-transcode="Create-calendar-content-content">Create your calendar event content below</p>
 
 
-                            <textarea cols="100" name="description1" rows="10" class="htmleditor" placeholder="Enter the details here">$!page.description</textarea>
+                            <textarea class="trans-lookup" cols="100" name="description1" rows="10" class="htmleditor" placeholder="Enter the details here">$!page.description</textarea>
                             <pre style="display: none;">$!page.description</pre>
                             <textarea name="description" style="width: 1px; height: 1px; opacity: 0.01;" id="" cols="30" rows="10"></textarea>
 
@@ -125,40 +125,40 @@
                         <div id="confirmation" class="tab-pane panel-body">
                             <div class="panel-body">
                                 <div class="form-group">
-                                    <label class="control-label col-md-4 col-lg-3">Allow registration</label>
+                                    <label class="control-label col-md-4 col-lg-3 trans-lookup" for="allow-registration">Allow registration</label>
                                     <div class="col-md-8 col-lg-6">
                                         <div class="checkbox">
                                             <label>
                                                 $formatter.checkbox("allowRegistration", "allowRegistration", $page.allowRegistration)
-                                                <small>Allow users to register their attendance.</small>
+                                                <small class="trans-lookup" for="allow-users-register-attendance">Allow users to register their attendance.</small>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group allowReg">
-                                    <label class="control-label col-md-4 col-lg-3">Allow guests</label>
+                                    <label class="control-label col-md-4 col-lg-3 trans-lookup" for="allow-guests">Allow guests</label>
                                     <div class="col-md-8 col-lg-6">
                                          <div class="checkbox">
                                             <label>
                                                 $formatter.checkbox("allowGuests", "allowGuests", $page.allowGuests)
-                                                <small>Allow users to register guests.</small>
+                                                <small class="trans-lookup" for="allow-users-register-guests">Allow users to register guests.</small>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group allowReg">
-                                    <label class="control-label col-md-4 col-lg-3" for="maxAttendees">Maximum attendees</label>
+                                    <label class="control-label col-md-4 col-lg-3 trans-lookup" for="maxAttendees">Maximum attendees</label>
                                     <div class="col-md-8 col-lg-6">
-                                        <input type="text" id="maxAttendees" name="maxAttendees" placeholder="Leave empty if there's no limit" value="$!page.maxAttendees" class="numeric form-control" />
+                                        <input type="text" id="maxAttendees" name="maxAttendees" placeholder="Leave empty if there's no limit" value="$!page.maxAttendees" class="numeric form-control trans-lookup" />
                                     </div>
                                 </div>
                                 <div class="form-group allowReg">
-                                    <label class="control-label col-md-4 col-lg-3">Email confirmation</label>
+                                    <label class="control-label col-md-4 col-lg-3 trans-lookup" for="email-confirmation">Email confirmation</label>
                                     <div class="col-md-8 col-lg-6">
                                          <div class="checkbox">
                                             <label>
                                                 $formatter.checkbox("emailConfirm", "emailConfirm", $page.emailConfirm)
-                                                <small>Send an email confirmation to the user when they've registered.</small>
+                                                <small class="trans-lookup" for="send-email-confirmation-registered">Send an email confirmation to the user when they've registered.</small>
                                             </label>
                                         </div>
                                     </div>
@@ -170,12 +170,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group allowReg allowGuests emailReg">
-                                    <label class="control-label col-md-4 col-lg-3">No guest emails</label>
+                                    <label class="control-label col-md-4 col-lg-3 trans-lookup" for="no-guest-emails">No guest emails</label>
                                     <div class="col-md-8 col-lg-6">
                                          <div class="checkbox">
                                             <label>
                                                 $formatter.checkbox("suppressGuestEmails", "suppressGuestEmails", $page.suppressGuestEmails)
-                                                <small>Tick this to prevent guests from receiving confirmation and reminder emails</small>
+                                                <small class="trans-lookup" for="prevent-guests-emails">Tick this to prevent guests from receiving confirmation and reminder emails</small>
                                             </label>
                                         </div>
                                     </div>
@@ -186,8 +186,8 @@
 
                                 <div class="form-group allowReg emailReg">
                                     <div class="col-md-12">
-                                        <p class="lead">The message to send when a user registers.</p>
-                                        <textarea cols="100" name="emailConfirmTemplate" rows="10" class="htmleditor" placeholder="Enter the details here">$!page.emailConfirmTemplate</textarea>
+                                        <p class="lead trans-lookup" for="message-registers">The message to send when a user registers.</p>
+                                        <textarea cols="100" name="emailConfirmTemplate" rows="10" class="htmleditor" placeholder="Enter the details here" class="trans-lookup">$!page.emailConfirmTemplate</textarea>
                                         <pre style="display: none;">$!page.emailConfirmTemplate</pre>
                                     </div>
                                 </div>
@@ -198,7 +198,7 @@
                         <!-- Start content of Reminders tab -->
                         <div id="reminders" class="tab-pane panel-body">
                             <header class="clearfix">
-                                <a class="btn btn-sm btn-success add-reminder" href="#reminderDetails" data-toggle="modal"><i class="fa fa-plus"></i> Create a reminder</a>
+                                <a class="btn btn-sm btn-success add-reminder" href="#reminderDetails" data-toggle="modal"><i class="fa fa-plus"></i> <span class="trans-lookup" data-transcode="create-a-reminder">Create a reminder</span></a>
                             </header>
                             <br />
 
@@ -213,11 +213,11 @@
                                     </colgroup>
                                     <thead>
                                         <tr class="odd">
-                                            <th class="icon">Status</th>
-                                            <th>When</th>
-                                            <th>Email subject</th>
-                                            <th>Website</th>
-                                            <th>Processed</th>
+                                            <th class="icon trans-lookup" data-transcode="status">Status</th>
+                                            <th class="trans-lookup" data-transcode="when">When</th>
+                                            <th class="trans-lookup" data-transcode="email-subject">Email subject</th>
+                                            <th class="trans-lookup" data-transcode="website">Website</th>
+                                            <th class="trans-lookup" data-transcode="processed">Processed</th>
                                             <th class="action"></th>
                                         </tr>
                                     </thead>
@@ -242,15 +242,15 @@
                                                 <td class="action last">
                                                     <div class="btn-group btn-group-sm">
                                                         <a class="btn btn-sm btn-info btn-sm edit" href="#">
-                                                            <i class="fa fa-edit"></i> Edit
+                                                            <i class="fa fa-edit"></i> <span class="trans-lookup" data-transcode="edit">Edit</span>
                                                         </a>
                                                         <button data-toggle="dropdown" class="btn btn-sm btn-info btn-sm dropdown-toggle">
                                                             <span class="caret"></span>
                                                         </button>
                                                         <ul role="menu" class="dropdown-menu pull-right">
-                                                            <li class="odd"><a title="Edit" class="edit" href="#"><i class="fa fa-edit"></i> Edit</a></li>
+                                                            <li class="odd"><a title="Edit" class="edit" href="#"><i class="fa fa-edit"></i> <span class="trans-lookup" data-transcode="edit">Edit</span></a></li>
                                                             <li class="divider even"></li>
-                                                            <li class="odd"><a title="Delete" class="delete" href="#"><i class="fa fa-times"></i> Delete</a></li>
+                                                            <li class="odd"><a title="Delete" class="delete" href="#"><i class="fa fa-times"></i> <span class="trans-lookup" data-transcode="delete">Delete</span></a></li>
                                                         </ul>
                                                     </div>
                                                 </td>
@@ -272,19 +272,19 @@
                         <form class="form-horizontal">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title">Reminder</h4>
+                                <h4 class="modal-title trans-lookup" data-transcode="reminders">Reminder</h4>
                             </div>
                             <div class="modal-body">
                                 <input type="hidden" name="reminderId" />
                                 <div class="form-message alert alert-danger" style="display: none;"></div>
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-2" for="subject">Send reminder</label>
+                                    <label class="control-label col-md-2 trans-lookup" for="send-reminder">Send reminder</label>
                                     <div class="col-md-4">
                                         <div class="input-group">
                                             <input type="text" class="text-center form-control" required="true" value="$!page.job.timerMultiple" name="timerMultiple" />
                                             <div class="input-group-btn">
-                                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle timer-unit" type="button">DAYS <span class="caret"></span>
+                                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle timer-unit" type="button"> <span class="trans-lookup" data-transcode="days">DAYS</span> <span class="caret"></span>
                                                 </button>
                                                 <ul role="menu" class="dropdown-menu pull-right timer-units">
                                                     #foreach($unit in $page.timerUnits)
@@ -305,12 +305,12 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-2" for="subject">Email subject</label>
+                                    <label class="control-label col-md-2 trans-lookup" for="email-subject">Email subject</label>
                                     <div class="col-md-10">
                                         <input type="text" id="subject" name="subject" value="" placeholder="" required="true" class="form-control" />
                                     </div>
                                 </div>
-                                <i>Enter the message content as HTML below</i>
+                                <i class="trans-lookup" data-transcode="enter-message-html">Enter the message content as HTML below</i>
 
                                 <div class="form-group">
                                     <div class="col-md-12">
@@ -319,8 +319,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer BtnBar">
-                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
-                                <button class="btn btn-sm btn-primary" type="submit">OK</button>
+                                <button type="button" class="btn btn-sm btn-default trans-lookup" data-transcode="cancel" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-sm btn-primary trans-lookup" data-transcode="ok" type="submit">OK</button>
                             </div>
                         </form>
                     </div>
@@ -348,15 +348,15 @@
                     <td class="action last">
                         <div class="btn-group btn-group-sm">
                             <a class="btn btn-sm btn-info btn-sm edit" href="#">
-                                <i class="fa fa-edit"></i> Edit
+                                <i class="fa fa-edit"></i> <span class="trans-lookup" data-transcode="edit">Edit</span>
                             </a>
                             <button data-toggle="dropdown" class="btn btn-sm btn-info btn-sm dropdown-toggle">
                                 <span class="caret"></span>
                             </button>
                             <ul role="menu" class="dropdown-menu pull-right">
-                                <li class="odd"><a title="Edit" class="edit" href="#"><i class="fa fa-edit"></i> Edit</a></li>
+                                <li class="odd"><a title="Edit" class="edit" href="#"><i class="fa fa-edit"></i> <span class="trans-lookup" data-transcode="edit">Edit</span></a></li>
                                 <li class="divider even"></li>
-                                <li class="odd"><a title="Delete" class="delete" href="#"><i class="fa fa-times"></i> Delete</a></li>
+                                <li class="odd"><a title="Delete" class="delete" href="#"><i class="fa fa-times"></i> <span class="trans-lookup" data-transcode="delete">Delete</span></a></li>
                             </ul>
                         </div>
                     </td>
@@ -371,7 +371,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                        <h4 class="modal-title">Create a calendar event</h4>
+                        <h4 class="modal-title trans-lookup" data-transcode="create-calendar-event">Create a calendar event</h4>
                     </div>
                     <form method="post" action="$request.absolutePath" class="form-horizontal">
                         <div class="modal-body">
@@ -379,12 +379,12 @@
                             <input type="hidden" name="action" value="create" />
 
                             <div class="form-group">
-                                <label class="control-label col-md-3">Start/Finish dates</label>
+                                <label class="control-label col-md-3 trans-lookup" for="start-finish-dates">Start/Finish dates</label>
                                 <div class="col-md-8">
                                     <div class="input-group">
                                         #set ($startDate = $formatter.formatDateTime(  $formatter.now, $page.timezone ))
                                         #set ($endDate = $formatter.formatDateTime(  $formatter.now, $page.timezone ))
-                                        <input type="text" placeholder="Choose start and end dates" value="$startDate - $endDate" class="form-control required event-range" required="true" />
+                                        <input type="text" placeholder="Choose start and end dates" value="$startDate - $endDate" class="form-control required event-range trans-lookup" required="true" />
                                         <input type="hidden" name="startDate" value="$startDate" />
                                         <input type="hidden" name="endDate" value="$endDate" />
                                         <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
@@ -393,10 +393,10 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-3">Timezone</label>
+                                <label class="control-label col-md-3 rans-lookup" for="timezone">Timezone</label>
                                 <div class="col-md-8">
                                     <select name="timezone" class="chosen-select required form-control">
-                                        <option value="">[Please select]</option>
+                                        <option value="">[<span class="trans-lookup" data-transcode="please-select">Please select</span>]</option>
                                         #foreach($tzId in $page.timezoneIdList)
                                         $formatter.option( $tzId, $tzId, $page.timezone )
                                         #end
@@ -405,17 +405,17 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-3" for="summary">Short summary</label>
+                                <label class="control-label col-md-3 trans-lookup" for="summary">Short summary</label>
                                 <div class="col-md-8">
                                     <textarea name="summary" id="summary" class="form-control required" required="true" rows="3"></textarea>
                                 </div>
                             </div>
 
-                            <i>Enter the full event content, reminders and other details after the event is created</i>
+                            <i class="trans-lookup" data-transcode="enter-event-content">Enter the full event content, reminders and other details after the event is created</i>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                            <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                            <button class="btn btn-sm btn-default trans-lookup" data-transcode="close" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary trans-lookup" data-transcode="save" type="submit">Save</button>
                         </div>
                     </form>
                 </div>

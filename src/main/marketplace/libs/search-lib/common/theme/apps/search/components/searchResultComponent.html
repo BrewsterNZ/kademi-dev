@@ -14,15 +14,15 @@
     <p class="totals text-muted">
         <small>
             #if( $totalHits == 0 )
-                Couldnt find any matching results
+                <span class="trans-lookup" data-transcode="search-not-result">Couldnt find any matching results</span>
             #elseif( $totalHits == 1 )
-                Oh, just one result
+                <span class="trans-lookup" data-transcode="search-one-result">Oh, just one result</span>
             #elseif( $totalHits < 4 )
-                Found a few results
+               <span class="trans-lookup" data-transcode="search-few-results"> Found a few results</span>
             #elseif( $totalHits < 10 )
-                Found several results
+                <span class="trans-lookup" data-transcode="search-several-results">Found several results</span>
             #else
-                Found about $totalHits results
+                <span class="trans-lookup" data-transcode="found-about">Found about</span> $totalHits <span class="trans-lookup" data-transcode="results">results</span>
             #end
         </small>
     </p>
@@ -33,7 +33,7 @@
         #if( $formatter.isNotNull($resultHTML) && $resultHTML )
             $resultHTML
         #else
-            <li class="no-result text-muted">No results found</li>
+            <li class="no-result text-muted trans-lookup" data-transcode="no-results-found">No results found</li>
         #end
     </div>
 

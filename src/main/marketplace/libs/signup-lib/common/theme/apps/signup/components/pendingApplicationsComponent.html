@@ -3,19 +3,19 @@
     <div class="panel panel-default panel-pending-applications">
         <div class="panel-heading">
             <i class="fa fa-users"></i>
-            Pending membership applications
+            <span class="trans-lookup" data-transcode="pending-membership-application">Pending membership applications</span>
         </div>
         <div class="panel-body">
-            <p class="alert alert-info">This portlet shows membership applications which have not been processed. Please review them and accept those which appear legitimate, this will allow those users access to your site
+            <p class="alert alert-info trans-lookup" data-transcode="pending-membership-application-alert">This portlet shows membership applications which have not been processed. Please review them and accept those which appear legitimate, this will allow those users access to your site
             </p>
             <table class="data table table-striped">
                 <thead>
                     <tr>
-                        <th>Nickname</th>
-                        <th>Group</th>
-                        <th>Email</th>
-                        <th>Organisation</th>
-                        <th>Date</th>
+                        <th class="trans-lookup" data-transcode="nickname-user">Nickname</th>
+                        <th class="trans-lookup" data-transcode="group-user">Group</th>
+                        <th class="trans-lookup" data-transcode="email">Email</th>
+                        <th class="trans-lookup" data-transcode="organisation">Organisation</th>
+                        <th class="trans-lookup" data-transcode="date">Date</th>
                         <th width="130"></th>
                     </tr>
                 </thead>
@@ -39,8 +39,8 @@
                                         <button type="button" disabled="disabled" class="btn btn-info btn-show-more disabled" title="This application doesn't have any details">
                                             <i class="fa fa-arrow-down"></i></button>
                                     #end
-                                    <button type="button" class="accept btn btn-success" title="Accept"><i class="fa fa-check"></i></button>
-                                    <button type="button" class="reject btn btn-danger" title="Reject"><i class="fa fa-ban"></i></button
+                                    <button type="button" class="accept btn btn-success trans-lookup" title="Accept"><i class="fa fa-check"></i></button>
+                                    <button type="button" class="reject btn btn-danger trans-lookup" title="Reject"><i class="fa fa-ban"></i></button
                                 </div>
                             </td>
                         </tr>
@@ -52,8 +52,8 @@
                                         <table class="table table-striped">
                                             <thead>
                                                 <tr>
-                                                    <th width="30%">Field Name</th>
-                                                    <th>Property Value</th>
+                                                    <th width="30%" class="trans-lookup" data-transcode="field-name">Field Name</th>
+                                                    <th class="trans-lookup" data-transcode="property-value">Property Value</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -100,10 +100,10 @@
 <div class="panel panel-default panel-pending-applications">
     <div class="panel-heading">
         <i class="fa fa-users"></i>
-        Pending membership applications
+        <span class="trans-lookup" data-transcode="pending-membership-application">Pending membership applications</span>
     </div>
     <div class="panel-body">
-        <p class="alert alert-info">This portlet shows membership applications which have not been processed. Please review them and accept those which appear legitimate, this will allow those users access to your site
+        <p class="alert alert-info trans-lookup" data-transcode="pending-membership-application-alert">This portlet shows membership applications which have not been processed. Please review them and accept those which appear legitimate, this will allow those users access to your site
         </p>
         <table class="data table table-striped">
             <colgroup>
@@ -117,29 +117,29 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th>Nickname</th>
-                    <th>Group</th>
-                    <th>Email</th>
-                    <th>Organisation</th>
-                    <th>Date</th>
+                    <th class="trans-lookup" data-transcode="nickname-user">Nickname</th> 
+                    <th class="trans-lookup" data-transcode="group-user">Group</th>
+                    <th class="trans-lookup" data-transcode="email">Email</th>
+                    <th class="trans-lookup" data-transcode="organisation">Organisation</th>
+                    <th class="trans-lookup" data-transcode="date">Date</th>
                     <th></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
             ##            <tr data-toggle="collapse" data-target=".det-$app.id">
-##                <td>Example Member Name</td>
-##                <td>Example Group Name</td>
+##                <td class="trans-lookup" data-transcode="example-member-name">Example Member Name</td>
+##                <td class="trans-lookup" data-transcode="example-group-name">Example Group Name</td>
 ##                <td>member@example.com</td>
-##                <td>Org Title</td>
+##                <td  class="trans-lookup" data-transcode="org-title">Org Title</td>
 ##                <td><abbr title="$formatter.formatDate($formatter.getCurrentDateService().getNow())" class="timeago">
 ##                    $formatter.formatDate($formatter.getCurrentDateService().getNow())</abbr></td>
 ##                <td>
 ##                    <input type="hidden" name="appId" value="$app.id"/>
-##                    <button class="accept btn btn-success">Accept</button>
+##                    <button class="accept btn btn-success trans-lookup" data-transcode="accept">Accept</button>
 ##                </td>
 ##                <td>
-##                    <button class="reject btn btn-danger">Reject</button>
+##                    <button class="reject btn btn-danger trans-lookup" data-transcode="reject">Reject</button>
 ##                </td>
 ##            </tr>
             </tbody>

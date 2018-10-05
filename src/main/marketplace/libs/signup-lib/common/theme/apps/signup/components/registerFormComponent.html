@@ -41,36 +41,36 @@
 
 
     <div class="form-group $!inputSize">
-        #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="email">Email</label> #end
+        #if ($displayLabels) <label class="control-label col-md-3 trans-lookup" style="$!labelAlign" for="email">Email</label> #end
         <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
-            <input class="required form-control" required="true" type="email" name="email" id="email" placeholder="Your email address" value="$!userResource.email" />
+            <input class="required form-control trans-lookup" required="true" type="email" name="email" id="email" placeholder="Your email address" value="$!userResource.email" />
         </div>
     </div>
 
     #if ($displayNickname)
     <div class="form-group $!inputSize">
-        #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="nickName">Nickname</label> #end
+        #if ($displayLabels) <label class="control-label col-md-3 trans-lookup" style="$!labelAlign" for="nickName">Nickname</label> #end
 
         <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
-            <input class="required form-control" type="text" name="nickName" id="nickName" placeholder="Your nickname for others to see" value="$!userResource.nickName" />
+            <input class="required form-control trans-lookup" type="text" name="nickName" id="nickName" placeholder="Your nickname for others to see" value="$!userResource.nickName" />
         </div>
     </div>
     #end
 
     #if ($displayName)
     <div class="form-group $!inputSize">
-        #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="firstName">First name</label> #end
+        #if ($displayLabels) <label class="control-label col-md-3 trans-lookup" style="$!labelAlign" for="firstName">First name</label> #end
 
         <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
-            <input class="required form-control" name="firstName" placeholder="Your first name" value="$!userResource.firstName" />
+            <input class="required form-control trans-lookup" name="firstName" placeholder="Your first name" value="$!userResource.firstName" />
         </div>
     </div>
 
     <div class="form-group $!inputSize">
-        #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="surName">Surname</label> #end
+        #if ($displayLabels) <label class="control-label col-md-3 trans-lookup" style="$!labelAlign" for="surName">Surname</label> #end
 
         <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
-            <input class="required form-control" name="surName" placeholder="Your last name" value="$!userResource.surName" />
+            <input class="required form-control trans-lookup" name="surName" placeholder="Your last name" value="$!userResource.surName" />
         </div>
     </div>
     #end
@@ -86,17 +86,17 @@
 
     #if ($displayPwd)
     <div class="form-group $!inputSize">
-        #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="password">Password</label> #end
+        #if ($displayLabels) <label class="control-label col-md-3 trans-lookup" style="$!labelAlign" for="password">Password</label> #end
 
         <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
-            <input class="required form-control" type="password" name="password" id="password" placeholder="Your preferred password" />
+            <input class="required form-control trans-lookup" type="password" name="password" id="password" placeholder="Your preferred password" />
         </div>
     </div>
     <div class="form-group $!inputSize">
-        #if ($displayLabels) <label class="control-label col-md-3" style="$!labelAlign" for="confirmPassword">Confirm</label> #end
+        #if ($displayLabels) <label class="control-label col-md-3 trans-lookup" style="$!labelAlign" for="confirmPassword">Confirm</label> #end
 
         <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
-            <input class="required form-control" type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" />
+            <input class="required form-control trans-lookup" type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" />
         </div>
     </div>
     #end
@@ -125,7 +125,7 @@
 
         <div #if ($displayLabels) class="col-md-9" #else class="col-md-12" #end>
             <input type="hidden" name="orgId" id="orgId" />
-            <input class="required form-control" type="text" name="orgName" id="orgName" autocomplete="off" placeholder="Choose your $orgType" />
+            <input class="required form-control trans-lookup" type="text" name="orgName" id="orgName" autocomplete="off" placeholder="Choose your $orgType" />
         </div>
     </div>
     #end
@@ -166,8 +166,8 @@
 
     <div class="form-group $!inputSize">
         <div class="col-md-9 #if($displayLabels) col-md-offset-3 #end" >
-            <button type="submit" class="btn btn-primary">Register</button>
-            #if($displayCancel) <a href="/index.html" class="btn">Cancel</a> #end
+            <button type="submit" class="btn btn-primary trans-lookup" data-transcode="register">Register</button>
+            #if($displayCancel) <a href="/index.html" class="btn trans-lookup" data-transcode="cancel">Cancel</a> #end
         </div>
     </div>
 
@@ -192,7 +192,7 @@
                 $!successBody
             </div>
             <div class="modal-footer">
-                <a href="/" type="button" class="btn btn-primary">Close</a>
+                <a href="/" type="button" class="btn btn-primary trans-lookup" data-transcode="close">Close</a>
             </div>
         </div>
     </div>

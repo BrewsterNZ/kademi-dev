@@ -22,11 +22,11 @@
 <form class="$!clsName" action='$!action'>
     <div class="input-group add-on">
         #if ($buttonAlign == "right")
-        <input id="omniSearchInput" data-type="$!searchType" type="text" name="q" value="$!params.q" class="omni-search-input form-control" placeholder="$!placeholder" aria-describedby="searchBoxComponent">
+        <input id="omniSearchInput" data-type="$!searchType" type="text" name="q" value="$!params.q" class="omni-search-input form-control trans-lookup" placeholder="$!placeholder" aria-describedby="searchBoxComponent">
         <span class="input-group-addon" id="searchBoxComponent"><span class='glyphicon glyphicon-search'></span></span>
         #elseif ($buttonAlign == "left")
         <span class="input-group-addon" id="searchBoxComponent"><span class='glyphicon glyphicon-search'></span></span>
-        <input id="omniSearchInput" data-type="$!searchType" type="text" name="q" value="$!params.q" class="omni-search-input form-control" placeholder="$!placeholder" aria-describedby="searchBoxComponent">
+        <input id="omniSearchInput" data-type="$!searchType" type="text" name="q" value="$!params.q" class="omni-search-input form-control trans-lookup" placeholder="$!placeholder" aria-describedby="searchBoxComponent">
         #end
     </div>
 </form>

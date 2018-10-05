@@ -26,15 +26,15 @@
 <div class="calendar-events">
     <article class="calendar-events-item">
         <header class="calendar-events-header">
-            <h3><a href="/Calendars/TanCalendar/ss3318">Example Event</a></h3>
+            <h3><a href="/Calendars/TanCalendar/ss3318" class="trans-lookup" data-transcode="example-event">Example Event</a></h3>
             <div class="calendar-event-byline">
-                <small class="author">By <a href="/users/admin/public">admin</a></small>
-                <small>Starts 05/06/2017 (<abbr title="2017-06-05 12:00:00.0" class="timeago">24 days from now</abbr>)</small>
+                <small class="author"><span class="trans-lookup" data-transcode="by">By</span> <a href="/users/admin/public" class="trans-lookup" data-transcode="admin">admin</a></small>
+                <small><span class="trans-lookup" data-transcode="starts">Starts</span> 05/06/2017 (<abbr title="2017-06-05 12:00:00.0" class="timeago">24 <span class="trans-lookup" data-transcode="days-from-now">days from now</span></abbr>)</small>
             </div>
         </header>
         <div class="calendar-event-text clearfix">
             <div class="clearfix"></div>
-            <a href="/Calendars/TanCalendar/ss3318" class="btn btn-sm btn-success pull-right">Register</a>
+            <a href="/Calendars/TanCalendar/ss3318" class="btn btn-sm btn-success pull-right trans-lookup" data-transcode="register">Register</a>
         </div>
     </article>
 </div>
@@ -64,7 +64,7 @@
     </header>
     <div class="calendar-event-text clearfix">
         <div class="clearfix">$!event.description</div>
-        <a href="$eventHref" class="btn btn-sm btn-success pull-right">Register</a>
+        <a href="$eventHref" class="btn btn-sm btn-success pull-right trans-lookup" data-transcode="register">Register</a>
     </div>
 </article>
 #end
