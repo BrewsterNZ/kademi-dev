@@ -46,7 +46,7 @@
             <div class="lead">
                 $!curCourse.body
                 #if (!$curCourse.body || $curCourse.body != "")
-                    <p>No description for current course</p>
+                <p><span class="trans-lookup" data-transcode="no-description">No description for current course</span></p>
                 #end
             </div>
         #end
@@ -66,7 +66,7 @@
     <div class="my-learning-container">
         <div class="btn-group course-picker-wrapper" style="z-index: 2">
             <button class="btn btn-primary btn-lg course-picker-toggler dropdown-toggle">
-                <span class="current-module">No Modules</span>
+                <span class="current-module trans-lookup" data-transcode="certificate">No Modules</span>
                 <span class="caret"></span>
             </button>
             <div class="dropdown-menu container">

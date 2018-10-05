@@ -30,10 +30,10 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Modified</th>
-                    <th class="size">Size</th>
-                    <th class="text-center">Actions</th>
+                    <th><span class="trans-lookup" data-transcode="name">Name</span></th>
+                    <th><span class="trans-lookup" data-transcode="modified">Modified</span></th>
+                    <th class="size"><span class="trans-lookup" data-transcode="size">Size</span></th>
+                    <th class="text-center"><span class="trans-lookup" data-transcode="actions">Actions</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -65,13 +65,13 @@
                                     </button>
                                     <ul class="dropdown-menu pull-right" role="menu">
 
-                                        <li><a href="${f.path}" class='btn-rename-file' title="Rename file"><i class="fa fa-edit"></i> Rename</a></li>
-                                        <li><a href="${f.path}" class="btn-share" title="Share with"><i class="fa fa-share"></i> Share with ...</a></li>
+                                        <li><a href="${f.path}" class='btn-rename-file' title="Rename file"><i class="fa fa-edit"></i> <span class="trans-lookup" data-transcode="rename">Rename</span></a></li>
+                                        <li><a href="${f.path}" class="btn-share" title="Share with"><i class="fa fa-share"></i> <span class="trans-lookup" data-transcode="share-with">Share with ...</span></a></li>
                                         <!--<li class="divider"></li>-->
                                         <!--<li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>-->
                                         <!--<li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>-->
                                         <li class="divider"></li>
-                                        <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-times"></i> Delete</a></li>
+                                        <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-times"></i> <span class="trans-lookup" data-transcode="delete">Delete</span></a></li>
                                     </ul>
                                 </div>
                             #end
@@ -92,14 +92,14 @@
                                 <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu pull-right" role="menu">
-                                    <li><a href="${f.path}" class='btn-rename-file' title="Rename file"><i class="fa fa-edit"></i> Rename</a></li>
-                                    <li><a href="${f.path}" download title="Download file"><i class="fa fa-cloud-download"></i> Download</a></li>
-                                    <li><a href="${f.path}" title="Share with"><i class="fa fa-share"></i> Share with ...</a></li>
+                                    <li><a href="${f.path}" class='btn-rename-file' title="Rename file"><i class="fa fa-edit"></i> <span class="trans-lookup" data-transcode="rename">Rename</span></a></li>
+                                    <li><a href="${f.path}" download title="Download file"><i class="fa fa-cloud-download"></i> <span class="trans-lookup" data-transcode="download">Download</span></a></li>
+                                    <li><a href="${f.path}" title="Share with"><i class="fa fa-share"></i> <span class="trans-lookup" data-transcode="share-with">Share with ...</span></a></li>
                                     <!--<li class="divider"></li>-->
                                     <!--<li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>-->
                                     <!--<li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>-->
                                     <li class="divider"></li>
-                                    <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-times"></i> Delete</a></li>
+                                    <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-times"></i> <span class="trans-lookup" data-transcode="delete">Delete</span></a></li>
                                 </ul>
                             </div>
                         </td>
@@ -114,13 +114,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Upload files</h4>
+                <h4 class="modal-title"><span class="trans-lookup" data-transcode="upload-files">Upload files</span></h4>
             </div>
             <div class="modal-body">
                 <form action="${pageHref}_DAV/PUT?overwrite=true" class="dropzone dropzone-fullwidth" id="uploadFileDropzone"></form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button"><span class="trans-lookup" data-transcode="close">Close</span></button>
             </div>
         </div>
     </div>

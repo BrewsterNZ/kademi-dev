@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>Module complete</h3>
+                <h3><span class="trans-lookup" data-transcode="module-complete">Module complete</span></h3>
             </div>
             <div class="modal-body">
                 #if( $page.completionMessage.length() gt 0 )
@@ -21,14 +21,14 @@
             </div>
             <div class="modal-footer">
                 #foreach($cert in $page.certificateFiles)
-                    <a href="$cert.href" target="_blank" class="btn btn-success pull-left">View Certificate</a>
+                <a href="$cert.href" target="_blank" class="btn btn-success pull-left"><span class="trans-lookup" data-transcode="view-certificate">View Certificate</span></a>
                 #end
-                <a href="../" class="btn">My Learning</a>
-                <a href="/dashboard" class="btn btn-primary">Continue training</a>
+                <a href="../" class="btn"><span class="trans-lookup" data-transcode="my-learning">My Learning</span></a>
+                <a href="/dashboard" class="btn btn-primary"><span class="trans-lookup" data-transcode="continue-training">Continue training</span></a>
             </div>
         </div>
     </div>
 </div>
 #else
-    <div class="alert alert-warning">Module Complete component will go here</div>
+<div class="alert alert-warning"><span class="trans-lookup" data-transcode="module-complete">Module Complete component will go here</span></div>
 #end

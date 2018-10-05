@@ -17,24 +17,24 @@
         <table class="table table-striped table-condensed">
             <thead>
             <tr>
-                <th>Title</th>
+                <th><span class="trans-lookup" data-transcode="title">Title</span></th>
                 #if ($showPersonName == "true")
-                <th>Name</th>
+                <th><span class="trans-lookup" data-transcode="name">Name</span></th>
                 #end
                 #if ($showStartDate == "true")
-                <th>Started</th>
+                <th><span class="trans-lookup" data-transcode="started">Started</span></th>
                 #end
-                <th>Completed</th>
-                <th>Status</th>
+                <th><span class="trans-lookup" data-transcode="completed">Completed</span></th>
+                <th><span class="trans-lookup" data-transcode="status">Status</span></th>
                 #if ($showCpdHours == "true")
-                <th>CPD Hours</th>
+                <th><span class="trans-lookup" data-transcode="cpd-hours">CPD Hours</span></th>
                 #end
             </tr>
             </thead>
             <tbody id="$queryTableId">
                 #if ($resp.hits.totalHits < 1)
                 <tr>
-                    <td colspan="99">No result</td>
+                    <td colspan="99"><span class="trans-lookup" data-transcode="no-result">No result</span></td>
                 </tr>
                 #end
                 #foreach($hit in $resp.hits.hits)
