@@ -26,9 +26,9 @@
 
                 <div class="module-tile-action text-right">
                     #if ($mod.percentComplete)
-                        <a href="$mod.href" class="btn btn-primary btn-sm">Continue</a>
+                    <a href="$mod.href" class="btn btn-primary btn-sm"><span class="trans-lookup" data-transcode="continue">Continue</span></a>
                     #else
-                        <a href="$mod.href" class="btn btn-primary btn-sm">Start</a>
+                    <a href="$mod.href" class="btn btn-primary btn-sm"><span class="trans-lookup" data-transcode="start">Start</span></a>
                     #end
                 </div>
             </div>
@@ -62,10 +62,10 @@
         #set ($count = $count + 1)
         <div class="$tileSize">
             <div class="module-tile component-tile component-info">
-                <h3>Module #${count}</h3>
-                <p class="clearfix">This is brief of module #${count}</p>
+                <h3><span class="trans-lookup" data-transcode="module">Module</span> #${count}</h3>
+                <p class="clearfix"><span class="trans-lookup" data-transcode="brief-module">This is brief of module</span> #${count}</p>
                 <div class="text-right">
-                    <a href="#" class="btn btn-primary btn-sm">Start</a>
+                    <a href="#" class="btn btn-primary btn-sm"><span class="trans-lookup" data-transcode="start">Start</span></a>
                 </div>
             </div>
         </div>

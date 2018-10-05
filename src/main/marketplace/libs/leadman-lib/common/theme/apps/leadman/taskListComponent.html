@@ -26,23 +26,23 @@
 #macro(fakeUI)
 <div class="" id="tasksList">
     <h3 class="no-mgt">
-        <small class="pull-right"><i style="font-size: 10px">Unassigned tasks</i></small>
-        Incoming
+        <small class="pull-right"><i style="font-size: 10px"><span class="trans-lookup" data-transcode="unassigned-tasks">Unassigned tasks</span></i></small>
+        <span class="trans-lookup" data-transcode="incoming">Incoming</span>
     </h3>
     <div class="list-tasks">
         <ul class="list-group ng-scope">
             <li class="list-group-item" style="padding-bottom: 45px">
                 <p>
-                    <em>Example Task Title</em>
-                    - Example Task Description
+                    <em> <span class="trans-lookup" data-transcode="example-task-title">Example Task Title</span></em>
+                    -  <span class="trans-lookup" data-transcode="example-task-description">Example Task Description</span>
                 </p>
-                <a href="" class="btn btn-success pull-right takeTask">Take task</a>
+                <a href="" class="btn btn-success pull-right takeTask"> <span class="trans-lookup" data-transcode="take-task">Take task</span></a>
                 <a href="" title="Cancel this task" class="deleteTask btnCancelTask text-danger"><i
                         class="fa fa-trash"></i></a>
                 <div style="margin: 15px">
                     <h3 class="media-heading">
                         <a href="">
-                            Contact information
+                            <span class="trans-lookup" data-transcode="contact-information">Contact information</span>
                         </a>
                     </h3>
 
@@ -70,9 +70,9 @@
                     <a href="#" class="mr btn btn-danger btn-sm btn-circle"
                        data-target="#modalEditTask" data-toggle="modal">T</a>
                     <em>
-                        Example Task Title
+                        <span class="trans-lookup" data-transcode="example-task-title">Example Task Title</span>
                     </em>
-                    <small class="pull-right">No due date</small>
+                    <small class="pull-right"> <span class="trans-lookup" data-transcode="no-due-date">No due date</span></small>
 
                 </p>
                 <hr/>
@@ -80,7 +80,7 @@
                 <div style="margin: 15px">
                     <h3 class="media-heading">
                         <a class="text-success" href="#">
-                            Example Lead Name
+                            <span class="trans-lookup" data-transcode="example-lead-name">Example Lead Name</span>
                         </a>
                     </h3>
                     <i class="fa fa-envelope"></i> example@email.com

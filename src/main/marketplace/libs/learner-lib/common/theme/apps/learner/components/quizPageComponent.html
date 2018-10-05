@@ -4,9 +4,9 @@
             <div class="col-md-4">
                 <div class="padded">
                     <hgroup>
-                        <h2 class="text-info when-not-complete">Please answer the following quiz:</h2>
+                        <h2 class="text-info when-not-complete"><span class="trans-lookup" data-transcode="answer-quiz">Please answer the following quiz:</span></h2>
     
-                        <h2 class="text-info when-complete">This quiz has already been completed</h2>
+                        <h2 class="text-info when-complete"><span class="trans-lookup" data-transcode="quiz-completed">This quiz has already been completed</span></h2>
                     </hgroup>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                         $!folder.quizBatch( $page.name )
                     </div>
                     <div class="quizSubmit">
-                        <a class="nextBtn when-not-complete btn btn-default pull-right">Submit</a>
+                        <a class="nextBtn when-not-complete btn btn-default pull-right"><span class="trans-lookup" data-transcode="submit">Submit</span></a>
                     </div>
                 </form>
             </div>
@@ -36,6 +36,6 @@
     #end
 #else
     <div class="alert alert-warning">
-        Content of quiz page
+        <span class="trans-lookup" data-transcode="content-quiz-page">Content of quiz page</span>
     </div>
 #end
