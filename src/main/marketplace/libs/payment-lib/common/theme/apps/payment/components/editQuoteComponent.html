@@ -8,7 +8,7 @@
                             <section style="padding-top: 15px">
                                 <header>
                                     <h2>
-                                        $!page.title - $!page.quoteState #if (!$formatter.isNull($page.lead)) - For Lead
+                                        $!page.title - $!page.quoteState #if (!$formatter.isNull($page.lead)) - <span class="trans-lookup" data-transcode="for-lead">For Lead</span>
                                         <a href="/leads/$page.lead.id">$page.lead.profile.formattedName</a> #end
                                         <div class="btn-group pull-right">
                                             <!--<button type="submit" class="btn btn-sm btn-success">
@@ -16,12 +16,12 @@
                                             </button>-->
 
                                             <button data-toggle="modal" data-target="#cloneQuoteModal" type="button" class="btn btn-sm btn-success">
-                                                <i class="fa fa-copy"></i> Clone Quote
+                                                <i class="fa fa-copy"></i> <span class="trans-lookup" data-transcode="clone-quote">Clone Quote</span>
                                             </button>
 
                                             #if( $page.proposal )
                                             <a class="btn btn-sm btn-info" href="/proposals/$page.proposal.id">
-                                                Edit Proposal
+                                                <span class="trans-lookup" data-transcode="edit-proposal">Edit Proposal</span>
                                             </a>
                                             #end
 
@@ -39,27 +39,27 @@
 
                                 <div class="panel panel-default">
                                     <div class="panel-body">
-                                        <h4 class="page-header">Update Quote details</h4>
+                                        <h4 class="page-header"><span class="trans-lookup" data-transcode="update-quote-details">Update Quote details</span></h4>
 
                                         <form id="invoice-details-form" action="" method="POST" enctype="multipart/form-data" class="form-horizontal">
                                             <div class="form-group">
                                                 <div class="container">
                                                     <div class="row">
                                                         <div class="col-sm-5">
-                                                            <label class="control-label" for="name">Title</label>
+                                                            <label class="control-label trans-lookup" for="name">Title</label>
                                                             <input type="text" name="title" class="form-control search-input" placeholder="Quote Title" value="$formatter.ifNull($page.title,
                                                                    '')" />
                                                         </div>
 
                                                         <div class="col-sm-7">
-                                                            <label class="control-label" for="name">Description</label>
+                                                            <label class="control-label trans-lookup" for="name">Description</label>
                                                             <input type="text" name="description" class="form-control search-input" placeholder="Quote Description" value="$formatter.ifNull($page.description,
                                                                    '')" />
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-sm-3">
-                                                            <label class="control-label" for="name">Vendor</label>
+                                                            <label class="control-label trans-lookup" for="name">Vendor</label>
 
                                                             <div class="input-group col-sm-12">
                                                                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
@@ -70,7 +70,7 @@
                                                         </div>
 
                                                         <div class="col-sm-3">
-                                                            <label class="control-label" for="name">Customer</label>
+                                                            <label class="control-label trans-lookup" for="name">Customer</label>
 
                                                             <div class="input-group col-sm-12">
                                                                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
@@ -80,7 +80,7 @@
                                                         </div>
 
                                                         <div class="col-sm-2">
-                                                            <label class="control-label" for="name">Issue Date</label>
+                                                            <label class="control-label trans-lookup" for="name">Issue Date</label>
                                                             <div class="input-group col-sm-12">
                                                                 <input name="issueDate" class="form-control date-pickers" value="$formatter.formatJodaDate($page.issuedDate,
                                                                        'dd/MM/yyyy HH:mm')" />
@@ -88,7 +88,7 @@
                                                         </div>
 
                                                         <div class="col-sm-2">
-                                                            <label class="control-label" for="name">Expiry Date</label>
+                                                            <label class="control-label trans-lookup" for="name">Expiry Date</label>
                                                             <div class="input-group col-sm-12">
                                                                 <input name="expiryDate" class="form-control date-pickers" value="$formatter.formatJodaDate($page.expiryDate,
                                                                        'dd/MM/yyyy HH:mm')" />
@@ -96,7 +96,7 @@
                                                         </div>
 
                                                         <div class="col-sm-2">
-                                                            <label class="control-label" for="name">Quote #</label>
+                                                            <label class="control-label trans-lookup" for="name">Quote #</label>
                                                             <div class="input-group col-sm-12">
                                                                 <input name="quoteNumber" class="form-control" value="$page.number" />
                                                             </div>
@@ -108,7 +108,7 @@
                                                 <div class="col-md-12">
                                                     <button class="btn btn-sm btn-success pull-right" type="submit">
                                                         <i class="fa fa-check"></i>
-                                                        Save
+                                                        <span class="trans-lookup" data-transcode="save">Save</span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -118,7 +118,7 @@
                                 </div>
                                 <div class="panel panel-default">
                                     <div class="panel-body">
-                                        <h4 class="page-header">Quote Attachments</h4>
+                                        <h4 class="page-header"> <span class="trans-lookup" data-transcode="quote-attachments">Quote Attachments</span></h4>
                                         <div id="files-body" class="form-group attachment-container">
                                             <div class="col-md-12">
                                                 #foreach($attachment in $page.attachments)
@@ -132,7 +132,7 @@
                                                 #end
                                                 <button class="remove-uneditable btn btn-success pull-left upload-files" type="button">
                                                     <i class="fa fa-plus"></i>
-                                                    Add File
+                                                    <span class="trans-lookup" data-transcode="add-file">Add File</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -141,21 +141,21 @@
 
                                 <div class="panel panel-default">
                                     <div class="panel-body">
-                                        <h4 class="page-header">Update Quote Items</h4>
+                                        <h4 class="page-header"> <span class="trans-lookup" data-transcode="update-quote-items">Update Quote Items</span></h4>
 
                                         <div class="form-group">
                                             <div class="container">
                                                 <table id="line-items" class="table table-striped table-bordered col-sm-12 invoices-table" style="margin-top: 15px">
                                                     <thead>
                                                         <tr>
-                                                            <th class="description" style="width: 200px;">Description</th>
-                                                            <th class="supplier">Account</th>
-                                                            <th class="supplier" style="width: 200px;">Supplier</th>
-                                                            <th class="quantity">Quantity</th>
-                                                            <th class="price">Unit Price</th>
-                                                            <th class="discount">Discount %</th>
-                                                            <th class="tax-rate" style="width: 100px;">Tax Rate</th>
-                                                            <th class="amount" style="width: 200px;">Amount</th>
+                                                            <th class="description" style="width: 200px;"> <span class="trans-lookup" data-transcode="description">Description</span></th>
+                                                            <th class="supplier"> <span class="trans-lookup" data-transcode="account">Account</span></th>
+                                                            <th class="supplier" style="width: 200px;"> <span class="trans-lookup" data-transcode="supplier">Supplier</span></th>
+                                                            <th class="quantity"> <span class="trans-lookup" data-transcode="quantity">Quantity</span></th>
+                                                            <th class="price"> <span class="trans-lookup" data-transcode="unit-price">Unit Price</span></th>
+                                                            <th class="discount"> <span class="trans-lookup" data-transcode="discount">Discount %</span></th>
+                                                            <th class="tax-rate" style="width: 100px;"> <span class="trans-lookup" data-transcode="tax-rate">Tax Rate</span></th>
+                                                            <th class="amount" style="width: 200px;"> <span class="trans-lookup" data-transcode="amount">Amount</span></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -193,23 +193,23 @@
                                                         </tr>
                                                         #end
                                                         <tr class="new-line-add-wrapper remove-uneditable">
-                                                            <td colspan="8"><a href="" class="new-line-add">Click to add a new line</a></td>
+                                                            <td colspan="8"><a href="" class="new-line-add"> <span class="trans-lookup" data-transcode="click-add-new-line">Click to add a new line</span></a></td>
                                                         </tr>
                                                     </tbody>
                                                     <tfoot>
                                                         <tr class="subtotal">
                                                             <td colspan="6" rowspan="3"></td>
-                                                            <td>Subtotal</td>
+                                                            <td> <span class="trans-lookup" data-transcode="subtotal">Subtotal</span></td>
                                                             <td class="subtotal-field">0.00</td>
                                                         </tr>
 
                                                         <tr class="gst">
-                                                            <td>GST</td>
+                                                            <td> <span class="trans-lookup" data-transcode="gst">GST</span></td>
                                                             <td>0.00</td>
                                                         </tr>
 
                                                         <tr class="total">
-                                                            <td>Total</td>
+                                                            <td> <span class="trans-lookup" data-transcode="total">Total</span></td>
                                                             <td class="global-total-field">0.00</td>
                                                         </tr>
                                                     </tfoot>
@@ -231,12 +231,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Clone Quote</h4>
+                    <h4 class="modal-title" id="myModalLabel"> <span class="trans-lookup" data-transcode="clone-quote">Clone Quote</span></h4>
                 </div>
                 <div class="modal-body">
                     <form id="clone-quote-form" class="form-horizontal" method="POST" action="$page.href">
                         <div class="form-group">
-                            <label for="quoteNumber" class="col-sm-3 control-label">New Quote Number</label>
+                            <label for="quoteNumber" class="col-sm-3 control-label rans-lookup">New Quote Number</label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control required" required="true" id="quoteNumber" name="number" />
                             </div>
@@ -246,8 +246,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                    <button id="clone-quote-button" type="button" class="btn btn-sm btn-primary" data-type="form-submit">Clone Quote</button>
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><span class="trans-lookup" data-transcode="close">Close</span></button>
+                    <button id="clone-quote-button" type="button" class="btn btn-sm btn-primary" data-type="form-submit"><span class="trans-lookup" data-transcode="clone-quote">Clone Quote</span></button>
                 </div>
             </div>
         </div>
@@ -258,7 +258,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">Upload Files</h4>
+                    <h4 class="modal-title"><span class="trans-lookup" data-transcode="upload-files">Upload Files</span></h4>
                 </div>
 
                 <div class="modal-body">
@@ -272,7 +272,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+                    <button class="btn btn-default" data-dismiss="modal" type="button"><span class="trans-lookup" data-transcode="exit">Exit</span></button>
 
                     <!--<button class="btn btn-primary" type="submit">Upload</button>-->
                 </div>
