@@ -23,6 +23,14 @@ controllerMappings
         .build();
 
 controllerMappings
+    .adminController()
+    .pathSegmentName('manageSaleDataClaimer.csv')
+    .addMethod('GET', 'exportCSV')
+    .postPriviledge('READ_CONTENT')
+    .enabled(true)
+    .build();
+
+controllerMappings
         .adminController()
         .path('/manageSaleDataClaimer/')
         .defaultView(views.templateView('/theme/apps/salesDataClaimer/viewClaims.html'))
@@ -515,4 +523,60 @@ function findParticipant(entityName, series) {
         return null;
     }
 
+}
+
+function exportCSV(page, params) {
+    var extraFields = getSalesDataExtreFields(page);
+    var db = getDB(page);
+    var claims = db.findByType("record");
+    var arr = [];
+    for (var i in claims){
+        var claim = claims[i].jsonObject;
+        var items = claim.claimItems;
+        if (items && items.length > 0){
+            for (var j = 0; j < items.length; j ++){
+                var item = items[j];
+                var rowObj = item;
+                // sale claim item id
+                rowObj.claimItemId = item.recordId;
+                log.info('claim {} {}', i, item);
+                rowObj.recordId = claim.recordId;
+                rowObj.enteredDate = claim.enteredDate;
+                rowObj.enteredUser = claim.enteredUser;
+                rowObj.modifiedDate = claim.modifiedDate;
+                rowObj.status = claim.status;
+                rowObj.salesTeamOrgId = claim.salesTeamOrgId;
+                findClaimExtraFields(claim, rowObj);
+                arr.push(rowObj);
+                log.info('arr length {}', arr.length);
+            }
+        }
+    }
+
+    var csvArr = [];
+    if ( arr.length ){
+        var keys = ['recordId', 'amount', 'productSku', 'soldDate', 'soldBy', 'soldById', 'modifiedDate', 'claimItemId', 'enteredDate', 'enteredUser', 'modifiedDate', 'status'];
+        for (var i in extraFields){
+            keys.push('field_'+extraFields[i].name);
+        }
+        csvArr.push(keys);
+
+        for (var i = 0; i < arr.length; i ++){
+            var row = [];
+            for (var j = 0; j < keys.length; j++){
+                row.push(arr[i][keys[j]]);
+            }
+            csvArr.push(row);
+        }
+    }
+
+    return views.csvView(csvArr)
+}
+
+function findClaimExtraFields(claim, obj) {
+    for(var key in claim){
+        if (key.indexOf('field_') === 0){
+            obj[key] = claim[key];
+        }
+    }
 }

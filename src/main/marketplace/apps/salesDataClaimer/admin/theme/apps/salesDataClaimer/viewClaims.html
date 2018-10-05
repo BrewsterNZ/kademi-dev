@@ -71,11 +71,15 @@
                                 <p class="btn-group btn-group-sm">
                                     <button type="button" class="btn btn-success" data-target="#modal-upload-ocr-claim" data-toggle="modal"><i class="fa fa-plus"></i> Upload Image Claim</button>
                                 </p>
-                                #end
+                                <p class="btn-group btn-group-sm">
+                                    <button type="button" class="btn btn-success btn-import-claims"><i class="fa fa-cloud-upload"></i> Import</button>
+                                    <a download="salesDataClaims.csv" href="/manageSaleDataClaimer.csv" class="btn btn-success btn-export-claims"><i class="fa fa-cloud-download"></i> Export</a>
+                                </p>
                                 <p class="btn-group btn-group-sm">
                                     <button type="button" class="btn btn-success btn-approve-claims"><i class="fa fa-check"></i> Approve</button>
                                     <button type="button" class="btn btn-danger btn-reject-claims"><i class="fa fa-times"></i> Reject</button>
                                 </p>
+                                #end
                                 #if ($isAdmin)
                                 <p class="btn-group btn-group-sm">
                                     <button type="button" class="btn btn-danger btn-delete-claims"><i class="fa fa-times"></i> Delete</button>
@@ -115,10 +119,6 @@
                                 #renderClaim($hit.jsonObject)
                                 #end
                                 #end
-
-                                <tr>
-                                    <td colspan="7">--</td>
-                                </tr>
 
                                 #foreach($hit in $claims)
                                 #if ($hit.jsonObject.status != 0)
