@@ -9,11 +9,11 @@
     <div class="panel panel-default">
         <div class="panel-body">
             #if( $mod.inProgress )
-            <p class="lead">Continue your training:</p>
+            <p class="lead"><span class="trans-lookup" data-transcode="congratulations-continue">Congratulations Continue your training:</span></p>
             #elseif( $mod.complete )
-            <p class="lead">Congratulations, you've completed all of your training</p>
+            <p class="lead"> <span class="trans-lookup" data-transcode="congratulations">Congratulations, you've completed all of your training</span></p>
             #else
-            <p class="lead">Suggested module:</p>
+            <p class="lead"> <span class="trans-lookup" data-transcode="suggested-module">Suggested module:</span></p>
             #end
 
             #renderModuleListItem($mod)
@@ -23,11 +23,11 @@
 </div>
 
 <a class="pull-right btn btn-info" href="/myLearning">
-    Browse all courses
+    <span class="trans-lookup" data-transcode="browse-all-courses">Browse all courses</span>
     <span class="glyphicon glyphicon-chevron-right"></span>
 </a>
 
-<p class="lead">Other courses and modules</p>
+<p class="lead"> <span class="trans-lookup" data-transcode="other-courses-and-modules">Other courses and modules</span></p>
 
 <div class="modules-list row modules-list-2">
     #if( $items )

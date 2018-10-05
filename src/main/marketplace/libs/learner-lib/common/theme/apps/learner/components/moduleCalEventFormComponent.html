@@ -1,7 +1,7 @@
 #if( $page.isIlt() )
 <div class="panel panel-info">
     <div class="panel-heading">
-        Register for this module
+        <span class="trans-lookup" data-transcode="register-this-module">Register for this module</span>
     </div>
     <div class="panel-body">
         <h2>Upcoming sessions</h2>
@@ -23,7 +23,7 @@
                 <td colspan="3" class="text-right">
                     <a href="/Calendars/$event.calendar.name/$event.name" class="btn btn-success">
                         <i class="fa fa-play"></i>
-                        Register
+                        <span class="trans-lookup" data-transcode="register"> Register</span>
                     </a>
                 </td>
             </tr>
@@ -34,7 +34,7 @@
 
 #elseif( $page.assignment )
 <div class="alert alert-warning">
-    You havent been given this assignment yet.
+    <span class="trans-lookup" data-transcode="have-no-assigment"> You havent been given this assignment yet.</span>
 </div>
 
 #else

@@ -53,24 +53,24 @@
                     #if($showThumbnail)
                     <th></th>
                     #end
-                    <th>Title</th>
+                    <th><span class="trans-lookup" data-transcode="title">Title</span></th>
                     #if ($showStartDate == "true")
                     <th>Started</th>
                     #end
-                    <th>Completed</th>
+                    <th><span class="trans-lookup" data-transcode="completed">Completed</span></th>
                     <th>Status</th>
                     #if ($showCpdHours == "true")
-                    <th>CPD Hours</th>
+                    <th><span class="trans-lookup" data-transcode="cpd-hours">CPD Hours</span></th>
                     #end
                     #if($showCertificates)
-                    <th>Certificates</th>
+                    <th><span class="trans-lookup" data-transcode="certificate">Certificates</span></th>
                     #end
                 </tr>
             </thead>
             <tbody id="$queryTableId">
                 #if ($resp.hits.totalHits < 1)
                 <tr>
-                    <td colspan="99">No result</td>
+                    <td colspan="99"><span class="trans-lookup" data-transcode="no-result">No result</span></td>
                 </tr>
                 #end
                 #foreach($hit in $resp.hits.hits)

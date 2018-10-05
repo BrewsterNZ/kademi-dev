@@ -34,7 +34,7 @@
 #if( $folder.complete )
 <div class="alert alert-success">
     <span class="glyphicon glyphicon-ok"></span>
-    You have completed this module.
+    <span class="trans-lookup" data-transcode="completed-module"> You have completed this module.</span>
 </div>
 #elseif ( $folder.percentComplete )
 
@@ -46,7 +46,7 @@
 <acronym title="You have not completed prequisites">
     <div class="alert alert-warning">
         <span class="glyphicon glyphicon-lock"></span>
-        This module is locked because you have not completed the pre-requisites:
+        <span class="trans-lookup" data-transcode="module-locked"> This module is locked because you have not completed the pre-requisites:</span>
         <ul>
             #foreach($module in $folder.unmetPrerequisites)
             <li>
@@ -54,12 +54,12 @@
                 -
                 #if( $module.inProgress )
                 #if( $module.percentComplete == 100 )
-                on last page
+                <span class="trans-lookup" data-transcode="on-last-page">on last page</span>
                 #else
                 $module.percentComplete
                 #end
                 #else
-                not started
+                <span class="trans-lookup" data-transcode="not-started">not started</span>
                 #end
             </li>
             #end
@@ -71,7 +71,7 @@
 <acronym title="You do not have an enrolement for this module">
     <div class="alert alert-warning">
         <span class="glyphicon glyphicon-lock"></span>
-        This module is view-only. You do not have an enrolement for this module.
+        <span class="trans-lookup" data-transcode="module-view-only"> This module is view-only. You do not have an enrolement for this module.</span>
     </div>
 </acronym>
 #end
@@ -82,12 +82,12 @@
 #if( $folder.complete )
 <div class="alert alert-success">
     <span class="glyphicon glyphicon-ok"></span>
-    You have completed this module.
+    <span class="trans-lookup" data-transcode="completed-module">You have completed this module.</span>
 </div>
 #elseif ( $folder.submitted )
 <div class="alert alert-success">
     <span class="glyphicon glyphicon-ok"></span>
-    You have submitted this module.
+    <span class="trans-lookup" data-transcode="submitted-module">You have submitted this module.</span>
 </div>
 #elseif( $folder.registeredForIlt )
 #if( $folder.iltStarted )
@@ -95,23 +95,23 @@
 #elseif( $folder.iltAboutToStart )
 <div class="alert alert-info">
     <span class="glyphicon glyphicon-ok"></span>
-    The session is starting in $formatter.formatAge($folder.nextIltDate)
+    <span class="trans-lookup" data-transcode="session-starting-in">The session is starting in</span> $formatter.formatAge($folder.nextIltDate)
 
 </div>
 #else
 <div class="alert alert-info">
     <span class="glyphicon glyphicon-ok"></span>
-    There is no session currently available.
+    <span class="trans-lookup" data-transcode="no-session-available"> There is no session currently available.</span>
 </div>
 #end
 #else
 <div class="alert alert-info">
     <span class="glyphicon glyphicon-ok"></span>
-    You are not registered for this module. Please choose a session:
+    <span class="trans-lookup" data-transcode="not-register">You are not registered for this module. Please choose a session:</span>
     <table class="table table-striped">
         <thead>
-        <th>Date</th>
-        <th>Location</th>
+        <th><span class="trans-lookup" data-transcode="date">Date</span></th>
+        <th><span class="trans-lookup" data-transcode="location">Location</span></th>
         </thead>
         <tbody>
             #foreach($event in $folder.upcomingModuleCalEvents )
@@ -123,7 +123,7 @@
                 </td>
                 <td>$event.calEvent.location</td>
                 <td>
-                    <a>Register</a>
+                    <a><span class="trans-lookup" data-transcode="register">Register</span></a>
                 </td>
             </tr>
             #end
@@ -138,17 +138,17 @@
 #if( $folder.complete )
 <div class="alert alert-success">
     <span class="glyphicon glyphicon-ok"></span>
-    You have completed this module.
+    <span class="trans-lookup" data-transcode="completed-module">You have completed this module.</span>
 </div>
 #elseif ( $folder.submitted )
 <div class="alert alert-success">
     <span class="glyphicon glyphicon-ok"></span>
-    You have submitted this module.
+    <span class="trans-lookup" data-transcode="submitted-module">You have submitted this module.</span>
 </div>
 #elseif( $folder.assignmentPastDue )
 <div class="alert alert-warning">
     <span class="fa fa-exclamation"></span>
-    The assignment is now past its due date.
+    <span class="trans-lookup" data-transcode="assigment-now">The assignment is now past its due date.</span>
 </div>
 #end
 #end
@@ -157,7 +157,7 @@
     <div class="contentForm panelBox">
 
         <div class="alert alert-warning">
-            Content of module page
+            <span class="trans-lookup" data-transcode="content-module-page">Content of module page</span>
             <br/>
         </div>
 
