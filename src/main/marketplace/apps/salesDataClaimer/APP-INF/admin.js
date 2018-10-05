@@ -213,6 +213,17 @@ function approveClaims(page, params) {
                                 dp.enteredBy = enteredBy;
                             }
 
+                            // populate extra fields
+                            var extrFields = formatter.newMap();
+                            for (var key in claimOb){
+                                if (key.indexOf('field_') == 0){
+                                    extrFields.put(key.replace('field_', ''), claimOb[key]);
+                                }
+                            }
+
+                            dp.fields = extrFields;
+                            log.info('db.fields {}', dp.fields);
+
                             services.dataSeriesManager.insertDataPoint(dp);
 
                             var custProfileBean = services.userManager.toProfileBean(soldByUser);
