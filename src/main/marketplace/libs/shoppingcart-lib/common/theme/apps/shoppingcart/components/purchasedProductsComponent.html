@@ -21,7 +21,7 @@
                                     #if ($titleText && $titleText != "")
                                         $titleText
                                     #else
-                                        Purchased Products
+                                        <span class="trans-lookup" data-transcode="purchased-products">Purchased Products</span>
                                     #end
                                 </strong>
 
@@ -29,12 +29,12 @@
                                     <thead>
                                         <tr bgcolor="${headerBg}">
                                             #if ($showProductPhoto == "true")
-                                                <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Photo</strong></th>
+                                                <th style="$baseStyles; ${cellStyles}; text-align: left"><strong class="trans-lookup" data-transcode="photo">Photo</strong></th>
                                             #end
-                                            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Name</strong></th>
-                                            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Price</strong></th>
-                                            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong>Qty</strong></th>
-                                            <th style="$baseStyles; ${cellStyles}; text-align: right"><strong>Sub Total</strong></th>
+                                            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong class="trans-lookup" data-transcode="name">Name</strong></th>
+                                            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong class="trans-lookup" data-transcode="price">Price</strong></th>
+                                            <th style="$baseStyles; ${cellStyles}; text-align: left"><strong class="trans-lookup" data-transcode="qty">Qty</strong></th>
+                                            <th style="$baseStyles; ${cellStyles}; text-align: right"><strong class="trans-lookup" data-transcode="sub-total">Sub Total</strong></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -48,7 +48,7 @@
                                                             </td>
                                                         #end
                                                         <td valign="top" style="$baseStyles; ${cellStyles}">$productOrder.product.title</td>
-                                                        <td valign="top" style="$baseStyles; ${cellStyles}">$formatter.formatCurrency($productOrder.effectiveUnitCost, false) Points</td>
+                                                        <td valign="top" style="$baseStyles; ${cellStyles}">$formatter.formatCurrency($productOrder.effectiveUnitCost, false) <span class="trans-lookup" data-transcode="point">Points</span></td>
                                                         <td valign="top" style="$baseStyles; ${cellStyles}">$productOrder.quantity</td>
                                                         <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">$formatter.formatCurrency($productOrder.totalCost, false) Points</td>
                                                     </tr>
@@ -61,10 +61,10 @@
                                                         <img src="/static/images/ballon_flight.jpg" width="200" height="auto" alt="Product #1" />
                                                     </td>
                                                 #end
-                                                <td valign="top" style="$baseStyles; ${cellStyles}">Product #1</td>
-                                                <td valign="top" style="$baseStyles; ${cellStyles}">300 Points</td>
+                                                <td valign="top" style="$baseStyles; ${cellStyles}"><span class="trans-lookup" data-transcode="product">Product</span> #1</td>
+                                                <td valign="top" style="$baseStyles; ${cellStyles}">300 <span class="trans-lookup" data-transcode="points">Points</span></td>
                                                 <td valign="top" style="$baseStyles; ${cellStyles}">1</td>
-                                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">300 Points</td>
+                                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">300 <span class="trans-lookup" data-transcode="points">Points</span></td>
                                             </tr>
                                             <tr bgcolor="${bodyBg}">
                                                 #if ($showProductPhoto == "true")
@@ -72,10 +72,10 @@
                                                         <img src="/static/images/basketball_net.jpg" width="200" height="auto" alt="Product #2" />
                                                     </td>
                                                 #end
-                                                <td valign="top" style="$baseStyles; ${cellStyles}">Product #2</td>
-                                                <td valign="top" style="$baseStyles; ${cellStyles}">200 Points</td>
+                                                <td valign="top" style="$baseStyles; ${cellStyles}"><span class="trans-lookup" data-transcode="product">Product</span> #2</td>
+                                                <td valign="top" style="$baseStyles; ${cellStyles}">200 <span class="trans-lookup" data-transcode="points">Points</span></td>
                                                 <td valign="top" style="$baseStyles; ${cellStyles}">2</td>
-                                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">400 Points</td>
+                                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">400 <span class="trans-lookup" data-transcode="points">Points</span></td>
                                             </tr>
                                             <tr bgcolor="${bodyBg}">
                                                 #if ($showProductPhoto == "true")
@@ -83,23 +83,23 @@
                                                         <img src="/static/images/beach_house.jpg" width="200" height="auto" alt="Product #3" />
                                                     </td>
                                                 #end
-                                                <td valign="top" style="$baseStyles; ${cellStyles}">Product #3</td>
-                                                <td valign="top" style="$baseStyles; ${cellStyles}">100 Points</td>
+                                                <td valign="top" style="$baseStyles; ${cellStyles}"><span class="trans-lookup" data-transcode="points">Product</span> #3</td>
+                                                <td valign="top" style="$baseStyles; ${cellStyles}">100 <span class="trans-lookup" data-transcode="points">Points</span></td>
                                                 <td valign="top" style="$baseStyles; ${cellStyles}">3</td>
-                                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">300 Points</td>
+                                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">300 <span class="trans-lookup" data-transcode="points">Points</span></td>
                                             </tr>
                                         #end
                                     </tbody>
                                     <tfoot>
                                         <tr bgcolor="${footerBg}">
                                             #if ($event)
-                                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top">Total
+                                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top"><span class="trans-lookup" data-transcode="total">Total</span>
                                                 </td>
-                                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$formatter.formatCurrency($event.cart.totalCost, false) Points</td>
+                                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$formatter.formatCurrency($event.cart.totalCost, false) <span class="trans-lookup" data-transcode="points">Points</span></td>
                                             #else
-                                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top">Total
+                                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top"><span class="trans-lookup" data-transcode="total">Total</span>
                                                 </td>
-                                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">1000 Points</td>
+                                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">1000 <span class="trans-lookup" data-transcode="points">Points</span></td>
                                             #end
                                         </tr>
                                     </tfoot>

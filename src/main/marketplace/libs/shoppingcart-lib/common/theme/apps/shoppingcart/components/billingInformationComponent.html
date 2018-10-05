@@ -13,24 +13,24 @@
                                     #if ($titleText && $titleText != "")
                                         $titleText
                                     #else
-                                        Shipping Address
+                                        <span class="trans-lookup" data-transcode="shipping-address">Shipping Address</span>
                                     #end
                                 </strong>
                                 <ul>
                                     #if ($event)
-                                        <li>Name: $!event.attributes.shoppingCart.firstName $!event.attributes.shoppingCart.surName</li>
-                                        <li>Phone: $!event.attributes.shoppingCart.phone</li>
-                                        <li>Address: $!event.attributes.shoppingCart.addressLine1</li>
-                                        <li>Address Line 2: $!event.attributes.shoppingCart.addressLine2</li>
-                                        <li>State: $!event.attributes.shoppingCart.addressState</li>
-                                        <li>Postcode: $!event.attributes.shoppingCart.postcode</li>
+                                        <li><span class="trans-lookup" data-transcode="name">Name</span>: $!event.attributes.shoppingCart.firstName $!event.attributes.shoppingCart.surName</li>
+                                        <li><span class="trans-lookup" data-transcode="phone">Phone</span>: $!event.attributes.shoppingCart.phone</li>
+                                        <li><span class="trans-lookup" data-transcode="address">Address</span>: $!event.attributes.shoppingCart.addressLine1</li>
+                                        <li><span class="trans-lookup" data-transcode="address-line-2">Address Line 2</span>: $!event.attributes.shoppingCart.addressLine2</li>
+                                        <li><span class="trans-lookup" data-transcode="state">State</span>: $!event.attributes.shoppingCart.addressState</li>
+                                        <li><span class="trans-lookup" data-transcode="postcode">Postcode</span>: $!event.attributes.shoppingCart.postcode</li>
                                     #else
-                                        <li>Name: Jame Bond</li>
-                                        <li>Phone: +61 01 2345 6789</li>
-                                        <li>Address: 200 Broadway Av</li>
-                                        <li>Address Line 2: WEST BEACH</li>
-                                        <li>State: SA</li>
-                                        <li>Postcode: 5024</li>
+                                        <li><span class="trans-lookup" data-transcode="name">Name</span>: Jame Bond</li>
+                                        <li><span class="trans-lookup" data-transcode="phone">Phone</span>: +61 01 2345 6789</li>
+                                        <li><span class="trans-lookup" data-transcode="address">Address</span>: 200 Broadway Av</li>
+                                        <li><span class="trans-lookup" data-transcode="address-line-2">Address Line 2</span>: WEST BEACH</li>
+                                        <li><span class="trans-lookup" data-transcode="state">State</span>: SA</li>
+                                        <li><span class="trans-lookup" data-transcode="postcode">Postcode</span>: 5024</li>
                                     #end
                                 </ul>
                             </td>

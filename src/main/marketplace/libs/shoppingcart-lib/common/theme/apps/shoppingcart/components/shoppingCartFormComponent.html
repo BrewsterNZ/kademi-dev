@@ -60,18 +60,18 @@
             <div class="form-horizontal">
                 <div class="form-group">
                     <div class="col-sm-6">
-                        <input type="text" name="firstName" class="form-control required" value="$!user.firstName" placeholder="First Name" required="required" />
+                        <input type="text" name="firstName" class="form-control required trans-lookup" value="$!user.firstName" placeholder="First Name" required="required" />
                         <div class="visible-xs" style="height: 15px"></div>
                     </div>
                     <div class="col-sm-6">
-                        <input type="text" name="surName" class="form-control required" value="$!user.surName" placeholder="Last Name" required="required" />
+                        <input type="text" name="surName" class="form-control required trans-lookup" value="$!user.surName" placeholder="Last Name" required="required" />
                     </div>
                 </div>
                 #if ($useOrgAddress && $useOrgAddress == 'true' && $orgs && $orgs.size() > 1)
                 <div class="form-group">
                     <div class="col-sm-12">
                         <select name="selectedOrg" id="selectedOrgAddress" class="form-control">
-                            <option value="">Select an org</option>
+                            <option value=""><span class="trans-lookup" data-transcode="select-ant-org">Select an org</span></option>
                             #foreach($o in $orgs)
                                 #if ($o.orgId == $selectedOrg.orgId)
                                     #set ($selected = 'selected')
@@ -86,32 +86,32 @@
                 #end
                 <div class="form-group">
                     <div class="col-md-12">
-                        <input type="text" $!readOnly name="phone" class="form-control" value="$!phone" placeholder="Phone number" required="required" />
+                        <input type="text" $!readOnly name="phone" class="form-control trans-lookup" value="$!phone" placeholder="Phone number" required="required" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-12">
-                        <input type="text" $!readOnly name="addressLine1" class="form-control required" required="required" value="$!addressLine1" placeholder="Address 1" />
+                        <input type="text" $!readOnly name="addressLine1" class="form-control required trans-lookup" required="required" value="$!addressLine1" placeholder="Address 1" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-12">
-                        <input type="text" $!readOnly name="addressLine2" class="form-control" value="$!addressLine2" placeholder="Address 2 (Optional)" />
+                        <input type="text" $!readOnly name="addressLine2" class="form-control trans-lookup" value="$!addressLine2" placeholder="Address 2 (Optional)" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-6">
-                        <input type="text" $!readOnly name="postcode" class="form-control required" required="required" value="$!postcode" placeholder="Zip/Postcode" />
+                        <input type="text" $!readOnly name="postcode" class="form-control required trans-lookup" required="required" value="$!postcode" placeholder="Zip/Postcode" />
                         <div class="visible-xs" style="height: 15px"></div>
                     </div>
                     <div class="col-sm-6">
-                        <input type="text" $!readOnly name="addressState" class="form-control required" required="required" value="$!addressState" placeholder="State/Province" />
+                        <input type="text" $!readOnly name="addressState" class="form-control required trans-lookup" required="required" value="$!addressState" placeholder="State/Province" />
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-sm-12">
-                        <textarea class="form-control" name="orderNotes" placeholder="Order notes, courier instructions etc  "></textarea>
+                        <textarea class="form-control trans-lookup" name="orderNotes" placeholder="Order notes, courier instructions etc  "></textarea>
                     </div>
                 </div>
                                 
@@ -130,7 +130,7 @@
                     #end
                 #end
 
-                <button type="submit" class="btn btn-block btn-success"><i class="fa fa-spinner fa-spin" style="display:none;"></i> SUBMIT MY ORDER</button>
+                <button type="submit" class="btn btn-block btn-success"><i class="fa fa-spinner fa-spin" style="display:none;"></i> <span class="trans-lookup" data-transcode="submit-my-order">SUBMIT MY ORDER</span></button>
             </div>
         </div>
     </div>

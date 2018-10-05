@@ -5,34 +5,34 @@
             #if( $page.lead )
             <a class="btn btn-info btn-sm" href="/leads/$page.lead.id">
                 <span class="fa fa-arrow-left"></span>
-                Back
+                <span class="trans-lookup" data-transcode="back"> Back</span>
             </a>
             #end
 
             Create new proposal
             #if( $page.lead )
-            for <a href="/leads/$page.lead.id"><b>$page.lead.profile.formattedName</b> as part of <b>$page.lead.formattedTitle</b></a>
+            for <a href="/leads/$page.lead.id"><b>$page.lead.profile.formattedName</b> <span class="trans-lookup" data-transcode="as-part-of">as part of</span> <b>$page.lead.formattedTitle</b></a>
             #end                               
             #else
             <div class="dropdown proposal-status pull-right">
                 <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
-                    Status: <span id="proposal-status">$page.proposal.status</span>
+                    <span class="trans-lookup" data-transcode="status">Status:</span> <span id="proposal-status">$page.proposal.status</span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#CREATED"><i class="fa fa-fw text-success #if($page.proposal.status == 'CREATED') fa-check #end"></i> Created</a></li>
-                    <li><a href="#ACCEPTED"><i class="fa fa-fw text-success #if($page.proposal.status == 'ACCEPTED') fa-check #end"></i> Accepted</a></li>
+                    <li><a href="#CREATED"><i class="fa fa-fw text-success #if($page.proposal.status == 'CREATED') fa-check #end"></i> <span class="trans-lookup" data-transcode="created">Created</span></a></li>
+                    <li><a href="#ACCEPTED"><i class="fa fa-fw text-success #if($page.proposal.status == 'ACCEPTED') fa-check #end"></i> <span class="trans-lookup" data-transcode="accepted">Accepted</span></a></li>
                 </ul>
             </div>
 
             #if( $page.lead )
             <a class="btn btn-info btn-sm" href="/leads/$page.lead.id">
                 <span class="fa fa-arrow-left"></span>
-                Back
+                <span class="trans-lookup" data-transcode="back"> Back</span>
             </a>
             #end
-
-            Edit proposal
+    
+            <span class="trans-lookup" data-transcode="edit-proposal">Edit proposal</span>
             #end
         </div>
     </div>
@@ -41,13 +41,13 @@
         <div class="alert alert-info">
             <p>
                 <span class="fa fa-exclamation-circle"></span>
-                Press <b>create</b> to create the proposal and begin adding quotes.
+                <span class="trans-lookup" data-transcode="press"> Press</span> <b><span class="trans-lookup" data-transcode="create">create</span></b><span class="trans-lookup" data-transcode="to-create-proposal"> to create the proposal and begin adding quotes.</span>
             </p>
         </div>
         #else
         #if( $page.lead )
         <div class="alert alert-info">
-            Proposal prepared for <a href="/leads/$page.lead.id"><b>$page.lead.profile.formattedName as part of $page.lead.formattedTitle</b></a>
+            <span class="trans-lookup" data-transcode="proposal-prepared-for">Proposal prepared for</span> <a href="/leads/$page.lead.id"><b>$page.lead.profile.formattedName <span class="trans-lookup" data-transcode="as-part-of">as part of</span> $page.lead.formattedTitle</b></a>
         </div>
         #end        
         #end
@@ -62,7 +62,7 @@
             <input type="hidden" name="customer" value="$!page.customer.id" />
             #else
             <div class="form-group">
-                <label class="control-label col-sm-3">Customer</label>
+                <label class="control-label col-sm-3 trans-lookup">Customer</label>
                 <div class="col-sm-5">
                     <input type="text" class="form-control proposal-customer" name="customer" value="$!page.customer.id" data-text="$!page.customer.formattedName" />
                 </div>
@@ -75,9 +75,9 @@
                     <button type="submit" class="btn btn-primary btn-lg">
                         <span class="fa fa-check"></span>
                         #if( $page.newProposal )
-                        Create
+                            <span class="trans-lookup" data-transcode="create">Create</span>
                         #else
-                        Save
+                            <span class="trans-lookup" data-transcode="save">Save</span>
                         #end
                     </button>
                 </div>
@@ -94,26 +94,26 @@
         <div class="panel-title">
             <a class="btn btn-info btn-add-quote pull-right" href="#addQuoteInProposalModal" data-toggle="modal">
                 <span class="fa fa-plus"></span>
-                Add a new quote
+                <span class="trans-lookup" data-transcode="add-new-quote"> Add a new quote</span>
             </a>
-            Quotes
+            <span class="trans-lookup" data-transcode="quotes">Quotes</span>
         </div>
     </div>
     <div class="panel-body">
         <table id="quotesTable" class="table table-hover table-striped table-condensed">
             <thead>
                 <tr>
-                    <th>Status</th>
-                    <th>Number</th>
-                    <th>Title</th>
-                    <th>Vendor</th>
-                    <th>Customer</th>
-                    <th>Sub Total</th>
-                    <th>Tax</th>
-                    <th>Total</th>
-                    <th>Issue Date</th>
-                    <th>Expire Date</th>
-                    <th>Options</th>
+                    <th><span class="trans-lookup" data-transcode="status">Status</span></th>
+                    <th><span class="trans-lookup" data-transcode="number">Number</span></th>
+                    <th><span class="trans-lookup" data-transcode="title">Title</span></th>
+                    <th><span class="trans-lookup" data-transcode="vendor">Vendor</span></th>
+                    <th><span class="trans-lookup" data-transcode="customer">Customer</span></th>
+                    <th><span class="trans-lookup" data-transcode="sub-total">Sub Total</span></th>
+                    <th><span class="trans-lookup" data-transcode="tax">Tax</span></th>
+                    <th><span class="trans-lookup" data-transcode="total">Total</span></th>
+                    <th><span class="trans-lookup" data-transcode="issue-date">Issue Date</span></th>
+                    <th><span class="trans-lookup" data-transcode="expire-date">Expire Date</span></th>
+                    <th><span class="trans-lookup" data-transcode="options">Options</span></th>
                 </tr>
             </thead>
 
@@ -146,7 +146,7 @@
                     #end
                     <td class="action">
                         <div class="btn-group btn-group-sm">
-                            <a href="/quotes/$v.id" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
+                            <a href="/quotes/$v.id" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> <span class="trans-lookup" data-transcode="edit">Edit</span></a>
                         </div>
                     </td>
                 </tr>
@@ -176,7 +176,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Add new Quote</h4>
+                <h4 class="modal-title" id="myModalLabel"><span class="trans-lookup" data-transcode="add-new-quote">Add new Quote</span></h4>
             </div>
             <div>
                 <form id="add-quote-form" class="form-horizontal" method="POST" action="/quotes/" enctype="multipart/form-data">
@@ -185,26 +185,26 @@
                         <input type="hidden" name="createQuoteFolder" value="true" />
 
                         <div class="form-group">
-                            <label for="quoteNumber" class="col-sm-3 control-label">Quote Number</label>
+                            <label for="quoteNumber" class="col-sm-3 control-label trans-lookup"">Quote Number</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control required" id="quoteNumber" name="number" />
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="quoteTitle" class="col-sm-3 control-label">Quote Title</label>
+                            <label for="quoteTitle" class="col-sm-3 control-label trans-lookup"">Quote Title</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control required"id="quoteTitle" name="title" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="description" class="col-sm-3 control-label">Description</label>
+                            <label for="description" class="col-sm-3 control-label trans-lookup"">Description</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control required" id="description" name="description" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="quoteExpiryDate" class="col-sm-3 control-label">Expiry Date</label>
+                            <label for="quoteExpiryDate" class="col-sm-3 control-label trans-lookup"">Expiry Date</label>
                             <div class="col-sm-9">
 
                                 <input type='text' class="form-control date" id="quoteExpiryDate" name="expiryDate" style="cursor:pointer;" />
@@ -215,29 +215,29 @@
 
                         <button type="button" class="btn btn-info btn-quick-add-line-item btn-sm pull-right">
                             <span class="fa fa-plus"></span>
-                            Add a line item
+                            <span class="trans-lookup" data-transcode="add-line-item">Add a line item</span>
                         </button>
                         <div class="add-quote-line-item-wrapper" style="display: none;">
                             <p class="lead">Quote Item</p>
                             <div class="form-group">
-                                <label for="supplier" class="col-sm-3 control-label">Supplier</label>
+                                <label for="supplier" class="col-sm-3 control-label trans-lookup">Supplier</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control required-if-shown" id="supplier" name="lineitem.supplier" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="description" class="col-sm-3 control-label">Description</label>
+                                <label for="description" class="col-sm-3 control-label trans-lookup">Description</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" id="description" name="lineitem.description" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="quantity" class="col-sm-3 control-label">Quantity</label>
+                                <label for="quantity" class="col-sm-3 control-label trans-lookup">Quantity</label>
                                 <div class="col-sm-3">
                                     <input type="number" class="form-control required-if-shown" id="quantity" name="lineitem.quantity" value="1" />
                                 </div>
 
-                                <label for="unitPrice" class="col-sm-3 control-label">Unit price</label>
+                                <label for="unitPrice" class="col-sm-3 control-label trans-lookup">Unit price</label>
                                 <div class="col-sm-3">
                                     <input type="number" class="form-control required-if-shown" id="unitPrice" name="lineitem.unitPrice" />
                                 </div>
@@ -246,8 +246,8 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                        <button id="add-quote-button" type="submit" class="btn btn-sm btn-primary" data-type="form-submit">Create Quote</button>
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><span class="trans-lookup" data-transcode="close">Close</span></button>
+                        <button id="add-quote-button" type="submit" class="btn btn-sm btn-primary" data-type="form-submit"><span class="trans-lookup" data-transcode="create-quote">Create Quote</span></button>
                     </div>
                 </form>
             </div>

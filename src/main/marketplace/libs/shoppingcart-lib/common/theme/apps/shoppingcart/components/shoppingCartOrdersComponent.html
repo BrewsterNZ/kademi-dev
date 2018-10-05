@@ -11,14 +11,14 @@
 
 <div class="panel panel-default panel-shoppingcart-orders">
     <div class="panel-heading">
-        <i class="fa fa-shopping-cart"></i> Shopping Carts - showing $searchResults.size()
+        <i class="fa fa-shopping-cart"></i> <span class="trans-lookup" data-transcode="shopping-carts">Shopping Carts</span> - <span class="trans-lookup" data-transcode="showing">showing</span> $searchResults.size()
     </div>
     <div class="panel-body">
         <div class="row">
             <div class="col-md-6">
                 <div class="input-group col-md-6">
                     <select class="form-control cbb-fulfillment">
-                        <option value="">Any fulfillment state</option>
+                        <option value=""><span class="trans-lookup" data-transcode="any-fulfillment-state">Any fulfillment state</span></option>
                         $formatter.option("N", "Not fulfilled", $params.fulfillment)
                         $formatter.option("C", "Fulfilled", $params.fulfillment)
                     </select>
@@ -26,14 +26,14 @@
             </div>
             <div class="col-md-6 text-right">
                 <div class="btn-group" role="group">
-                    <a href="/shopping-carts/carts.csv" download="carts.csv" class="btn btn-sm btn-info btn-download-csv"><i class="fa fa-download"></i> Download CSV</a>
+                    <a href="/shopping-carts/carts.csv" download="carts.csv" class="btn btn-sm btn-info btn-download-csv"><i class="fa fa-download"></i> <span class="trans-lookup" data-transcode="download-csv">Download CSV</span></a>
                     <div class="btn-group">
                         <a role="button" href="#" class="btn btn-success btn-sm markFulfilled"><i class="fa fa-check"></i> Fulfilled</a>
                         <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                            <li class="presentation" role="menuitem"><a href="#" class="deleteCart"><i class="glyphicon glyphicon-trash"></i> Delete</a></li>
+                            <li class="presentation" role="menuitem"><a href="#" class="deleteCart"><i class="glyphicon glyphicon-trash"></i> <span class="trans-lookup" data-transcode="delete">Delete</span></a></li>
                         </ul>
                     </div>
                 </div>
@@ -53,12 +53,12 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>Status</th>
-                        <th>User</th>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th class="text-center">Items</th>
-                        <th class="text-center">Amount</th>
+                        <th class="trans-lookup" data-transcode="status">Status</th>
+                        <th class="trans-lookup" data-transcode="user">User</th>
+                        <th class="trans-lookup" data-transcode="date">Date</th>
+                        <th class="trans-lookup" data-transcode="description">Description</th>
+                        <th class="text-center trans-lookup" data-transcode="items">Items</th>
+                        <th class="text-center trans-lookup" data-transcode="amount">Amount</th>
                         <th><input type="checkbox" class="check-all" /></th>
                     </tr>
                 </thead>
