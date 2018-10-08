@@ -69,7 +69,7 @@
                 #if( $rewardEndDate )
                 <div class="product-content rewardItemDate text-italic">
                     <i class="fa fa-calendar-o"></i>
-                    Closes
+                    <span class="trans-lookup" data-transcode="closes">Closes</span>
                     <abbr title="$formatter.formatDateISO8601($rewardEndDate)" class="timeago">$!rewardEndDate</abbr>
                 </div>
                 #end
@@ -87,9 +87,9 @@
             <div class="rewardItemCaption">
                 <h3 class="product-title rewardItemTitle" title="$rewardTitle"><strong>$rewardTitle</strong></h3>
                 #if ($rewardWinners)
-                <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Winner announced.</div>
+                <div class="rewardItemContent"><i class="fa fa-info-circle"></i><span class="trans-lookup" data-transcode="winner-announced"> Winner announced.</span></div>
                 #else
-                <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Closed. Winner pending.</div>
+                <div class="rewardItemContent"><i class="fa fa-info-circle"></i><span class="trans-lookup" data-transcode="closed-winner-pending"> Closed. Winner pending.</span></div>
                 #end
             </div>
         </a>

@@ -2,16 +2,16 @@
 <div class="competitionResult">
     #if( !$page.entriesForUser.isEmpty() )
     <div class="well">
-        <h2>You've entered</h2>
-        <p>Thanks for entering! You have $page.entriesForUser.size() entries</p>
+        <h2><span class="trans-lookup" data-transcode="your-entered">You've entered</span></h2>
+        <p><span class="trans-lookup" data-transcode="thanks-for-entering-1">Thanks for entering! You have</span> $page.entriesForUser.size() entries</p>
     </div>
     #end
 </div>
 #else
 <div class="competitionResult">
     <div class="well">
-        <h2>You've entered</h2>
-        <p>Thanks for entering! You have 2 sample entries</p>
+        <h2><span class="trans-lookup" data-transcode="your-entered">You've entered</span></h2>
+        <p><span class="trans-lookup" data-transcode="thanks-for-entering">Thanks for entering! You have 2 sample entries</span></p>
     </div>
 </div>
 #end

@@ -1,23 +1,23 @@
 <form class="form-horizontal">
     <div class="form-group">
-        <label class="col-sm-12">Title</label>
+        <label class="col-sm-12 trans-lookup" for="title">Title</label>
         <div class="col-sm-12">
             <input type="text" class="form-control txt-title"/>
         </div>
     </div>
     <div class="form-group">
-        <label for="" class="col-sm-12">Query Type</label>
+        <label for="query type" class="col-sm-12 trans-lookup" >Query Type</label>
         <div class="col-sm-12">
             <label class="radio-inline">
-                <input type="radio" name="queryType" class="queryType" value="query" checked> Query
+                <input type="radio" name="queryType" class="queryType" value="query" checked> <span class="trans-lookup" data-transcode="query">Query</span>
             </label>
             <label class="radio-inline">
-                <input type="radio" name="queryType" class="queryType" value="queryTable"> Query Table
+                <input type="radio" name="queryType" class="queryType" value="queryTable"> <span class="trans-lookup" data-transcode="query-table">Query Table</span>
             </label>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-12">Query</label>
+        <label class="col-sm-12 trans-lookup" for="query">Query</label>
         <div class="col-sm-12">
             <select class="form-control select-query">
                 <option value="">- None/Default -</option>
@@ -32,7 +32,7 @@
     </div>
 
     <div class="form-group aggregation">
-        <label class="col-sm-12">Aggregation</label>
+        <label class="col-sm-12 trans-lookup" for="aggregation">Aggregation</label>
         <div class="col-sm-12">
             <select class="form-control select-agg">
                 <option value="">- None -</option>
@@ -41,24 +41,24 @@
     </div>
 
     <div class="form-group sub-aggregation">
-        <label class="col-sm-12">Sub-aggregation</label>
+        <label class="col-sm-12 trans-lookup" for="sub-aggregation">Sub-aggregation</label>
         <div class="col-sm-12">
             <input type="text" class="form-control sub-agg"/>
-            <em class="help-block small text-muted">For displaying multiple series</em>
+            <em class="help-block small text-muted"><span class="trans-lookup" data-transcode="for-displaying-multiple-series">For displaying multiple series</span></em>
         </div>
     </div>
 
     <div class="form-group sub-aggregation">
-        <label class="col-sm-12">Metric aggregation</label>
+        <label class="col-sm-12 trans-lookup" for="metric aggregation">Metric aggregation</label>
         <div class="col-sm-12">
             <input type="text" class="form-control metric-agg"/>
-            <em class="help-block small text-muted">Optional. Display a certain metric, otherwise count</em>
+            <em class="help-block small text-muted"><span class="trans-lookup" data-transcode="optional-display-a-metric">Optional. Display a certain metric, otherwise count</span></em>
         </div>
     </div>
     
     
     <div class="form-group">
-        <label class="col-sm-12">Chart Type</label>
+        <label class="col-sm-12 trans-lookup" for="chart type">Chart Type</label>
         <div class="col-sm-12">
             <select class="form-control chart-type">
                 <option value="bar">Bar</option>
@@ -69,19 +69,19 @@
 
     <div class="checkbox">
         <label>
-            <input type="checkbox" class="show-stacked" value="true"/> Stacked
+            <input type="checkbox" class="show-stacked" value="true"/> <span class="trans-lookup" data-transcode="stacked">Stacked</span>
         </label>
     </div>
 
     <div class="checkbox">
         <label>
-            <input type="checkbox" class="show-controls" value="true"/> Show controls
+            <input type="checkbox" class="show-controls" value="true"/> <span class="trans-lookup" data-transcode="show-controls">Show controls</span>
         </label>
     </div>
 
     <div class="checkbox">
         <label>
-            <input type="checkbox" class="show-legend" value="true"/> Show legend
+            <input type="checkbox" class="show-legend" value="true"/> <span class="trans-lookup" data-transcode="show-legend">Show legend</span>
         </label>
     </div>
 </form>
