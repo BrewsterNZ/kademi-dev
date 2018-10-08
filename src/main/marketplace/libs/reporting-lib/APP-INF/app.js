@@ -74,7 +74,6 @@ function loadWebsiteRequests(start, maxRows, rowsResult, rootFolder) {
         var hit = resp.hits.hits[i];
         rowsResult.addRow();
         var userName = hit.fields.reqUser;
-        log.info("user: {}", userName);
         rowsResult.addCell(userName);
         rowsResult.addCell(hit.fields.url.value);
         rowsResult.flush();
