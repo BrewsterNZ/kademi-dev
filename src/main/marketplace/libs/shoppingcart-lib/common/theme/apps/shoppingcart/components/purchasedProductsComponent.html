@@ -55,9 +55,9 @@
                                 </td>
                                 #end
                                 <td valign="top" style="$baseStyles; ${cellStyles}">$productOrder.product.title</td>
-                                <td valign="top" style="$baseStyles; ${cellStyles}">$$formatter.formatCurrency($productOrder.effectiveUnitCost, false)</td>
+                                <td valign="top" style="$baseStyles; ${cellStyles}">$formatter.formatCurrency($productOrder.effectiveUnitCost, false) Pts</td>
                                 <td valign="top" style="$baseStyles; ${cellStyles}">$productOrder.quantity</td>
-                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">$$formatter.formatCurrency($productOrder.totalCost, false)</td>
+                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">$formatter.formatCurrency($productOrder.totalCost, false) Pts</td>
                             </tr>
                             #else
                             <tr>
@@ -73,9 +73,9 @@
                                 </td>
                                 #end
                                 <td valign="top" style="$baseStyles; ${cellStyles}">Product #1</td>
-                                <td valign="top" style="$baseStyles; ${cellStyles}">$300</td>
+                                <td valign="top" style="$baseStyles; ${cellStyles}">300 Pts</td>
                                 <td valign="top" style="$baseStyles; ${cellStyles}">1</td>
-                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">$300</td>
+                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">300 Pts</td>
                             </tr>
                             <tr bgcolor="${bodyBg}">
                                 #if ($showProductPhoto == "true")
@@ -84,9 +84,9 @@
                                 </td>
                                 #end
                                 <td valign="top" style="$baseStyles; ${cellStyles}">Product #2</td>
-                                <td valign="top" style="$baseStyles; ${cellStyles}">$200</td>
+                                <td valign="top" style="$baseStyles; ${cellStyles}">200 Pts</td>
                                 <td valign="top" style="$baseStyles; ${cellStyles}">2</td>
-                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">$400</td>
+                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">400 Pts</td>
                             </tr>
                             <tr bgcolor="${bodyBg}">
                                 #if ($showProductPhoto == "true")
@@ -95,9 +95,9 @@
                                 </td>
                                 #end
                                 <td valign="top" style="$baseStyles; ${cellStyles}">Product #3</td>
-                                <td valign="top" style="$baseStyles; ${cellStyles}">$100</td>
+                                <td valign="top" style="$baseStyles; ${cellStyles}">100 Pts</td>
                                 <td valign="top" style="$baseStyles; ${cellStyles}">3</td>
-                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">$300</td>
+                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">300 Pts</td>
                             </tr>
                             #end
                             </tbody>
@@ -129,6 +129,6 @@
 #macro(showFooterRows $showProductPhoto $total  )
         <tr bgcolor="${footerBg}">
             <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top">Total</td>
-            <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$formatter.toInteger($total)</td>
+            <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$formatter.toInteger($total) Pts</td>
         </tr>
 #end
