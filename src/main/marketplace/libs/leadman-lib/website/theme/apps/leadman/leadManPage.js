@@ -284,7 +284,13 @@
         });
 
         editor.on('submitComplete', function (e, json, data) {
-            if(data !== undefined){
+            if(data){
+                if (data.fields){
+                    for (var key in data.fields){
+                        data[key] = data.fields[key];
+                    }
+                }
+
                 var scoreTd = $('#leadTable').find('.leadMan-del-lead[value='+data.leadId+']').closest('td').parent('tr').find('td').first();
                 if (scoreTd){
                     var cell = dataTable.cell( scoreTd );
