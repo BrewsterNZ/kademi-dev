@@ -1,7 +1,7 @@
 #if($request.params.omni)
 <li class="omni-search-suggestion">
     #if( $searchResult.type == "profile" )
-        <a href="/custs/$!searchResult.userId">
+        <a href="/custs/$!searchResult.source.userName">
             <span>$!searchResult.source.nickName</span>
             &ndash;
             <span class="text-info">$!searchResult.source.email</span>
