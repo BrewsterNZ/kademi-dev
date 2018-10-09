@@ -125,7 +125,7 @@ function searchClaims(page, status, user, claimForm) {
             log.error('ERROR in searchClaims: {}', e, e);
         }
     }
-    log.info("searchClaims {}", searchResult);
+    //log.info("searchClaims {}", searchResult);
     return searchResult;
 }
 
