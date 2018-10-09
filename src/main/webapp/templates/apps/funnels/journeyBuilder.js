@@ -768,13 +768,13 @@ jsPlumb.ready(function () {
                     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
                         var node = JBApp.funnel.nodes[i];
                         var nodeInfo = JBApp.getNodeInfo(node);
-                        JBApp.newNode(nodeInfo[1], nodeInfo[0]);
+                        JBApp.newNode(nodeInfo[1], getSpecificNodeType(nodeInfo));
                     }
 
                     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
                         var node = JBApp.funnel.nodes[i];
                         var nodeInfo = JBApp.getNodeInfo(node);
-                        JBApp.initConnection(nodeInfo[1], nodeInfo[0]);
+                        JBApp.initConnection(nodeInfo[1], getSpecificNodeType(nodeInfo));
                     }
 
                     JBApp.initialized = true;
@@ -787,6 +787,13 @@ jsPlumb.ready(function () {
     JBApp.initialized = true;
     flog('JBApp init done');
 });
+
+function getSpecificNodeType(nodeInfo) {
+    if (nodeInfo[0] == 'customGoal'){
+        return nodeInfo[1].nodeType;
+    }
+    return nodeInfo[0];
+}
 
 function initJourneyBuilder() {
     flog('initJourneyBuilder');
