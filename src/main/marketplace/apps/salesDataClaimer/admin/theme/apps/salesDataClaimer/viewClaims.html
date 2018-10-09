@@ -72,7 +72,7 @@
                                     <button type="button" class="btn btn-success" data-target="#modal-upload-ocr-claim" data-toggle="modal"><i class="fa fa-plus"></i> Upload Image Claim</button>
                                 </p>
                                 <p class="btn-group btn-group-sm">
-                                    <button type="button" class="btn btn-success btn-import-claims"><i class="fa fa-cloud-upload"></i> Import</button>
+                                    <button type="button" data-toggle="modal" data-target="#modal-import-claim-csv" class="btn btn-success btn-import-claims"><i class="fa fa-cloud-upload"></i> Import</button>
                                     <a download="salesDataClaims.csv" href="/manageSaleDataClaimer.csv" class="btn btn-success btn-export-claims"><i class="fa fa-cloud-download"></i> Export</a>
                                 </p>
                                 <p class="btn-group btn-group-sm">
@@ -545,6 +545,27 @@
             </div>
         </div>
     </div>
+
+        <div class="modal fade" id="modal-import-claim-csv">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Import sales claims from CSV</h3>
+                    </div>
+                    <form class="form-horizontal" action="/manageSaleDataClaimer.csv" method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <div class="alert alert-info">Coming soon</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-success" type="submit">Upload claim</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
     <script>
         var highConfidenceFrom = '$!page.attributes.settings.highConfidenceFrom';
