@@ -234,9 +234,10 @@ function approveClaims(page, params) {
 
                             services.dataSeriesManager.insertDataPoint(dp);
 
-                            var custProfileBean = services.userManager.toProfileBean(soldByUser);
-                            eventManager.goalAchieved('claimProcessedGoal', custProfileBean, {'claim': id, 'status': RECORD_STATUS.APPROVED});
                         }
+                        var enteredUser = services.userManager.findById(claim.enteredUser);
+                        var enteredUserBean = services.userManager.toProfileBean(enteredUser);
+                        eventManager.goalAchieved('claimProcessedGoal', enteredUserBean, {'claim': id, 'status': RECORD_STATUS.APPROVED});
                     }
                 })(ids[i]);
             }
