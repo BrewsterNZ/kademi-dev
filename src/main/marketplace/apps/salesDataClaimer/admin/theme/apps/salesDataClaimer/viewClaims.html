@@ -231,8 +231,12 @@
         </td>
         <td>
             #if( $team )
+            #if( $team.id == $page.organisation.id )
+            This account
+            #else
             <a href="/organisations/$hit.salesTeamOrgId/">$team.formattedName</a>
             <span class="text-muted">($hit.salesTeamOrgId)</span>
+            #end
             #else
             No sales team
             #end
