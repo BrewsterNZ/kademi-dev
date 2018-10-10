@@ -235,7 +235,7 @@ function approveClaims(page, params) {
                             services.dataSeriesManager.insertDataPoint(dp);
 
                         }
-                        var enteredUser = services.userManager.findById(claim.enteredUser);
+                        var enteredUser = services.userManager.findById(claim.enteredById);
                         var enteredUserBean = services.userManager.toProfileBean(enteredUser);
                         eventManager.goalAchieved('claimProcessedGoal', enteredUserBean, {'claim': id, 'status': RECORD_STATUS.APPROVED});
                     }

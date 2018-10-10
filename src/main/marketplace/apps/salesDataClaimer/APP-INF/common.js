@@ -195,7 +195,7 @@ function createClaim(page, params, files, form) {
         var obj = {
             recordId: id,
             enteredDate: now,
-            enteredUser: (isNotNull(currentUser) ? currentUser.userId : params.soldById),
+            enteredById: (isNotNull(currentUser) ? currentUser.userId : params.soldById),
             modifiedDate: now,
             status: RECORD_STATUS.NEW
         };
@@ -220,8 +220,8 @@ function createClaim(page, params, files, form) {
 
             if (isNotNull(anonUser)) {
                 log.info('Profile for anonymous: userName={}, userId={}', anonUser.name, anonUser.userId);
-                if (isNull(obj.enteredUser)) {
-                    obj.enteredUser = anonUser.userId;
+                if (isNull(obj.enteredById)) {
+                    obj.enteredById = anonUser.userId;
                 }
             }
 
