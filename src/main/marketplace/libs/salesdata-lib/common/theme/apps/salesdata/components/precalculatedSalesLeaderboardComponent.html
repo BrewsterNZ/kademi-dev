@@ -12,6 +12,9 @@
     #if ($formatter.isNull($showAmount))
         #set ($showAmount = "true")
     #end
+    #if ($formatter.isNull($sortDirection))
+        #set ($sortDirection = "descending")
+    #end
 
     #if ($formatter.isNull($extraFields))
     #set ($extraFields = [])
@@ -23,7 +26,11 @@
         #set ($dataSeriesObj = $applications.salesData.getSalesDataSeries($series))
 
         #set( $crit = $services.criteriaBuilders.salesDataRecord.eq("series", $dataSeriesObj) )
-        #set( $crit = $crit.sortDesc("amount") )
+        #if ($sortDirection == "descending")
+            #set( $crit = $crit.sortDesc("amount") )
+        #elseif ($sortDirection == "ascending")
+            #set( $crit = $crit.sortAsc("amount") )
+        #end
         ##set( $crit = $crit.groupBy("salesBy"))
         #set( $results = $crit.execute($numUsers) )
 
@@ -51,18 +58,50 @@
                 #renderLeaderRow(2 "Please select data series"  3000 false)
             #end
         #else
+            #set ($foundUser = false)
             #foreach($row in $results)
-            #set ($isThisUser = false)
-            #if ($dataSeriesObj.salesType == "SALES_PROFILE")
-                #set ($name = $applications.userApp.findUserResource($row.salesBy).formattedName)
-                #set ($isThisUser = $row.salesBy.id == $userResource.userId)
-            #elseif ($dataSeriesObj.salesType == "SALES_ORG")
-                #set ($name = $row.salesBy.title)
-                #set ($m = $userResource.primaryMemberships.filterByOrg($row.salesBy.orgId))
-                #set ($isThisUser = $m.size() > 0)
+                #set ($isThisUser = false)
+                #if ($dataSeriesObj.salesType == "SALES_PROFILE")
+                    #set ($name = $applications.userApp.findUserResource($row.salesBy).formattedName)
+                    #set ($isThisUser = $row.salesBy.id == $userResource.userId)
+                #elseif ($dataSeriesObj.salesType == "SALES_ORG")
+                    #set ($name = $row.salesBy.title)
+                    #set ($m = $userResource.primaryMemberships.filterByOrg($row.salesBy.orgId))
+                    #set ($isThisUser = $m.size() > 0)
+                #end
+                #if ($isThisUser)
+                    #set ($foundUser = true)
+                #end
+                #set ($amnt = $formatter.formatCurrency($row.amount))
+                #renderLeaderRow($foreach.count, $name, $amnt, $isThisUser $row)
             #end
-            #set ($amnt = $formatter.formatCurrency($row.amount))
-            #renderLeaderRow($foreach.count, $name, $amnt, $isThisUser $row)
+            #if (!$foundUser)
+                #set( $crit1 = $services.criteriaBuilders.salesDataRecord.eq("series", $dataSeriesObj) )
+                #if ($sortDirection == "descending")
+                    #set( $crit1 = $crit1.sortDesc("amount") )
+                #elseif ($sortDirection == "ascending")
+                    #set( $crit1 = $crit1.sortAsc("amount") )
+                #end
+                ##set( $crit1 = $crit1.groupBy("salesBy"))
+                #set( $results1 = $crit1.execute(1000) )
+                #foreach($row in $results1)
+                    #if ($dataSeriesObj.salesType == "SALES_PROFILE")
+                        #if ($row.salesBy.id == $userResource.userId))
+                            #set ($name = $applications.userApp.findUserResource($row.salesBy).formattedName)
+                            #set ($amnt = $formatter.formatCurrency($row.amount))
+                            #renderLeaderRow($foreach.count, $name, $amnt, true $row)
+                            #break
+                        #end
+                    #elseif ($dataSeriesObj.salesType == "SALES_ORG")
+                        #set ($m = $userResource.primaryMemberships.filterByOrg($row.salesBy.orgId))
+                        #if ($m.size() > 0)
+                            #set ($name = $row.salesBy.title)
+                            #set ($amnt = $formatter.formatCurrency($row.amount))
+                            #renderLeaderRow($foreach.count, $name, $amnt, true $row)
+                            #break
+                        #end
+                    #end
+                #end
             #end
         #end
     </tbody>
