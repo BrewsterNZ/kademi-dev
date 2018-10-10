@@ -1,0 +1,79 @@
+<form class="form-horizontal">
+
+    <div class="form-group">
+        <label class="col-sm-12">Data series</label>
+        <div class="col-sm-12">
+            <select class="form-control select-series">
+                <option value="" selected="selected">- None -</option>
+                #foreach($series in $applications.salesData.allSalesDataSeries)
+                <option value="$series.name">$series.title</option>
+                #end
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Hide participant names</label>
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="hide-names" value="" />
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Text when hidden</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control hidden-text" value="" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Participants text</label>
+        <div class="col-sm-12">
+            <input type="text" placeholder="Participants" class="form-control participants-text" value="Participants" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Number of participants</label>
+        <div class="col-sm-12">
+            <input type="number" class="form-control num-users" value="" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Height</label>
+        <div class="col-sm-12">
+            <input type="number" class="form-control txt-height" value="" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Show amount column</label>
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="show-sales" value="" />
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Show extra fields</label>
+        <div class="col-sm-12">
+            #foreach($series in $applications.salesData.allSalesDataSeries)
+            #set ($extraFields = $applications.salesData.getDataSeriesExtraFields($series.name))
+            #foreach ($xf in $extraFields)
+            <div class="checkbox extraFieldsSeries" data-series="$series.name">
+                <label>
+                    <input type="checkbox" data-series="$series.name" class="extraFields" value="$xf.name" /> $xf.title
+                </label>
+            </div>
+            #end
+            #end
+        </div>
+    </div>
+</form>

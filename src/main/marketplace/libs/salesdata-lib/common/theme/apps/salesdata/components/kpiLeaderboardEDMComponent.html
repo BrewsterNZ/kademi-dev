@@ -53,8 +53,8 @@
 
 #macro (renderLeaderboardRecord $rank $name)
     <tr bgcolor="$!bodyBgColor">
-        <td height="$rowHeight" valign="top" style="$baseStyles; ${cellStyles}">$rank</td>
-        <td valign="top" style="$baseStyles; ${cellStyles}">
+        <td height="$rowHeight" valign="top" style="$!baseStyles; $!{cellStyles}">$rank</td>
+        <td valign="top" style="!$baseStyles; $!{cellStyles}">
             $name
         </td>
     </tr>

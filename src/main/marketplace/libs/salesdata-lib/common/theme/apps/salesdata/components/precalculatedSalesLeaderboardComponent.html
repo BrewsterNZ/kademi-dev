@@ -1,0 +1,104 @@
+<table class="table table-striped salesLeaderboardWeb">
+    #if (!$rowHeight)
+    #set ($rowHeight = 25)
+    #end
+
+    #if (!$numUsers)
+    #set ($numUsers = 5)
+    #else
+    #set ($numUsers = $formatter.toInteger($numUsers))
+    #end
+
+    #if ($formatter.isNull($showAmount))
+        #set ($showAmount = "true")
+    #end
+
+    #if ($formatter.isNull($extraFields))
+    #set ($extraFields = [])
+    #else
+    #set ($extraFields = $extraFields.split(","))
+    #end
+
+    #if ($series && $series != "")
+        #set ($dataSeriesObj = $applications.salesData.getSalesDataSeries($series))
+
+        #set( $crit = $services.criteriaBuilders.salesDataRecord.eq("series", $dataSeriesObj) )
+        #set( $crit = $crit.sortDesc("amount") )
+        ##set( $crit = $crit.groupBy("salesBy"))
+        #set( $results = $crit.execute($numUsers) )
+
+        #set ($seriesExtraFields = $applications.salesData.getDataSeriesExtraFields($series))
+
+    #end
+    <thead>
+        <tr>
+            <th class="trans-lookup" data-transcode="rank">Rank</th>
+            <th class="trans-lookup" data-transcode="participant">$formatter.ifNull($participantsText, "Participants")</th>
+            #if ($showAmount == "true")
+            <th class="trans-lookup" data-transcode="points">Amount</th>
+            #end
+            #foreach ($xf in $seriesExtraFields)
+            #if ($extraFields.contains($xf.name))
+            <th>$xf.title</th>
+            #end
+            #end
+        </tr>
+    </thead>
+    <tbody>
+        #if ($formatter.isNull($results) || $results.isEmpty())
+            #if (!$page)
+                #renderLeaderRow(1 "Please select data series"  4000 false)
+                #renderLeaderRow(2 "Please select data series"  3000 false)
+            #end
+        #else
+            #foreach($row in $results)
+            #set ($isThisUser = false)
+            #if ($dataSeriesObj.salesType == "SALES_PROFILE")
+                #set ($name = $applications.userApp.findUserResource($row.salesBy).formattedName)
+                #set ($isThisUser = $row.salesBy.id == $userResource.userId)
+            #elseif ($dataSeriesObj.salesType == "SALES_ORG")
+                #set ($name = $row.salesBy.title)
+                #set ($m = $userResource.primaryMemberships.filterByOrg($row.salesBy.orgId))
+                #set ($isThisUser = $m.size() > 0)
+            #end
+            #set ($amnt = $formatter.formatCurrency($row.amount))
+            #renderLeaderRow($foreach.count, $name, $amnt, $isThisUser $row)
+            #end
+        #end
+    </tbody>
+</table>
+#macro (renderLeaderRow $rank $participantName $amount $highlightRow $row)
+    <tr>
+        <td>
+            #if( $highlightRow )
+            <b>$rank</b>
+            #else
+            $rank
+            #end
+        </td>
+        <td>
+            #if( $highlightRow )
+            <b>$participantName</b>
+            #else
+            #if( $formatter.toBool($hideNames) )
+            $hiddenText
+            #else
+            $participantName
+            #end
+            #end
+        </td>
+        #if ($showAmount == "true")
+        <td>
+            $$!amount
+        </td>
+        #end
+        #if ($row && $seriesExtraFields)
+        #foreach ($xf in $seriesExtraFields)
+        #if ($extraFields.contains($xf.name))
+        <th>$!row.fieldValue($xf.name)</th>
+        #end
+        #end
+        #end
+    </tr>
+#end
+
