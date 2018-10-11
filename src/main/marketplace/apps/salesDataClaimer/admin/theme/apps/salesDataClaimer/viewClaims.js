@@ -17,6 +17,7 @@
             initAddClaim();
             initEditClaim();
             initUploadImageClaim();
+            initImport();
         }
     });
 
@@ -913,6 +914,19 @@
                 if (typeof callback === 'function') {
                     callback();
                 }
+            }
+        });
+    }
+
+    function initImport() {
+        var btn = $('#importUpload');
+        btn.mupload({
+            url: '/manageSaleDataClaimer.csv',
+            buttonText: 'Upload CSV',
+            acceptedFiles: '.csv',
+            useJsonPut: false,
+            oncomplete: function (data) {
+                Msg.success('ok');
             }
         });
     }

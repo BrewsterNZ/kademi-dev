@@ -26,6 +26,7 @@ controllerMappings
     .adminController()
     .pathSegmentName('manageSaleDataClaimer.csv')
     .addMethod('GET', 'exportCSV')
+    .addMethod('POST', 'importCSV')
     .postPriviledge('READ_CONTENT')
     .enabled(true)
     .build();
@@ -556,7 +557,7 @@ function exportCSV(page, params) {
 
     var csvArr = [];
     if ( arr.length ){
-        var keys = ['recordId', 'amount', 'productSku', 'soldDate', 'soldBy', 'soldById', 'modifiedDate', 'claimItemId', 'enteredDate', 'enteredUser', 'modifiedDate', 'status'];
+        var keys = ['recordId', 'amount', 'productSku', 'soldDate', 'soldBy', 'soldById', 'modifiedDate', 'claimItemId', 'enteredDate', 'enteredUser', 'enteredById', 'modifiedDate', 'status', 'salesTeamOrgId', 'ocrFileHash', 'processed', 'receipt', 'claimType', 'claimField1', 'claimField2', 'claimField3', 'claimField4', 'claimField5', 'taggedFromSalesRecordId'];
         for (var i in extraFields){
             keys.push('field_'+extraFields[i].name);
         }
@@ -580,4 +581,20 @@ function findClaimExtraFields(claim, obj) {
             obj[key] = claim[key];
         }
     }
+}
+
+function importCSV(page, params, files) {
+    var file = files.get('file');
+    log.info('file {}', file);
+    var csvArr = fileManager.fromCsv(file);
+    log.info('csvArr {}', csvArr);
+    if (csvArr.size() > 0){
+        var headerRow = csvArr[0];
+
+    }
+    for (var i in csvArr){
+        var row = csvArr[i];
+        log.info('row {}', row);
+    }
+    return views.jsonResult(true);
 }
