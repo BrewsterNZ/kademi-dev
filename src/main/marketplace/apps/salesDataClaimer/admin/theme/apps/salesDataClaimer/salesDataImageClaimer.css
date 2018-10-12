@@ -71,3 +71,7 @@
     margin-right: 15px;
     background: #ccc5c5;
 }
+
+#modal-import-claim-csv .dropzone-previews{
+    margin-top: 20px;
+}

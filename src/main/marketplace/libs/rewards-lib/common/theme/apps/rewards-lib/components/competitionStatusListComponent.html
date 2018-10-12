@@ -26,9 +26,9 @@
                 #if( $reward.endDate )
                 <div class="product-content">
                     #if( $formatter.now.after( $reward.endDate ) )
-                    <span class="label label-warning">Closed</span>
+                    <span class="label label-warning trans-lookup" data-transcode="closed">Closed</span>
                     #else
-                    <span class="label label-success">Closes </span>
+                    <span class="label label-success trans-lookup" data-transcode="closes">Closes </span>
                     #end
                     <abbr title="$!formatter.formatDateISO8601($reward.endDate)" class="timeago">$!reward.endDate</abbr>
                 </div>
@@ -39,7 +39,7 @@
                     #if( $entries )
                     $entries entries
                     #else
-                    No entries yet
+                        <span class="trans-lookup" data-transcode="no-entries-yet">No entries yet</span>
                     #end
                 </div>
             </div>
@@ -59,17 +59,17 @@
                 </a>
 
                 <div class="caption">
-                    <h3 class="product-title" title="$p.fields.title.value"><a href="$href">Example Reward Title</a></h3>
+                    <h3 class="product-title" title="$p.fields.title.value"><a href="$href"><span class="trans-lookup" data-transcode="example-reward-title">Example Reward Title</span> </a></h3>
 
                     #if( $reward.endDate )
                     <div class="product-content">
-                        <span class="label label-warning">Closed</span>
+                        <span class="label label-warning trans-lookup" data-transcode="closed">Closed</span>
                         <abbr title="$formatter.formatDateISO8601($!reward.endDate)" class="timeago">$!reward.endDate</abbr>
                     </div>
                     #end
 
                     <div class="product-actions text-right">
-                        No entries yet
+                        <span class="trans-lookup" data-transcode="no-entries-yet">No entries yet</span>
                     </div>
                 </div>
             </div>

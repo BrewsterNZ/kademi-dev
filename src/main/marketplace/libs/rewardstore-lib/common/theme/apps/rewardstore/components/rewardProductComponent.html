@@ -42,9 +42,10 @@
                                     <div class="form-group">
                                         <label for="param-$param.name" class="$paramLabelClass control-label variant-name">$param.title</label>
                                         <div class="$paramInputClass">
+                                            #set ($options = $formatter.sortByProperty($param.options, "cost"))
                                             <select name="param-$param.name" class="form-control productParameterSelect">
                                                 <option value="">[ $param.title ]</option>
-                                                #foreach( $opt in $param.options)
+                                                #foreach( $opt in $options)
                                                     $formatter.option( $opt.name, $opt.title, $page.selectedParameterOptions.get($param.name) )
                                                 #end
                                             </select>

@@ -5,6 +5,7 @@ controllerMappings.addComponent("salesdata/components", "salesDataCompare", "htm
 controllerMappings.addComponent("salesdata/components", "salesLeaderboardWeb", "html", "Displays sales data leaderboard", "Sales data");
 controllerMappings.addComponent("salesdata/components", "onTrackAllKpis", "html", "Shows indicators if the user is on track to achieve all available KPIs", "Sales data");
 controllerMappings.addComponent("salesdata/components", "kpiStatus", "html", "Shows current status of single KPI", "Sales data");
+controllerMappings.addComponent("salesdata/components", "precalculatedSalesLeaderboard", "html", "Displays sales data leaderboard which has been precalculated", "Sales data");
 
 
 controllerMappings.addComponent("salesdata/components", "kpiLeaderboardEDM")

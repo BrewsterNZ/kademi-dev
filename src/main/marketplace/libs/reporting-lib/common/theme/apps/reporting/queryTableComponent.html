@@ -25,9 +25,9 @@
     <div class="panel-heading">
         <i class="fa fa-table"></i> $title
         #if($queryType == 'queryTable' && $exportToCsv == true)
-            <a download="${title}.csv" href="/queries/${query}?as=csv&from=0&size=10000$!{profileParam}" class="text-white pull-right btnDownloadCSV"><i class="fa fa-download"></i> CSV</a>
+        <a download="${title}.csv" href="/queries/${query}?as=csv&from=0&size=10000$!{profileParam}" class="text-white pull-right btnDownloadCSV"><i class="fa fa-download"></i> <span class="trans-lookup" data-transcode="csv">CSV</span></a>
         #elseif($queryType == 'query' && $exportToCsv == true)
-            <a download="${title}.csv" href="/queries/${query}?run&from=0&size=10000$!{profileParam}" class="text-white pull-right btnDownloadCSV"><i class="fa fa-download"></i> CSV</a>
+            <a download="${title}.csv" href="/queries/${query}?run&from=0&size=10000$!{profileParam}" class="text-white pull-right btnDownloadCSV"><i class="fa fa-download"></i> <span class="trans-lookup" data-transcode="csv">CSV</span></a>
         #end
     </div>
     <div class="panel-body">

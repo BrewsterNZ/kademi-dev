@@ -125,7 +125,7 @@ function searchClaims(page, status, user, claimForm) {
             log.error('ERROR in searchClaims: {}', e, e);
         }
     }
-    log.info("searchClaims {}", searchResult);
+    //log.info("searchClaims {}", searchResult);
     return searchResult;
 }
 
@@ -195,7 +195,7 @@ function createClaim(page, params, files, form) {
         var obj = {
             recordId: id,
             enteredDate: now,
-            enteredUser: (isNotNull(currentUser) ? currentUser.userId : params.soldById),
+            enteredById: (isNotNull(currentUser) ? currentUser.userId : params.soldById),
             modifiedDate: now,
             status: RECORD_STATUS.NEW
         };
@@ -220,8 +220,8 @@ function createClaim(page, params, files, form) {
 
             if (isNotNull(anonUser)) {
                 log.info('Profile for anonymous: userName={}, userId={}', anonUser.name, anonUser.userId);
-                if (isNull(obj.enteredUser)) {
-                    obj.enteredUser = anonUser.userId;
+                if (isNull(obj.enteredById)) {
+                    obj.enteredById = anonUser.userId;
                 }
             }
 
@@ -251,9 +251,10 @@ function createClaim(page, params, files, form) {
         var extraFields = getSalesDataExtreFields(page);
         for (var i = 0; i < extraFields.length; i++) {
             var ex = extraFields[i];
-            var fieldName = 'field_' + ex.name;
-
-            obj[fieldName] = params.get(ex.name) || '';
+            if (!formatter.isNull(params.get(ex.name))){
+                var fieldName = 'field_' + ex.name;
+                obj[fieldName] = params.get(ex.name);
+            }
         }
 
         // Upload receipt

@@ -336,6 +336,7 @@ function doSearch() {
 
             table.replaceWith($fragment);
             $('#searchStats').replaceWith(newDom.find('#searchStats'));
+            $('#pointsFooter').replaceWith(newDom.find('#pointsFooter'));
 
             initSort();
             initLoginAs();

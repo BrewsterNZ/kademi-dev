@@ -30,6 +30,18 @@
                                 <p class="form-control-static">$!page.docType</p>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Created date</label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">$formatter.formatDateTime($page.createDate)</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Modified date</label>
+                            <div class="col-md-8">
+                                <p class="form-control-static">$formatter.formatDateTime($page.modifiedDate)</p>
+                            </div>
+                        </div>
                         <textarea id="jsonText" name="json" class="form-control form-control-code" style="height: 400px">$!page.json</textarea>
                     </div>
                 </div>

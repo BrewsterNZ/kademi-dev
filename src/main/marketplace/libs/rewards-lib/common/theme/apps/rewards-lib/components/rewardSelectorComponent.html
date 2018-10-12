@@ -26,9 +26,9 @@
         </button>
         <ul class="dropdown-menu rewardSelectorWrap" aria-labelledby="dropdownMenuRewardSelector">
             #if( $rewards.isEmpty() )
-                <li>No selections available</li>
+            <li><span class="trans-lookup" data-transcode="no-selections-available">No selections available</span></li>
             #else
-                <li><a data-reward="" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> Clear selection</a></li>
+            <li><a data-reward="" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> <span class="trans-lookup" data-transcode="clear-selection">Clear selection</span></a></li>
                 #foreach( $reward in $rewards)
                     #if ($reward.name == $selectedRewardName)
                         <li><a href="javascript:void (0)"><i class="fa fa-check text-success"></i> $reward.title</a></li>

@@ -226,7 +226,7 @@
             },
             datatype: "json",
             success: function (data) {
-                $("#ecomItemsTable, #cart-link, #cart-checkout-data").reloadFragment({
+                $("#ecomItemsTable, #cart-link, #cart-checkout-data, #shipping-provide-select").reloadFragment({
                     whenComplete: function (resp) {
                         Msg.info("Updated item in your shopping cart");
                         actors.prop('disabled', false);
@@ -268,7 +268,7 @@
             success: function (data) {
                 if( data.status ) {
                     callback();
-                    $("#ecomItemsTable, #cart-link, #cart-checkout-data").reloadFragment({
+                    $("#ecomItemsTable, #cart-link, #cart-checkout-data, #shipping-provide-select").reloadFragment({
                         whenComplete: function () {
                             Msg.info("Removed item from your shopping cart");
                         }
@@ -347,7 +347,7 @@
             },
             datatype: "json",
             success: function (data) {
-                $("#ecomItemsTable, #cart-link, #cart-checkout-data").reloadFragment({
+                $("#ecomItemsTable, #cart-link, #cart-checkout-data, #shipping-provide-select").reloadFragment({
                     whenComplete: function (resp) {
                         Msg.info("Updated item in your shopping cart");
                         var actors = $('.btn-decrease-quantity, .btn-increase-quantity, .ecom-txt-quantity, .btn-ecom-remove-item');

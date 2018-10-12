@@ -20,8 +20,8 @@
                 #end
             </div>
             <div class="modal-footer">
-                #foreach($cert in $page.certificateFiles)
-                <a href="$cert.href" target="_blank" class="btn btn-success pull-left"><span class="trans-lookup" data-transcode="view-certificate">View Certificate</span></a>
+                #foreach($href in $page.certificateHrefs)
+                <a href="$href" target="_blank" class="btn btn-success pull-left"><span class="trans-lookup" data-transcode="view-certificate">View Certificate</span></a>
                 #end
                 <a href="../" class="btn"><span class="trans-lookup" data-transcode="my-learning">My Learning</span></a>
                 <a href="/dashboard" class="btn btn-primary"><span class="trans-lookup" data-transcode="continue-training">Continue training</span></a>

@@ -175,8 +175,8 @@
                                             <a href="/manageUsers/$p.issuedBy.id">$p.issuedBy.formattedName</a>
                                             #end
                                         </td>
-                                        <td>$formatter.formatDateTime($p.issuedDate, $page.organisation.timezone)</td>
-                                        <td>$!formatter.formatDateTime($p.expiryDate, $page.organisation.timezone)</td>
+                                        <td>$formatter.formatDateTime($p.issuedDate)</td>
+                                        <td>$!formatter.formatDateTime($p.expiryDate)</td>
                                         <td>
                                             #if($isDebit)
                                             <span class="label label-warning">- $!formatter.formatCurrency($p.numPoints)</span>

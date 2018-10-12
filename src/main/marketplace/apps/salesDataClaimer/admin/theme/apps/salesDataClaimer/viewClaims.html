@@ -71,11 +71,15 @@
                                 <p class="btn-group btn-group-sm">
                                     <button type="button" class="btn btn-success" data-target="#modal-upload-ocr-claim" data-toggle="modal"><i class="fa fa-plus"></i> Upload Image Claim</button>
                                 </p>
-                                #end
+                                <p class="btn-group btn-group-sm">
+                                    <button type="button" data-toggle="modal" data-target="#modal-import-claim-csv" class="btn btn-success btn-import-claims"><i class="fa fa-cloud-upload"></i> Import</button>
+                                    <a download="salesDataClaims.csv" href="/manageSaleDataClaimer.csv" class="btn btn-success btn-export-claims"><i class="fa fa-cloud-download"></i> Export</a>
+                                </p>
                                 <p class="btn-group btn-group-sm">
                                     <button type="button" class="btn btn-success btn-approve-claims"><i class="fa fa-check"></i> Approve</button>
                                     <button type="button" class="btn btn-danger btn-reject-claims"><i class="fa fa-times"></i> Reject</button>
                                 </p>
+                                #end
                                 #if ($isAdmin)
                                 <p class="btn-group btn-group-sm">
                                     <button type="button" class="btn btn-danger btn-delete-claims"><i class="fa fa-times"></i> Delete</button>
@@ -115,10 +119,6 @@
                                 #renderClaim($hit.jsonObject)
                                 #end
                                 #end
-
-                                <tr>
-                                    <td colspan="7">--</td>
-                                </tr>
 
                                 #foreach($hit in $claims)
                                 #if ($hit.jsonObject.status != 0)
@@ -200,6 +200,7 @@
 
         #macro (renderClaim $hit)
         #set( $enteredBy = $services.userManager.findById($formatter.toLong($hit.enteredById)) )
+        #set( $team = false )
         #set( $team = $services.organisationManager.findOrg($hit.salesTeamOrgId) )
     <tr>
         <td class="fa-2x text-center">
@@ -231,8 +232,12 @@
         </td>
         <td>
             #if( $team )
+            #if( $team.id == $page.organisation.id )
+            This account
+            #else
             <a href="/organisations/$hit.salesTeamOrgId/">$team.formattedName</a>
             <span class="text-muted">($hit.salesTeamOrgId)</span>
+            #end
             #else
             No sales team
             #end
@@ -545,6 +550,34 @@
             </div>
         </div>
     </div>
+
+        <div class="modal fade" id="modal-import-claim-csv">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Import sales claims from CSV</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-message alert alert-danger" style="display: none;"></div>
+                        <div class="alert alert-info">
+                            Before importing claims, please download this sample data and append your data to upload or upload previous exported CSV.
+                            <br>
+                            <br>
+                            <strong>Notes: <code>recordId</code> and <code>claimItemId</code> can be blank so that will be inserted to database, otherwise records will be updated</strong>
+                            <br>
+                            <a download="sample.csv" href="/manageSaleDataClaimer.csv" class="btn btn-info btn-xs"><i class="fa fa-cloud-download"></i> Download sample CSV</a>
+                        </div>
+                        <div>
+                            <div id="importUpload" ></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <script>
         var highConfidenceFrom = '$!page.attributes.settings.highConfidenceFrom';
