@@ -81,11 +81,11 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('.show-sales').on('change', function () {
+                    form.find('.show-amount').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        component.attr('data-show-points', this.checked);
+                        component.attr('data-show-amount', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
@@ -131,7 +131,7 @@
             form.find('.sort-direction').val(dataAttributes['data-sort-direction'] || 'descending');
 
             form.find('input.txt-height').val(dataAttributes['data-row-height'] || 25);
-            form.find('input.show-sales').prop("checked", dataAttributes['data-show-sales'] !== 'false');
+            form.find('input.show-amount').prop("checked", dataAttributes['data-show-amount'] !== 'false');
             form.find('input.use-date-range').prop("checked", dataAttributes['data-use-date-range'] !== 'false');
             if (dataAttributes['data-use-date-range'] !== 'false'){
                 form.find('.customDate').addClass('hide');
