@@ -12,19 +12,19 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <i class="fa fa-table"></i>
-            Recent points in
+            <span class="trans-lookup" data-transcode="recent-points-in">Recent points in</span>
             $pointsBucket.title
         </div>
         <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
             #set( $recentPoints = $applications.rewardStore.findPointsByLimit($bucket, 100, $profile) )
             #if( $recentPoints.size() > 0 )
-            <p>You have been awarded $recentPoints.size() times in the last $days days</p>
+            <p><span class="trans-lookup" data-transcode="you-have-been-awarded">You have been awarded</span> $recentPoints.size() <span class="trans-lookup" data-transcode="times-in-the-last">times in the last</span> $days <span class="trans-lookup" data-transcode="days">days</span></p>
             <table class="table table-hover table-striped">
                 <thead>
                 <tr>
-                    <th>No. Points</th>
-                    <th>Awarded date/time</th>
-                    <th>Reason</th>
+                    <th class="trans-lookup" data-transcode="no-points">No. Points</th>
+                    <th class="trans-lookup" data-transcode="awarded-date-time">Awarded date/time</th>
+                    <th class="trans-lookup" data-transcode="reason">Reason</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -40,7 +40,7 @@
             </table>
             #else
             <p>
-                <i>You have not been awarded any points in the last $days days</i>
+                <i><span class="trans-lookup" data-transcode="have-not-any-points">You have not been awarded any points in the last</i> $days <span class="trans-lookup" data-transcode="days">days</span></i>
             </p>
             #end
         </div>
@@ -50,11 +50,11 @@
     <div class="clearfix panel panel-default">
         <div class="panel-heading">
             <i class="fa fa-table"></i>
-            Recent points
+            <span class="trans-lookup" data-transcode="recent-points">Recent points</span>
         </div>
         <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
             <p>
-                <i>You have not been awarded any points in the last 10 days</i>
+                <i class="trans-lookup" data-transcode="have-not-points-10-days">You have not been awarded any points in the last 10 days</i>
             </p>
         </div>
     </div>

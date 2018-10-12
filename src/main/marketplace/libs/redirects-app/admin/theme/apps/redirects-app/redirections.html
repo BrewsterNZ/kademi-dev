@@ -1,0 +1,123 @@
+<html>
+    <head>
+        <title>Redirections</title>
+    </head>
+    <body>
+        <div>
+            <div class="btn-group" role="group">
+                <button id="newRedirection" type="button" class="btn btn-sm btn-success newRedirection" data-toggle="modal" data-target="#addRedirection"><i class="fa fa-plus"></i> Add New Redirections</button>
+            </div>
+
+            <div class="btn-group pull-right" role="group">
+                <a href="#" class="btn btn-danger btn-sm btn-delete-products" role="button"><i class="fa fa-times"></i> Delete</a>
+                <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu pull-right" role="menu">
+                    <li>
+                        <a href="#" title="Bulk delete" id="bulkDeleteProducts" data-toggle="modal" data-target="#modalBulkDelete"><i class="glyphicon glyphicon-remove-circle"></i> Bulk delete...</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <br />
+        <div class="panel panel-default">
+            <div id="productsTableContainer" class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover pagination-container" style="table-layout: fixed">
+                        <colgroup>
+                            <col width="100px" />
+                            <col width="35%" />
+                            <col width="35%" /> 
+                            <col width="50px"/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th><a class="sort-field" id="name" href="#">Link</a></th>
+                                <th><a class="sort-field" id="title" href="#">Target</a></th>
+                                <th><input type="checkbox" class="check-all"/></th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody" class="pagination-results">
+                            #foreach($product in $page.paginator.records)
+                            <tr>
+                                <td>
+                                    #if( $product.imageHrefs.size() > 0 )
+                                    <a href='$product.imageHrefs.get(0)' class='product-image'>
+                                        <span class='fa fa-picture-o'></span>
+                                    </a>
+                                    #end
+                                </td>
+                                <td><a href="$product.product.id/">$formatter.firstNotNull($product.product.name, $product.name)</a></td>
+                                <td>$product.title</td>
+                                <td>
+                                    #if( $product.supplier )
+                                    <a href="/organisations/$product.supplier.id/edit">$!product.supplier.formattedName</a>
+                                    #end
+                                </td>
+                                <td>
+                                    #if( $product.product.name )
+                                    <a href="/skus/?dataQuery=productCode:$product.product.name">$product.numVariants</a>
+                                    #else
+                                    $product.numVariants
+                                    #end
+                                </td>
+                                <td>$!product.baseCost</td>
+                                <td><input type="checkbox" data-productname="$product.product.id" class="product-check"/></td>
+                                <td>
+                                    <a href="$product.product.id/" class="btn btn-info">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                        <tfoot id="pointsFooter">
+                            <tr>
+                                <td colspan="6">
+                                    $!page.paginator.html
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="addRedirection" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Add a new redirection</h4>
+                    </div>
+                    <form action="." method="POST" class="form-horizontal createProduct">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <input type="hidden" name="action" value="create"/>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="link">Link</label>
+                                <div class="col-md-8">
+                                    <input class="form-control required" id="link" type="text" name="text"  placeholder="Link" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                    <label class="col-md-3 control-label" for="target">Target</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control required" id="target" type="text" name="target"  placeholder="Target" />
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Add Redirection</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

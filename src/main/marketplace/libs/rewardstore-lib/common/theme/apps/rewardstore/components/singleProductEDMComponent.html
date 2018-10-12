@@ -68,7 +68,7 @@
                     <tbody>
                     <tr>
                         <td align="center" valign="middle" class="button-inner" style="padding-top: 5px; padding-bottom: 5px; padding-left: 10px; padding-right: 10px; $!baseStyles">
-                            <a title="$productTitle" href="$!productUrl" target="_blank" style="font-size: 12px; font-weight: bold; text-align: center; text-decoration: none;color:#ffffff;">View details</a>
+                            <a title="$productTitle" href="$!productUrl" target="_blank" style="font-size: 12px; font-weight: bold; text-align: center; text-decoration: none;color:#ffffff;"><span class="trans-lookup" data-transcode="view-details">View details</span></a>
                         </td>
                     </tr>
                     </tbody>
@@ -115,12 +115,12 @@
             <td class="wrapper" style="$!baseStyles; padding-left: 15px;">
                 <h4 style="font-size: $!{fontSizeH4}px; line-height: $!{lineHeightH4}px;margin-top:0;margin-bottom: 0;"><a href="$!{productUrl}" style="$!linkStyles">$productTitle</a></h4>
                 <p>
-                    <b>Price: $productPrice pts</b>
+                    <b><span class="trans-lookup" data-transcode="price">Price</span>: $productPrice pts</b>
                 </p>
                 <p>
                     $!formatter.truncate( $formatter.toPlain( $productDesc ), 100)
                 </p>
-                <p><a href="$!{productUrl}" style="$!linkStyles">View details</a></p>
+                <p><a href="$!{productUrl}" style="$!linkStyles"><span class="trans-lookup" data-transcode="view-details">View details</span></a></p>
             </td>
         </tr>
     </table>

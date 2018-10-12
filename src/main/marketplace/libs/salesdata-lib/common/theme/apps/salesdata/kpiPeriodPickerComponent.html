@@ -21,12 +21,12 @@
             </ul>
         </div>
     #else
-        No KPI selected
+        <span class="trans-lookup" data-transcode="no-kpi-selected">No KPI selected</span>
     #end
 #else
     <div class="dropdown kpiPeriodPicker #if($pickerAlign == 'right') text-right #else text-left #end">
         <button class="btn $pickerSize $pickerColor dropdown-toggle" type="button" id="kpiPeriodPicker-$formatter.randomGuid" data-toggle="dropdown">
-            <span class="txt">Period</span>
+            <span class="txt" class="trans-lookup" data-transcode="period">Period</span>
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu #if($pickerAlign == 'right') dropdown-menu-right #end">

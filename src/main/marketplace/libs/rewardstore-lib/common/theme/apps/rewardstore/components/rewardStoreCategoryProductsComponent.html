@@ -32,7 +32,7 @@
     #set( $products = $app.call("findProducts", $currentPage, $params, $reward, $numberOfProducts, $sort, $asc) )
     <div id="products-list" class="rewardStoreCategoryProductsComponent #if ($numberOfProducts) shouldLoadMore #end">
         #if( $products.hits.hits.size() == 0 )
-        <p class="alert alert-info">No products were found matching the critieria</p>
+        <p class="alert alert-info trans-lookup" data-transcode="no-products-found">No products were found matching the critieria</p>
         #else
         <div class="row">
             #foreach($p in $products.hits.hits )
@@ -83,7 +83,7 @@
         </p>
         <div class="row btn-load-more-wrapper" #if (!$showLoadMore) style="display: none;" #end>
             <p class="col-sm-4 col-sm-offset-4">
-                <button type="button" class="btn btn-default btn-block btn-load-more">Load more</button>
+                <button type="button" class="btn btn-default btn-block btn-load-more trans-lookup" data-transcode="load-more">Load more</button>
             </p>
         </div>
     </div>
@@ -98,7 +98,7 @@
             <div class="thumbnail product">
                 <div class="product-info">
                     <h3 class="product-title" title="Example Apple iPad">
-                        <a class="text-primary" href="/$p.fields.path.value">Example Apple iPad</a>
+                        <a class="text-primary trans-lookup" data-transcode="example-apple-ipad" href="/$p.fields.path.value">Example Apple iPad</a>
                     </h3>
                     <div class="embed-responsive embed-responsive-4by3">
                         <a href="javascript:" class="embed-responsive-item" style="background-image: url($bg);"></a>
@@ -120,7 +120,7 @@
             <div class="thumbnail product">
                 <div class="product-info">
                     <h3 class="product-title" title="Example Apple iPad">
-                        <a class="text-primary" href="/$p.fields.path.value">Example Apple Macbook Pro</a>
+                        <a class="text-primary trans-lookup" data-transcode="example-apple-macbook-pro" href="/$p.fields.path.value">Example Apple Macbook Pro</a>
                     </h3>
                     <div class="embed-responsive embed-responsive-4by3">
                         <a href="javascript:" class="embed-responsive-item" style="background-image: url($bg);"></a>
@@ -129,7 +129,7 @@
                 </div>
                 <div class="caption">
                     <h3 class="text-center product-price $bgBrand">4000
-                        <small>Points</small>
+                        <small class="text-primary trans-lookup" data-transcode="points">Points</small>
                     </h3>
                     <a href="javascript:" class="btn $buttonBrand">
                         <i  class="fa fa-shopping-cart"></i>
@@ -142,12 +142,12 @@
             <div class="thumbnail product">
                 <div class="product-info">
                     <h3 class="product-title" title="Example Apple iPad">
-                        <a class="text-primary" href="/$p.fields.path.value">Example iPhone X</a>
+                        <a class="text-primary trans-lookup" data-transcode="example-iphone-x" href="/$p.fields.path.value">Example iPhone X</a>
                     </h3>
                     <div class="embed-responsive embed-responsive-4by3">
                         <a href="javascript:" class="embed-responsive-item" style="background-image: url($bg);"></a>
                     </div>
-                    <div class="product-content">Apple iPhone X description goes here</div>
+                    <div class="product-content trans-lookup" data-transcode="apple-iphone-x-description-goes-here">Apple iPhone X description goes here</div>
                 </div>
                 <div class="caption">
                     <h3 class="text-center product-price $bgBrand">3000

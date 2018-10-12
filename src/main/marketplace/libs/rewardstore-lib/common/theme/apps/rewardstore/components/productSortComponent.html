@@ -1,12 +1,12 @@
 <!-- Single button -->
 <div class="btn-group productSortDropdown">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="selected-text">Product A-Z</span> <span class="caret"></span>
+        <span class="selected-text trans-lookup" data-transcode="product-a-z">Product A-Z</span> <span class="caret"></span> 
     </button>
     <ul class="dropdown-menu">
-        <li><a href="#" data-sort="title_raw" data-asc="true">Product A-Z</a></li>
-        <li><a href="#" data-sort="title_raw" data-asc="false">Product Z-A</a></li>
-        <li><a href="#" data-sort="finalPoints" data-asc="true">Price Low-High</a></li>
-        <li><a href="#" data-sort="finalPoints" data-asc="false">Price High-Low</a></li>
+        <li><a href="#" data-sort="title_raw" data-asc="true"><span class="trans-lookup" data-transcode="product-a-z">Product A-Z</span></a></li>
+        <li><a href="#" data-sort="title_raw" data-asc="false"><span class="trans-lookup" data-transcode="product-z-a">Product Z-A</span></a></li>
+        <li><a href="#" data-sort="finalPoints" data-asc="true"><span class="trans-lookup" data-transcode="price-low-high">Price Low-High</span></a></li>
+        <li><a href="#" data-sort="finalPoints" data-asc="false"><span class="trans-lookup" data-transcode="price-high-low">Price High-Low</span></a></li>
     </ul>
 </div>

@@ -27,7 +27,7 @@
                 <div class="col-xs-9 text-right">
                     <h2>
                         #if($formatter.isNull($pointsBucket))
-                            Please select a store
+                            <span class="trans-lookup" data-transcode="please-select-a-store">Please select a store</span>
                         #else
                             #set($points = $applications.rewardStore.pointsBalance( $pointsBucket.name, $be)  )
 
@@ -43,6 +43,6 @@
         </div>
     </div>
     <div class="panel-footer text-center">
-        <span class="">$!label</span>
+        <span class="trans-lookup" data-transcode="point-blance-label">$!label</span>
     </div>
 </div>
