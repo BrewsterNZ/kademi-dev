@@ -1,0 +1,6 @@
+<controllers>
+    <source>/APP-INF/app.js</source>
+    
+    <menu parentId="menuWebsiteManager" id="itemRedirects" text="Redirects"  path="/redirects/" ordering="101"/>
+</controllers>
+            
