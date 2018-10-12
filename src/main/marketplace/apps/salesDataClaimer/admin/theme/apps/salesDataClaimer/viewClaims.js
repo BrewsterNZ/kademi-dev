@@ -922,11 +922,18 @@
         var btn = $('#importUpload');
         btn.mupload({
             url: '/manageSaleDataClaimer.csv',
-            buttonText: 'Upload CSV',
+            buttonText: '<i class="fa fa-cloud-upload"></i> Upload CSV',
             acceptedFiles: '.csv',
             useJsonPut: false,
             oncomplete: function (data) {
-                Msg.success('ok');
+                if (data && data.result && data.result.status){
+                    Msg.success('Import success<br>' +
+                        'No. inserted: '+ data.result.data.insertedCount + '<br>' +
+                        'No. updated: '+ data.result.data.updatedCount)
+                    $('#table-claims').reloadFragment();
+                } else {
+                    Msg.error('There was an error while importing sales claim data')
+                }
             }
         });
     }
