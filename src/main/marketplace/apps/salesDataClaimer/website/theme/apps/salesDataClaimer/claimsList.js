@@ -368,7 +368,9 @@
                 successDiv.find('.btn-submit-other-claim').on('click', function (e) {
                     e.preventDefault();
 
-                    form.find('input').not('[name=soldBy], [name=soldById]').val('');
+                    form.find('input').not('[type=hidden]').val('');
+                    form.find('input[name=claimItemsLength]').val('1');
+                    form.find('.claim-items .claim-item').not('.claim-item-0').remove();
                     thumbImg.attr('src', '/static/images/photo_holder.png');
                     btnUpload.find('span').html('Upload receipt');
                     btnUpload.find('i').attr('class', 'fa fa-file-picture-o');
@@ -434,7 +436,7 @@
                 successDiv.find('.btn-submit-other-claim').on('click', function (e) {
                     e.preventDefault();
 
-                    form.find('input').not('[name=name]').val('');
+                    form.find('input').not('[type=hidden]').val('');
                     thumbImg.attr('src', '/static/images/photo_holder.png');
                     btnUpload.find('span').html('Upload claim image');
                     btnUpload.find('i').attr('class', 'fa fa-file-picture-o');
