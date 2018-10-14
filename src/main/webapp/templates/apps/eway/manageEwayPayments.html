@@ -62,6 +62,12 @@
                                 </td>
                                 <td>$formatter.formatDateTime($payment.createdDate)</td>
                             </tr>
+                            <tr>
+                                <td></td>
+                                <td colspan="10">
+                                    $payment.responseCode / $payment.responseMessage /  $payment.errors
+                                </td>
+                            </tr>
                             #end
                         </tbody>
                     </table>
@@ -349,7 +355,7 @@
                                 <td>$r.paymentResults.size()</td>
                                 <td>
                                 	<a id="$r.id" class="btn btn-danger btn-sm cancelPayment">
-                        				<span class="glyphicon glyphicon-remove"></span>  
+                        				<span class="glyphicon glyphicon-remove"></span>
                         					Cancel payment
                     				</a>
 								</td>
@@ -426,7 +432,7 @@
                         }
                     });
                 });
-                
+
                 $(".cancelPayment").click(function(e) {
                 	e.preventDefault();
                     var pid = this.getAttribute("id");
