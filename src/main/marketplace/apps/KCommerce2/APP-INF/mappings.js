@@ -86,39 +86,16 @@ function doEcomSearch(page, params) {
     if (formatter.isEmpty(query)) {
         return doEcomList(page, params);
     }
-    log.info("doEcomSearch: {} from {} size {}", query, params.pageFrom, params.pageSize);
-    var store = page.attributes.store;
-    var cat = page.attributes.category;
-    doProductSearch(page, store, cat, params);
     return views.templateView("KCommerce2/searchResults");
 }
 
 
 function doEcomList(page, params) {
-    var store = page.attributes.store;
-    var cat = page.attributes.category;
-
-    doProductSearch(page, store, cat, params);
-
     if (page.attributes.category) {
         return views.templateView("KCommerce2/viewCategory");
     } else {
         return views.templateView("KCommerce2/viewStore");
     }
-}
-
-function doProductSearch(page, store, category, params) {
-    var query = params.q;
-    var priceRanges = findPriceRanges(params);
-    log.info('priceRanges BBBBBBBBBBBBBBBBBBBBBBBB {}', JSON.stringify(priceRanges));
-    var attributePairs = findAttsInParams(params);
-    var otherCats = findOtherCatsInParams(params)
-    var brands = findBrandsInParams(params);
-    var searchResults = productSearch(page, store, category, query, attributePairs, otherCats, brands, priceRanges, params.pageFrom, params.pageSize);
-    page.attributes.searchResults = searchResults; // make available to templates
-    page.attributes.categories = listCategories(store, page.attributes.category);
-    page.attributes.brands = listBrands(store, page.attributes.searchAggs);
-    findAttributes(page, store, page.attributes.searchAggs);
 }
 
 /**
@@ -282,7 +259,7 @@ function saveAddress(page, params, files, form) {
         var cart = services.cartManager.shoppingCart(false);
         cart.addressLine1 = form.cleanedParam("addressLine1");
         cart.addressLine2 = form.cleanedParam("addressLine2");
-        cart.addressState = form.cleanedParam("state");
+        cart.addressState = form.cleanedParam("addressState");
         cart.country = form.cleanedParam("country");
         cart.city = form.cleanedParam("city");
         cart.postcode = form.cleanedParam("postcode");
