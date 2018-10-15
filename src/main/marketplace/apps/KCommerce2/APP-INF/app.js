@@ -125,3 +125,12 @@ function browseResources(websiteRoot, path, list) {
     }
 }
 
+function saveAppSettings(page, params) {
+    var pageSize = formatter.toInteger(params.pageSize);
+    if (formatter.isNull(pageSize)) {
+        pageSize = 12;
+    }
+    page.setAppSetting("KCommerce2", "pageSize", pageSize);
+
+    return views.jsonResult(true);
+}

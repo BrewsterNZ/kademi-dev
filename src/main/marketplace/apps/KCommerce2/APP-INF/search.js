@@ -54,8 +54,15 @@ function productSearch(page, store, category, query, attributePairs, otherCats, 
         pageFrom = parseInt(pageFrom);
     }
     if (!pageSize || isNaN(pageSize)) {
-        pageSize = 12;
+        var app = applications.get('KCommerce2');
+        var pageSizeSetting = app.getSetting("pageSize");
+        if (pageSizeSetting && !isNaN(pageSizeSetting)){
+            pageSize = pageSizeSetting;
+        } else {
+            pageSize = 12;
+        }
     } else {
+        // If pageSize is provided from query string, just use it
         pageSize = parseInt(pageSize);
     }
     var queryJson = {

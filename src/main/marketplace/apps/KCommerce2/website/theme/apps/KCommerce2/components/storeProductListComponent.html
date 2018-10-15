@@ -5,9 +5,8 @@
 
     #set ($prodsListId = $formatter.randomGuid)
 
-
     #if( $page.attributes.searchResults.hits.hits.size() > 0 )
-    <div class="kcom2ProductListHolder">
+    <div class="kcom2ProductListHolder" data-page-size="$!applications.KCommerce2.getSetting('pageSize')">
         #if ($layout == "grid")
             #set ($clsName = "col-sm-3")
             #if ($itemsPerRow == 1)
