@@ -373,43 +373,53 @@ function initKcom2CheckoutForm() {
     var kcom2CartForm = $('#cart-form');
     var shippingSelect = $("#shipping-provide-select");
 
+    var allForms = findEmailForm.add(kcom2PasswordForm)
+        .add(kcom2RegoForm)
+        .add(kcom2ShippingForm)
+        .add(kcom2ShippingProvider)
+        .add(kcom2CartForm);
+
     findEmailForm.forms({
         onSuccess: function (resp) {
             if (resp && resp.status){
-                findEmailForm.addClass('hide');
+                allForms.addClass('hide');
                 kcom2PasswordForm.removeClass('hide');
                 kcom2PasswordForm.find('[name=kcom2Email]').val(findEmailForm.find('[name=findProfileEmail]').val());
             }
         },
         onError: function () {
+            allForms.addClass('hide');
             // Show rego form with skip button
             kcom2RegoForm.removeClass('hide');
-            findEmailForm.addClass('hide');
             kcom2RegoForm.find('[name=kcom2Email]').val(findEmailForm.find('[name=findProfileEmail]').val());
         }
     });
 
+
     kcom2RegoForm.on('click', '.btn-skip-rego', function () {
-        kcom2RegoForm.addClass('hide');
+        allForms.addClass('hide');
         kcom2ShippingForm.removeClass('hide');
         initCountryList();
     });
 
-    kcom2PasswordForm.on('click', '.btn-prev', function () {
+    kcom2RegoForm.on('click', '.btn-prev', function () {
+        allForms.addClass('hide');
         findEmailForm.removeClass('hide');
-        kcom2PasswordForm.addClass('hide');
+    });
+
+    kcom2PasswordForm.on('click', '.btn-prev', function () {
+        allForms.addClass('hide');
+        findEmailForm.removeClass('hide');
     });
 
 
-    shippingSelect.click( function(e) {
+    shippingSelect.change( function(e) {
         // selected shipping provider, so save it and then reload the prices panel
-        var target = $(e.target);
-        var selectedId = target.val();
         $.ajax({
             type: 'POST',
             url: window.location.pathname,
             data: {
-                shippingProviderId : selectedId
+                shippingProviderId : this.value
             },
             datatype: 'json',
             success: function (data) {
@@ -433,7 +443,7 @@ function initKcom2CheckoutForm() {
                 whenComplete: function (resp) {
                     var html = resp.find('[data-type="component-menu"]').html();
                     $('[data-type="component-menu"]').html(html);
-                    kcom2PasswordForm.addClass('hide');
+                    allForms.addClass('hide');
                     kcom2ShippingForm.removeClass('hide');
                 }
             });
@@ -443,41 +453,41 @@ function initKcom2CheckoutForm() {
     kcom2RegoForm.find('form').forms({
         onSuccess: function (resp) {
             if (resp && resp.status){
-                kcom2RegoForm.addClass('hide');
+                allForms.addClass('hide');
                 kcom2ShippingForm.removeClass('hide');
             }
         }
     });
 
     kcom2ShippingProvider.on('click', '.btn-prev', function () {
+        allForms.addClass('hide');
         kcom2PasswordForm.removeClass('hide');
-        kcom2ShippingForm.addClass('hide');
     });
 
     kcom2ShippingForm.find('form').forms({
         onSuccess: function () {
-            kcom2ShippingForm.addClass('hide');
+            allForms.addClass('hide');
             kcom2ShippingProvider.removeClass('hide');
-            $('#ecomItemsTable, #cart-checkout-data').reloadFragment();
+            $('#ecomItemsTable, #cart-checkout-data, #shipping-provide-select').reloadFragment();
         }
     });
 
     kcom2ShippingProvider.on('click', '.btn-prev', function () {
+        allForms.addClass('hide');
         kcom2ShippingForm.removeClass('hide');
-        kcom2ShippingProvider.addClass('hide');
     });
 
     kcom2ShippingProvider.forms({
         allowPostForm: false,
         onValid: function () {
-            kcom2ShippingProvider.addClass('hide');
+            allForms.addClass('hide');
             kcom2CartForm.removeClass('hide');
         }
     });
 
     kcom2CartForm.on('click', '.btn-prev', function () {
+        allForms.addClass('hide');
         kcom2ShippingProvider.removeClass('hide');
-        kcom2CartForm.addClass('hide');
     });
 }
 
@@ -510,6 +520,8 @@ function initCountryList() {
     kcom2ShippingForm.find('.country-typeahead').on("typeahead:selected", function(e, datum) {
         kcom2ShippingForm.find('[name=country]').val(datum.iso_code);
     });
+
+    kcom2ShippingForm.find('.country-typeahead').attr('autocomplete', 'nope');
 }
 
 function initSelectAddress(){
