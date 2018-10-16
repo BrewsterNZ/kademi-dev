@@ -1,4 +1,30 @@
+#if ($page)
 #parse("/theme/apps/KCommerce2/ecommerceMacros.html")
+#set ($app = $applications.get("KCommerce2"))
+#set( $storeOb = $page.attributes.store )
+#set( $catOb = $page.attributes.category )
+#set ($page.attributes.searchAggs = $app.call("productSearchAggs", $page, $storeOb, $catOb, $param.q))
+#set ($page.attributes.categories = $app.call("listCategories", $storeOb, $page.attributes.category))
+#set ($page.attributes.brands = $app.call("listBrands", $storeOb, $page.attributes.searchAggs))
+#set ($minPrice = $page.attributes.searchAggs.aggregations.asMap.minPrice.value)
+#set ($maxPrice = $page.attributes.searchAggs.aggregations.asMap.maxPrice.value)
+#set ($attNameBuckets = $page.attributes.searchAggs.aggregations.asMap.attNames.buckets)
+#set ($page.attributes.attributesSummary = $app.call("findAttributesQuery", $storeOb, $catOb, null, $minPrice, $maxPrice, 5, $attNameBuckets))
 <div class="ecommerce-sidebar">
     #rightSidebar($page)
 </div>
+#else
+<div class="ecommerce-sidebar">
+    <div class="list-group list-group-root ecomStoreCategoriesList">
+        <span href="javascript:void (0)" class="list-group-item heading-item">Browse by category</span>
+
+        <a href="javascript:void (0)" class="list-group-item">
+            Electronics <i class="fa fa-angle-right  pull-right"></i>
+        </a>
+        <a href="javascript:void (0)" class="list-group-item">
+            Homeware <i class="fa fa-angle-right  pull-right"></i>
+        </a>
+    </div>
+
+</div>
+#end

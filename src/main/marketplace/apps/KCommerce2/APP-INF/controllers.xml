@@ -3,4 +3,8 @@
     <source>/APP-INF/mappings.js</source>
     <source>/APP-INF/search.js</source>
     <browseResourcesFunction class="string">browseResources</browseResourcesFunction>
+    <!-- Settings -->
+    <settings enabled="true" path="/theme/apps/KCommerce2/settings.html">
+        <function>saveAppSettings</function>
+    </settings>
 </controllers> 

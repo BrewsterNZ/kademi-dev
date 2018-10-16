@@ -5,7 +5,7 @@
     KEditor.components['ecomStoreCategories'] = {
         settingEnabled: true,
         
-        settingTitle: 'Product List Settings',
+        settingTitle: 'Store Categories Settings',
         
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "ecomStoreCategories" component', form, keditor);

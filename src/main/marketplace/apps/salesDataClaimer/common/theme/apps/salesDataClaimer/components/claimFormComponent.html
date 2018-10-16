@@ -14,7 +14,7 @@
 #end
 
 #macro (renderClaimForm )
-    <form class="form-horizontal form-new-claim #if ($bgTransparent == "true") #else well #end" action="/salesDataClaims/" method="post" enctype="multipart/form-data" style="background-color: $formBgColor;">
+    <form class="form-horizontal form-new-claim #if ($bgTransparent == "true") #else well #end" action="/salesDataClaims/" method="post" enctype="multipart/form-data" style="background-color: $!formBgColor;">
     #if ($formTitle && $formTitle != "")
     <h3>$formTitle</h3>
     #end

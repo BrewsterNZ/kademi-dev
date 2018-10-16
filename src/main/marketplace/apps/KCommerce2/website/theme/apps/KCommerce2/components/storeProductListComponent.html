@@ -1,13 +1,30 @@
 #parse("/theme/apps/KCommerce2/ecommerceMacros.html")
 #if($page)
     #set( $storeOb = $page.attributes.store )
+    #set( $catOb = $page.attributes.category )
     #set( $basePath = "/$storeOb.name/" )
+    #set ($app = $applications.get("KCommerce2"))
+    #set ($priceRanges = $app.call("findPriceRanges", $params))
+    #set ($attributePairs = $app.call("findAttsInParams", $params))
+    #set ($otherCats = $app.call("findOtherCatsInParams", $params))
+    #set ($brands = $app.call("findBrandsInParams", $params))
+
+    #set ($pageFrom = 0)
+    #if (!$formatter.isNull($params.pageFrom))
+        #set ($pageFrom = $formatter.toInteger($params.pageFrom))
+    #end
+
+    ## $pageSize is from component settings. Default = 12
+    #if (!$formatter.isNull($params.pageSize))
+        #set ($pageSize = $formatter.toInteger($params.pageSize))
+    #end
+
+    #set ($searchResults = $app.call("productSearch", $page, $storeOb, $catOb, $params.q, $attributePairs, $otherCats, $brands, $priceRanges, $pageFrom, $pageSize))
 
     #set ($prodsListId = $formatter.randomGuid)
 
-
-    #if( $page.attributes.searchResults.hits.hits.size() > 0 )
-    <div class="kcom2ProductListHolder">
+    #if( $searchResults.hits.hits.size() > 0 )
+    <div class="kcom2ProductListHolder" data-page-size="$!pageSize">
         #if ($layout == "grid")
             #set ($clsName = "col-sm-3")
             #if ($itemsPerRow == 1)
@@ -22,15 +39,15 @@
 
 
             <div class="row products-list grid-layout ecomStoreCategoryProductsComponent ecom-store-category-products" id="products-list-${prodsListId}">
-                #foreach( $hit in $page.attributes.searchResults.hits.hits )
+                #foreach( $hit in $searchResults.hits.hits )
                     #productTile($hit $basePath $storeOb)
                 #end
             </div>
 
         #else
             <div class="products-list ecom-store-category-products" id="products-list-$!prodsListId">
-                #foreach( $hit in $page.attributes.searchResults.hits.hits )
-                    productRow($hit $basePath $storeOb)
+                #foreach( $hit in $searchResults.hits.hits )
+                    #productRow($hit $basePath $storeOb)
                 #end
             </div>
         #end
@@ -48,8 +65,7 @@
         </div>
 
     #end
-
 #else
-    #fakeUI()
+    #fakeProductListUI()
 #end
 

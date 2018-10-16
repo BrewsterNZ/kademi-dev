@@ -1,0 +1,11 @@
+
+#set($pageSize = $page.getAppSetting($app.instanceId, 'pageSize'))
+#if ($formatter.isNull($pageSize))
+#set ($pageSize = 12)
+#end
+<div class="form-group hide">
+    <label class="col-sm-4 control-label" for="pageSize">Page size</label>
+    <div class="col-sm-7">
+        <input type="number" name="pageSize" id="pageSize" placeholder="Products list page size" class="form-control required" value="$!pageSize" />
+    </div>
+</div>

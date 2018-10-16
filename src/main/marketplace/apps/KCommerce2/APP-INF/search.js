@@ -1,14 +1,4 @@
-
-
-/**
- * Returns the ES result object
- *
- * @param {type} store
- * @param {type} category
- * @param {type} query
- * @returns {unresolved}
- */
-function productSearch(page, store, category, query, attributePairs, otherCats, brands, priceRanges, pageFrom, pageSize) {
+function productSearchAggs(page, store, category, query) {
     // Do aggregation search
     var aggsQuery = {
         "size": 0,
@@ -44,10 +34,20 @@ function productSearch(page, store, category, query, attributePairs, otherCats, 
     appendCriteria(aggsQuery, store, category, query, null, null, null, null);
     var aggsQueryText = JSON.stringify(aggsQuery);
     var aggregationResults = services.searchManager.search(aggsQueryText, 'ecommercestore');
-    page.attributes.searchAggs = aggregationResults;
+    // page.attributes.searchAggs = aggregationResults;
+    return aggregationResults;
+}
 
-
-    // TODO: Pagination
+/**
+ * Returns the ES result object
+ *
+ * @param {type} store
+ * @param {type} category
+ * @param {type} query
+ * @returns {unresolved}
+ */
+function productSearch(page, store, category, query, attributePairs, otherCats, brands, priceRanges, pageFrom, pageSize) {
+    // Do product search with pagination
     if (!pageFrom || isNaN(pageFrom)) {
         pageFrom = 0;
     } else {
@@ -56,6 +56,7 @@ function productSearch(page, store, category, query, attributePairs, otherCats, 
     if (!pageSize || isNaN(pageSize)) {
         pageSize = 12;
     } else {
+        // If pageSize is provided from query string, just use it
         pageSize = parseInt(pageSize);
     }
     var queryJson = {

@@ -27,7 +27,7 @@
                         form.find('.items-per-row-wrapper').css('display', this.value === 'grid' ? 'block' : 'none');
                     });
 
-                    form.find('.number-of-products').on('change', function () {
+                    form.find('.page-size').on('change', function () {
                         var number = this.value;
 
                         if (isNaN(number) || +number <= 0) {
@@ -38,7 +38,7 @@
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        component.attr('data-number-of-products', number);
+                        component.attr('data-page-size', number);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
@@ -65,7 +65,7 @@
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-layout').val(dataAttributes['data-layout']);
-            form.find('.number-of-products').val(dataAttributes['data-number-of-products']);
+            form.find('.page-size').val(dataAttributes['data-page-size'] || 12);
             form.find('.items-per-row').val(dataAttributes['data-items-per-row']);
             form.find('.items-per-row-wrapper').css('display', dataAttributes['data-layout'] === 'grid' ? 'block' : 'none');
         }

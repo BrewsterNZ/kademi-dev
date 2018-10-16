@@ -105,19 +105,21 @@
                                 <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top">Subtotal</td>
                                 <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$$formatter.formatCurrency($checkoutItems.subTotal)</td>
                             </tr>
+                            #if ($checkoutItems.totalTax > 0)
                             <tr bgcolor="${footerBg}">
                                 <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top">Tax</td>
                                 <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$$formatter.formatCurrency($checkoutItems.totalTax)</td>
                             </tr>
+                            #end
                             #if( $freight )
                             <tr bgcolor="${footerBg}">
                                 <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top">Shipping</td>
-                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$$formatter.formatCurrency($freight)</td>
+                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$$freight</td>
                             </tr>
                             #end
                             <tr bgcolor="${footerBg}">
                                 <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;" #if ($showProductPhoto == "true") colspan="4" #else colspan="3" #end valign="top">Total</td>
-                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$$formatter.formatCurrency($checkoutItems.totalCost, false)</td>
+                                <td align="right" style="$baseStyles; ${cellStyles}; font-weight: 700;">$$formatter.formatCurrency($checkoutItems.totalCost)</td>
                             </tr>
                             #else
                             <tr bgcolor="${footerBg}">

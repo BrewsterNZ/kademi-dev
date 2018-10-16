@@ -1,7 +1,8 @@
 /**
  * Created by Anh on 8/22/2016.
  */
-var startFrom = 12;
+var KCOM2_PAGE_SIZE = 12;
+var startFrom = KCOM2_PAGE_SIZE;
 var currentURI = new URI(window.location.href);
 
 $(function () {
@@ -28,30 +29,6 @@ $(function () {
             doProductSearch();
         });
     }
-
-
-    function initCategories() {
-        flog('initCategories');
-//        var categoryItems = $('.ecomStoreCategoriesList a.list-group-item');
-//        categoryItems.filter('[href='+window.location.pathName+']').addClass('selected');
-//        categoryItems.on('click', function (e) {
-//            e.preventDefault();
-//            var item = $(this);
-//            var newUrl = "";
-//            if (item.hasClass('selected')){
-//                item.removeClass('selected');
-//                newUrl = item.attr('href').split('/').slice(0,2).join('/') + window.location.search;
-//            } else {
-//                categoryItems.filter('.selected').removeClass('selected');
-//                item.addClass('selected');
-//                newUrl = item.attr('href') + window.location.search;
-//            }
-//
-//            window.history.pushState("", "", newUrl);
-//            doProductSearch();
-//        });
-    }
-
 
     function doProductSearch() {
         flog('doProductSearch1')
@@ -122,7 +99,7 @@ $(function () {
                 $('.product-content').dotdotdot({
                     height: 60
                 });
-                startFrom = 12;
+                startFrom = KCOM2_PAGE_SIZE;
                 inifiniteLoader.removeClass('limited').hide();
             },
             error: function (resp) {
@@ -147,7 +124,7 @@ $(function () {
 
                 if (products.length > 0) {
                     $('.kcom2ProductListHolder').find('.products-list').append(products);
-                    startFrom = startFrom + 12;
+                    startFrom = startFrom + KCOM2_PAGE_SIZE;
                 } else {
                     inifiniteLoader.addClass('limited');
                 }
@@ -189,6 +166,11 @@ $(function () {
     }
 
     var init = function () {
+        var pageSize = $('.kcom2ProductListHolder').attr('data-page-size');
+        if (pageSize && !isNaN(pageSize)){
+            KCOM2_PAGE_SIZE = parseInt(pageSize);
+            startFrom = KCOM2_PAGE_SIZE;
+        }
         var shouldLoadMore = $('.shouldLoadMore').length > 0;
         var $ecomStoreCategoriesList = $('.ecomStoreCategoriesList');
         var shouldInit = $ecomStoreCategoriesList.length > 0;
@@ -196,7 +178,6 @@ $(function () {
         if (!window.contentEditing && shouldInit && !isReadyInitEvent) {
             $ecomStoreCategoriesList.data('ready-init-event', true);
             initPriceRanges();
-            initCategories();
             initSortBy();
             if (!shouldLoadMore) {
                 $(window).scroll(function () {
