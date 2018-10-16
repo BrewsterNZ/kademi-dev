@@ -1,6 +1,6 @@
-<controllers>
+<controllers onAppEnabled="initRedirectsApp" >
     <source>/APP-INF/app.js</source>
-    
-    <menu parentId="menuWebsiteManager" id="itemRedirects" text="Redirects"  path="/redirects/" ordering="101"/>
+    <source>/APP-INF/adminRedirectManager.js</source>
+    <menu parentId="menuWebsiteManager" id="itemRedirects" text="Redirects"  path="/redirects/" ordering="101"/>    
 </controllers>
-            
+             
