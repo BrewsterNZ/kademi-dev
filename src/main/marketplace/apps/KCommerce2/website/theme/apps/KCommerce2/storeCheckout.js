@@ -453,8 +453,25 @@ function initKcom2CheckoutForm() {
     kcom2RegoForm.find('form').forms({
         onSuccess: function (resp) {
             if (resp && resp.status){
-                allForms.addClass('hide');
-                kcom2ShippingForm.removeClass('hide');
+                var email = kcom2RegoForm.find('[name=kcom2Email]').val();
+                var pwd = kcom2RegoForm.find('[name=kcom2Password]').val();
+                doLogin(email, pwd, {
+                    afterLoginUrl: 'none',
+                    urlSuffix: '/.dologin',
+                    loginFailedMessage: 'Something went wrong when creating new account or logging user in. Please try again later',
+                    onSuccess: function () {
+                        $('[data-type="component-menu"]').reloadFragment({
+                            whenComplete: function (resp) {
+                                var html = resp.find('[data-type="component-menu"]').html();
+                                $('[data-type="component-menu"]').html(html);
+
+                                allForms.addClass('hide');
+                                kcom2ShippingForm.removeClass('hide');
+                            }
+                        });
+                    }
+                }, kcom2RegoForm);
+
             }
         }
     });
@@ -468,7 +485,7 @@ function initKcom2CheckoutForm() {
         onSuccess: function () {
             allForms.addClass('hide');
             kcom2ShippingProvider.removeClass('hide');
-            $('#ecomItemsTable, #cart-checkout-data, #shipping-provide-select').reloadFragment();
+            $('#ecomItemsTable, #cart-checkout-data, #shipping-provide-select, #cart-form').reloadFragment();
         }
     });
 

@@ -424,8 +424,14 @@ function createAccount(page, params) {
     var rootOrg = page.find('/').organisation;
     var orgData = page.find('/').orgData;
     if (params.kcom2Firstname && params.kcom2Email && params.kcom2Password){
-        var p = securityManager.createProfile(rootOrg, params.kcom2Email, params.kcom2Firstname, params.kcom2Password);
-        orgData.createMembership(p.name, p.email, orgData, "ecommerce-users");
+        transactionManager.runInTransaction(function () {
+            var p = securityManager.createProfile(rootOrg, params.kcom2Email, params.kcom2Firstname, params.kcom2Password);
+            p.firstName = params.kcom2Firstname;
+            p.surName = params.kcom2Surname;
+            services.userManager.updateUser(p);
+
+            orgData.createMembership(p.name, p.email, orgData, "ecommerce-users");
+        });
         return views.jsonView(true, "Profile created");
     } else {
         return views.jsonView(false, "Fields are missing");
