@@ -66,6 +66,14 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
+                    form.find('.amount-text').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-amount-text', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                     form.find('.sort-direction').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -128,6 +136,7 @@
             form.find('input.hide-names').prop("checked", dataAttributes['data-hide-names']  == 'true');
             form.find('input.hidden-text').val(dataAttributes['data-hidden-text']);
             form.find('input.participants-text').val(dataAttributes['data-participants-text'] || 'Participants');
+            form.find('input.amount-text').val(dataAttributes['data-amount-text'] || 'Amount');
             form.find('.sort-direction').val(dataAttributes['data-sort-direction'] || 'descending');
 
             form.find('input.txt-height').val(dataAttributes['data-row-height'] || 25);

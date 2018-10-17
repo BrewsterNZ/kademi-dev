@@ -42,7 +42,7 @@
             <th class="trans-lookup" data-transcode="rank">Rank</th>
             <th class="trans-lookup" data-transcode="participant">$formatter.ifNull($participantsText, "Participants")</th>
             #if ($showAmount == "true")
-            <th class="trans-lookup" data-transcode="points">Amount</th>
+            <th class="trans-lookup" data-transcode="points">$formatter.ifNull($amountText, "Amount")</th>
             #end
             #foreach ($xf in $seriesExtraFields)
             #if ($extraFields.contains($xf.name))
