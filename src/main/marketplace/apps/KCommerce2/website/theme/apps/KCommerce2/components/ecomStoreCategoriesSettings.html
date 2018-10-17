@@ -4,7 +4,7 @@
         <div class="col-sm-12">
             <select class="form-control select-store">
                 <option value="" selected="selected">- None -</option>
-                #foreach($store in $applications.ecommerce.stores)
+                #foreach($store in $services.catalogManager.ecomStores)
                 <option value="$store.name">$store.title</option>
                 #end
             </select>
