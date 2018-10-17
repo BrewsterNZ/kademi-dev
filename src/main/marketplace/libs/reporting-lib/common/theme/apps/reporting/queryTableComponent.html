@@ -17,7 +17,7 @@
 #if( $formatter.isNull($csvFilename) )
     #set( $newCsvFilename = "${title}.csv" )
 #else
-    #define( $newCsvFilename ) #evaluate($csvFilename) #end
+    #define( $newCsvFilename )#evaluate($csvFilename)#end
 #end
 
 #set ($queryTableId = "query-component-tbody-" + $formatter.randomGuid)
