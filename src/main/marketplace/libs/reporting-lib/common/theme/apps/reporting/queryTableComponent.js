@@ -82,7 +82,16 @@
                         component.attr('data-export-to-csv', inp.val());
                         keditor.initDynamicContent(dynamicElement);
                     });
-                    
+
+                    form.find('.csv-filename').on('change', function () {
+                        var csvFilename = this.value;
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        
+                        component.attr('data-csv-filename', csvFilename);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                     form.find('.select-show-pagination').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -102,7 +111,7 @@
                     //        //self.initDateAgg();
                     //    });
                     //});
-                    
+
                     form.find('.txt-title').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -131,6 +140,7 @@
             form.find('.' + selectedQueryType).removeClass('hide');
             form.find('.select-export-to-csv').find("option[value='" + (dataAttributes['data-export-to-csv'] === undefined ? "true" : dataAttributes['data-export-to-csv']) + "']").prop("selected", true);
             form.find('.select-show-pagination').find("option[value='" + (dataAttributes['data-show-pagination'] === undefined ? "true" : dataAttributes['data-show-pagination']) + "']").prop("selected", true);
+            form.find('.csv-filename').val(dataAttributes['data-csv-filename'] || '');
 
         }
     };

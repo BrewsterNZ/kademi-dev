@@ -14,6 +14,12 @@
     #set( $showPagination = true )
 #end
 
+#if( $formatter.isNull($csvFilename) )
+    #set( $newCsvFilename = "${title}.csv" )
+#else
+    #define( $newCsvFilename ) #evaluate($csvFilename) #end
+#end
+
 #set ($queryTableId = "query-component-tbody-" + $formatter.randomGuid)
 #set ($queryCompId = "query-component-" + $formatter.randomGuid)
 #if($page.profile)
@@ -25,9 +31,9 @@
     <div class="panel-heading">
         <i class="fa fa-table"></i> $title
         #if($queryType == 'queryTable' && $exportToCsv == true)
-        <a download="${title}.csv" href="/queries/${query}?as=csv&from=0&size=10000$!{profileParam}" class="text-white pull-right btnDownloadCSV"><i class="fa fa-download"></i> <span class="trans-lookup" data-transcode="csv">CSV</span></a>
+        <a download="$newCsvFilename" href="/queries/${query}?as=csv&from=0&size=10000$!{profileParam}" class="text-white pull-right btnDownloadCSV"><i class="fa fa-download"></i> <span class="trans-lookup" data-transcode="csv">CSV</span></a>
         #elseif($queryType == 'query' && $exportToCsv == true)
-            <a download="${title}.csv" href="/queries/${query}?run&from=0&size=10000$!{profileParam}" class="text-white pull-right btnDownloadCSV"><i class="fa fa-download"></i> <span class="trans-lookup" data-transcode="csv">CSV</span></a>
+            <a download="$newCsvFilename" href="/queries/${query}?run&from=0&size=10000$!{profileParam}" class="text-white pull-right btnDownloadCSV"><i class="fa fa-download"></i> <span class="trans-lookup" data-transcode="csv">CSV</span></a>
         #end
     </div>
     <div class="panel-body">
