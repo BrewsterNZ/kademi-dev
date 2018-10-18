@@ -1,17 +1,10 @@
 $(function(){
-	resetCreateRedirect();
-    checkAllRedirects();
-	submitCreateRedirect();
-    submitDeleteRedirect();
+    initCheckAll();
+    initForm();
+    initDelete();
 });
 
-function resetCreateRedirect(){
-	$("#newRedirect").on("click", function(){
-		$("#form-create-redirect").find("input[type='text']").val("");
-	});
-}
-
-function checkAllRedirects(){
+function initCheckAll(){
     $('.check-all').change(function (e) {
         var checkedStatus = this.checked;
         $("#redirect-table-body input[data-redirect-id]").each(function(){
@@ -20,32 +13,17 @@ function checkAllRedirects(){
     });
 }
 
-function submitCreateRedirect(){
-	$('form#form-create-redirect').forms({
+function initForm(){
+	$('#redirect-form').forms({
 		onSuccess: function () {
-            $("#redirectTableBody").reloadFragment(); 
-            $.ajax({
-                type: 'GET',
-                url: window.location.href,
-                dataType: "html",
-                success: function (resp) {
-                    var page = $(resp);
-                    var table = page.find("#redirect-table-container table");
-                    $("#redirect-table-container").html(table);
-
-                },
-                error: function (resp) {
-                    log('There was a problem logging you out', resp);
-                },
-                complete: function (jqXHR, textStatus) {
-                    $("#addRedirectModal").modal('hide');
-                }
-            });
+		    Msg.success('Saved');
+            $("#redirectsTableBody").reloadFragment();
+            $('#redirect-form').trigger('reset');
         }
 	});
 }
 
-function submitDeleteRedirect(){
+function initDelete(){
     $('.btn-delete-redirects').click(function(e){
         e.preventDefault();
         var deleteRedirects = [];
