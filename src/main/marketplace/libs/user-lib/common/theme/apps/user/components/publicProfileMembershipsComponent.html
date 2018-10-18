@@ -1,12 +1,19 @@
 <div class="details">                        
-    <h4>${page.displayName}'s <span class="trans-lookup" data-transcode="memberships">memberships</span></h4>                                
-    <ul>
-        #if( $page.localMemberships.isEmpty() )
-        <li class="trans-lookup" data-transcode="public-profile-memberships-no-visible">No visible memberships</li>
+    <h4>
+        #if( $page.displayName )
+        ${page.displayName}'s  
         #else
+        Bob's
+        #end
+        <span class="trans-lookup" data-transcode="memberships">memberships</span>
+    </h4>
+    <ul>
+        #if( $page.localMemberships.size() > 0 )
         #foreach($m in $page.localMemberships)
         <li>$m.groupEntity.name in $m.withinOrg.title</li>
         #end
+        #else
+        <li class="trans-lookup" data-transcode="public-profile-memberships-no-visible">No visible memberships</li>        
         #end
     </ul>
 </div>

@@ -53,7 +53,7 @@
         });
     }
     
-    var searchResults = applications.search.searchManager.search(JSON.stringify(queryJson), "profile");
+    var searchResults = services.searchManager.search(JSON.stringify(queryJson), "profile");
     templatingContext.searchResults = searchResults;
 </script>
 #end
@@ -67,10 +67,10 @@
                 </div>
                 <div class="col-xs-9 text-right">
                     <h2>
-                        #if( $searchResults.hits.totalHits == 0 )
-                          <span class="trans-lookup" data-transcode="no-current-results">No current results</span>
+                        #if( $searchResults.hits.totalHits > 0 )
+                        $searchResults.hits.totalHits                          
                         #else
-                        $searchResults.hits.totalHits
+                        <span class="trans-lookup" data-transcode="no-current-results">No current results</span>
                         #end
                     </h2>
                 </div>

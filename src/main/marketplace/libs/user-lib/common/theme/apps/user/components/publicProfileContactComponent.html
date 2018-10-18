@@ -2,7 +2,16 @@
     <form action="$page.name" method="POST" class="sendMessage">
         <h4 class="trans-lookup" data-transcode="contact">Contact</h4>
         <div class="form-group">
-            <label for="message"><span class="trans-lookup" data-transcode="send">Send</span> $page.displayName <span class="trans-lookup" data-transcode="send-a-message">a message</span></label>
+            <label for="message">
+                <span class="trans-lookup" data-transcode="send">Send</span> 
+                #if( $page.displayName )
+                ${page.displayName}
+                #else
+                them
+                #end                
+
+                <span class="trans-lookup" data-transcode="send-a-message">a message</span>
+            </label>
             <textarea name="message" class="form-control trans-lookup" id="message" placeholder="message"></textarea>
         </div>
         <button type="submit" class="btn btn-primary trans-lookup" data-transcode="send">Send</button>
