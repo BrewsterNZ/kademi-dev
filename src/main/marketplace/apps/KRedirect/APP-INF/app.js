@@ -1,8 +1,8 @@
 controllerMappings
 	.adminController()
-	.path("/kredirects/")
+	.path("/kredirect/")
 	.enabled(true)
-	.defaultView(views.templateView("/theme/apps/redirects-app/redirects.html"))
+	.defaultView(views.templateView("/theme/apps/KRedirectApp/redirects.html"))
 	.addMethod("GET", "getAllRedirects")
 	.addMethod("POST", "saveRecord", "sourceUrl")
 	.addMethod("POST", "deleteRecord", "deleteRecord")
