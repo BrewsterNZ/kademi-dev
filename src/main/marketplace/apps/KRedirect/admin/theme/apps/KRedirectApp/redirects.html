@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>KRedirects</title>
+    <title>KRedirect</title>
     <script type="text/javascript" src="redirects.js">//</script>
 </head>
 </head>
@@ -8,7 +8,7 @@
 <div class="text-right">
     <div class="btn-group" role="group">
         <button id="newRedirect" type="button" class="btn btn-sm btn-success newRedirect" data-toggle="modal"
-                data-target="#addRedirectModal"><i class="fa fa-plus"></i> Add New Redirect
+                data-target="#addRedirectModal"><i class="fa fa-plus"></i> New
         </button>
     </div>
     <div class="btn-group" role="group">
@@ -68,7 +68,12 @@
         </div>
     </div>
 </div>
-
+#set ($jsondb = $page.find('/jsondb/kredirectDb'))
+$jsondb
+#if ($formatter.isNull($params.kredirectSourceUrl))
+#set ($r = $jsondb.child($params.kredirectSourceUrl))
+$r
+#end
 <div id="addRedirectModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -77,9 +82,6 @@
                 <h4 class="modal-title">Add a new redirect</h4>
             </div>
             <form action="." method="POST" class="form-horizontal" id="redirect-form">
-                #if ($formatter.isNull($params.kredirectSourceUrl))
-                    #set ($
-                #end
                 <div class="modal-body">
                     <div class="form-message alert alert-danger" style="display: none;"></div>
                     <input type="hidden" name="newRedirect" value="newRedirect"/>

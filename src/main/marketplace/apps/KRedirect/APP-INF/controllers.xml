@@ -4,6 +4,6 @@
     <source>/APP-INF/dbUtils.js</source>
     <source>/APP-INF/admin.js</source>
     <source>/APP-INF/website.js</source>
-    <menu parentId="menuRoot" css="fa fa-retweet" id="itemKRedirects" text="KRedirects"  path="/kredirects/" ordering="101"/>
+    <menu parentId="menuRoot" css="fa fa-retweet" id="itemKRedirects" text="KRedirect"  path="/kredirect/" ordering="101"/>
 </controllers>
              
