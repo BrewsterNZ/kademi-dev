@@ -15,7 +15,8 @@ function saveRecord(page, params) {
     var result;
     if (sourceUrl && targetUrl && website){
         // Find existing source
-        var recordId = [website, sourceUrl].join('-');
+        var recordId = [website, sourceUrl].join('@');
+        recordId = encodeURIComponent(recordId);
         var existing = db.child(recordId);
         if (existing){
             // found, so just update record
@@ -45,6 +46,21 @@ function saveRecord(page, params) {
     }
 
     return result;
+}
+
+
+function deleteRecord(page, params) {
+    log.info('deleteRecord {}', params.deleteRecord);
+    var arr = params.deleteRecord.split(',');
+    var db = getDB(page);
+    for (var i in arr){
+        var id = arr[i];
+        var res = db.child(id);
+        if (res){
+            res.delete();
+        }
+    }
+    return views.jsonResult(true);
 }
 
 

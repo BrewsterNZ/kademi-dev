@@ -8,6 +8,14 @@ controllerMappings
 	.addMethod("POST", "deleteRecord", "deleteRecord")
 	.build();
 
+controllerMappings
+    .websiteController()
+    .path("/kredirects/")
+    .enabled(true)
+	.isPublic(true)
+    .addMethod("GET", "redirectUrl")
+    .build();
+
 function initKRedirectsApp(orgRoot, webRoot, enabled){
 	log.info("initRedirectsApp: orgRoot={}", orgRoot);
     var dbs = orgRoot.find('jsondb');

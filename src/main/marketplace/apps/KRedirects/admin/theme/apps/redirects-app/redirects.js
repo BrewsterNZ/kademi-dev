@@ -1,58 +1,55 @@
-$(function(){
+$(function () {
     initCheckAll();
     initForm();
     initDelete();
 });
 
-function initCheckAll(){
+function initCheckAll() {
     $('.check-all').change(function (e) {
         var checkedStatus = this.checked;
-        $("#redirect-table-body input[data-redirect-id]").each(function(){
-            $(this).prop('checked', checkedStatus);
+        $(".chk-record").each(function () {
+            this.checked = checkedStatus;
         });
     });
 }
 
-function initForm(){
-	$('#redirect-form').forms({
-		onSuccess: function () {
-		    Msg.success('Saved');
+function initForm() {
+    $('#redirect-form').forms({
+        onSuccess: function () {
+            Msg.success('Saved');
             $("#redirectsTableBody").reloadFragment();
             $('#redirect-form').trigger('reset');
         }
-	});
+    });
 }
 
-function initDelete(){
-    $('.btn-delete-redirects').click(function(e){
+function initDelete() {
+    $('#btnDeleteR').click(function (e) {
         e.preventDefault();
-        var deleteRedirects = [];
-        $("#redirect-table-body input[data-redirect-id]:checked").each(function(){
-            deleteRedirects.push($(this).data('redirect-id'));
+        var arr = [];
+        $(".chk-record:checked").each(function () {
+            arr.push(this.value);
         });
-        flog('Delete products: ',deleteRedirects);
-        var deleteRedirectsCount = deleteRedirects.length;
-        if(deleteRedirectsCount > 0 && confirm("Are you sure you want to delete " + deleteRedirectsCount  + " redirects?")){
+        if (!arr.length) {
+            return Msg.warning('Please select a record to delete');
+        }
+        if (confirm("Are you sure you want to delete " + arr.length + " record(s)?")) {
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
-                url: window.location.href,
+                url: window.location.pathname,
                 data: {
-                    deleteRedirect: 'deleteRedirect',
-                    deleteList: deleteRedirects.join(','),
+                    deleteRecord: arr.join(','),
                 },
-                success: function (data) {
-                    if (data.status) {
-                        Msg.info(deleteRedirects.length + " redirect(s) have been deleted");
-                        $("#redirect-table-body").reloadFragment();
+                success: function (resp) {
+                    if (resp && resp.status) {
+                        $("#redirectsTableBody").reloadFragment();
                     } else {
-                         
-                        Msg.error("An error occured deleting the redirects. Please check your internet connection");
+                        Msg.error("An error occurred. Please contact administrator for details");
                     }
                 },
                 error: function (resp) {
-                    
-                    Msg.error("An error occured deleting the redirects");
+                    Msg.error("An error occurred. Please contact administrator for details");
                 }
             });
         }

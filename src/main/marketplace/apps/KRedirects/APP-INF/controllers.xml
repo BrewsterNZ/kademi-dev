@@ -1,7 +1,7 @@
 <controllers onAppEnabled="initKRedirectsApp" >
     <source>/APP-INF/app.js</source>
-    <source>/APP-INF/dbUtils.js</source>
     <source>/APP-INF/dbMapping.js</source>
+    <source>/APP-INF/dbUtils.js</source>
     <source>/APP-INF/admin.js</source>
     <menu parentId="menuRoot" css="fa fa-retweet" id="itemKRedirects" text="KRedirects"  path="/kredirects/" ordering="101"/>
 </controllers>
