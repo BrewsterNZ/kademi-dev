@@ -93,7 +93,7 @@ function findAttributesQuery(store, category, query, minPrice, maxPrice, numBuck
     var width = ((maxPrice + 10) - minPrice) / numBuckets;
 
     var ranges = [];
-    for (var i = 1; i <= numBuckets; i++) {
+    for (var i = 0; i <= numBuckets; i++) {
         var from = roundDownToNearestTen((width * i));
         var to = roundDownToNearestTen(width * (i + 1));
         ranges.push({
