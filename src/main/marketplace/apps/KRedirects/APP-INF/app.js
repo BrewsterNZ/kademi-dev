@@ -10,7 +10,8 @@ controllerMappings
 
 controllerMappings
     .websiteController()
-    .path("/kredirects/")
+    .path('/(?<kredirect>[^/]*)')
+    .addPathResolver('kredirect', 'kredirectResolver')
     .enabled(true)
 	.isPublic(true)
     .addMethod("GET", "redirectUrl")
