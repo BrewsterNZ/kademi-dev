@@ -30,7 +30,7 @@ function generateShoppingCartReport(page, params, req, resp) {
 function getShoppingCartCSVHeaders() {
     var headers = formatter.newArrayList();
 
-    headers.addAll(["Product SKU", "Date", "First Name", "Last Name", "Redemption Product Name", "Redemption Product Quantity", "Shipping Address", "City", "State", "Post Code", "Phone Number"]);
+    headers.addAll(["Product SKU", "Date", "First Name", "Last Name", "Redemption Product Name", "Redemption Product Quantity", "Shipping Address", "City", "State", "Post Code", "Phone Number", "CartID", "Internal ID"]);
 
     return headers;
 }
@@ -84,7 +84,7 @@ function generateProductOrderRow(c, po) {
     }
 
     row.add(formatter.cleanString(sku));
-    row.add(formatter.formatDateTime(c.getOrderedDate()));
+    row.add(formatter.formatDateTime(c.orderedDate));
     row.add(formatter.cleanString(firstName));
     row.add(formatter.cleanString(surName));
     row.add(formatter.cleanString(productTitle));
@@ -94,6 +94,9 @@ function generateProductOrderRow(c, po) {
     row.add(formatter.cleanString(c.getAddressState()));
     row.add(formatter.cleanString(c.getPostcode()));
     row.add(formatter.cleanString(phone));
+    row.add(formatter.cleanString(c.cartId));
+    row.add(formatter.cleanString(c.id));
+
 
     return row;
 }
