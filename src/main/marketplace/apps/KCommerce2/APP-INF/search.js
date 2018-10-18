@@ -46,7 +46,7 @@ function productSearchAggs(page, store, category, query) {
  * @param {type} query
  * @returns {unresolved}
  */
-function productSearch(page, store, category, query, attributePairs, otherCats, brands, priceRanges, pageFrom, pageSize) {
+function productSearch(page, store, category, query, attributePairs, otherCats, brands, priceRanges, pageFrom, pageSize, sortBy, sortDirection) {
     // Do product search with pagination
     if (!pageFrom || isNaN(pageFrom)) {
         pageFrom = 0;
@@ -82,7 +82,13 @@ function productSearch(page, store, category, query, attributePairs, otherCats, 
 
     appendCriteria(queryJson, store, category, query, attributePairs, otherCats, brands, priceRanges);
 
+    if (!formatter.isNull(sortBy)){
+        var sort = {};
+        sort[sortBy] = {"order" : sortDirection};
+        queryJson.sort = sort;
+    }
     var queryText = JSON.stringify(queryJson);
+    log.info('query text {}', queryText);
     var results = services.searchManager.search(queryText, 'ecommercestore');
 
     return results;

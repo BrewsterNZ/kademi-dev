@@ -19,9 +19,33 @@
         #set ($pageSize = $formatter.toInteger($params.pageSize))
     #end
 
-    #set ($searchResults = $app.call("productSearch", $page, $storeOb, $catOb, $params.q, $attributePairs, $otherCats, $brands, $priceRanges, $pageFrom, $pageSize))
+    #if ($formatter.isNull($sortDirection))
+        #set ($sortDirection = 'asc')
+    #end
+
+    #if (!$formatter.isNull($params.sortDirection))
+        #set ($sortDirection = $params.sortDirection)
+    #end
+
+    #if (!$formatter.isNull($params.sortBy))
+        #set ($sortBy = $params.sortBy)
+    #end
+
+    #set ($sortByFields = ["position", "finalCost", "sortableTitle"])
+    #set ($sortDirectionArr = ["asc", "desc"])
+
+    #if (!$formatter.isNull($sortBy) && !$sortByFields.contains($sortBy))
+        #set ($sortBy = "")
+    #end
+
+    #if (!$formatter.isNull($sortDirection) && !$sortDirectionArr.contains($sortDirection))
+        #set ($sortDirection = "asc")
+    #end
+
+    #set ($searchResults = $app.call("productSearch", $page, $storeOb, $catOb, $params.q, $attributePairs, $otherCats, $brands, $priceRanges, $pageFrom, $pageSize, $sortBy, $sortDirection))
 
     #set ($prodsListId = $formatter.randomGuid)
+
 
     #if( $searchResults.hits.hits.size() > 0 )
     <div class="kcom2ProductListHolder" data-page-size="$!pageSize">

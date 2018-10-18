@@ -44,6 +44,7 @@ var cartMapping = controllerMappings
         .addMethod('POST', 'applyPromoCodes', 'promoCodes')
         .addMethod('POST', 'createAccount', 'kcom2Firstname')
         .addMethod('POST', 'findProfile', 'findProfileEmail')
+        .addMethod('POST', 'getAddresses', 'getAddresses')
         .addMethod('POST', 'saveAddress', 'addressLine1')
         .addMethod('POST', 'saveShippingProfider', 'shippingProviderId');
 
@@ -436,4 +437,33 @@ function createAccount(page, params) {
     } else {
         return views.jsonView(false, "Fields are missing");
     }
+}
+
+function getAddresses(page, params) {
+    log.info('getAddresses {} {}', page, params);
+    var user = securityManager.currentUser;
+    if (user) {
+        var addrs = services.userManager.findAddresses(user.thisProfile);
+        var profileAddrs = {};
+        for (var i in addrs){
+            var item = addrs[i];
+            var addr = {
+                addressLine1: item.address.addressLine1,
+                addressLine2: item.address.addressLine2,
+                addressState: item.address.addressState,
+                city: item.address.city,
+                postcode: item.address.postcode,
+                country: item.address.country,
+            };
+            var addressType = item.addressType;
+            if (addressType) {
+                profileAddrs[addressType] = addr;
+            }
+        }
+
+        return views.jsonObjectView(JSON.stringify({status: true, data: profileAddrs}))
+    } else {
+        return views.jsonView(false, "Not logged in");
+    }
+
 }
