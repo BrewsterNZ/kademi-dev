@@ -83,7 +83,6 @@ function productSearch(page, store, category, query, attributePairs, otherCats, 
     appendCriteria(queryJson, store, category, query, attributePairs, otherCats, brands, priceRanges);
 
     var queryText = JSON.stringify(queryJson);
-    log.info('Final query {}', queryText);
     var results = services.searchManager.search(queryText, 'ecommercestore');
 
     return results;
@@ -130,7 +129,7 @@ function findAttributesQuery(store, category, query, minPrice, maxPrice, numBuck
     var aggs = queryJson.aggs;
     for (var i = 0; i < attNameBuckets.length; i++) {
         var att = attNameBuckets[i].key;
-        log.info("Add att {}", att);
+//        log.info("Add att {}", att);
         aggs[att + "Att"] = {
             "terms": {
                 "field": att
@@ -143,7 +142,7 @@ function findAttributesQuery(store, category, query, minPrice, maxPrice, numBuck
     appendCriteria(queryJson, store, category, query);
 
     var s = JSON.stringify(queryJson);
-    log.info("price range query {}", s);
+    //log.info("price range query {}", s);
     var results = services.searchManager.search(s, 'ecommercestore');
     return results;
 }
@@ -176,7 +175,7 @@ function listCategories(store, parentCategory) {
     }
     crit.sortAsc("title");
     var list = crit.execute(100);
-    log.info("listCategories list={}", list);
+    //log.info("listCategories list={}", list);
     return list;
 }
 
@@ -210,7 +209,7 @@ function productInCategorySearch(store, category, query) {
     appendCriteria(queryJson, store, category, query);
 
     var queryText = JSON.stringify(queryJson);
-    log.info("query: {}", queryText);
+    //log.info("query: {}", queryText);
     var results = services.searchManager.search(queryText, 'ecommercestore');
 
     //log.info("cat results {} - {}", results, results.class);
@@ -228,10 +227,10 @@ function productInCategorySearch(store, category, query) {
         var prod = prodBuilder.get(id);
         if (prod != null) {
             var catsAgg = bucket.aggregations.asMap.cats;
-            log.info(" - catsAgg {} {}", catsAgg, catsAgg.buckets.size());
+            // log.info(" - catsAgg {} {}", catsAgg, catsAgg.buckets.size());
             if (catsAgg.buckets.size() > 0) {
                 for (var c = 0; c < catsAgg.buckets.size(); c++) {
-                    log.info("  -- cat bucket {}", catsAgg.buckets[c]);
+                    // log.info("  -- cat bucket {}", catsAgg.buckets[c]);
                     var catBucket = catsAgg.buckets[c];
                     var catId = formatter.toLong(catBucket.keyAsNumber);
                     var category = catBuilder.get(catId);

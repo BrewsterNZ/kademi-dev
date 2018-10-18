@@ -102,16 +102,16 @@ function initKCommerce2App(orgRoot, webRoot, enabled) {
 }
 
 function browseResources(websiteRoot, path, list) {
-    log.info("browseResources path={} list={}", path, list);
+    //log.info("browseResources path={} list={}", path, list);
     if (path.root) {
-        log.info("browseResources: is root, list stores");
+        //log.info("browseResources: is root, list stores");
         var stores = services.criteriaBuilders.get("ecommerceStore")
                 .eq("website", websiteRoot.website)
                 .execute(100);
         formatter.foreach(stores, function(store){
             list.addFolder(store.name, store.title, "/" + store.name + "/");
         });
-        
+
     } else {
         var possibleStoreName = path.first;
         var store = services.criteriaBuilders.get("ecommerceStore")
@@ -120,7 +120,7 @@ function browseResources(websiteRoot, path, list) {
                 .executeSingle();
         if (store != null) {
             // add root categories for the store
-            log.info("browseResources: found store {}", store.name);
+            //log.info("browseResources: found store {}", store.name);
         }
     }
 }

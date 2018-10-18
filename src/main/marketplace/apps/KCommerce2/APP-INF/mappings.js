@@ -69,7 +69,7 @@ controllerMappings
 
 function doSuggestionList(page, params) {
     var query = params.suggestions;
-    log.info("doSuggestionList: {}", query);
+    //log.info("doSuggestionList: {}", query);
     var store = page.attributes.store;
     var searchResults = productInCategorySearch(store, page.attributes.category, query); // aggregation to find top cats with matching products
     page.attributes.suggestionList = searchResults; // make available to templates
@@ -108,12 +108,12 @@ function doEcomList(page, params) {
 function listBrands(store, searchResults) {
     var brandBuckets = searchResults.aggregations.asMap.brands.buckets;
     var brandsList = formatter.newArrayList();
-    log.info("listBrands: brandBuckets={}", brandBuckets);
+    //log.info("listBrands: brandBuckets={}", brandBuckets);
     formatter.foreach(brandBuckets, function(brandBucket){
         var brandId = brandBucket.key;
-        log.info("listBrands: brandId={}", brandId);
+        //log.info("listBrands: brandId={}", brandId);
         var brandCat = services.criteriaBuilders.getBuilder("category").get(brandId);
-        log.info("listBrands: brand={}", brandCat);
+        //log.info("listBrands: brand={}", brandCat);
         if( brandCat != null ) {
             brandsList.add(brandCat);
         }
@@ -135,7 +135,7 @@ function findAttsInParams(params) {
     for( var i=0; i<allAttNames.length; i++) {
         var attName = allAttNames[i].object1;
         var attValue = params.get(attName);
-        log.info("findAttsInParams: {} {}", attName, attValue);
+        //log.info("findAttsInParams: {} {}", attName, attValue);
         if( !formatter.isEmpty(attValue) ) {
             atts.push({
                 "name" : attName,
@@ -150,7 +150,7 @@ function findBrandsInParams(params) {
     var brands = formatter.newArrayList();
     var idsList = formatter.toList(formatter.split(params.brandId));
     formatter.foreach(idsList, function(sId) {
-        log.info("findBrandsInParams: id={}", sId);
+        // log.info("findBrandsInParams: id={}", sId);
         var id = formatter.toLong(sId);
         if( id != null ) {
             var cat = services.criteriaBuilders.get("category").eq("id", id).executeSingle();
@@ -168,7 +168,7 @@ function findPriceRanges(params) {
     var endPriceList = formatter.toList(formatter.split(params.endPrice));
     var currIdx = -1;
     formatter.foreach(startPriceList, function(sStartPrice) {
-        log.info("findPriceRanges: startPrice={}", sStartPrice);
+        // log.info("findPriceRanges: startPrice={}", sStartPrice);
         currIdx ++;
         var startPrice = formatter.toLong(sStartPrice);
         if (endPriceList[currIdx] && !isNaN(endPriceList[currIdx])){
