@@ -6,6 +6,7 @@ controllerMappings
 	.addMethod("GET", "getAllRedirects")
 	.addMethod("POST", "saveRecord", "sourceUrl")
 	.addMethod("POST", "deleteRecord", "deleteRecord")
+	.addMethod("POST", "changeStatus", "changeStatus")
 	.build();
 
 controllerMappings

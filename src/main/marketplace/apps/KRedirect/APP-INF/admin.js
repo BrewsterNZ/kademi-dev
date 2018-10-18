@@ -64,3 +64,15 @@ function deleteRecord(page, params) {
 }
 
 
+function changeStatus(page, params) {
+    log.info('changeStatus {}', params.changeStatus);
+    var db = getDB(page);
+    var res = db.child(params.changeStatus);
+    if (res){
+        res.status = !res.status;
+        res.save();
+    }
+
+    return views.jsonResult(true);
+}
+

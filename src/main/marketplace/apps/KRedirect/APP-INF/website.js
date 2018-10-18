@@ -11,8 +11,15 @@ function kredirectResolver(rf, groupName, groupVal, mapOfGroups) {
 }
 
 function redirectUrl(page, params) {
-    if (page.attributes.kredirect){
+    if (page.attributes.kredirect && page.attributes.kredirect.status && page.attributes.kredirect.targetUrl){
         // 301 Moved Permanently
         return views.redirectView(page.attributes.kredirect.targetUrl, true);
     }
+}
+
+function findRecord(page, id) {
+    var recordId = encodeURIComponent(id);
+    var db = getDB(page);
+    var record = db.child(recordId);
+    return record;
 }

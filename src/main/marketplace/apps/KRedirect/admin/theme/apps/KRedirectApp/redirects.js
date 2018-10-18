@@ -2,6 +2,8 @@ $(function () {
     initCheckAll();
     initForm();
     initDelete();
+    initEdit();
+    initNewForm();
 });
 
 function initCheckAll() {
@@ -13,12 +15,25 @@ function initCheckAll() {
     });
 }
 
+function initNewForm() {
+    $('#newRedirect').click(function (e) {
+        e.preventDefault();
+
+        $('#redirect-form').reloadFragment({
+            url: window.location.href,
+            whenComplete: function () {
+                $('#addRedirectModal').modal('show');
+            }
+        });
+    });
+}
+
 function initForm() {
     $('#redirect-form').forms({
         onSuccess: function () {
             Msg.success('Saved');
             $("#redirectsTableBody").reloadFragment();
-            $('#redirect-form').trigger('reset');
+            $('#addRedirectModal').modal('hide');
         }
     });
 }
@@ -56,3 +71,38 @@ function initDelete() {
     })
 }
 
+function initEdit() {
+    $(document).on('click', '.btnEditR', function (e) {
+        e.preventDefault();
+
+        $('#redirect-form').reloadFragment({
+            url: $(this).attr('href'),
+            whenComplete: function () {
+                $('#addRedirectModal').modal('show');
+            }
+        })
+    })
+
+    $(document).on('click', '.btnChangeStatus', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: window.location.pathname,
+            data: {
+                changeStatus: $(this).attr('data-id')
+            },
+            dataType: 'json',
+            type: 'post',
+            success: function (resp) {
+                if (resp && resp.status){
+                    $("#redirectsTableBody").reloadFragment();
+                } else {
+                    Msg.error("An error occurred. Please contact administrator for details");
+                }
+            },
+            error: function (resp) {
+                Msg.error("An error occurred. Please contact administrator for details");
+            }
+        })
+    })
+}
