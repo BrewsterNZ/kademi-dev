@@ -107,6 +107,9 @@ function doEcomList(page, params) {
  * @returns {undefined}
  */
 function listBrands(store, searchResults) {
+    if( store == null || searchResults == null ) {
+        return null;
+    }
     var brandBuckets = searchResults.aggregations.asMap.brands.buckets;
     var brandsList = formatter.newArrayList();
     //log.info("listBrands: brandBuckets={}", brandBuckets);

@@ -382,7 +382,7 @@ function getClaimSalesById(salesDataId) {
         "size": 1
     };
 
-    var sm = applications.search.searchManager;
+    var sm = services.searchManager;
     var salesDataResp = sm.search(JSON.stringify(salesQuery), 'dataseries');
 
     var record = {};
@@ -504,7 +504,7 @@ function getClaimGroupContactRequest(rf, claimGroupId) {
         }
     };
 
-    var queryRes = applications.search.searchManager.search(JSON.stringify(query), 10000, 'profile');
+    var queryRes = services.searchManager.search(JSON.stringify(query), 10000, 'profile');
 
     return queryRes;
 }
@@ -612,7 +612,7 @@ function getUnclaimedSales(rf, dataSeriesName, extraFields, filteringParams, all
         }
     }
 
-    var sm = applications.search.searchManager;
+    var sm = services.searchManager;
     var salesDataResp = sm.search(JSON.stringify(salesQuery), 'dataseries');
 
     var data = [];
@@ -683,7 +683,7 @@ function getclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
         }
     }
 
-    var sm = applications.search.searchManager;
+    var sm = services.searchManager;
     var salesDataResp = sm.search(JSON.stringify(salesQuery), 'dataseries');
 
     var data = [];

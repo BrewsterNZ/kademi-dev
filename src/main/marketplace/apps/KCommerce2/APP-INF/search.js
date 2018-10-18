@@ -1,4 +1,7 @@
 function productSearchAggs(page, store, category, query) {
+    if( store == null ) {
+        return null;
+    }
     // Do aggregation search
     var aggsQuery = {
         "size": 0,
@@ -47,6 +50,10 @@ function productSearchAggs(page, store, category, query) {
  * @returns {unresolved}
  */
 function productSearch(page, store, category, query, attributePairs, otherCats, brands, priceRanges, pageFrom, pageSize, sortBy, sortDirection) {
+    if( store == null ) {
+        return null;
+    }
+    
     // Do product search with pagination
     if (!pageFrom || isNaN(pageFrom)) {
         pageFrom = 0;
@@ -95,6 +102,10 @@ function productSearch(page, store, category, query, attributePairs, otherCats, 
 }
 
 function findAttributesQuery(store, category, query, minPrice, maxPrice, numBuckets, attNameBuckets) {
+    if( store == null ) {
+        return null;
+    }
+    
     var width = ((maxPrice + 10) - minPrice) / numBuckets;
 
     var ranges = [];
@@ -194,6 +205,10 @@ function listCategories(store, parentCategory) {
  * @returns {Array|productInCategorySearch.list}
  */
 function productInCategorySearch(store, category, query) {
+    if( store == null ) {
+        return null;
+    }
+    
     var queryJson = {
         "size": 0,
         "aggregations": {
@@ -262,7 +277,7 @@ function productInCategorySearch(store, category, query) {
 }
 
 
-function appendCriteria(queryJson, store, category, query, attributePairs, otherCategorys, brands, priceRanges) {
+function appendCriteria(queryJson, store, category, query, attributePairs, otherCategorys, brands, priceRanges) {    
     // todo filter by store and category
     var must = [
         {"term": {"storeId": store.id}}
