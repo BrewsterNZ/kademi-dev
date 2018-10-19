@@ -31,7 +31,7 @@
         #set ($sortBy = $params.sortBy)
     #end
 
-    #set ($sortByFields = ["position", "finalCost", "sortableTitle"])
+    #set ($sortByFields = ["position", "finalCost", "sortableTitle.keyword"])
     #set ($sortDirectionArr = ["asc", "desc"])
 
     #if (!$formatter.isNull($sortBy) && !$sortByFields.contains($sortBy))
