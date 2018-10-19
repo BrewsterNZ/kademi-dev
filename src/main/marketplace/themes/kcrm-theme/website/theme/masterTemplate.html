@@ -32,29 +32,12 @@
         #end
         <!-- End injected CSS sources -->
 
-        <!-- Injected JS sources - grouped -->
-        #foreach($groupEntry in $templater.jsSources.entrySet())
-            #if( $formatter.isNotEmpty($groupEntry.key) )
-            #foreach($path in $templater.getCombinedJsPaths($groupEntry.key))
-            <script src="$path" type="text/javascript">//</script>
-            #end
-            #end
-        #end
-
-        <!-- Injected JS sources - NOT grouped -->
-        #foreach($groupEntry in $templater.jsSources.entrySet())
-            #if( $formatter.isEmpty($groupEntry.key) )
-                #foreach($source in $groupEntry.value)
-                <script src="$source" type="text/javascript">//</script>
-                #end
-            #end
-        #end
-
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
         <script src="/js/html5shiv.js" type="text/javascript"></script>
         <script src="/static/js/respond.src.js" type="text/javascript">//</script>
         <![endif]-->
+        <script>var pageInitFunctions = [];</script>
 
         #portlets("header")
         
@@ -85,5 +68,23 @@
 
         #portlets("endOfPage")  <!-- hard coded into ContentApp at the moment, sorry :( -->
         #portlets("kchatPopup")
+
+        <!-- Injected JS sources - grouped -->
+        #foreach($groupEntry in $templater.jsSources.entrySet())
+            #if( $formatter.isNotEmpty($groupEntry.key) )
+            #foreach($path in $templater.getCombinedJsPaths($groupEntry.key))
+            <script src="$path" type="text/javascript">//</script>
+            #end
+            #end
+        #end
+
+        <!-- Injected JS sources - NOT grouped -->
+        #foreach($groupEntry in $templater.jsSources.entrySet())
+            #if( $formatter.isEmpty($groupEntry.key) )
+                #foreach($source in $groupEntry.value)
+                <script src="$source" type="text/javascript">//</script>
+                #end
+            #end
+        #end
     </body>
 </html>

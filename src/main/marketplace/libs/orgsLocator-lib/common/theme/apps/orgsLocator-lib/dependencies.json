@@ -2,7 +2,7 @@
     "appDependencies": [
         {
             "appId": "googlemap-lib",
-            "branch": "1.0.4"
+            "branch": "1.0.5"
         },
         {
             "appId": "jquery-orgFinder-lib",
