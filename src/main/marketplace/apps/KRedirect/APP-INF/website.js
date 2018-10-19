@@ -1,6 +1,6 @@
 function kredirectResolver(rf, groupName, groupVal, mapOfGroups) {
     log.info('kredirectResolver > {} {} {} {}', rf, groupName, groupVal, mapOfGroups);
-    var excludes = ['.css', '.js', '.png', '.jpg', '.ico', '.map', '.ttf', '.otf', '.woff2', '.woff', '.cur'];
+    var excludes = ['.css', '.js', '.png', '.jpg', '.ico', '.map', '.ttf', '.otf', '.woff2', '.woff', '.eot', '.svg', '.cur'];
     var shouldCheck = true;
     for (var i in excludes) {
         if (groupVal.indexOf(excludes[i]) != -1) {
