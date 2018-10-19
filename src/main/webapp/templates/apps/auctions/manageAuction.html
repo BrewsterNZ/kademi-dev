@@ -193,10 +193,12 @@
                                     <td>
                                         <div class="form-group">
                                             <div class="col-sm-5">
-                                                <div class="input-group">
-                                                    <input type="text" id="auctionStartDate" name="auctionStartDate" placeholder="Start date" value="$formatter.formatDateTime($page.auctionStartDate, $page.organisation.timezone)" class="form-control required" />
-                                                    <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
-                                                </div>
+                                               <div class='input-group'>
+                                                    <input type="text" name="auctionStartDate" data-format="$formatter.dateTimePattern('js')"  placeholder="Auction start date/time" value="$formatter.formatDateTime($page.auctionStartDate)" class="form-control DateTime required" />
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                </div>                                                  
                                             </div>
                                         </div>
                                     </td>
@@ -206,10 +208,15 @@
                                     <td>
                                         <div class="form-group">
                                             <div class="col-sm-5">
-                                                    <div class="input-group">
-                                                        <input type="text" id="auctionEndDate" name="auctionEndDate" placeholder="End date" value="$formatter.formatDateTime($page.auctionEndDate, $page.organisation.timezone)" class="form-control required" />
-                                                    <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
-                                                </div>
+                                                <div class='input-group'>
+                                                    <input type="text" name="auctionEndDate" data-format="$formatter.dateTimePattern('js')"  placeholder="Auction end date/time" value="$formatter.formatDateTime($page.auctionEndDate)" class="form-control DateTime required" />
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                </div>   
+                                                
+                                                <br/>
+                                                <i>Current date/time: $formatter.formatDateTime($formatter.now)</i>
                                             </div>
                                         </div>
                                     </td>
