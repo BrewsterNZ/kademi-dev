@@ -427,19 +427,46 @@ function createAccount(page, params) {
     log.info('findProfile {} {}', page, params);
     var rootOrg = page.find('/').organisation;
     var orgData = page.find('/').orgData;
+    var jsonResult;
     if (params.kcom2Firstname && params.kcom2Email && params.kcom2Password){
         transactionManager.runInTransaction(function () {
-            var p = securityManager.createProfile(rootOrg, params.kcom2Email, params.kcom2Firstname, params.kcom2Password);
-            p.firstName = params.kcom2Firstname;
-            p.surName = params.kcom2Surname;
-            services.userManager.updateUser(p);
+            var ur = applications.userApp.findUserResource(params.kcom2Email);
+            if (!ur){
+                log.info('kcom2 createAccount user not found {}', ur);
+                var p = securityManager.createProfile(rootOrg, params.kcom2Email, params.kcom2Firstname, params.kcom2Password);
+                p.firstName = params.kcom2Firstname;
+                p.surName = params.kcom2Surname;
+                services.userManager.updateUser(p);
+                orgData.createMembership(p.name, p.email, orgData, "ecommerce-users");
+                jsonResult = views.jsonView(true, "Profile created");
+            } else {
+                if (!ur.hasPassword){
+                    log.info('kcom2 createAccount user found and has no password {}', ur);
+                    var p = ur.thisProfile;
+                    p.firstName = params.kcom2Firstname;
+                    p.surName = params.kcom2Surname;
 
-            orgData.createMembership(p.name, p.email, orgData, "ecommerce-users");
+                    log.info('kcom2 passwordManager {}', securityManager.passwordManager);
+                    var org = services.userManager.toOrg(orgData);
+                    securityManager.passwordManager.setPassword(p, org, params.kcom2Password);
+
+                    services.userManager.updateUser(p);
+                    if (!ur.isInGroup("ecommerce-users")){
+                        orgData.createMembership(p.name, p.email, orgData, "ecommerce-users");
+                    }
+
+                    jsonResult = views.jsonView(true, "Profile updated with password");
+                } else {
+                    log.info('kcom2 createAccount user found and has password {}', ur);
+                    jsonResult = views.jsonView(false, "Profile with password existed. Please login");
+                }
+            }
         });
-        return views.jsonView(true, "Profile created");
     } else {
-        return views.jsonView(false, "Fields are missing");
+        jsonResult = views.jsonView(false, "Please enter required fields to continue");
     }
+
+    return jsonResult;
 }
 
 function getAddresses(page, params) {
