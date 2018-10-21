@@ -117,7 +117,7 @@
                             $('#cart-form').hide('fast');
                             $('#cart-items').hide('fast');
                             $('#modal-success-message').modal('show');
-                            $.cookie('ecommerceCartId', '');
+                            $.cookie('ecommerceCartId', null, { path: '/' });
                         }
                     });
                 } else {
