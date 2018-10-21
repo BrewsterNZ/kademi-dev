@@ -7,9 +7,12 @@ controllerMappings
         return "Team member: " + page.attributes.member.formattedName;
     })
     .defaultView(views.templateView('/theme/apps/team/viewMember.html'))
+    .postPriviledge("WRITE_ACL")
     .addMethod('GET', 'getTeamMember')
     .addMethod('POST', 'saveMember')
-    .addType("leadManResource") // this is so the SalesRole will apply
+    //.addType("leadManResource") // this is so the SalesRole will apply
+    .addType("userAdminResource") // this is so UserAdminRole and UserViewerRole will apply
+    .addType("userAdminLimitedView") // needed so we dont apply a check on the account org
     .build();
 
 controllerMappings
