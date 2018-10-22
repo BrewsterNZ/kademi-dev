@@ -49,12 +49,30 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
+                    form.find('.hide-amount').on('change', function () {
+                        var number = $(this).prop("checked");
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-hide-amount', number);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                     form.find('.hidden-text').on('change', function () {
                         var number = this.value;
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         component.attr('data-hidden-text', number);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find('.hidden-amount-text').on('change', function () {
+                        var number = this.value;
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-hidden-amount-text', number);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
@@ -134,7 +152,9 @@
 
             form.find('input.num-users').val(dataAttributes['data-num-users'] || 5);
             form.find('input.hide-names').prop("checked", dataAttributes['data-hide-names']  == 'true');
+            form.find('input.hide-amount').prop("checked", dataAttributes['data-hide-amount']  == 'true');
             form.find('input.hidden-text').val(dataAttributes['data-hidden-text']);
+            form.find('input.hidden-amount-text').val(dataAttributes['data-hidden-amount-text']);
             form.find('input.participants-text').val(dataAttributes['data-participants-text'] || 'Participants');
             form.find('input.amount-text').val(dataAttributes['data-amount-text'] || 'Amount');
             form.find('.sort-direction').val(dataAttributes['data-sort-direction'] || 'descending');

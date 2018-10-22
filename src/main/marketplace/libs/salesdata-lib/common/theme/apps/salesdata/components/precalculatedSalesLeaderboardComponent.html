@@ -128,7 +128,15 @@
         </td>
         #if ($showAmount == "true")
         <td>
-            $$!amount
+            #if( $highlightRow )
+            <b>$$!amount</b>
+            #else
+                #if( $formatter.toBool($hideAmount) )
+                    $hiddenAmountText
+                #else
+                    $$!amount
+                #end
+            #end
         </td>
         #end
         #if ($row && $seriesExtraFields)
