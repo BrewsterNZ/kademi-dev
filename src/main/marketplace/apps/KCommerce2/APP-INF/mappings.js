@@ -44,7 +44,7 @@ var cartMapping = controllerMappings
         .addMethod('POST', 'applyPromoCodes', 'promoCodes')
         .addMethod('POST', 'createAccount', 'kcom2Firstname')
         .addMethod('POST', 'findProfile', 'findProfileEmail')
-        .addMethod('POST', 'getAddresses', 'getAddresses')
+        .addMethod('GET', 'getAddresses', 'getAddresses')
         .addMethod('POST', 'saveAddress', 'addressLine1')
         .addMethod('POST', 'saveShippingProfider', 'shippingProviderId');
 

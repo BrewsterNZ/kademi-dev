@@ -170,6 +170,7 @@
             </div>
             <div class="panel-body">
                 <div class="form-horizontal">
+                    #if ($addrs && $addrs.size() > 0)
                     <div class="form-group">
                         <div class="col-md-12">
                             <div class="btn-group address-type-drop">
@@ -184,6 +185,7 @@
                             </div>
                         </div>
                     </div>
+                    #end
                     <div class="form-group">
                         <div class="col-md-12">
                             <input name="addressLine1" placeholder="Address line 1" type="text" class="form-control required" value="$!cart.addressLine1" />
