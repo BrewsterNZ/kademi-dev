@@ -1,21 +1,15 @@
 {
+    "appDependencies": [
+        {
+            "appId": "datetimepicker-lib",
+            "branch": "4.17.48"
+        }
+    ],
     "dependencies": [
         {
             "less": {
                 "lessMedia": "all",
                 "path": "/theme/apps/KConfirmDetails/kConfirmDetails.less"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.css"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/jquery.pageDatePicker/1.0.3/jquery.pageDatePicker-1.0.3.js"
             }
         },
         {

@@ -41,7 +41,7 @@
                 #if(!$preventClose)
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                 #end
-                <h4 class="modal-title">Confirm Details  $autoreload $preventClose </h4>
+                <h4 class="modal-title">Confirm Details</h4>
             </div>
             <form action="/profile/" method="POST" class="form-horizontal initProfileForm" charset="utf-8" role="form" id="confirmDetailsForm">
                 <div class="modal-body">
@@ -82,8 +82,8 @@
                     <div class="form-group">
                         <label for="birthDate" class="control-label col-md-3">Birth Date</label>
                         <div class="col-md-9">
-                            <div class="input-group">
-                                <input type="text" name="birthDate" id="birthDate" placeholder="Birth Date" data-format="DD/MM/YYYY" value="$!formatter.formatDate($currentUser.birthDate)" class="form-control pageDatePicker required" />
+                            <div class="input-group date">
+                                <input type="text" name="birthDate" id="birthDate" placeholder="Birth Date" value="$!formatter.formatDate($currentUser.birthDate)" class="form-control required" />
                                 <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                             </div>
                         </div>
