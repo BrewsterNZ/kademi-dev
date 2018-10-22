@@ -1,6 +1,6 @@
 (function ($) {
     $(function () {
-        var kpollComponents = $('[data-dynamic-href="_components/kpoll"]');
+        var kpollComponents = $('.kpoll-wrapper');
         if (kpollComponents.length > 0) {
             kpollComponents.each(function () {
                 var component = $(this);
