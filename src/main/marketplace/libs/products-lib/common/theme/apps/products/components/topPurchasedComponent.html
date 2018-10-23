@@ -22,7 +22,7 @@
     #end
 #end
 
-#set ($searchResults = findTopPurchased($displayedItems, $params.startDate, $param.endDate))
+#set ($searchResults = $applications.get("products-lib").call("findTopPurchased",$displayedItems, $params.startDate, $param.endDate))
 
 <div class="panel panel-default panel-top-purchased-table" id="${tableId}" #if ($height > 0) style="height: $!{height}px; min-height: 0; overflow: hidden" #end>
     <div class="panel-heading">
