@@ -457,6 +457,7 @@ function initKcom2CheckoutForm() {
 
                     var html = resp.find('#kcom2ShippingForm form').html();
                     kcom2ShippingForm.find('form').html(html);
+                    initCountryList();
                     allForms.addClass('hide');
                     kcom2ShippingForm.removeClass('hide');
                 }
