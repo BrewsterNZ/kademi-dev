@@ -334,14 +334,18 @@
                 </div>
                 #end
                 <div id="cart-checkout-data">
-                    <!-- TODO: Currency should be configurable -->
-                    <input type="hidden" name="currencyCode" value="AUD" />
+                    #set( $rules = $services.pricingRulesService.rules )
+                    #if( $formatter.isNotEmpty($rules.currencyCode) )
+                    <input type="hidden" name="currencyCode" value="$rules.currencyCode" />
                     <input type="hidden" name="processCartId" value="$checkoutItems.cartId" />
                     <!-- This is to validate the re-calculated total server side -->
                     <input type="hidden" name="cartTotal" value="$checkoutItems.totalCost" />
                     <input type="hidden" name="paymentProvider" value="$firstApp.instanceId" />
                     <input type="hidden" name="paymentOption" value="$firstPo.id" />
                     <input type="hidden" name="processCart" value="processCart" />
+                    #else
+                    NO CURRENCY SELECTED
+                    #end
                 </div>
 
                 <!--
