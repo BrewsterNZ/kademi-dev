@@ -51,6 +51,23 @@ function getTeamMember(page, params) {
 
 function saveMember(page, params) {
     log.info('saveMember={}', page.attributes.member);
+
+    // check the user has useradmin role on any of the teams this user is in
+    var teamOrgType = services.organisationManager.getOrgType(applications.team.selectedOrgTypeName);
+    var teams = services.teamManager.teamsForUser(page.attributes.member.thisProfile, teamOrgType);
+    var roleFound = false;
+    var currentUser = securityManager.currentProfile;
+    formatter.foreach(teams, function(team) {
+        var currentUserRoles = securityManager.findApplicableRoles(team, currentUser);
+        if( securityManager.containsRole(currentUserRoles, "User Administrator") ) {
+            roleFound = true; 
+        }
+    });
+
+    if( !roleFound ) {
+        return views.jsonView(false, "Permission denied");
+    }
+
     transactionManager.runInTransaction(function () {
         var profile = page.attributes.member.thisProfile;
         log.info('saveMember profile={} params={}', profile, params);
