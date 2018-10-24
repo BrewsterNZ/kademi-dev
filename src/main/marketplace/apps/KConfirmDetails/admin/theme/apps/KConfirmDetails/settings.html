@@ -1,14 +1,29 @@
+<hr/>
+
 <div class="form-group">
     <label class="col-sm-4 control-label" for="groupName">Group Name</label>
     <div class="col-sm-7">
-        <input type="text" name="groupName" id="groupName" placeholder="" class="form-control" value="$!page.getAppSetting($app.instanceId, 'groupName')" />
+        #set( $curGroupName = $page.getAppSetting($app.instanceId, 'groupName') )
+        <select name="groupName" id="groupName" class="form-control">
+            <option value="">[None]</option>
+            #foreach( $group in $rootFolder.groups )
+            $formatter.option($group.name, $group.title, $curGroupName )
+            #end
+        </select>
+        <i>Normally you would choose a group like 'registered'. The form will display if the user is not in this group, and they will be added to it when they submit the form.
+            <a href='/groups/' target="_blank">Click here to add a group</a></i>
     </div>
 </div>
+
+<hr/>
+
+<h4>Terms and conditions</h4>
 
 <div class="form-group">
     <label class="col-sm-4 control-label" for="showTC">Show T&C</label>
     <div class="col-sm-7">
         $formatter.checkbox("showTC", "showTC", $!page.getAppSetting($app.instanceId, 'showTC'))
+        <i>If ticked, the user is required to accept terms and conditions to submit the form</i>
     </div>
 </div>
 
@@ -16,6 +31,7 @@
     <label class="col-sm-4 control-label" for="tcURL">T&C URL</label>
     <div class="col-sm-7">
         <input type="text" name="tcURL" id="tcURL" placeholder="" class="form-control" value="$!page.getAppSetting($app.instanceId, 'tcURL')" />
+        <i>This will provide a link to a page with the terms and conditions. You need to create this page.</i>
     </div>
 </div>
 
@@ -23,13 +39,17 @@
     <label class="col-sm-4 control-label" for="tcURL">T&C Text</label>
     <div class="col-sm-7">
         <input type="text" name="tcText" id="tcText" placeholder="" class="form-control" value="$!page.getAppSetting($app.instanceId, 'tcText')" />
+        <i>The text of the link to the terms and conditions, eg 'Click here to see competition terms'</i>
     </div>
 </div>
+
+<hr/>
 
 <div class="form-group">
     <label class="col-sm-4 control-label" for="showExtraFields">Show Extra Fields</label>
     <div class="col-sm-7">
         $formatter.checkbox("showExtraFields", "showExtraFields", $!page.getAppSetting($app.instanceId, 'showExtraFields'))
+        <i>If checked, custom fields from the user's group will be shown on the form</i>
     </div>
 </div>
 
@@ -37,6 +57,7 @@
     <label class="col-sm-4 control-label" for="autoreload">Auto-refresh page</label>
     <div class="col-sm-7">
         $formatter.checkbox("autoreload", "autoreload", $!page.getAppSetting($app.instanceId, 'autoreload'))
+        <i>If checked, the page will be reloaded after the user submits. Recommendation: ticked</i>
     </div>
 </div>
 
@@ -44,5 +65,6 @@
     <label class="col-sm-4 control-label" for="preventClose">Prevent user from closing modal</label>
     <div class="col-sm-7">
         $formatter.checkbox("preventClose", "preventClose", $!page.getAppSetting($app.instanceId, 'preventClose'))
+        <i>If checked, the user cant close the modal, so they must submit the form to use the site. Recommendation: ticked</i>
     </div>
 </div>
