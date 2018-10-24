@@ -322,7 +322,7 @@
                 #foreach($metaName in $file.metaNames)
                     metas.push({
                         'name': '$metaName',
-                        'content': '$formatter.htmlAttEncode($!file.getMeta($metaName))'
+                        'content': '$!formatter.htmlAttEncode($!file.getMeta($metaName))'
                     });
                 #end
 
