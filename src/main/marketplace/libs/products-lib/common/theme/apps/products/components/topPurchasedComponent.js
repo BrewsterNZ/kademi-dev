@@ -80,17 +80,9 @@
             form.find('.txt-displayed-items').val(dataAttributes['data-displayed-items']);
             form.find('.txt-height').val(dataAttributes['data-height']);
             form.find('.txt-title').val(dataAttributes['data-title']);
-            form.find('.show-headers').prop("checked", toBool(dataAttributes['data-show-headers']));
+            form.find('.show-headers').prop("checked", dataAttributes['data-show-headers'] == 'true' );
             
         }
     };
-    
-    function toBool(v) {
-        if (v === true) {
-            return true;
-        }
-        var b = (v === 'true');
-        return b;
-    }
 
 })(jQuery);

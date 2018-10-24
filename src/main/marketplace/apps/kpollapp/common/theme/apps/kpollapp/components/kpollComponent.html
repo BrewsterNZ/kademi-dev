@@ -6,59 +6,59 @@
 #set ($answers = $applications.kpollapp.call('getAnswers', $rootFolder, $poll.name).answers)
 #end
 
+<div class="kpoll-wrapper">
+    #if ($page)
+        #if ($user && $poll)
+            #if (!$answer)
+                #renderPollForm($poll.jsonObject.question $poll.jsonObject.answers)
+            #end
 
-#if ($page)
-
-    #if ($user && $poll)
-        #if (!$answer)
-            #renderPollForm($poll.jsonObject.question $poll.jsonObject.answers)
-        #end
-
-        <div class="poll-result" #if (!$answer) style="display: none" #end>
-            <div class="kpoll">
-                #if ($answer)
-                    <p class="alert alert-info lead"><i class="glyphicon glyphicon-info-sign"></i> You already answered this poll!</p>
-                #end
-                <div class="kpoll-question clearfix">
-                    $poll.jsonObject.question
-                </div>
-                <hr />
-                <h3 class="kpoll-total-answer">Total answer: <span class="label label-success">$answers.total</span></h3>
-                <div class="kpoll-anwsers">
-                    #foreach($ans in $answers.list)
-                        <div class="answer">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    #if ($answer && $answer.source.answer == $ans.answer)
-                                        <strong>$ans.answer (<em class="small">your answer</em>)</strong>
-                                    #else
-                                        $ans.answer
-                                    #end
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" style="width: ${ans.percent}%"></div>
+            <div class="poll-result" #if (!$answer) style="display: none" #end>
+                <div class="kpoll">
+                    #if ($answer)
+                        <p class="alert alert-info lead"><i class="glyphicon glyphicon-info-sign"></i> You already answered this poll!</p>
+                    #end
+                    <div class="kpoll-question clearfix">
+                        $poll.jsonObject.question
+                    </div>
+                    <hr />
+                    <h3 class="kpoll-total-answer">Total answer: <span class="label label-success">$answers.total</span></h3>
+                    <div class="kpoll-anwsers">
+                        #foreach($ans in $answers.list)
+                            <div class="answer">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        #if ($answer && $answer.source.answer == $ans.answer)
+                                            <strong>$ans.answer (<em class="small">your answer</em>)</strong>
+                                        #else
+                                            $ans.answer
+                                        #end
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: ${ans.percent}%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        $ans.hit ($ans.percent%)
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
-                                    $ans.hit ($ans.percent%)
-                                </div>
                             </div>
-                        </div>
-                    #end
+                        #end
+                    </div>
                 </div>
             </div>
-        </div>
+        #else
+            #renderPollForm("<p>Please select a poll</p>" ["Sample answer 1", "Sample answer 2"])
+        #end
     #else
-        #renderPollForm("<p>Please select a poll</p>" ["Sample answer 1", "Sample answer 2"])
+        #if ($poll)
+            #renderPollForm($poll.jsonObject.question $poll.jsonObject.answers)
+        #else
+            #renderPollForm("<p>Please select a poll</p>" ["Sample answer 1", "Sample answer 2"])
+        #end
     #end
-#else
-    #if ($poll)
-    #renderPollForm($poll.jsonObject.question $poll.jsonObject.answers)
-    #else
-#renderPollForm("<p>Please select a poll</p>" ["Sample answer 1", "Sample answer 2"])
-    #end
-#end
+</div>
 
 #macro (renderPollItem $anwserId $ans)
 <div class="radio kpoll-anwser">

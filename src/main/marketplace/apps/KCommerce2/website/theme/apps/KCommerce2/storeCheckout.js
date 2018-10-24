@@ -117,7 +117,7 @@
                             $('#cart-form').hide('fast');
                             $('#cart-items').hide('fast');
                             $('#modal-success-message').modal('show');
-                            $.cookie('ecommerceCartId', '');
+                            $.cookie('ecommerceCartId', null, { path: '/' });
                         }
                     });
                 } else {
@@ -432,17 +432,32 @@ function initKcom2CheckoutForm() {
         });
     });
 
-
-
     kcom2PasswordForm.user({
         afterLoginUrl: 'none',
         userNameSelector: kcom2PasswordForm.find('[name=kcom2Email]'),
         passwordSelector: kcom2PasswordForm.find('[name=kcom2Password]'),
         onSuccess: function () {
+            $.ajax({
+                url: window.location.pathname,
+                data: {
+                    getAddresses: true
+                },
+                dataType: 'json',
+                success: function (resp) {
+                    if (resp && resp.status){
+                        window.profileAddrs = resp.data;
+                    }
+                }
+            });
+
             $('[data-type="component-menu"]').reloadFragment({
                 whenComplete: function (resp) {
                     var html = resp.find('[data-type="component-menu"]').html();
                     $('[data-type="component-menu"]').html(html);
+
+                    var html = resp.find('#kcom2ShippingForm form').html();
+                    kcom2ShippingForm.find('form').html(html);
+                    initCountryList();
                     allForms.addClass('hide');
                     kcom2ShippingForm.removeClass('hide');
                 }

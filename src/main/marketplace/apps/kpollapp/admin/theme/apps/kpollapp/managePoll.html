@@ -121,7 +121,7 @@
                         #set ($g = $groups.child($groupName))
                         <div class="alert alert-info">
                             <span class="fa fa-users"></span>
-                            <a href="/groups/$g.name/members">$g.name</a>
+                            <a href="/groups/$g.name/members">$formatter.ifNull($g.groupTitle, $g.group.name)</a>
                             #if( $g.groupType == "P" )
                                 - Primary group
                             #elseif( $g.groupType == "M" )
@@ -243,11 +243,11 @@
             <h4 class="modal-title">Choose groups</h4>
         </div>
         <div class="modal-body">
-            #foreach($g in $page.find('/groups').children)
+            #foreach($g in $rootFolder.allGroups)
                 <div class="checkbox">
                     <label>
                         #set ($isChecked = $poll.jsonObject.groups && $poll.jsonObject.groups.indexOf($g.name) != -1)
-                        $formatter.checkbox($g.name, $isChecked) $g.name
+                        $formatter.checkbox($g.name, $isChecked) $formatter.ifNull($g.title, $g.name)
                     </label>
                 </div>
             #end

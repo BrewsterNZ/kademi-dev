@@ -84,16 +84,17 @@
             }
         });
 
-        holder.typeahead('val', myVal);
-        flog("lookup asst name", myVal);
-        $.ajax({
-            url: "/assets/" + myVal + "?asJson",
-            type: 'get',
-            dataType: 'json',
-            success: function (resp) {
-                holder.typeahead('val', resp.name);
-            }
-        });
+        // debugger;
+        // holder.typeahead('val', myVal);
+        // flog("lookup asst name", myVal);
+        // $.ajax({
+        //     url: "/assets/" + myVal + "?asJson",
+        //     type: 'get',
+        //     dataType: 'json',
+        //     success: function (resp) {
+        //         holder.typeahead('val', resp.name);
+        //     }
+        // });
 
         holder.on('typeahead:selected', function (e, datum) {
             flog('Selected assets suggestion', datum);

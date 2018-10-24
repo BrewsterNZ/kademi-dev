@@ -18,6 +18,15 @@ controllerMappings
     .addMethod("GET", "redirectUrl")
     .build();
 
+controllerMappings
+    .websiteController()
+    .path('/(?<kredirect>[^/]*)/')
+    .addPathResolver('kredirect', 'kredirectResolver')
+    .enabled(true)
+    .isPublic(true)
+    .addMethod("GET", "redirectUrl")
+    .build();
+
 function initKRedirectsApp(orgRoot, webRoot, enabled){
 	log.info("initRedirectsApp: orgRoot={}", orgRoot);
     var dbs = orgRoot.find('jsondb');

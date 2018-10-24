@@ -44,7 +44,7 @@ var cartMapping = controllerMappings
         .addMethod('POST', 'applyPromoCodes', 'promoCodes')
         .addMethod('POST', 'createAccount', 'kcom2Firstname')
         .addMethod('POST', 'findProfile', 'findProfileEmail')
-        .addMethod('POST', 'getAddresses', 'getAddresses')
+        .addMethod('GET', 'getAddresses', 'getAddresses')
         .addMethod('POST', 'saveAddress', 'addressLine1')
         .addMethod('POST', 'saveShippingProfider', 'shippingProviderId');
 
@@ -446,9 +446,8 @@ function createAccount(page, params) {
                     p.firstName = params.kcom2Firstname;
                     p.surName = params.kcom2Surname;
 
-                    log.info('kcom2 passwordManager {}', securityManager.passwordManager);
                     var org = services.userManager.toOrg(orgData);
-                    securityManager.passwordManager.setPassword(p, org, params.kcom2Password);
+                    services.userManager.setPassword(p, params.kcom2Password);
 
                     services.userManager.updateUser(p);
                     if (!ur.isInGroup("ecommerce-users")){

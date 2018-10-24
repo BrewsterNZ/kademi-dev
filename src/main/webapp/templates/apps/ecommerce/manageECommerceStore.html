@@ -18,6 +18,10 @@
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.1.0/js/bootstrap-toggle.min.js">//</script>
     </head>
     <body>
+        #set( $rulesDir = $rootFolder.find("/repositories/$page.storeWebsite.name/$page.storeWebsite.liveBranch/WEB-INF/") )
+        #set( $rulesFile = $rulesDir.child("pricing-rules.csv") )
+        #set( $rules = $services.pricingRulesService.rules($page.storeWebsite) )
+
         <div class="tabbable">
             <ul class="nav nav-tabs tab-bricky">
                 <li class="active"><a data-toggle="tab" href="#products" aria-expanded="true">Products</a></li>
@@ -166,13 +170,22 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label class="control-label col-md-3" for="currencyCode">Currency</label>
+                                    <div class="col-md-9">
+                                        <input type="text" name="currencyCode" id="currencyCode" value="$!rules.currencyCode" placeholder="" class="form-control">
+                                        <span class="help-block">
+                                            <i>The default currency code, eg USD, GBP, AUD</i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <label class="control-label col-md-3" for="gstRate">GST</label>
                                     <div class="col-md-9">
                                         <input type="text" name="gstRate" id="gstRate" value="$!page.store.gstRate" placeholder="0.15" class="form-control numeric">
                                         <span class="help-block">
-                                            <i>The default tax rate.</i>
+                                            <i>The default tax rate. See the tax tab for more options</i>
                                         </span>
-
                                     </div>
                                 </div>
 
@@ -200,9 +213,6 @@
                 </div>
                 <div id="pricing" class="tab-pane">
 
-                    #set( $rulesDir = $rootFolder.find("/repositories/$page.storeWebsite.name/$page.storeWebsite.liveBranch/WEB-INF/") )
-                    #set( $rulesFile = $rulesDir.child("pricing-rules.csv") )
-                    #set( $rules = $services.pricingRulesService.rules($page.storeWebsite) )
 
                     <div class="btn-group pull-right">
                         <a href="$page.href?ruleNum=new" class="btn btn-success">
