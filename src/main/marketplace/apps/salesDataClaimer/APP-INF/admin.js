@@ -614,7 +614,10 @@ function importCSV(page, params, files) {
                         for (var j in headerRow){
                             var field = headerRow[j];
                             if (claimItemFields.indexOf(field) == -1){
-                                claimJson[field] = row[j];
+                                if (row[j]){
+                                    claimJson[field] = row[j];
+                                }
+
                             } else {
                                 if (field == 'claimItemId'){
                                     claimItemObj['recordId'] = row[j];
