@@ -73,6 +73,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/rewardstore/storeCategory.js"
             }
         },

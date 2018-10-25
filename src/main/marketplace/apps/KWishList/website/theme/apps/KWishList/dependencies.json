@@ -1,0 +1,16 @@
+{
+    "appDependencies": [
+        {
+            "appId": "KongoDB",
+            "branch": ""
+        }
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/KWishList/wishlist.js"
+            }
+        }
+    ]
+}
