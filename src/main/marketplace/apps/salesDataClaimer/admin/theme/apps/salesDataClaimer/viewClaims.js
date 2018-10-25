@@ -69,12 +69,41 @@
             form.salesDataClaimForm('addEmptyRow');
         });
 
+        initUploadReceipt(form);
+
+
         form.forms({
             onSuccess: function (resp) {
                 reloadClaimsList(function () {
                     modal.modal('hide');
                 });
             }
+        });
+    }
+
+    function initUploadReceipt(form) {
+        var btnUpload = form.find('.btn-upload-receipt');
+        var inputImage = form.find('[name=receiptImage]');
+        var thumbImg = form.find('.thumbnail img');
+        inputImage.on('change', function () {
+            var file = this.files[0];
+            var isImage = $.inArray(file['type'], ['image/gif', 'image/jpeg', 'image/png']) !== -1;
+
+            if (isImage) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    thumbImg.attr('src', e.target.result);
+                    btnUpload.find('span').html('Upload other receipt');
+                    btnUpload.find('i').attr('class', 'fa fa-check');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        btnUpload.on('click', function (e) {
+            e.preventDefault();
+
+            inputImage.trigger('click');
         });
     }
 
@@ -90,6 +119,8 @@
             // Reset the modal
             form.trigger('reset');
         });
+
+        initUploadReceipt(form);
 
         form.forms({
             onSuccess: function (resp) {
