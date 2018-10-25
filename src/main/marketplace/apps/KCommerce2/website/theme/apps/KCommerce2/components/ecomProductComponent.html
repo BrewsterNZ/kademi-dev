@@ -124,7 +124,13 @@
                     <span class="input-group-addon" id="basic-addon1">Quantity</span>
                     <input required min="0" type="number" class="product-quantity form-control required" placeholder="Quantity" value="1" />
                     <span class="input-group-btn">
-                        <a href="/$page.attributes.store.name/cart" class="btn btn-info btn-ecom-add-to-cart" data-sku-id="$!initialSkuId" role="button">Add to cart <i class="fa fa-shopping-cart"></i></a>
+                        <a title="Add to cart" href="/$page.attributes.store.name/cart" class="btn btn-info btn-ecom-add-to-cart" data-sku-id="$!initialSkuId" role="button"><i class="fa fa-shopping-cart"></i></a>
+                        #if ($applications.KWishList && $userResource)
+                            #set ($on = $applications.KWishList.call("isInWishList", $page, $product.name))
+                            <a title="$!formatter.ifTrue($on, 'Remove from wishlist', 'Add to wishlist')" data-on="fa-heart" data-off="fa-heart-o" href="$!product.name" class="btnToggleWishList btn btn-info">
+                                <i class="fa $!formatter.ifTrue($on, 'fa-heart', 'fa-heart-o')"></i>
+                            </a>
+                        #end
                     </span>
                 </div>
 

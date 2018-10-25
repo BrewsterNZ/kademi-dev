@@ -1,0 +1,29 @@
+<h3>Wishlist</h3>
+<table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Product title</th>
+        <th style="width: 20px"></th>
+    </tr>
+    </thead>
+    <tbody>
+
+    #if ($page.attributes.wishList && $page.attributes.wishList.hits.totalHits > 0)
+    #foreach ($r in $page.attributes.wishList.hits.hits)
+    <tr>
+        <td>
+            #set ($product = $services.catalogManager.findProductByName($r.source.product))
+            $!product.title
+        </td>
+        <td>
+            <a class="btn btn-danger btn-xs btn-remove-wishlist" href="$!product.name"><i class="fa fa-trash"></i></a>
+        </td>
+    </tr>
+    #end
+    #else
+    <tr>
+        <td colspan="99">No product found</td>
+    </tr>
+    #end
+    </tbody>
+</table>

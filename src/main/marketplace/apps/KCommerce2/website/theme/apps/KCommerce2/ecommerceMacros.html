@@ -99,6 +99,12 @@
                 <div class="media-body">
                     <h4 class="media-heading" style="margin-bottom: 10px;">
                         <a href="$prodUrl">$hit.fields.title.value</a>
+                        #if ($applications.KWishList && $userResource)
+                        #set ($on = $applications.KWishList.call("isInWishList", $page, $!hit.fields.name.value))
+                        <a data-on="fa-heart" data-off="fa-heart-o" href="$!hit.fields.name.value" class="btnToggleWishList pull-right text-info">
+                            <i class="fa $!formatter.ifTrue($on, 'fa-heart', 'fa-heart-o')"></i>
+                        </a>
+                        #end
                     </h4>
                     <p><label class="label label-success" style="font-size: 14px;">
                         #if ($hit.fields.finalCost.value)
@@ -128,11 +134,17 @@
             #else
                 #set( $prodHref = "${basePath}$hit.fields.webName.value" )
             #end
-
             <div class="$clsName product-item">
                 <div class="thumbnail product">
                     <div class="product-info">
-                        <h3 class="product-title" ><a class="text-primary" href="$prodHref">$hit.fields.title.value</a>
+                        <h3 class="product-title" >
+                            <a class="text-primary" href="$prodHref">$hit.fields.title.value</a>
+                            #if ($applications.KWishList && $userResource)
+                            #set ($on = $applications.KWishList.call("isInWishList", $page, $!hit.fields.name.value))
+                            <a data-on="fa-heart" data-off="fa-heart-o" href="$!hit.fields.name.value" class="btnToggleWishList pull-right text-info">
+                                <i class="fa $!formatter.ifTrue($on, 'fa-heart', 'fa-heart-o')"></i>
+                            </a>
+                            #end
                         </h3>
                         <div class="embed-responsive embed-responsive-4by3">
                             <a href="$prodHref" class="embed-responsive-item"
@@ -149,7 +161,6 @@
                             N/A
                             #end
                         </h3>
-
                         <a href="$prodHref" class="btn btn-info" role="button">
                             <i class="fa fa-shopping-cart"></i>
                         </a>

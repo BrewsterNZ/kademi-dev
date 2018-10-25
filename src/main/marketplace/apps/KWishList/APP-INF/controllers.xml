@@ -1,0 +1,8 @@
+<controllers onAppEnabled="initKWishListsApp" >
+    <source>/APP-INF/app.js</source>
+    <source>/APP-INF/dbMapping.js</source>
+    <source>/APP-INF/dbUtils.js</source>
+    <source>/APP-INF/website.js</source>
+    <menu parentId="menuRoot" css="fa fa-retweet" id="itemKRedirects" text="KRedirect"  path="/kredirect/" ordering="101"/>
+</controllers>
+             
