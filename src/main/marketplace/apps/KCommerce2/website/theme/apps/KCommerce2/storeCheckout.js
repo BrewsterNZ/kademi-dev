@@ -497,6 +497,15 @@ function initKcom2CheckoutForm() {
     });
 
     kcom2ShippingForm.find('form').forms({
+        validate : function(form, config) {
+            var countryCode = form.find("input[name=country]").val();
+            flog("shipping form", countryCode);
+            if( countryCode == "" || countryCode == null ) {
+                showErrorMessage(form, config, "Please select a country");
+                return false;
+            }
+            return true;
+        },
         onSuccess: function () {
             allForms.addClass('hide');
             kcom2ShippingProvider.removeClass('hide');
@@ -538,6 +547,9 @@ function initCountryList() {
         valueKey: "iso_code",
         source: countriesBH.ttAdapter()
     });
+    kcom2ShippingForm.find('.country-typeahead').keydown(function() {
+        kcom2ShippingForm.find('[name=country]').val("");
+    });
 
     var selectedCountry = kcom2ShippingForm.find('[name=country]').val();
     if (selectedCountry){
@@ -555,6 +567,8 @@ function initCountryList() {
 
     kcom2ShippingForm.find('.country-typeahead').attr('autocomplete', 'nope');
 }
+
+
 
 function initSelectAddress(){
     $(document).on('click', '#kcom2ShippingForm .address-type-drop a', function (e) {
