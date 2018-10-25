@@ -3,7 +3,8 @@
 
 
     <ul class='list-unstyled memberships' id="profile-memberships">
-        #foreach($membership in $profile.primaryMemberships())
+        #set ($primaryMemberships = $profile.primaryMemberships())
+        #foreach($membership in $primaryMemberships)
         <li>
             <span class="trans-lookup" data-transcode="profile-memberships-of">Member of the</span> <b>$membership.groupTitle</b> <span class="trans-lookup" data-transcode="profile-memberships-group">group</span>
             #if( $membership.org.isAdminDomain() )
@@ -12,9 +13,9 @@
             <b>$membership.org.title</b>
             #end
 
-        <acronym title='Remove this membership'>
-            <a href='$membership.id' class='membership-remove'><i class="fa fa-times"></i><span class="trans-lookup" data-transcode="profile-memberships-group-remove">Remove</span></a>
-        </acronym>
+            #if ($primaryMemberships.size() > 1)
+            <a title='Remove this membership' href='$membership.id' class='membership-remove'><i class="fa fa-times"></i><span class="trans-lookup" data-transcode="profile-memberships-group-remove">Remove</span></a>
+            #end
         </li>
         #end
     </ul>
