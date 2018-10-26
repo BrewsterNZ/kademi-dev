@@ -622,6 +622,8 @@ function importCSV(page, params, files) {
                                 } else {
                                     if (field == 'claimItemId'){
                                         claimItemObj['recordId'] = row[j];
+                                    } else if (field == 'amount'){
+                                        claimItemObj[field] = formatter.toLong(row[j]);
                                     } else {
                                         claimItemObj[field] = row[j];
                                     }
@@ -634,12 +636,12 @@ function importCSV(page, params, files) {
                                 var found = false;
                                 for (var j in claimJson.claimItems){
                                     var item = claimJson.claimItems[j];
-                                    log.info('item.recordId = {} claimItemObj.recordId = {} found = {} claimItemObj={}', item.recordId , claimItemObj.recordId, item.recordId == claimItemObj.claimItemId, JSON.stringify(claimItemObj));
+                                    log.info('item.recordId = {} claimItemObj.recordId = {} found = {} claimItemObj={}', item.recordId , claimItemObj.recordId, item.recordId == claimItemObj.recordId, JSON.stringify(claimItemObj));
                                     if (item.recordId == claimItemObj.recordId){
                                         // update claim item
                                         item.soldDate = claimItemObj.soldDate;
                                         item.modifiedDate = claimItemObj.modifiedDate || Date.now();
-                                        item.amount = formatter.toLong(claimItemObj.amount);
+                                        item.amount = claimItemObj.amount;
                                         item.soldBy = claimItemObj.soldBy;
                                         item.soldById = claimItemObj.soldById;
                                         item.productSku = claimItemObj.productSku;
@@ -666,6 +668,8 @@ function importCSV(page, params, files) {
                                 if (claimItemFields.indexOf(headerRow[j]) != -1){
                                     if (headerRow[j] == 'claimItemId'){
                                         claimItemObj['recordId'] = row[j];
+                                    } else if (headerRow[j] == 'amount'){
+                                        claimItemObj[headerRow[j]] = formatter.toLong(row[j]);
                                     } else {
                                         claimItemObj[headerRow[j]] = row[j];
                                     }
@@ -687,6 +691,8 @@ function importCSV(page, params, files) {
                             if (claimItemFields.indexOf(headerRow[j]) != -1){
                                 if (headerRow[j] == 'claimItemId'){
                                     claimItemObj['recordId'] = 'claimItem-' + generateRandomText(32);;
+                                } else if (headerRow[j] == 'amount'){
+                                    claimItemObj[headerRow[j]] = formatter.toLong(row[j]);
                                 } else {
                                     claimItemObj[headerRow[j]] = row[j];
                                 }

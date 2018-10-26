@@ -631,7 +631,7 @@
         $('.btn-delete-claims').on('click', function (e) {
             e.preventDefault();
 
-            var checked = tbody.find(':checkbox:checked');
+            var checked = $('#table-claims-body').find('input[type=checkbox]:checked');
 
             if (checked.length > 0) {
                 var isConfirmed = confirm('Are you that you want to delete ' + checked.length + ' selected ' + (checked.length > 1 ? 'claims' : 'claim') + '?');
@@ -959,8 +959,8 @@
             oncomplete: function (data) {
                 if (data && data.result && data.result.status){
                     Msg.success('Import success<br>' +
-                        'No. inserted: '+ data.result.data.insertedCount + '<br>' +
-                        'No. updated: '+ data.result.data.updatedCount)
+                        'No. inserted rows: '+ data.result.data.insertedCount + '<br>' +
+                        'No. updated rows: '+ data.result.data.updatedCount)
                     $('#table-claims').reloadFragment();
                 } else {
                     Msg.error('There was an error while importing sales claim data')
