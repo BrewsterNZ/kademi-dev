@@ -613,19 +613,18 @@ function importCSV(page, params, files) {
                             var claimJson = JSON.parse(record.json);
                             var claimItemObj = {};
                             for (var j in headerRow){
-                                var field = headerRow[j];
-                                if (claimItemFields.indexOf(field) == -1){
-                                    if (row[j]){
+                                if (row[j]) {
+                                    var field = headerRow[j];
+                                    if (claimItemFields.indexOf(field) == -1) {
                                         claimJson[field] = row[j];
-                                    }
-
-                                } else {
-                                    if (field == 'claimItemId'){
-                                        claimItemObj['recordId'] = row[j];
-                                    } else if (field == 'amount'){
-                                        claimItemObj[field] = formatter.toLong(row[j]);
                                     } else {
-                                        claimItemObj[field] = row[j];
+                                        if (field == 'claimItemId') {
+                                            claimItemObj['recordId'] = row[j];
+                                        } else if (field == 'amount') {
+                                            claimItemObj[field] = formatter.toLong(row[j]);
+                                        } else {
+                                            claimItemObj[field] = row[j];
+                                        }
                                     }
                                 }
                             }
@@ -665,16 +664,19 @@ function importCSV(page, params, files) {
                             var claimItemObj = {};
                             var claimObj = {};
                             for (var j in headerRow){
-                                if (claimItemFields.indexOf(headerRow[j]) != -1){
-                                    if (headerRow[j] == 'claimItemId'){
-                                        claimItemObj['recordId'] = row[j];
-                                    } else if (headerRow[j] == 'amount'){
-                                        claimItemObj[headerRow[j]] = formatter.toLong(row[j]);
+                                if (row[j]) {
+                                    if (claimItemFields.indexOf(headerRow[j]) != -1) {
+
+                                        if (headerRow[j] == 'claimItemId') {
+                                            claimItemObj['recordId'] = row[j];
+                                        } else if (headerRow[j] == 'amount') {
+                                            claimItemObj[headerRow[j]] = formatter.toLong(row[j]);
+                                        } else {
+                                            claimItemObj[headerRow[j]] = row[j];
+                                        }
                                     } else {
-                                        claimItemObj[headerRow[j]] = row[j];
+                                        claimObj[headerRow[j]] = row[j];
                                     }
-                                } else {
-                                    claimObj[headerRow[j]] = row[j];
                                 }
                             }
                             claimObj.claimItems = [claimItemObj];
@@ -688,17 +690,20 @@ function importCSV(page, params, files) {
                         var claimItemObj = {};
                         var claimObj = {};
                         for (var j in headerRow){
-                            if (claimItemFields.indexOf(headerRow[j]) != -1){
-                                if (headerRow[j] == 'claimItemId'){
-                                    claimItemObj['recordId'] = 'claimItem-' + generateRandomText(32);;
-                                } else if (headerRow[j] == 'amount'){
-                                    claimItemObj[headerRow[j]] = formatter.toLong(row[j]);
+                            if (row[j]) {
+                                if (claimItemFields.indexOf(headerRow[j]) != -1){
+                                    if (headerRow[j] == 'claimItemId'){
+                                        claimItemObj['recordId'] = 'claimItem-' + generateRandomText(32);;
+                                    } else if (headerRow[j] == 'amount'){
+                                        claimItemObj[headerRow[j]] = formatter.toLong(row[j]);
+                                    } else {
+                                        claimItemObj[headerRow[j]] = row[j];
+                                    }
                                 } else {
-                                    claimItemObj[headerRow[j]] = row[j];
+                                    claimObj[headerRow[j]] = row[j];
                                 }
-                            } else {
-                                claimObj[headerRow[j]] = row[j];
                             }
+
                         }
                         claimObj.claimItems = [claimItemObj];
                         var id = 'claim-' + generateRandomText(32);
