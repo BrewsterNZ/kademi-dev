@@ -224,14 +224,16 @@ function checkout(page, params, files, form) {
         return views.jsonView(false, "The item prices have changed, please refresh your page. " + totalAmountFromForm + " was submitted, current price is " + checkoutItems.totalCost);
     }
 
-
     var paymentResult;
     transactionManager.runInTransaction(function () {
         var customerGroup = services.cartManager.getOrCreateCustomerGroup("customers"); // todo move to setting
         var purchaser = services.cartManager.getOrCreatePurchaser(form, customerGroup);
 
         var cart = checkoutItems.cart;
-        form.databind(cart);
+
+        // https://github.com/Kademi/kademi-dev/issues/6194
+        // Must not databind to the cart, because eway fields will overwrite cart fields
+        //form.databind(cart);
 
         var useBillingAddress = form.booleanParam("useBillingAddress");
         var addressBuilder = services.criteriaBuilders.getBuilder("address");
