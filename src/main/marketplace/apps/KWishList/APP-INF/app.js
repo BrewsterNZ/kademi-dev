@@ -9,6 +9,13 @@ controllerMappings
 	.addMethod("POST", "toggleWishList", "toggleWishList")
 	.build();
 
+controllerMappings
+        .websitePortletController()
+        .portletSection('wishlistAddProduct')
+        .templatePath('/theme/apps/KWishList/wishlistAddProductPortlet.html')
+        .enabled(true)
+        .build();
+
 function initKWishListsApp(orgRoot, webRoot, enabled){
 	log.info("initRedirectsApp: orgRoot={}", orgRoot);
     var dbs = orgRoot.find('jsondb');
