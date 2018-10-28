@@ -499,11 +499,13 @@ function initKcom2CheckoutForm() {
     kcom2ShippingForm.find('form').forms({
         validate : function(form, config) {
             var countryCode = form.find("input[name=country]").val();
-            flog("shipping form", countryCode);
+            flog("shipping form, check country code", countryCode);
             if( countryCode == "" || countryCode == null ) {
+                flog("No country is selected");
                 showErrorMessage(form, config, "Please select a country");
                 return false;
             }
+            flog("country is ok");
             return true;
         },
         onSuccess: function () {
