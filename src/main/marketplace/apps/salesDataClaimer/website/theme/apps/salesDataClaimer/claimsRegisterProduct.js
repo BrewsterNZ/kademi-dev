@@ -658,37 +658,3 @@ $('.bottom-next-prev .bottom-prev').click(function(){
 }
 
 })(jQuery);
-
- function showFormMessage(form, config, message, title, type, callback) {
-    var alertMsg = $(".form-message");
-
-	if (alertMsg.find(":contains(" + $(message).text() + ")").length > 0) {
-		return;
-    }
-
-	if (alertMsg.length > 0) {
-        alertMsg.append(message);
-        alertMsg.attr('class', 'form-message alert alert-' + type);
-    } else {
-		alertMsg = $(config.renderMessageWrapper(message, type));
-    }
-
-	if (title && title.length > 0) {
-        var messageTitle = alertMsg.find('.form-message-title');
-        if (messageTitle.length === 0) {
-            var btnClose = alertMsg.find('.close');
-            var titleHtml = '<p class="form-message-title"><b>' + title + '</b></p>';
-            if (btnClose.length === 0) {
-                alertMsg.prepend(titleHtml);
-            } else {
-                btnClose.after(titleHtml);
-            }
-        } else {
-            messageTitle.html('<b>' + title + '</b');
-        }
-    }
-
-    $(".step-content").prepend(alertMsg);
-
-    alertMsg.slideDown(300);
- }
