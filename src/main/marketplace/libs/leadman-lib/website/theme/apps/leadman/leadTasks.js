@@ -125,7 +125,7 @@ $(function () {
             });
 
             $.ajax({
-                url: '/leads/?teamUsers',
+                url: '/leads/?allTeamUsers',
                 dataType: 'json'
             }).done(function (data) {
                 if (data.status) {
