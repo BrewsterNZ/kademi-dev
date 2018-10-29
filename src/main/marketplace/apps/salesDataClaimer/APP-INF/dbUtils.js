@@ -30,7 +30,7 @@ function updateMapping(page, params) {
 
     try {
         var db = getDB(page);
-        saveMapping(db);
+        saveMapping(db, page);
     } catch (e) {
         result.status = false;
         result.messages = ['Error in updating mapping: ' + e];
@@ -39,15 +39,39 @@ function updateMapping(page, params) {
     return views.jsonObjectView(JSON.stringify(result))
 }
 
-function saveMapping(db) {
+function saveMapping(db, page) {
     log.info('saveMapping');
 
     var mapBuilder = formatter.newMapBuilder();
     for (var name in DB_MAPPINGS) {
+        if (page && name == TYPE_RECORD){
+            var customMapping = getExtraFieldsMappping(page);
+            if (Object.keys(customMapping).length){
+                for (var key in customMapping){
+                    DB_MAPPINGS[name].properties[key] = customMapping[key];
+                }
+            }
+        }
         mapBuilder.field(name, JSON.stringify(DB_MAPPINGS[name]));
     }
 
     db.updateTypeMappings(mapBuilder);
+}
+
+function getExtraFieldsMappping(page) {
+    var extraFields = getSalesDataExtreFields(page);
+    var arr = {};
+    for (var i = 0; i < extraFields.length; i++) {
+        var ex = extraFields[i];
+        var fieldName = 'field_' + ex.name;
+        var type = ex.type;
+        log.info('field name={} type={}', ex.name, ex.type);
+        arr[fieldName] = {
+            type: type || 'text',
+            store: true
+        }
+    }
+    return arr;
 }
 
 function setAllowAccess(db, allowAccess) {
