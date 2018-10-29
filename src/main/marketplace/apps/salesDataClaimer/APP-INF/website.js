@@ -332,13 +332,14 @@ function saveProductClaim(page, params, files) {
 
                 securityManager.runAsUser(enteredUser, function () {
                     var claim = db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
-                    eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});
 
                     var claimItems = [
                         {amount: 1, productSku: productsSKUs[i], soldDate: soldDate, soldBy: soldBy, soldById: soldById}
                     ];
 
                     createOrUpdateClaimItem(claim, claimObj, claimItems);
+
+                    eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});
                 });
             }
 
@@ -455,14 +456,15 @@ function createClaimTaggingInner(page, params, files) {
                 if (salesDataRecord.points) {
                     nodeParams["points"] = salesDataRecord.points;
                 }
-                eventManager.goalAchieved("claimSubmittedGoal", nodeParams);
-                eventManager.goalAchieved("claimProcessedGoal", custProfileBean, {"claim": claimId, "claimType": salesDataRecord.type, 'status': RECORD_STATUS.APPROVED});
 
                 var claimItems = [
                     {amount: 1, productSku: null, soldDate: soldDate, soldBy: soldBy, soldById: soldById}
                 ];
 
                 createOrUpdateClaimItem(claim, claimObj, claimItems);
+
+                eventManager.goalAchieved("claimSubmittedGoal", nodeParams);
+                eventManager.goalAchieved("claimProcessedGoal", custProfileBean, {"claim": claimId, "claimType": salesDataRecord.type, 'status': RECORD_STATUS.APPROVED});
             });
 
             result.data = {};
