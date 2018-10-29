@@ -22,7 +22,7 @@ $(function () {
                 success: function (resp) {
                     if (resp && resp.status){
                         if (btn.hasClass('btn-remove-wishlist')){
-                            btn.closest('tr').remove();
+                            btn.closest('.product-item').remove();
                             Msg.success('Removed from wish list');
                             return;
                         }

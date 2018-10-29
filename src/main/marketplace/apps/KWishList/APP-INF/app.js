@@ -12,6 +12,22 @@ controllerMappings
 	.build();
 
 controllerMappings
+    .websiteController()
+    .path('/wishlist')
+    .enabled(true)
+    .addMethod("GET", "checkRedirect")
+    .build();
+
+function checkRedirect(page, params) {
+    var href = page.href;
+    if (!href.endsWith('/')) {
+        href = href + '/';
+    }
+
+    return views.redirectView(href);
+}
+
+controllerMappings
         .websitePortletController()
         .portletSection('wishlistAddProduct')
         .templatePath('/theme/apps/KWishList/wishlistAddProductPortlet.html')

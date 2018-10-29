@@ -1,4 +1,4 @@
-<div class="row products-list ecomStoreCategoryProductsComponent">
+<div class="row products-list ecomStoreCategoryProductsComponent wishlistWrap">
     #set( $cart = $services.cartManager.shoppingCart(true) )
 #if ($page.attributes.wishList && $page.attributes.wishList.hits.totalHits > 0)
 #foreach ($r in $page.attributes.wishList.hits.hits)
@@ -11,7 +11,7 @@
             <h3 class="product-title" >
                 <a class="text-primary" href="$r.source.path">$product.title</a>
                 #set ($on = $applications.KWishList.call("isInWishList", $page, $product.name, $r.source.store))
-                <a data-on="fa-heart" data-off="fa-heart-o" data-store="$!r.source.store" data-path="$!r.source.path" href="$!product.name" class="btnToggleWishList pull-right text-info">
+                <a data-on="fa-heart" data-off="fa-heart-o" data-store="$!r.source.store" data-path="$!r.source.path" href="$!product.name" class="btn-remove-wishlist pull-right text-info">
                     <i class="fa $!formatter.ifTrue($on, 'fa-heart', 'fa-heart-o')"></i>
                 </a>
             </h3>
