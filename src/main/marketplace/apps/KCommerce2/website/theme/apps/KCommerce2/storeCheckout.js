@@ -361,6 +361,100 @@
         });
     }
 
+    /** Google Address Lookup Functions **/
+    var googleAddressAutoComplete; // the autocomplete object for searching for google addresses
+    var shippingFormLocator = '#kcom2ShippingForm';
+
+    // Request Access to Users Location and bias the autocomplete object to there,
+    // (Requires https)
+    function biasToUsersLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+            var geolocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            var circle = new google.maps.Circle({
+                center: geolocation,
+                radius: position.coords.accuracy
+            });
+            
+            googleAddressAutoComplete.setBounds(circle.getBounds());
+            });
+        }
+    }
+    
+    // return the google address fragment for the field type requested, or null if not exists
+    function getAddressElement(place, type, field) {
+        for(var i =0; i < place.address_components.length; i++) {
+            if (place.address_components[i].types[0] == type)
+                return place.address_components[i][field];
+        }
+        return null;
+    }
+    
+    // populate the shipping address portion of the form with the selected google address
+    function setAddress() {
+        var place = googleAddressAutoComplete.getPlace();
+        if (!place.address_components)
+            return;
+        flog('[google address finder]', place);
+        
+        var line1 = (getAddressElement(place, 'street_number', 'long_name') + ' ' + getAddressElement(place, 'route', 'short_name')).trim();
+        var line2 = getAddressElement(place, 'sublocality_level_1', 'long_name')
+        var city = getAddressElement(place, 'postal_town', 'long_name') || getAddressElement(place, 'locality', 'long_name')
+        var state = getAddressElement(place, 'administrative_area_level_1', 'long_name')
+        var country = getAddressElement(place, 'country', 'long_name')
+        var postcode = getAddressElement(place, 'postal_code', 'long_name')
+
+        var addressForm = $(shippingFormLocator)
+
+        // google seems to drop any text prior to the street number / route so we need to recover that and prefix address line 1 with it.
+        var fullAddress = addressForm.find('#google-address-search-bar').val();
+        var line1Index = fullAddress.indexOf(line1)
+        if (line1Index > 0) {
+            line1 = fullAddress.substring(0, line1Index) + line1;
+        }
+        
+        addressForm.find('[name=addressLine1]').val(line1);
+        addressForm.find('[name=addressLine2]').val(line2);
+        addressForm.find('[name=addressState]').val(state);
+        addressForm.find('[name=postcode]').val(postcode);
+        addressForm.find('[name=city]').val(city);
+        addressForm.find('[name=country]').val(country);
+        addressForm.find('.enter-manually').click();
+        
+    }
+    
+    // wire up the google address search form
+    function initGoogleAddressSearch() {
+        // make sure google maps are initialised
+        if (!window.google || !window.google.maps) {
+            $('body').on('onGoogleMapReady', initGoogleAddressSearch);
+            return;
+        }
+
+        $(shippingFormLocator).each(function(index, em){
+            googleAddressAutoComplete = new google.maps.places.Autocomplete(
+                /** @type {!HTMLInputElement} **/ (document.getElementById('google-address-search-bar')),
+                {types: ['address']});
+            biasToUsersLocation();
+            googleAddressAutoComplete.addListener('place_changed', setAddress);
+            
+            var $em = $(em);
+            
+            $em.find('.enter-manually').click(function(){
+                $em.find('.address-display-box').show();
+                $em.find('.address-search-box').hide();
+            })
+            $em.find('.search-again').click(function(){
+                $em.find('.address-display-box').hide();
+                $em.find('.address-search-box').show();
+            })
+        });
+    }
+
+    /** END Google Address Lookup Functions **/
 
 })(jQuery);
 
