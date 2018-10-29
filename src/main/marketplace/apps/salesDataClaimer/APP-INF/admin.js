@@ -110,11 +110,13 @@ function getAllClaims(page, params) {
 
         var claimsQueryResp = db.search(JSON.stringify(claimsQuery));
         var claims = formatter.newArrayList();
-        formatter.foreach(claimsQueryResp.hits.hits, function (hit) {
-            log.info("Add claim", hit, hit.source.id);
-            var record = db.child(hit.id);
-            claims.add(record);
-        });
+        if( claimsQueryResp != null && claimsQueryResp.hits != null ) {
+            formatter.foreach(claimsQueryResp.hits.hits, function (hit) {
+                log.info("Add claim", hit, hit.source.id);
+                var record = db.child(hit.id);
+                claims.add(record);
+            });
+        }
 
 
         page.attributes.claims = claims;
