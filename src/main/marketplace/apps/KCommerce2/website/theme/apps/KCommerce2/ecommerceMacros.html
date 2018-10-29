@@ -139,12 +139,7 @@
                     <div class="product-info">
                         <h3 class="product-title" >
                             <a class="text-primary" href="$prodHref">$hit.fields.title.value</a>
-                            #if ($applications.KWishList && $userResource)
-                            #set ($on = $applications.KWishList.call("isInWishList", $page, $!hit.fields.name.value))
-                            <a data-on="fa-heart" data-off="fa-heart-o" href="$!hit.fields.name.value" class="btnToggleWishList pull-right text-info">
-                                <i class="fa $!formatter.ifTrue($on, 'fa-heart', 'fa-heart-o')"></i>
-                            </a>
-                            #end
+                            #portlets("wishlistAddProductList")
                         </h3>
                         <div class="embed-responsive embed-responsive-4by3">
                             <a href="$prodHref" class="embed-responsive-item"

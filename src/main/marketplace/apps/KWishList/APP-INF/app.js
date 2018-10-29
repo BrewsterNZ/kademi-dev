@@ -7,6 +7,7 @@ controllerMappings
 	.defaultView(views.templateView("/theme/apps/KWishList/wishlist.html"))
 	.addMethod("GET", "getWishList")
 	.addMethod("POST", "toggleWishList", "toggleWishList")
+    .postPriviledge("READ_CONTENT")
 	.build();
 
 controllerMappings
@@ -15,6 +16,13 @@ controllerMappings
         .templatePath('/theme/apps/KWishList/wishlistAddProductPortlet.html')
         .enabled(true)
         .build();
+
+controllerMappings
+    .websitePortletController()
+    .portletSection('wishlistAddProductList')
+    .templatePath('/theme/apps/KWishList/wishlistAddProductListPortlet.html')
+    .enabled(true)
+    .build();
 
 function initKWishListsApp(orgRoot, webRoot, enabled){
 	log.info("initRedirectsApp: orgRoot={}", orgRoot);
