@@ -29,12 +29,12 @@ function getWishList(page, params) {
     }
 }
 
-function isInWishList(page, product) {
+function isInWishList(page, product, store) {
     if (securityManager.currentUser) {
         var db = getDB(page);
         var user = securityManager.currentUser.userId;
         var websiteName = page.find('/').websiteName;
-        var recordId = [websiteName, user, product].join('-');
+        var recordId = [websiteName, user, store, product].join('-');
         var res = db.child(recordId);
         return !formatter.isNull(res);
     }
@@ -48,8 +48,10 @@ function toggleWishList(page, params) {
         var db = getDB(page);
         var user = securityManager.currentUser.userId;
         var product = params.product;
+        var store = params.store;
+        var path = params.path;
         var websiteName = page.find('/').websiteName;
-        var recordId = [websiteName, user, product].join('-');
+        var recordId = [websiteName, user, store, product].join('-');
         var res = db.child(recordId);
         if (res) {
             res.delete();
@@ -57,6 +59,8 @@ function toggleWishList(page, params) {
             var json = {
                 user: securityManager.currentUser.userId,
                 product: product,
+                store: store,
+                path: path,
                 website: websiteName
             };
             db.createNew(recordId, JSON.stringify(json), 'record');

@@ -8,6 +8,7 @@ controllerMappings
 	.addMethod("GET", "getWishList")
 	.addMethod("POST", "toggleWishList", "toggleWishList")
     .postPriviledge("READ_CONTENT")
+    .addType("controllerResource")
 	.build();
 
 controllerMappings

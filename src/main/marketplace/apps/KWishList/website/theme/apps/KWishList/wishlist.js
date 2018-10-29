@@ -4,6 +4,8 @@ $(function () {
             e.preventDefault();
 
             var product = $(this).attr('href');
+            var store = $(this).attr('data-store');
+            var path = $(this).attr('data-path');
             var on = $(this).attr('data-on');
             var off = $(this).attr('data-off');
             var btn = $(this);
@@ -12,6 +14,8 @@ $(function () {
                 dataType: 'json',
                 url: '/wishlist/',
                 data: {
+                    store: store,
+                    path: path,
                     product: product,
                     toggleWishList: true
                 },
