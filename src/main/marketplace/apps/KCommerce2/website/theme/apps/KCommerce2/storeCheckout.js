@@ -404,7 +404,7 @@
         var line2 = getAddressElement(place, 'sublocality_level_1', 'long_name')
         var city = getAddressElement(place, 'postal_town', 'long_name') || getAddressElement(place, 'locality', 'long_name')
         var state = getAddressElement(place, 'administrative_area_level_1', 'long_name')
-        var country = getAddressElement(place, 'country', 'long_name')
+        var country = getAddressElement(place, 'country', 'short_name')
         var postcode = getAddressElement(place, 'postal_code', 'long_name')
 
         var addressForm = $(shippingFormLocator)
