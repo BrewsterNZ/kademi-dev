@@ -1,8 +1,4 @@
 #set ($on = $applications.KWishList.call("isInWishList", $page, $product.name, $!page.attributes.store.name))
-<div class="clearfix">
-    <h3 style="margin: 0" class="text-right">
-        <a title="$!formatter.ifTrue($on, 'Remove from wishlist', 'Add to wishlist')" data-on="fa-heart" data-off="fa-heart-o" data-store="$!page.attributes.store.name" data-path="/$!page.attributes.store.name/$!product.name" href="$!product.name" class="btnToggleWishList">
-            <i class="fa $!formatter.ifTrue($on, 'fa-heart', 'fa-heart-o')"></i>
-        </a>
-    </h3>
-</div>
+<a title="$!formatter.ifTrue($on, 'Remove from wishlist', 'Add to wishlist')" data-on="fa-heart" data-off="fa-heart-o" data-store="$!page.attributes.store.name" data-path="/$!page.attributes.store.name/$!product.name" href="$!product.name" class="btnToggleProductDetail btnToggleWishList">
+    <i class="fa fa-2x $!formatter.ifTrue($on, 'fa-heart', 'fa-heart-o')"></i>
+</a>

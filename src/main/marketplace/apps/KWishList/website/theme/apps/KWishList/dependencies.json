@@ -11,6 +11,12 @@
                 "group": "main",
                 "path": "/theme/apps/KWishList/wishlist.js"
             }
+        },
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/KWishList/wishlist.less"
+            }
         }
     ]
 }
