@@ -85,7 +85,11 @@
 
 
         #macro( productRow $productHit $basePath )
-        #set ($prodUrl = "/$basePath/$hit.fields.name.value")
+            #if( $formatter.isEmpty($hit.fields.webName.value) )
+            #set( $prodUrl = "${basePath}$productHit.fields.name.value" )
+            #else
+            #set( $prodUrl = "${basePath}$productHit.fields.webName.value" )
+            #end
             #set($bg = "/static/images/photo_holder.png")
             #if ($hit.fields.primaryImageHref)
             #set($bg = $hit.fields.primaryImageHref.value)
