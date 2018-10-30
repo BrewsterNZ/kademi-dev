@@ -6,16 +6,16 @@ $(function(){
 function initCookieAccept(){
 
 	$(".cookie-decline").on("click", function(){
-		$.cookie('cookie-accept', 'decline', { path: '/' });
+		$.removeCookie('cookie-accept', { path: '/' });  
 		hideBanner();
 	});
 
 	$(".cookie-allow").on("click", function(){
-		$.cookie('cookie-accept', 'allow', { path: '/' });
+		$.cookie('cookie-accept', 'true', { path: '/' });
 		hideBanner();
 	});
 
-	$(".close-cookie-banner").on("click", function(){
+	$(".close-cookie-banner").on("click", function(){  
 		hideBanner();
 	});
 }
