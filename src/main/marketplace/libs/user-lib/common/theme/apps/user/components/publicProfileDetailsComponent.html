@@ -1,4 +1,11 @@
 <div class="bar">
-    <h3>${page.displayName}'s  <span class="trans-lookup" data-transcode="public-profile">public profile</span></h3>
+    <h3>
+        #if( $page.displayName )
+        ${page.displayName}'s  
+        #else
+        Bob's
+        #end
+        <span class="trans-lookup" data-transcode="public-profile">public profile</span>
+    </h3>
     <div class="clearfix"></div>
 </div>

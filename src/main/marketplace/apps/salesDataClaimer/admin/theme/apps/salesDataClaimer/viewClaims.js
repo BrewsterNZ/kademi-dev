@@ -69,12 +69,41 @@
             form.salesDataClaimForm('addEmptyRow');
         });
 
+        initUploadReceipt(form);
+
+
         form.forms({
             onSuccess: function (resp) {
                 reloadClaimsList(function () {
                     modal.modal('hide');
                 });
             }
+        });
+    }
+
+    function initUploadReceipt(form) {
+        var btnUpload = form.find('.btn-upload-receipt');
+        var inputImage = form.find('[name=receiptImage]');
+        var thumbImg = form.find('.thumbnail img');
+        inputImage.on('change', function () {
+            var file = this.files[0];
+            var isImage = $.inArray(file['type'], ['image/gif', 'image/jpeg', 'image/png']) !== -1;
+
+            if (isImage) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    thumbImg.attr('src', e.target.result);
+                    btnUpload.find('span').html('Upload other receipt');
+                    btnUpload.find('i').attr('class', 'fa fa-check');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        btnUpload.on('click', function (e) {
+            e.preventDefault();
+
+            inputImage.trigger('click');
         });
     }
 
@@ -90,6 +119,8 @@
             // Reset the modal
             form.trigger('reset');
         });
+
+        initUploadReceipt(form);
 
         form.forms({
             onSuccess: function (resp) {
@@ -600,7 +631,7 @@
         $('.btn-delete-claims').on('click', function (e) {
             e.preventDefault();
 
-            var checked = tbody.find(':checkbox:checked');
+            var checked = $('#table-claims-body').find('input[type=checkbox]:checked');
 
             if (checked.length > 0) {
                 var isConfirmed = confirm('Are you that you want to delete ' + checked.length + ' selected ' + (checked.length > 1 ? 'claims' : 'claim') + '?');
@@ -928,8 +959,8 @@
             oncomplete: function (data) {
                 if (data && data.result && data.result.status){
                     Msg.success('Import success<br>' +
-                        'No. inserted: '+ data.result.data.insertedCount + '<br>' +
-                        'No. updated: '+ data.result.data.updatedCount)
+                        'No. inserted rows: '+ data.result.data.insertedCount + '<br>' +
+                        'No. updated rows: '+ data.result.data.updatedCount)
                     $('#table-claims').reloadFragment();
                 } else {
                     Msg.error('There was an error while importing sales claim data')

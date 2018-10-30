@@ -105,6 +105,10 @@ function deleteMembership(row, id) {
             flog('success', data);
             form.removeClass('ajax-processing');
             row.remove();
+
+            if ($('#profile-memberships').children().length < 2){
+                $('#profile-memberships').find('.membership-remove').remove();
+            }
         },
         error: function (resp, textStatus, errorThrown) {
             form.removeClass('ajax-processing');

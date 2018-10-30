@@ -5,17 +5,20 @@
     var privs = $formatter.toJson($request.attributes.privs);
     var completable = $page.parent.completable && $page.parent.startable;
     var complete = $page.parent.complete;
-    flog("push init module page");
+
     pageInitFunctions.push(function() {
+        flog("push init module page");
         $.module({currentUrl: "${folder.path}/",isCompleted: complete, isEditable: $editMode,isCompletable: completable });
+
+        flog("postq", $(".post-question"));
+        $(".post-question").click(function(e) {
+            e.preventDefault();
+            var ta = $(e.target).closest(".panel").find("textarea");
+            flog("focus", ta);
+            ta.focus();
+        });
     });
-    flog("postq", $(".post-question"));
-    $(".post-question").click(function(e) {
-        e.preventDefault();
-        var ta = $(e.target).closest(".panel").find("textarea");
-        flog("focus", ta);
-        ta.focus();
-    });
+
 </script>
 #end
 <div class="clearfix"></div>

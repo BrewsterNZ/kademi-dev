@@ -47,6 +47,9 @@
         </style>
     </head>
     <body>
+        #set( $cartState = "COMPLETED" )
+        #set( $cartState = $request.params.cartState )
+        
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-shopping-cart"></i> Shopping Carts - showing $page.searchResults.size()
@@ -64,9 +67,8 @@
                         </div>
                         <div class="col-md-6">
                             <select id="searchCartState" class="form-control">
-                                <option value="">Any cart state</option>
                                 #foreach( $cartStateEntry in $page.cartStates.entrySet() )
-                                <option value="$cartStateEntry.key">$cartStateEntry.key - $cartStateEntry.value</option>
+                                $formatter.option($cartStateEntry.key, "$cartStateEntry.key - $cartStateEntry.value", $cartState )
                                 #end
                             </select>
                         </div>
@@ -357,7 +359,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp;Create</button>
+                            <button type="submit" class="btn btn-success"><i class="fa fa-"></i>&nbsp;Create</button>
                         </div>
                     </form>
                 </div>
@@ -376,15 +378,16 @@
 
             #if($statusMsg == "N")
                 #set($statusMsg = "Not fulfilled")
-                #set($statusClass = "fa fa-exclamation text-info")
+                #set($statusClass = "fa fa-envelope text-info")
             #elseif($statusMsg == "C")
                 #set($statusMsg = "Fulfilled")
                 #set($statusClass = "fa fa-check-circle text-success")
             #else
                 #set($statusMsg = "Pending")
-                #set($statusClass = "fa fa-pause-circle text-info")
+                #set($statusClass = "fa fa-cart-plus text-muted")
             #end
         <td class="icon clickable" data-href="$v.href" title="$statusMsg">
+                        
             #if($statusClass)
             <i class="$statusClass"></i>
             #else

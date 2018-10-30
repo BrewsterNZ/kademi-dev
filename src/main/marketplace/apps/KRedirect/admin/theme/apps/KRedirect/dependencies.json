@@ -1,0 +1,10 @@
+{
+    "appDependencies": [
+        {
+            "appId": "KongoDB",
+            "branch": ""
+        }
+    ],
+    "dependencies": [
+    ]
+}

@@ -281,7 +281,7 @@
                                     <select class="form-control" id="assignedTo" name="assignedTo">
                                         <option value="$user.name">Assign to me</option>
                                         <option value="">Assign to nobody</option>
-                                        #set($teamMembers = $leadsPage.teamMembers)
+                                        #set($teamMembers = $leadsPage.allTeamMembers)
                                         #if($teamMembers && $teamMembers.size() > 0)
                                         #foreach($user in $teamMembers)
                                         <option value="$user.name">$user.formattedName</option>

@@ -1,6 +1,6 @@
 function findTopPurchased(displayedItems, startDate, endDate) {
     var queryJson = {
-        "fields": ["productName", "productTitle", "quantity"],
+        "stored_fields": ["productName", "productTitle", "quantity"],
         "size": 10000,
         "sort": [
             {
@@ -38,18 +38,14 @@ function findTopPurchased(displayedItems, startDate, endDate) {
             }
         },
         "query": {
-            "filtered": {
-                "filter": {
-                    "bool": {
-                        "must": [
-                            {
-                                "type": {
-                                    "value": "productorder"
-                                }
-                            }
-                        ]
+            "bool": {
+                "must": [
+                    {
+                        "type": {
+                            "value": "productorder"
+                        }
                     }
-                }
+                ]
             }
         }
     };
@@ -65,7 +61,7 @@ function findTopPurchased(displayedItems, startDate, endDate) {
         });
     }
     
-    var searchResults = applications.search.searchManager.search(JSON.stringify(queryJson), "productorders");
+    var searchResults = services.searchManager.search(JSON.stringify(queryJson), "productorders");
     
     return searchResults;
 }

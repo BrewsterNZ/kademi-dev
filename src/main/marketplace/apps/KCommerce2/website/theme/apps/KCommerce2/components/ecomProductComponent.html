@@ -5,6 +5,7 @@
 <div class="ecom-product-component">
     <div class="product-item">
         <div class="product kcom2Product thumbnail">
+            #portlets("wishlistAddProduct")
             <div class="product-info" id="product-images">
                 #set ($productsImages = $product.images)
                 #foreach($img in $productsImages)
@@ -120,19 +121,19 @@
                     #end
                 </h3>
 
+                
                 <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1">Quantity</span>
                     <input required min="0" type="number" class="product-quantity form-control required" placeholder="Quantity" value="1" />
                     <span class="input-group-btn">
-                        <a href="/$page.attributes.store.name/cart" class="btn btn-info btn-ecom-add-to-cart" data-sku-id="$!initialSkuId" role="button">Add to cart <i class="fa fa-shopping-cart"></i></a>
+                        <a title="Add to cart" href="/$page.attributes.store.name/cart" class="btn btn-info btn-ecom-add-to-cart" data-sku-id="$!initialSkuId" role="button"><i class="fa fa-shopping-cart"></i></a>
                     </span>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
-
+ 
 #else
 <div class="ecomStoreCategoryProductsComponent ">
     #set ($productImage = "/theme/img/photo_holder.png")

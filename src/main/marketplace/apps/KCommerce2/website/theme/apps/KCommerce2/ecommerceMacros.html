@@ -85,13 +85,18 @@
 
 
         #macro( productRow $productHit $basePath )
-        #set ($prodUrl = "/$basePath/$hit.fields.name.value")
+            #if( $formatter.isEmpty($hit.fields.webName.value) )
+            #set( $prodUrl = "${basePath}$productHit.fields.name.value" )
+            #else
+            #set( $prodUrl = "${basePath}$productHit.fields.webName.value" )
+            #end
             #set($bg = "/static/images/photo_holder.png")
             #if ($hit.fields.primaryImageHref)
             #set($bg = $hit.fields.primaryImageHref.value)
             #end
             <div class="media prod">
-                <div class="media-left hidden-sm hidden-xs">
+                <div class="media-left hidden-sm hidden-xs" style="position: relative">
+                    #portlets("wishlistAddProductList")
                     <a href="$prodUrl">
                         <img class="media-object" alt="$hit.fields.title.value" src="$bg" width="200" height=""/>
                     </a>
@@ -128,11 +133,12 @@
             #else
                 #set( $prodHref = "${basePath}$hit.fields.webName.value" )
             #end
-
             <div class="$clsName product-item">
                 <div class="thumbnail product">
+                    #portlets("wishlistAddProductList")
                     <div class="product-info">
-                        <h3 class="product-title" ><a class="text-primary" href="$prodHref">$hit.fields.title.value</a>
+                        <h3 class="product-title" >
+                            <a class="text-primary" href="$prodHref">$hit.fields.title.value</a>
                         </h3>
                         <div class="embed-responsive embed-responsive-4by3">
                             <a href="$prodHref" class="embed-responsive-item"
@@ -149,7 +155,6 @@
                             N/A
                             #end
                         </h3>
-
                         <a href="$prodHref" class="btn btn-info" role="button">
                             <i class="fa fa-shopping-cart"></i>
                         </a>

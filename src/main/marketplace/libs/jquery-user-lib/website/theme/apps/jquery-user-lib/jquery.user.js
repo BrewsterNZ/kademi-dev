@@ -77,7 +77,7 @@
             // End of DEPRECATED migration
             // ==============================================================================
 
-            $(config.logoutSelector).on('click', function (e) {
+            $(document).on('click', config.logoutSelector, function (e) {
                 e.preventDefault();
                 doLogout();
             });

@@ -56,6 +56,22 @@
                         component.attr('data-items-per-row', number);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('.sort-by').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-sort-by', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find('.sort-direction').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-sort-direction', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -66,6 +82,8 @@
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-layout').val(dataAttributes['data-layout']);
             form.find('.page-size').val(dataAttributes['data-page-size'] || 12);
+            form.find('.sort-by').val(dataAttributes['data-sort-by'] || '');
+            form.find('.sort-direction').val(dataAttributes['data-sort-direction'] || 'asc');
             form.find('.items-per-row').val(dataAttributes['data-items-per-row']);
             form.find('.items-per-row-wrapper').css('display', dataAttributes['data-layout'] === 'grid' ? 'block' : 'none');
         }

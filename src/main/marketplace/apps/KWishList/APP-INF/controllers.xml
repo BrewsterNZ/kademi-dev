@@ -1,0 +1,14 @@
+<controllers onAppEnabled="initKWishListsApp" >
+    <source>/APP-INF/app.js</source>
+    <source>/APP-INF/dbMapping.js</source>
+    <source>/APP-INF/dbUtils.js</source>
+    <source>/APP-INF/website.js</source>
+
+    <role class="role">
+        <name>WishList</name>
+        <privNames>
+            <string>READ_CONTENT</string>
+        </privNames>
+    </role>
+</controllers>
+             

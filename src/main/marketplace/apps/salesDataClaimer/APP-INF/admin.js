@@ -110,11 +110,13 @@ function getAllClaims(page, params) {
 
         var claimsQueryResp = db.search(JSON.stringify(claimsQuery));
         var claims = formatter.newArrayList();
-        formatter.foreach(claimsQueryResp.hits.hits, function (hit) {
-            log.info("Add claim", hit, hit.source.id);
-            var record = db.child(hit.id);
-            claims.add(record);
-        });
+        if( claimsQueryResp != null && claimsQueryResp.hits != null ) {
+            formatter.foreach(claimsQueryResp.hits.hits, function (hit) {
+                log.info("Add claim", hit, hit.source.id);
+                var record = db.child(hit.id);
+                claims.add(record);
+            });
+        }
 
 
         page.attributes.claims = claims;
@@ -584,123 +586,141 @@ function findClaimExtraFields(claim, obj) {
 }
 
 function importCSV(page, params, files) {
-    var db = getDB(page);
-    var file = files.get('file');
-    log.info('file {}', file);
-    var csvArr = fileManager.fromCsv(file);
-    log.info('csvArr {}', csvArr);
-    var headerRow = [];
-    var insertedCount = 0;
-    var updatedCount = 0;
-    if (csvArr.size() > 0){
-        headerRow = csvArr[0];
-        var claimItemFields = ['claimItemId', 'soldDate', 'modifiedDate', 'amount', 'soldBy', 'soldById', 'productSku'];
+    try {
+        var db = getDB(page);
+        var file = files.get('file');
+        log.info('file {}', file);
+        var csvArr = fileManager.fromCsv(file);
+        log.info('csvArr {}', csvArr);
+        var headerRow = [];
+        var insertedCount = 0;
+        var updatedCount = 0;
+        if (csvArr.size() > 0){
+            headerRow = csvArr[0];
+            var claimItemFields = ['claimItemId', 'soldDate', 'modifiedDate', 'amount', 'soldBy', 'soldById', 'productSku'];
 
-        for (var i in csvArr){
-            if (i > 0) {
-                var row = csvArr[i];
-                log.info('row {}', row);
+            for (var i in csvArr){
+                if (i > 0) {
+                    var row = csvArr[i];
+                    log.info('row {}', row);
 
-                var recordId = row[0];
-                log.info('record id {}', recordId);
+                    var recordId = row[0];
+                    log.info('record id {}', recordId);
 
-                if (recordId) {
-                    // update record
-                    var record = db.child(recordId);
-                    if (record) {
-                        log.info('record found {}', record);
-                        var claimJson = JSON.parse(record.json);
-                        var claimItemObj = {};
-                        for (var j in headerRow){
-                            var field = headerRow[j];
-                            if (claimItemFields.indexOf(field) == -1){
-                                claimJson[field] = row[j];
+                    if (recordId) {
+                        // update record
+                        var record = db.child(recordId);
+                        if (record) {
+                            log.info('record found {}', record);
+                            var claimJson = JSON.parse(record.json);
+                            var claimItemObj = {};
+                            for (var j in headerRow){
+                                if (row[j]) {
+                                    var field = headerRow[j];
+                                    if (claimItemFields.indexOf(field) == -1) {
+                                        claimJson[field] = row[j];
+                                    } else {
+                                        if (field == 'claimItemId') {
+                                            claimItemObj['recordId'] = row[j];
+                                        } else if (field == 'amount') {
+                                            claimItemObj[field] = formatter.toLong(row[j]);
+                                        } else {
+                                            claimItemObj[field] = row[j];
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Find claim item if exists
+
+                            if (claimJson.claimItems && claimJson.claimItems.length > 0){
+                                var found = false;
+                                for (var j in claimJson.claimItems){
+                                    var item = claimJson.claimItems[j];
+                                    log.info('item.recordId = {} claimItemObj.recordId = {} found = {} claimItemObj={}', item.recordId , claimItemObj.recordId, item.recordId == claimItemObj.recordId, JSON.stringify(claimItemObj));
+                                    if (item.recordId == claimItemObj.recordId){
+                                        // update claim item
+                                        item.soldDate = claimItemObj.soldDate;
+                                        item.modifiedDate = claimItemObj.modifiedDate || Date.now();
+                                        item.amount = claimItemObj.amount;
+                                        item.soldBy = claimItemObj.soldBy;
+                                        item.soldById = claimItemObj.soldById;
+                                        item.productSku = claimItemObj.productSku;
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (!found) {
+                                    log.info('not found {}', claimJson.claimItems);
+                                    // insert new item
+                                    claimJson.claimItems.push(claimItemObj);
+                                }
                             } else {
-                                if (field == 'claimItemId'){
-                                    claimItemObj['recordId'] = row[j];
-                                } else {
-                                    claimItemObj[field] = row[j];
-                                }
+                                claimJson.claimItems = [claimItemObj];
                             }
-                        }
-
-                        // Find claim item if exists
-
-                        if (claimJson.claimItems && claimJson.claimItems.length > 0){
-                            var found = false;
-                            for (var j in claimJson.claimItems){
-                                var item = claimJson.claimItems[j];
-                                if (item.recordId == claimItemObj.claimItemId){
-                                    // update claim item
-                                    item.soldDate = claimItemObj.soldDate;
-                                    item.modifiedDate = claimItemObj.modifiedDate || Date.now();
-                                    item.amount = claimItemObj.amount;
-                                    item.soldBy = claimItemObj.soldBy;
-                                    item.soldById = claimItemObj.soldById;
-                                    item.productSku = claimItemObj.productSku;
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if (!found) {
-                                log.info('not found {}', claimJson.claimItems);
-                                // insert new item
-                                claimJson.claimItems.push(claimItemObj);
-                            }
+                            // save record
+                            record.update(JSON.stringify(claimJson));
+                            updatedCount ++;
                         } else {
-                            claimJson.claimItems = [claimItemObj];
+                            // Insert new record with given id
+                            var claimItemObj = {};
+                            var claimObj = {};
+                            for (var j in headerRow){
+                                if (row[j]) {
+                                    if (claimItemFields.indexOf(headerRow[j]) != -1) {
+
+                                        if (headerRow[j] == 'claimItemId') {
+                                            claimItemObj['recordId'] = row[j];
+                                        } else if (headerRow[j] == 'amount') {
+                                            claimItemObj[headerRow[j]] = formatter.toLong(row[j]);
+                                        } else {
+                                            claimItemObj[headerRow[j]] = row[j];
+                                        }
+                                    } else {
+                                        claimObj[headerRow[j]] = row[j];
+                                    }
+                                }
+                            }
+                            claimObj.claimItems = [claimItemObj];
+                            var claim = db.createNew(recordId, JSON.stringify(claimObj), TYPE_RECORD);
+                            if (claim){
+                                insertedCount ++;
+                            }
                         }
-                        // save record
-                        record.update(JSON.stringify(claimJson));
-                        updatedCount ++;
                     } else {
-                        // Insert new record with given id
+                        // insert new claim
                         var claimItemObj = {};
                         var claimObj = {};
                         for (var j in headerRow){
-                            if (claimItemFields.indexOf(headerRow[j]) != -1){
-                                if (headerRow[j] == 'claimItemId'){
-                                    claimItemObj['recordId'] = row[j];
+                            if (row[j]) {
+                                if (claimItemFields.indexOf(headerRow[j]) != -1){
+                                    if (headerRow[j] == 'claimItemId'){
+                                        claimItemObj['recordId'] = 'claimItem-' + generateRandomText(32);;
+                                    } else if (headerRow[j] == 'amount'){
+                                        claimItemObj[headerRow[j]] = formatter.toLong(row[j]);
+                                    } else {
+                                        claimItemObj[headerRow[j]] = row[j];
+                                    }
                                 } else {
-                                    claimItemObj[headerRow[j]] = row[j];
+                                    claimObj[headerRow[j]] = row[j];
                                 }
-                            } else {
-                                claimObj[headerRow[j]] = row[j];
                             }
+
                         }
                         claimObj.claimItems = [claimItemObj];
-                        var claim = db.createNew(recordId, JSON.stringify(claimObj), TYPE_RECORD);
+                        var id = 'claim-' + generateRandomText(32);
+                        claimObj.recordId = id;
+                        var claim = db.createNew(id, JSON.stringify(claimObj), TYPE_RECORD);
                         if (claim){
                             insertedCount ++;
                         }
                     }
-                } else {
-                    // insert new claim
-                    var claimItemObj = {};
-                    var claimObj = {};
-                    for (var j in headerRow){
-                        if (claimItemFields.indexOf(headerRow[j]) != -1){
-                            if (headerRow[j] == 'claimItemId'){
-                                claimItemObj['recordId'] = 'claimItem-' + generateRandomText(32);;
-                            } else {
-                                claimItemObj[headerRow[j]] = row[j];
-                            }
-                        } else {
-                            claimObj[headerRow[j]] = row[j];
-                        }
-                    }
-                    claimObj.claimItems = [claimItemObj];
-                    var id = 'claim-' + generateRandomText(32);
-                    claimObj.recordId = id;
-                    var claim = db.createNew(id, JSON.stringify(claimObj), TYPE_RECORD);
-                    if (claim){
-                        insertedCount ++;
-                    }
                 }
             }
         }
+
+        return views.jsonObjectView(JSON.stringify({status: true, data: {insertedCount: insertedCount, updatedCount: updatedCount}}));
+    } catch (e) {
+        return views.jsonView(false, "There was error occurred when importing data. Error detail: " + e.message);
     }
-
-
-    return views.jsonObjectView(JSON.stringify({status: true, data: {insertedCount: insertedCount, updatedCount: updatedCount}}));
 }

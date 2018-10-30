@@ -3,11 +3,22 @@
 #set($auctionFolder = $rootFolder.find("/auctions"))
 #if ($auctionFolder && $auctionFolder.isReadable())
     #set($auctions = $auctionFolder.childrenWithPermission.sortByExpr("auctionEndDate"))
+
     #foreach($auction in $auctions)
         #if($auction.isInGroup() && $auction.auctionState == "open")
-    
             #set($comingUpAuction = $auction)
             #break
+        #end
+    #end
+
+    #if( $comingUpAuction )
+    #else
+        #set($auctions = $auctions.sortByExpr("auctionStartDate"))
+        #foreach($auction in $auctions)
+            #if($auction.isInGroup() && $auction.auctionState == "active")
+                #set($comingUpAuction = $auction)
+                #break
+            #end
         #end
     #end
 #end
@@ -34,18 +45,30 @@
         #end
 
         <div class="embed-responsive embed-responsive-4by3">
-            <span class="embed-responsive-item" style="background-image: url('$bg');"></span>
+            <a href="$comingUpAuction.href" style="display: block">
+                <span class="embed-responsive-item" style="background-image: url('$bg');"></span>
+            </a>
         </div>
         <div class="panel-info">
             <div class="panel-heading">
                 <div class="auction-info">
-                    <div class="text-center"><strong>$comingUpAuction.title</strong></div>
+                    <div class="text-center">
+                        <strong>$comingUpAuction.title</strong>
+                    </div>
                 </div>
                 <div class="auction-countdown">
+                    #if( $auction.auctionState == "open" )
                     <div class="countdown text-center" data-end="$formatter.formatDateISO8601($comingUpAuction.auctionEndDate)" data-wSUri="$comingUpAuction.wSUri">
                         00:00:00:<span>00</span>
                     </div>
+                    #else
+                    <div class="countdown text-center" data-end="$formatter.formatDateISO8601($comingUpAuction.auctionStartDate)" data-wSUri="$comingUpAuction.wSUri">
+                        00:00:00:<span>00</span>
+                    </div>
+                    #end
                 </div>
+
+                #if( $auction.auctionState == "open" )
                 <div class="auction-info">
                     <div class="text-center"><span  class="trans-lookup"  data-transcode="current-bid">Current Bid:</span>
                         #if($comingUpAuction.currentBidValue)
@@ -55,11 +78,13 @@
                         #end
                     </div>
                 </div>
+                #end
             </div>
         </div>
         #if ($showDescription == "true")
             <div class="panel-body">
                 <div class="clearfix">$!comingUpAuction.description</div>
+                #if( $auction.auctionState == "open" )
                 <form action="/auctions/$comingUpAuction.name" method="post" class="form-horizontal">
                     <div class="form-group">
                         <div class="col-sm-12">
@@ -72,8 +97,10 @@
                         </div>
                     </div>
                 </form>
+                #end
             </div>
         #else
+            #if( $auction.auctionState == "open" )
             <div class="panel-default">
                 <div class="panel-heading">
                     <form action="/auctions/$comingUpAuction.name" method="post" class="form-horizontal">
@@ -90,6 +117,7 @@
                     </form>
                 </div>
             </div>
+            #end
         #end
     </div>
 #end

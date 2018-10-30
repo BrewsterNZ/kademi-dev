@@ -268,7 +268,6 @@ function createClaim(page, params, files, form) {
                 log.info("Run as user: {}", params.claimItemsLength);
 
                 var claim = db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
-                eventManager.goalAchieved("claimSubmittedGoal", {"claim": id, "claimType": params.claimType});
 
                 var soldBy, soldById = null;
 
@@ -316,6 +315,8 @@ function createClaim(page, params, files, form) {
                 }
 
                 createOrUpdateClaimItem(claim, obj, claimItems);
+
+                eventManager.goalAchieved("claimSubmittedGoal", {"claim": id, "claimType": params.claimType});
             });
         });
     } catch (e) {

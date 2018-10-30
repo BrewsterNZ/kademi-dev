@@ -30,7 +30,7 @@ function generateShoppingCartReport(page, params, req, resp) {
 function getShoppingCartCSVHeaders() {
     var headers = formatter.newArrayList();
 
-    headers.addAll(["Product SKU", "Date", "First Name", "Last Name", "Redemption Product Name", "Redemption Product Quantity", "Shipping Address", "City", "State", "Post Code", "Phone Number"]);
+    headers.addAll(["Product SKU", "Date", "First Name", "Last Name", "Redemption Product Name", "Redemption Product Quantity", "Shipping Address", "City", "State", "Post Code", "Phone Number", "CartID", "Internal ID", "User name"]);
 
     return headers;
 }
@@ -84,16 +84,20 @@ function generateProductOrderRow(c, po) {
     }
 
     row.add(formatter.cleanString(sku));
-    row.add(formatter.formatDateTime(c.getOrderedDate()));
+    row.add(formatter.formatDateTime(c.orderedDate));
     row.add(formatter.cleanString(firstName));
     row.add(formatter.cleanString(surName));
     row.add(formatter.cleanString(productTitle));
-    row.add(formatter.cleanString(po.getQuantity()));
+    row.add(formatter.cleanString(po.quantity ));
     row.add(formatter.cleanString(buildCartAddress(c)));
-    row.add(formatter.cleanString(c.getCity()));
-    row.add(formatter.cleanString(c.getAddressState()));
-    row.add(formatter.cleanString(c.getPostcode()));
+    row.add(formatter.cleanString(c.city ));
+    row.add(formatter.cleanString(c.addressState ));
+    row.add(formatter.cleanString(c.postcode));
     row.add(formatter.cleanString(phone));
+    row.add(formatter.cleanString(c.cartId));
+    row.add(formatter.cleanString(c.id));
+    row.add(formatter.cleanString(c.profile.name));
+
 
     return row;
 }

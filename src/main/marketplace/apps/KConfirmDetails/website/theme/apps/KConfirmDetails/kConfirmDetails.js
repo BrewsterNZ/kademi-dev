@@ -5,7 +5,11 @@
             flog('init KConfirm :: ', confirmDetailsModal);
             confirmDetailsModal.modal("show");
             var autoreload = confirmDetailsModal.data('autoreload');
-
+            // init datepicker
+            $('#birthDate').datetimepicker({
+                format: 'DD/MM/YYYY'
+            });
+            // init form
             $('#confirmDetailsForm').forms({
                 onSuccess: function (resp) {
                     flog('kConfirm :: ', resp);

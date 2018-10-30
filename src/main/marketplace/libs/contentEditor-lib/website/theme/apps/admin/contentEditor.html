@@ -18,6 +18,7 @@
         #foreach( $lessSource in $templater.lessSources.entrySet())
             <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
         #end
+        <script>var pageInitFunctions = [];</script>
 
         <!-- Injected CSS sources -->
         #foreach($groupEntry in $templater.cssSources.entrySet())
@@ -26,26 +27,6 @@
             #end
         #end
         <!-- End injected CSS sources -->
-
-        <!-- Injected JS sources - grouped -->
-        #foreach($groupEntry in $templater.jsSources.entrySet())
-            #if( $formatter.isNotEmpty($groupEntry.key) )
-            #foreach($path in $templater.getCombinedJsPaths($groupEntry.key))
-            <script src="$path" type="text/javascript">//</script>
-            #end
-            #end
-        #end
-
-        <!-- Injected JS sources - NOT grouped -->
-        #foreach($groupEntry in $templater.jsSources.entrySet())
-            #if( $formatter.isEmpty($groupEntry.key) )
-                #foreach($source in $groupEntry.value)
-                <script src="$source" type="text/javascript">//</script>
-                #end
-            #end
-        #end
-
-
 
         #portlets("header")
 
@@ -315,6 +296,24 @@
         #set($snippetsUrl = "_components?fileName=$!fname")
         #set($snippetsHandlersUrl = "${page.parent.href}_components?handlers&fileName=$!fname")
 
+        <!-- Injected JS sources - grouped -->
+        #foreach($groupEntry in $templater.jsSources.entrySet())
+            #if( $formatter.isNotEmpty($groupEntry.key) )
+            #foreach($path in $templater.getCombinedJsPaths($groupEntry.key))
+            <script src="$path" type="text/javascript">//</script>
+            #end
+            #end
+        #end
+
+        <!-- Injected JS sources - NOT grouped -->
+        #foreach($groupEntry in $templater.jsSources.entrySet())
+            #if( $formatter.isEmpty($groupEntry.key) )
+                #foreach($source in $groupEntry.value)
+                <script src="$source" type="text/javascript">//</script>
+                #end
+            #end
+        #end
+
         <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
         <div id="file-jsparams">
             <code class="hide">$!bodyCssBgColor $!bodyCssBgImg</code>
@@ -323,7 +322,7 @@
                 #foreach($metaName in $file.metaNames)
                     metas.push({
                         'name': '$metaName',
-                        'content': '$!file.getMeta($metaName)'
+                        'content': '$!formatter.htmlAttEncode($!file.getMeta($metaName))'
                     });
                 #end
 

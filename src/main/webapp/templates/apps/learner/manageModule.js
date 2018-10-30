@@ -847,29 +847,32 @@ function doSavePage(form, pageArticle, isQuiz) {
                         Msg.success('Saved!');
                         modal.modal('hide');
                     } else {
-                        if (isKEditor) {
-                            var editorFrame = modal.find('iframe');
-                            var pageName = modal.find('[name=pageName]').val();
-                            if (!pageName) {
-                                pageName = getFileName(response.nextHref);
-                            }
-                            var postData = {
-                                url: window.location.href.split('#')[0],
-                                triggerSave: true,
-                                pageName: pageName,
-                                willClose: modal.hasClass('save-and-close')
-                            };
+                        Msg.success('Saved!');
+                        closeFuseModal(modal);
 
-                            modal.find('[name=pageName]').val(pageName);
-
-                            var postDataStr = JSON.stringify(postData);
-                            flog('Post data: ' + postDataStr);
-
-                            editorFrame[0].contentWindow.postMessage(postDataStr, iframeUrl);
-                        } else {
-                            Msg.success('Saved!');
-                            closeFuseModal(modal);
-                        }
+                        // if (isKEditor) {
+                        //     var editorFrame = modal.find('iframe');
+                        //     var pageName = modal.find('[name=pageName]').val();
+                        //     if (!pageName) {
+                        //         pageName = getFileName(response.nextHref);
+                        //     }
+                        //     var postData = {
+                        //         url: window.location.href.split('#')[0],
+                        //         triggerSave: true,
+                        //         pageName: pageName,
+                        //         willClose: modal.hasClass('save-and-close')
+                        //     };
+                        //
+                        //     modal.find('[name=pageName]').val(pageName);
+                        //
+                        //     var postDataStr = JSON.stringify(postData);
+                        //     flog('Post data: ' + postDataStr);
+                        //
+                        //     editorFrame[0].contentWindow.postMessage(postDataStr, iframeUrl);
+                        // } else {
+                        //     Msg.success('Saved!');
+                        //     closeFuseModal(modal);
+                        // }
                     }
                 } else {
                     Msg.error('There was an error saving the page: ' + response.messages);

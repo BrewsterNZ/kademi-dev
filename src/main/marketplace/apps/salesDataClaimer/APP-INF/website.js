@@ -332,13 +332,14 @@ function saveProductClaim(page, params, files) {
 
                 securityManager.runAsUser(enteredUser, function () {
                     var claim = db.createNew(claimId, JSON.stringify(claimObj), TYPE_RECORD);
-                    eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});
 
                     var claimItems = [
                         {amount: 1, productSku: productsSKUs[i], soldDate: soldDate, soldBy: soldBy, soldById: soldById}
                     ];
 
                     createOrUpdateClaimItem(claim, claimObj, claimItems);
+
+                    eventManager.goalAchieved("claimSubmittedGoal", {"claim": claimId});
                 });
             }
 
@@ -382,7 +383,7 @@ function getClaimSalesById(salesDataId) {
         "size": 1
     };
 
-    var sm = applications.search.searchManager;
+    var sm = services.searchManager;
     var salesDataResp = sm.search(JSON.stringify(salesQuery), 'dataseries');
 
     var record = {};
@@ -455,14 +456,15 @@ function createClaimTaggingInner(page, params, files) {
                 if (salesDataRecord.points) {
                     nodeParams["points"] = salesDataRecord.points;
                 }
-                eventManager.goalAchieved("claimSubmittedGoal", nodeParams);
-                eventManager.goalAchieved("claimProcessedGoal", custProfileBean, {"claim": claimId, "claimType": salesDataRecord.type, 'status': RECORD_STATUS.APPROVED});
 
                 var claimItems = [
                     {amount: 1, productSku: null, soldDate: soldDate, soldBy: soldBy, soldById: soldById}
                 ];
 
                 createOrUpdateClaimItem(claim, claimObj, claimItems);
+
+                eventManager.goalAchieved("claimSubmittedGoal", nodeParams);
+                eventManager.goalAchieved("claimProcessedGoal", custProfileBean, {"claim": claimId, "claimType": salesDataRecord.type, 'status': RECORD_STATUS.APPROVED});
             });
 
             result.data = {};
@@ -504,7 +506,7 @@ function getClaimGroupContactRequest(rf, claimGroupId) {
         }
     };
 
-    var queryRes = applications.search.searchManager.search(JSON.stringify(query), 10000, 'profile');
+    var queryRes = services.searchManager.search(JSON.stringify(query), 10000, 'profile');
 
     return queryRes;
 }
@@ -612,7 +614,7 @@ function getUnclaimedSales(rf, dataSeriesName, extraFields, filteringParams, all
         }
     }
 
-    var sm = applications.search.searchManager;
+    var sm = services.searchManager;
     var salesDataResp = sm.search(JSON.stringify(salesQuery), 'dataseries');
 
     var data = [];
@@ -683,7 +685,7 @@ function getclaimedSales(rf, dataSeriesName, extraFields, filteringParams) {
         }
     }
 
-    var sm = applications.search.searchManager;
+    var sm = services.searchManager;
     var salesDataResp = sm.search(JSON.stringify(salesQuery), 'dataseries');
 
     var data = [];

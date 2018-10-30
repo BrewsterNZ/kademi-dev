@@ -72,48 +72,31 @@
                 dataType: 'json',
                 success: function (resp) {
                     if (resp && resp.status) {
-                        $.ajax({
-                            url: url + '?claimItems',
-                            type: 'get',
-                            dataType: 'json',
-                            success: function (respItems) {
-                                if (respItems && respItems.status) {
-                                    modalViewTBody.empty();
+                        modalViewTBody.empty();
+                        var claimItems = resp.data.claimItems;
+                        $.each(claimItems, function (_, claimItem) {
+                            var row = '<tr>' +
+                                '<td>' + (claimItem.amount ? claimItem.amount : '') + '</td>' +
+                                '<td>' + (claimItem.soldDate ? moment(claimItem.soldDate).format('DD/MM/YYYY HH:mm') : '') + '</td>' +
+                                '<td>' + (claimItem.productSku ? claimItem.productSku : '') + '</td>' +
+                                '</tr>';
 
-                                    $.each(respItems.data.hits.hits, function (_, item) {
-                                        var claimItem = item.fields;
-
-                                        var row = '<tr>' +
-                                                '<td>' + (claimItem.amount && claimItem.amount.length > 0 ? claimItem.amount[0] : '') + '</td>' +
-                                                '<td>' + (claimItem.soldDate && claimItem.soldDate.length > 0 ? moment(claimItem.soldDate[0]).format('DD/MM/YYYY HH:mm') : '') + '</td>' +
-                                                '<td>' + (claimItem.productSku && claimItem.productSku.length > 0 ? claimItem.productSku[0] : '') + '</td>' +
-                                                '</tr>';
-
-                                        modalViewTBody.append(row);
-                                    });
-
-                                    $.each(resp.data, function (key, value) {
-                                        var newValue = value;
-                                        if (key === 'soldDate') {
-                                            newValue = '<abbr class="timeago" title="' + value + '">' + value + '</abbr>';
-                                        }
-
-                                        modalView.find('.' + key).html(newValue);
-                                    });
-
-                                    modalView.find('.thumbnail img').attr('src', resp.data.receipt || '/static/images/photo_holder.png');
-
-                                    modalView.find('.timeago').timeago();
-                                    modalView.modal('show');
-                                } else {
-                                    alert('Error in getting claim item data. Please contact your administrators to resolve this issue.');
-                                }
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                alert('Error in getting claim item data: ' + errorThrown + '. Please contact your administrators to resolve this issue.');
-                                flog('Error in getting claim item data', jqXHR, textStatus, errorThrown);
-                            }
+                            modalViewTBody.append(row);
                         });
+
+                        $.each(resp.data, function (key, value) {
+                            var newValue = value;
+                            if (key === 'soldDate') {
+                                newValue = '<abbr class="timeago" title="' + value + '">' + value + '</abbr>';
+                            }
+
+                            modalView.find('.' + key).html(newValue);
+                        });
+
+                        modalView.find('.thumbnail img').attr('src', resp.data.receipt || '/static/images/photo_holder.png');
+
+                        modalView.find('.timeago').timeago();
+                        modalView.modal('show');
                     } else {
                         alert('Error in getting claim data. Please contact your administrators to resolve this issue.');
                     }

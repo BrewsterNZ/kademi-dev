@@ -1,7 +1,7 @@
 /**
  *
  * jquery.forms.js
- * @version: 1.1.7
+ * @version: 1.0.4
  * @depends: common.js, moment.js
  *
  * Configuration:
@@ -56,7 +56,7 @@
     var defaultRegionCode = (typeof window.defaultRegionCode !== 'undefined' && window.defaultRegionCode !== '') ? window.defaultRegionCode : 'AU';
     
     // Version for jquery.forms
-    $.fn.forms.version = '1.1.7';
+    $.fn.forms.version = '1.0.4';
 
     // Get libphonenumber.js
     // $.getScriptOnce('/static/libphonenumber/7.2.6/libphonenumber.js', function () {
@@ -67,7 +67,7 @@
     $.fn.forms.DEFAULT = {
         postUrl: null, // means to use the form action as url
         validate: function (form, config) {
-            flog('[jquery.forms] Default validate of v1.1.7', form, config);
+            flog('[jquery.forms] Default validate of ' + $.fn.forms.version, form, config);
 
             return {
                 error: 0,
@@ -501,13 +501,16 @@ function doPostForm(form, config, event) {
  * @param {Function} callback
  */
 function showFormMessage(form, config, message, title, type, callback) {
+    flog("jquery.forms: showFormMessage");
     config = getFormConfig(form, config);
     
     var alertMsg = getValidationMessage(form, config);
     if (alertMsg.length === 0) {
         alertMsg = $(config.renderMessageWrapper(message, type));
         form.prepend(alertMsg);
+        flog("create new alerts container", alertMsg);        
     } else {
+        flog("use existing alerts container", alertMsg);
         alertMsg.append(message);
         alertMsg.attr('class', 'form-message alert alert-' + type);
     }
@@ -543,6 +546,7 @@ function showFormMessage(form, config, message, title, type, callback) {
  * @param {String|Array} message
  */
 function showErrorMessage(form, config, message) {
+    flog("jquery.forms: showErrorMessage");
     config = getFormConfig(form, config);
     
     var messageHtml = config.renderErrorMessage(message);

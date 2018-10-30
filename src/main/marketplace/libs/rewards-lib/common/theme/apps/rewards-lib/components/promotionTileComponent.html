@@ -1,6 +1,6 @@
 <div class="row">
-    #set( $rewards = $applications.rewards.rewardsHome )
-    #set( $activeRewards = $rewards.activeRewards )
+    #set( $activeRewards = $services.promotionsManager.availablePromotions() )
+
 
     #if ($formatter.isNull($tilesPerRow))
         #set($tilesPerRow = 3)
@@ -18,10 +18,10 @@
             #renderRow ("No active reward available", "", "col-md-12 col-lg-8", "promotionTileHero", "/theme/img/photo_holder.png")
         #end
     #else
-        #foreach( $reward in $rewards.activeRewards )
+        #foreach( $reward in $activeRewards )
 
-            #if( $reward.imageHash )
-                #set( $bg = "/_hashes/files/$reward.imageHash/alt-640-480.png" )
+            #if( $reward.image.imageHash )
+                #set( $bg = "/_hashes/files/$reward.image.imageHash/alt-640-480.png" )
             #else
                 #set($bg = "/theme/img/photo_holder.png")
             #end
@@ -37,7 +37,7 @@
         #end
     #end
 
-    #set( $closedRewards = $rewards.viewableRewards )
+    #set( $closedRewards = $services.promotionsManager.promotions(false, $formatter.now) )
     #if( $closedRewards.isEmpty() )
         #if (!$page)
             #renderRowClosedReward("No closed reward available", "", "col-md-6 col-lg-4", "/theme/img/photo_holder.png")
@@ -45,8 +45,8 @@
     #else
         #foreach( $reward in $rewards.viewableRewards )
             #if ($reward.status == 'e')
-            #if( $reward.imageHash )
-                #set( $bg = "/_hashes/files/$reward.imageHash/alt-300-300.png" )
+            #if( $reward.image.imageHash )
+                #set( $bg = "/_hashes/files/$reward.image.imageHash/alt-300-300.png" )
             #else
                 #set($bg = "/theme/img/photo_holder.png")
             #end

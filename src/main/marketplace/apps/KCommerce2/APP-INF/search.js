@@ -1,4 +1,7 @@
 function productSearchAggs(page, store, category, query) {
+    if( store == null ) {
+        return null;
+    }
     // Do aggregation search
     var aggsQuery = {
         "size": 0,
@@ -46,7 +49,11 @@ function productSearchAggs(page, store, category, query) {
  * @param {type} query
  * @returns {unresolved}
  */
-function productSearch(page, store, category, query, attributePairs, otherCats, brands, priceRanges, pageFrom, pageSize) {
+function productSearch(page, store, category, query, attributePairs, otherCats, brands, priceRanges, pageFrom, pageSize, sortBy, sortDirection) {
+    if( store == null ) {
+        return null;
+    }
+    
     // Do product search with pagination
     if (!pageFrom || isNaN(pageFrom)) {
         pageFrom = 0;
@@ -82,18 +89,27 @@ function productSearch(page, store, category, query, attributePairs, otherCats, 
 
     appendCriteria(queryJson, store, category, query, attributePairs, otherCats, brands, priceRanges);
 
+    if (!formatter.isNull(sortBy)){
+        var sort = {};
+        sort[sortBy] = {"order" : sortDirection};
+        queryJson.sort = sort;
+    }
     var queryText = JSON.stringify(queryJson);
-    log.info('Final query {}', queryText);
+    log.info('query text {}', queryText);
     var results = services.searchManager.search(queryText, 'ecommercestore');
 
     return results;
 }
 
 function findAttributesQuery(store, category, query, minPrice, maxPrice, numBuckets, attNameBuckets) {
+    if( store == null ) {
+        return null;
+    }
+    
     var width = ((maxPrice + 10) - minPrice) / numBuckets;
 
     var ranges = [];
-    for (var i = 1; i <= numBuckets; i++) {
+    for (var i = 0; i <= numBuckets; i++) {
         var from = roundDownToNearestTen((width * i));
         var to = roundDownToNearestTen(width * (i + 1));
         ranges.push({
@@ -130,7 +146,7 @@ function findAttributesQuery(store, category, query, minPrice, maxPrice, numBuck
     var aggs = queryJson.aggs;
     for (var i = 0; i < attNameBuckets.length; i++) {
         var att = attNameBuckets[i].key;
-        log.info("Add att {}", att);
+//        log.info("Add att {}", att);
         aggs[att + "Att"] = {
             "terms": {
                 "field": att
@@ -143,7 +159,7 @@ function findAttributesQuery(store, category, query, minPrice, maxPrice, numBuck
     appendCriteria(queryJson, store, category, query);
 
     var s = JSON.stringify(queryJson);
-    log.info("price range query {}", s);
+    //log.info("price range query {}", s);
     var results = services.searchManager.search(s, 'ecommercestore');
     return results;
 }
@@ -176,7 +192,7 @@ function listCategories(store, parentCategory) {
     }
     crit.sortAsc("title");
     var list = crit.execute(100);
-    log.info("listCategories list={}", list);
+    //log.info("listCategories list={}", list);
     return list;
 }
 
@@ -189,6 +205,10 @@ function listCategories(store, parentCategory) {
  * @returns {Array|productInCategorySearch.list}
  */
 function productInCategorySearch(store, category, query) {
+    if( store == null ) {
+        return null;
+    }
+    
     var queryJson = {
         "size": 0,
         "aggregations": {
@@ -210,7 +230,7 @@ function productInCategorySearch(store, category, query) {
     appendCriteria(queryJson, store, category, query);
 
     var queryText = JSON.stringify(queryJson);
-    log.info("query: {}", queryText);
+    //log.info("query: {}", queryText);
     var results = services.searchManager.search(queryText, 'ecommercestore');
 
     //log.info("cat results {} - {}", results, results.class);
@@ -228,10 +248,10 @@ function productInCategorySearch(store, category, query) {
         var prod = prodBuilder.get(id);
         if (prod != null) {
             var catsAgg = bucket.aggregations.asMap.cats;
-            log.info(" - catsAgg {} {}", catsAgg, catsAgg.buckets.size());
+            // log.info(" - catsAgg {} {}", catsAgg, catsAgg.buckets.size());
             if (catsAgg.buckets.size() > 0) {
                 for (var c = 0; c < catsAgg.buckets.size(); c++) {
-                    log.info("  -- cat bucket {}", catsAgg.buckets[c]);
+                    // log.info("  -- cat bucket {}", catsAgg.buckets[c]);
                     var catBucket = catsAgg.buckets[c];
                     var catId = formatter.toLong(catBucket.keyAsNumber);
                     var category = catBuilder.get(catId);
@@ -257,7 +277,7 @@ function productInCategorySearch(store, category, query) {
 }
 
 
-function appendCriteria(queryJson, store, category, query, attributePairs, otherCategorys, brands, priceRanges) {
+function appendCriteria(queryJson, store, category, query, attributePairs, otherCategorys, brands, priceRanges) {    
     // todo filter by store and category
     var must = [
         {"term": {"storeId": store.id}}

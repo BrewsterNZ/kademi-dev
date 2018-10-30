@@ -44,6 +44,7 @@ var cartMapping = controllerMappings
         .addMethod('POST', 'applyPromoCodes', 'promoCodes')
         .addMethod('POST', 'createAccount', 'kcom2Firstname')
         .addMethod('POST', 'findProfile', 'findProfileEmail')
+        .addMethod('GET', 'getAddresses', 'getAddresses')
         .addMethod('POST', 'saveAddress', 'addressLine1')
         .addMethod('POST', 'saveShippingProfider', 'shippingProviderId');
 
@@ -69,7 +70,7 @@ controllerMappings
 
 function doSuggestionList(page, params) {
     var query = params.suggestions;
-    log.info("doSuggestionList: {}", query);
+    //log.info("doSuggestionList: {}", query);
     var store = page.attributes.store;
     var searchResults = productInCategorySearch(store, page.attributes.category, query); // aggregation to find top cats with matching products
     page.attributes.suggestionList = searchResults; // make available to templates
@@ -106,14 +107,17 @@ function doEcomList(page, params) {
  * @returns {undefined}
  */
 function listBrands(store, searchResults) {
+    if( store == null || searchResults == null ) {
+        return null;
+    }
     var brandBuckets = searchResults.aggregations.asMap.brands.buckets;
     var brandsList = formatter.newArrayList();
-    log.info("listBrands: brandBuckets={}", brandBuckets);
+    //log.info("listBrands: brandBuckets={}", brandBuckets);
     formatter.foreach(brandBuckets, function(brandBucket){
         var brandId = brandBucket.key;
-        log.info("listBrands: brandId={}", brandId);
+        //log.info("listBrands: brandId={}", brandId);
         var brandCat = services.criteriaBuilders.getBuilder("category").get(brandId);
-        log.info("listBrands: brand={}", brandCat);
+        //log.info("listBrands: brand={}", brandCat);
         if( brandCat != null ) {
             brandsList.add(brandCat);
         }
@@ -135,7 +139,7 @@ function findAttsInParams(params) {
     for( var i=0; i<allAttNames.length; i++) {
         var attName = allAttNames[i].object1;
         var attValue = params.get(attName);
-        log.info("findAttsInParams: {} {}", attName, attValue);
+        //log.info("findAttsInParams: {} {}", attName, attValue);
         if( !formatter.isEmpty(attValue) ) {
             atts.push({
                 "name" : attName,
@@ -150,7 +154,7 @@ function findBrandsInParams(params) {
     var brands = formatter.newArrayList();
     var idsList = formatter.toList(formatter.split(params.brandId));
     formatter.foreach(idsList, function(sId) {
-        log.info("findBrandsInParams: id={}", sId);
+        // log.info("findBrandsInParams: id={}", sId);
         var id = formatter.toLong(sId);
         if( id != null ) {
             var cat = services.criteriaBuilders.get("category").eq("id", id).executeSingle();
@@ -168,7 +172,7 @@ function findPriceRanges(params) {
     var endPriceList = formatter.toList(formatter.split(params.endPrice));
     var currIdx = -1;
     formatter.foreach(startPriceList, function(sStartPrice) {
-        log.info("findPriceRanges: startPrice={}", sStartPrice);
+        // log.info("findPriceRanges: startPrice={}", sStartPrice);
         currIdx ++;
         var startPrice = formatter.toLong(sStartPrice);
         if (endPriceList[currIdx] && !isNaN(endPriceList[currIdx])){
@@ -220,14 +224,16 @@ function checkout(page, params, files, form) {
         return views.jsonView(false, "The item prices have changed, please refresh your page. " + totalAmountFromForm + " was submitted, current price is " + checkoutItems.totalCost);
     }
 
-
     var paymentResult;
     transactionManager.runInTransaction(function () {
         var customerGroup = services.cartManager.getOrCreateCustomerGroup("customers"); // todo move to setting
         var purchaser = services.cartManager.getOrCreatePurchaser(form, customerGroup);
 
         var cart = checkoutItems.cart;
-        form.databind(cart);
+
+        // https://github.com/Kademi/kademi-dev/issues/6194
+        // Must not databind to the cart, because eway fields will overwrite cart fields
+        //form.databind(cart);
 
         var useBillingAddress = form.booleanParam("useBillingAddress");
         var addressBuilder = services.criteriaBuilders.getBuilder("address");
@@ -423,17 +429,72 @@ function createAccount(page, params) {
     log.info('findProfile {} {}', page, params);
     var rootOrg = page.find('/').organisation;
     var orgData = page.find('/').orgData;
+    var jsonResult;
     if (params.kcom2Firstname && params.kcom2Email && params.kcom2Password){
         transactionManager.runInTransaction(function () {
-            var p = securityManager.createProfile(rootOrg, params.kcom2Email, params.kcom2Firstname, params.kcom2Password);
-            p.firstName = params.kcom2Firstname;
-            p.surName = params.kcom2Surname;
-            services.userManager.updateUser(p);
+            var ur = applications.userApp.findUserResource(params.kcom2Email);
+            if (!ur){
+                log.info('kcom2 createAccount user not found {}', ur);
+                var p = securityManager.createProfile(rootOrg, params.kcom2Email, params.kcom2Firstname, params.kcom2Password);
+                p.firstName = params.kcom2Firstname;
+                p.surName = params.kcom2Surname;
+                services.userManager.updateUser(p);
+                orgData.createMembership(p.name, p.email, orgData, "ecommerce-users");
+                jsonResult = views.jsonView(true, "Profile created");
+            } else {
+                if (!ur.hasPassword){
+                    log.info('kcom2 createAccount user found and has no password {}', ur);
+                    var p = ur.thisProfile;
+                    p.firstName = params.kcom2Firstname;
+                    p.surName = params.kcom2Surname;
 
-            orgData.createMembership(p.name, p.email, orgData, "ecommerce-users");
+                    var org = services.userManager.toOrg(orgData);
+                    services.userManager.setPassword(p, params.kcom2Password);
+
+                    services.userManager.updateUser(p);
+                    if (!ur.isInGroup("ecommerce-users")){
+                        orgData.createMembership(p.name, p.email, orgData, "ecommerce-users");
+                    }
+
+                    jsonResult = views.jsonView(true, "Profile updated with password");
+                } else {
+                    log.info('kcom2 createAccount user found and has password {}', ur);
+                    jsonResult = views.jsonView(false, "Profile with password existed. Please login");
+                }
+            }
         });
-        return views.jsonView(true, "Profile created");
     } else {
-        return views.jsonView(false, "Fields are missing");
+        jsonResult = views.jsonView(false, "Please enter required fields to continue");
     }
+
+    return jsonResult;
+}
+
+function getAddresses(page, params) {
+    log.info('getAddresses {} {}', page, params);
+    var user = securityManager.currentUser;
+    if (user) {
+        var addrs = services.userManager.findAddresses(user.thisProfile);
+        var profileAddrs = {};
+        for (var i in addrs){
+            var item = addrs[i];
+            var addr = {
+                addressLine1: item.address.addressLine1,
+                addressLine2: item.address.addressLine2,
+                addressState: item.address.addressState,
+                city: item.address.city,
+                postcode: item.address.postcode,
+                country: item.address.country,
+            };
+            var addressType = item.addressType;
+            if (addressType) {
+                profileAddrs[addressType] = addr;
+            }
+        }
+
+        return views.jsonObjectView(JSON.stringify({status: true, data: profileAddrs}))
+    } else {
+        return views.jsonView(false, "Not logged in");
+    }
+
 }
