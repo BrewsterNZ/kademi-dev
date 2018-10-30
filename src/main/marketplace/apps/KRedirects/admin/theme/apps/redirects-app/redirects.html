@@ -15,14 +15,6 @@
 
             <div class="btn-group pull-right" role="group">
                 <a href="#" class="btn btn-danger btn-sm btn-delete-redirects" role="button"><i class="fa fa-times"></i> Delete</a>
-                <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu pull-right" role="menu">
-                    <li>
-                        <a href="#" title="Bulk delete" id="bulkDeleteProducts" data-toggle="modal" data-target="#modalBulkDelete"><i class="glyphicon glyphicon-remove-circle"></i> Bulk delete...</a>
-                    </li>
-                </ul>
             </div>
         </div>
         <br />
@@ -37,6 +29,7 @@
                             <col width="30%" />
                             <col width="30%" /> 
                             <col width="50px"/>
+                            <col width="50px"/>
                         </colgroup>
                         <thead>
                             <tr>
@@ -45,6 +38,7 @@
                                 <th><a class="sort-field" id="link" href="#">Url</a></th>
                                 <th><a class="sort-field" id="target" href="#">Target</a></th>
                                 <th><input type="checkbox" class="check-all"/></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody id="redirect-table-body">
@@ -69,6 +63,11 @@
                                             $redirect.target
                                         </td>
                                         <td><input type="checkbox" data-redirect-id="$redirect.id"/></td>
+                                        <td>
+                                            <button data-redirect-id="$redirect.id" data-toggle="modal" data-target="#updateRedirectModal"  class="btn btn-info">
+                                                <i class="fa fa-pencil"></i>
+                                            </button>
+                                        </td>
                                     </tr>
                                     
                                 #end
@@ -115,6 +114,48 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
                             <button class="btn btn-sm btn-primary" type="submit">Add Redirect</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="updateRedirectModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Update redirect</h4>
+                    </div>
+                    <form action="." method="POST" class="form-horizontal" id="form-update-redirect">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <input type="hidden" name="newRedirect" value="newRedirect"/>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="redirect-add-link">Id</label>
+                                <div class="col-md-8">
+                                    <input class="form-control required" id="redirect-update-id" type="text" name="id"  placeholder="Id" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="redirect-update-url">Url</label>
+                                <div class="col-md-8">
+                                    <input class="form-control required" id="redirect-update-url" type="text" name="url"  placeholder="Url" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                    <label class="col-md-3 control-label" for="redirect-update-target">Target</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control required" id="redirect-update-target" type="text" name="target"  placeholder="Target" />
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Update Redirect</button>
                         </div>
                     </form>
                 </div>

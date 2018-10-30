@@ -8,6 +8,13 @@ controllerMappings
 	.addMethod("POST", "deleteRedirects", "deleteRedirect")
 	.build();
 
+controllerMappings
+	.websiteController() 
+	.enabled(true)
+	.isPublic(true)
+	.addMethod("GET", "_redirectUrl")
+	.build();
+
 function initRedirectsApp(orgRoot, webRoot, enabled){
 	log.info("initRedirectsApp: orgRoot={}", orgRoot);
 	if(webRoot){
@@ -25,4 +32,8 @@ function initRedirectsApp(orgRoot, webRoot, enabled){
 			log.info("Database {} for website {} exists",dbName,webRoot.websiteName);  
 		}
 	}
+}
+
+function _redirectUrl(page){
+	log.info("redirectUrl 11111111111111111111111 {}", page);
 }
