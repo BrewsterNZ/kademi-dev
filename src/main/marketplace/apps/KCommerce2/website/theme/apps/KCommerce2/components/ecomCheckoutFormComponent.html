@@ -226,14 +226,17 @@
                             <input name="city" placeholder="City" type="text" class="form-control required"  value="$!cart.city" />
                         </div>
                     </div>
-                    <!--
-#set( $cityResp = $formatter.getGeoIPService().getCityResponse($request.remoteAddr) )
-$cityResp.country
-                    -->
+                    #set( $cityResp = $formatter.geoIPService.getCityResponse($request.remoteAddr) )
+                    #set ($geoCountryCode = '')
+                    #foreach($cc in $formatter.countryCodes.list)
+                        #if ($cityResp.country == $cc.englishShortName)
+                            #set ($geoCountryCode = $cc.alpha2Code)
+                            #break
+                        #end
+                    #end
                     <div class="form-group">
-                        <input type="hidden" name="country" value="$!cart.country" />
+                        <input type="hidden" name="country" value="$!formatter.ifNull($cart.country, $geoCountryCode)" />
                         <div class="col-md-12">
-
                             <input autocomplete="off" placeholder="Country" type="text" class="form-control country-typeahead required" />
                         </div>
                     </div>

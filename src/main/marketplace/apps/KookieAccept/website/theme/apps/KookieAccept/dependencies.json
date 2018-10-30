@@ -1,0 +1,22 @@
+{
+	"appDependencies": [
+        {
+            "appId": "jquery-cookie-lib",
+            "branch": "1.4.1"
+        }
+    ],
+	"dependencies": [
+		 {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/KookieAccept/cookieAccept.js"
+            }
+        },
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/KookieAccept/cookieAccept.less"
+            }
+        }
+	]
+}

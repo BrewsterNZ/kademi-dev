@@ -85,13 +85,18 @@
 
 
         #macro( productRow $productHit $basePath )
-        #set ($prodUrl = "/$basePath/$hit.fields.name.value")
+            #if( $formatter.isEmpty($hit.fields.webName.value) )
+            #set( $prodUrl = "${basePath}$productHit.fields.name.value" )
+            #else
+            #set( $prodUrl = "${basePath}$productHit.fields.webName.value" )
+            #end
             #set($bg = "/static/images/photo_holder.png")
             #if ($hit.fields.primaryImageHref)
             #set($bg = $hit.fields.primaryImageHref.value)
             #end
             <div class="media prod">
-                <div class="media-left hidden-sm hidden-xs">
+                <div class="media-left hidden-sm hidden-xs" style="position: relative">
+                    #portlets("wishlistAddProductList")
                     <a href="$prodUrl">
                         <img class="media-object" alt="$hit.fields.title.value" src="$bg" width="200" height=""/>
                     </a>
@@ -99,7 +104,6 @@
                 <div class="media-body">
                     <h4 class="media-heading" style="margin-bottom: 10px;">
                         <a href="$prodUrl">$hit.fields.title.value</a>
-                        #portlets("wishlistAddProductList")
                     </h4>
                     <p><label class="label label-success" style="font-size: 14px;">
                         #if ($hit.fields.finalCost.value)
