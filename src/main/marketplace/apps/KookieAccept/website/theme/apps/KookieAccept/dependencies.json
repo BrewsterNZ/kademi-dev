@@ -9,13 +9,13 @@
 		 {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/cookie-accept/cookieAccept.js"
+                "path": "/theme/apps/KookieAccept/cookieAccept.js"
             }
         },
         {
             "less": {
                 "lessMedia": "all",
-                "path": "/theme/apps/cookie-accept/cookieAccept.less"
+                "path": "/theme/apps/KookieAccept/cookieAccept.less"
             }
         }
 	]
