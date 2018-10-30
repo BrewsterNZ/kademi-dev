@@ -1,0 +1,7 @@
+<controllers>
+    <source>/APP-INF/app.js</source>
+    
+    <menu parentId="menuRoot" id="menuManageHelloWorlds" text="I need coffee!" css="fa fa-coffee" ordering="45"/>
+    <menu parentId="menuManageHelloWorlds" id="menuManageHelloWorld" text="Make me a coffee" path="/helloWorld/" ordering="45"/>
+</controllers>
+            
