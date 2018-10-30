@@ -91,7 +91,8 @@
             #set($bg = $hit.fields.primaryImageHref.value)
             #end
             <div class="media prod">
-                <div class="media-left hidden-sm hidden-xs">
+                <div class="media-left hidden-sm hidden-xs" style="position: relative">
+                    #portlets("wishlistAddProductList")
                     <a href="$prodUrl">
                         <img class="media-object" alt="$hit.fields.title.value" src="$bg" width="200" height=""/>
                     </a>
@@ -99,7 +100,6 @@
                 <div class="media-body">
                     <h4 class="media-heading" style="margin-bottom: 10px;">
                         <a href="$prodUrl">$hit.fields.title.value</a>
-                        #portlets("wishlistAddProductList")
                     </h4>
                     <p><label class="label label-success" style="font-size: 14px;">
                         #if ($hit.fields.finalCost.value)
