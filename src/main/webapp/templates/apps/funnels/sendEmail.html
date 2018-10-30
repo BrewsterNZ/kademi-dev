@@ -94,8 +94,7 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <label for="subject">Subject</label>
-                    <select id="subjectAssetField" name="subjectAssetField" class="form-control select-asset-field">
-                    </select>
+                    <select id="subjectAssetField" name="subjectAssetField" class="form-control select-asset-field"></select>
                     <textarea style="height: 70px" id="subject" name="subject" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.subject )</textarea>
                     <small>Can use MVEL syntax</small>
                 </div>
@@ -112,11 +111,11 @@
                 </button>
 
                 <div class="btn-group">
-                    <button class="btn btn-sm btn-success btn-sent-test" type="button">
+                    <button class="btn btn-sm btn-info btn-sent-test" type="button">
                         <span class="glyphicon glyphicon-send"></span>
                         Send test
                     </button>
-                    <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+                    <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" type="button">
                         <span class="caret"></span>
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
@@ -184,9 +183,19 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-4" for="subject">Email subject</label>
                                     <div class="col-md-8">
-                                        <select id="subjectAssetField" name="subjectAssetField" class="form-control select-asset-field" data-value="$!page.node.subjectAssetField">
-                                        </select>
+                                        <select id="subjectAssetField" name="subjectAssetField" class="form-control select-asset-field" data-value="$!page.node.subjectAssetField"></select>
                                         <textarea style="height: 70px" name="subject" id="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.subject )</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="attachments">Attachments</label>
+                                    <div class="col-md-8">
+                                        <textarea style="height: 120px" name="attachments" id="subject" value="" placeholder="Enter attachment file names" class="form-control required-if-shown">#foreach( $attachment in $page.node.attachments)
+$attachment
+#end</textarea>
+
+                                        <small>Enter each file path on a new line. Use * to attach all files attached to the journey</small>
                                     </div>
                                 </div>
                             </div>
