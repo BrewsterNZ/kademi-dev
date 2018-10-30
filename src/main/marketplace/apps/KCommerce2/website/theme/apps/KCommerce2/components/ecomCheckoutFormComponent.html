@@ -226,11 +226,12 @@
                             <input name="city" placeholder="City" type="text" class="form-control required"  value="$!cart.city" />
                         </div>
                     </div>
-                    #set( $cityResp = $formatter.geoIPService.getCityResponse("14.1.32.0") )
+                    #set( $cityResp = $formatter.geoIPService.getCityResponse($request.remoteAddr) )
                     #set ($geoCountryCode = '')
                     #foreach($cc in $formatter.countryCodes.list)
                         #if ($cityResp.country == $cc.englishShortName)
                             #set ($geoCountryCode = $cc.alpha2Code)
+                            #break
                         #end
                     #end
                     <div class="form-group">
