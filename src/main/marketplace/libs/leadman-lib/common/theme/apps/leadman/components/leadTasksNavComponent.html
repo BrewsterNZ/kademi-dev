@@ -14,7 +14,7 @@
             </form>
         </div>
         <div class="col-sm-9" id="leadTasksNav">
-            <div class="btn-group" data-toggle="buttons">
+            <div class="btn-group m-mgb-5" data-toggle="buttons">
                 #set($type = "active")
                 #if($request.params.type)
                 #set($type = $request.params.type)
@@ -33,7 +33,7 @@
             </div>
 
             <div class="pull-right">
-                <div class="btn-group">
+                <div class="btn-group m-mgb-5">
                     <button class="btn btn-primary dropdown-toggle text-capitalize" type="button" id="assigneeDropdown"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         Assignee:
@@ -62,7 +62,7 @@
                         #end
                     </ul>
                 </div>
-                <div class="btn-group">
+                <div class="btn-group m-mgb-5 m-align-right">
                     <button class="btn btn-primary dropdown-toggle" type="button" id="sortDropdown" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="true">
                         Sort
@@ -77,7 +77,7 @@
                         <li><a href="#" data-name="sort" data-value="dueDate-desc" class="filter">Due Last</a></li>
                     </ul>
                 </div>
-                <button data-toggle="modal" data-target="#quickTaskModal" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+                <button data-toggle="modal" data-target="#quickTaskModal" class="btn btn-primary m-mgb-5 m-align-right"><i class="fa fa-plus"></i></button>
             </div>
 
         </div>
