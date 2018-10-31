@@ -146,10 +146,12 @@ $(function () {
                 .on('click', 'tbody td.editable', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    $(this).addClass('editing');
-                    editor.inline(this, {
-                        onBlur: 'submit'
-                    });
+                    if (!$('#leadTasksTable').hasClass('not-allow')){
+                        $(this).addClass('editing');
+                        editor.inline(this, {
+                            onBlur: 'submit'
+                        });
+                    }
                 });
 
             editor.on('preSubmit', function (e, json, action) {
@@ -176,15 +178,20 @@ $(function () {
         }
     }
 
-    function loadTasks(url, editable) {
+    function loadTasks(url) {
         if (!$('#leadTasksTable').length) return;
         if (dataTable) {
             dataTable.clear(false);
         }
+        var uri = new URI(url || window.location.href);
+        var s = uri.search(true);
+        var editable = s.type == 'active';
         if (editable){
             editor.enable();
+            $('#leadTasksTable').removeClass('not-allow');
         } else {
             editor.disable();
+            $('#leadTasksTable').addClass('not-allow');
         }
         $.ajax({
             url: url || window.location.href,
@@ -258,7 +265,7 @@ $(function () {
         uri.removeSearch('type');
         uri = uri.addSearch('type', t.val());
 
-        loadTasks(uri.toString(), t.val() == 'active');
+        loadTasks(uri.toString());
         history.pushState(null, null, uri.toString());
     });
 
@@ -273,7 +280,7 @@ $(function () {
         uri.removeSearch(name);
         uri = uri.addSearch(name, value);
 
-        loadTasks(uri.toString(), $('#lead-tasks-page input[name=taskType]:checked').val() =='active');
+        loadTasks(uri.toString());
         history.pushState(null, null, uri.toString());
     });
 
@@ -285,7 +292,7 @@ $(function () {
             uri.removeSearch('q');
             uri = uri.addSearch('q', val);
 
-            loadTasks(uri.toString(), $('#lead-tasks-page input[name=taskType]:checked').val() =='active');
+            loadTasks(uri.toString());
             history.pushState(null, null, uri.toString());
         }, 500);
 
