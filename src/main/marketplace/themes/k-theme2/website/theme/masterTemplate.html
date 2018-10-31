@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            #set( $title = false )
+            #set( $title = $templater.mergeTitles( $template.title, $page.title) )
+            #if( $title )
+            $title
+            #else
+            Untitled page
+            #end
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="templateName" content="$templateName" />
+        <meta name="theme" content="k-theme" />
+        <meta name='pageType' value='$templater.getClassName($page)' />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        #if( $rootFolder.versioned )
+        <meta name="robots" content="noindex,nofollow"/>
+        #end        
+
+        $templater.pushLess("/theme/less/bootstrap.less", "all", 0)
+        $templater.pushLess("/theme/theme-params.less", "all")
+
+        $!bodyContent
+
+        #foreach( $lessSource in $templater.lessSources.entrySet())
+            <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key"   />
+        #end
+
+        <!-- Injected CSS sources -->
+        #foreach($groupEntry in $templater.cssSources.entrySet())
+            <link href="/$templater.getCombinedCssPath($groupEntry.value)" rel="stylesheet" type="text/css" media="$!groupEntry.key" />
+        #end
+        <!-- End injected CSS sources -->
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+        <script src="/js/html5shiv.js" type="text/javascript"></script>
+        <script src="/static/js/respond.src.js" type="text/javascript">//</script>
+        <![endif]-->
+        <script>var pageInitFunctions = [];</script>
+        #portlets("header")
+        
+        
+    </head>
+
+    #if ($page.getParam("pageBgColor") && $page.getParam("pageBgColor") != "")
+        #set ($bodyCssBgColor = "background-color: $!page.getParam('pageBgColor');")
+    #end
+    #if ($page.getParam("pageBgImage") && $page.getParam("pageBgImage") != "")
+        #set ($bodyCssBgImg = "background-image: url($!page.getParam('pageBgImage')); background-size: $!page.getParam('pageBgSize'); background-position: $!page.getParam('pageBgPosition'); background-repeat: $!page.getParam('pageBgRepeat'); ")
+    #end
+
+    <body style="$!bodyCssBgColor $!bodyCssBgImg" class="is${templater.getClassName($page)} $!templater.bodyClasses">
+        #set( $memberships = $userResource.primaryMemberships )
+        #set( $selectedOrgId = $request.getCookie("selectedOrg").value)
+        #if( $selectedOrgId )
+            #set( $curMembership = $memberships.filterByOrg($selectedOrgId).first )
+        #else
+            #set( $curMembership = $memberships.first )
+        #end
+        #set( $selectedOrg = $curMembership.org  )
+
+        <div class="main-content" id="maincontentContainer">
+            $themeTemplate.body
+        </div>
+        <!-- /container -->
+
+        #portlets("endOfPage")  <!-- hard coded into ContentApp at the moment, sorry :( -->
+        #portlets("kchatPopup")
+
+        <!-- Injected JS sources - grouped -->
+        #foreach($groupEntry in $templater.jsSources.entrySet())
+            #if( $formatter.isNotEmpty($groupEntry.key) )
+            #foreach($path in $templater.getCombinedJsPaths($groupEntry.key))
+            <script src="$path" type="text/javascript">//</script>
+            #end
+            #end
+        #end
+
+        <!-- Injected JS sources - NOT grouped -->
+        #foreach($groupEntry in $templater.jsSources.entrySet())
+            #if( $formatter.isEmpty($groupEntry.key) )
+                #foreach($source in $groupEntry.value)
+                <script src="$source" type="text/javascript">//</script>
+                #end
+            #end
+        #end
+    </body>
+</html>
