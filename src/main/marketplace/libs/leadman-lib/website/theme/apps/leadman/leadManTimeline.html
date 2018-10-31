@@ -16,8 +16,8 @@
                 <div class="timeline-heading">
 
                     <div class="row">
-                        <div class="col-sm-6"><h4>$action.itemTitle</h4></div>
-                        <div class="col-sm-6 text-right">
+
+                        <div class="col-sm-6 col-sm-push-6 text-right ">
                             #if ($action.itemType == "fa-file")
                                 <a href="$action.actionDesc" download="$action.actionDesc" class="btn btn-success"><i class="fa fa-cloud-download"></i></a>
                                 <a href="$action.actionDesc" download="$action.actionDesc" class="btn btn-danger btn-delete-timeline-file"><i class="fa fa-trash"></i></a>
@@ -56,6 +56,8 @@
                                 #end
                             #end
                         </div>
+
+                        <div class="col-sm-6 col-sm-pull-6"><h4 class="m-mgt-5">$action.itemTitle</h4></div>
                     </div>
                 </div>
                 <div class="timeline-body">

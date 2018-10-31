@@ -190,6 +190,7 @@ table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:af
     opacity: 0.2;
 }
 
+.dataTable.not-allow td.editable:after,
 .dataTable td.editable.editing:after{
      content: "";
      float: none;
