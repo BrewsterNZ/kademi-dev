@@ -1186,6 +1186,7 @@ function initLeadProducts() {
             dataType: 'html',
             success: function (resp) {
                 $("#modal-place-order").html(resp);
+                $("#modal-place-order").modal("show");
             },
             error: function () {
                 Msg.error('Something went wrong. Please contact administrator for details');
