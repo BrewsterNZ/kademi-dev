@@ -1110,7 +1110,7 @@ function initLeadProducts() {
         displayKey: 'title',
         source: productSearch.ttAdapter(),
         templates: {
-            empty: '<div class="text-danger" style="padding: 5px 10px;">No insurance types were found</div>',
+            empty: '<div class="text-danger" style="padding: 5px 10px;">No matching products were found</div>',
             suggestion: Handlebars.compile(
                 '<div>'
                 + '<div>{{title}}</div>'
@@ -1175,5 +1175,21 @@ function initLeadProducts() {
                 Msg.error('Something went wrong. Please contact administrator for details');
             }
         })
-    })
+    });
+
+    $(document).on("click", ".btn-place-order", function(e) {
+        var href = window.location.pathname + "?placeOrderModal";
+        flog("place order click", window.location.pathname, href);
+        $.ajax({
+            url: href,
+            type: 'get',
+            dataType: 'html',
+            success: function (resp) {
+                $("#modal-place-order").html(resp);
+            },
+            error: function () {
+                Msg.error('Something went wrong. Please contact administrator for details');
+            }
+        })
+    });
 }

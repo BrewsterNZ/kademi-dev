@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title">Place order</h4>
+</div>
+<form method="post" action="$page.href" class="form-horizontal">
+    <div class="modal-body">
+        <input type="hidden" name="cancelDeal" />
+
+        <div class="modal-body">
+
+            <p>Cancel this lead if you are sure it will not go ahead. The lead will be marked as lost, ie no sale.</p>
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <select name="reason" class="form-control required" required="true">
+                        <option value="">[Reason the sale was lost]</option>
+                        #foreach( $reason in $page.lostReasons )
+                        <option>$reason</option>
+                        #end
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+        <button class="btn btn-primary" type="submit">Cancel lead</button>
+    </div>
+</form>

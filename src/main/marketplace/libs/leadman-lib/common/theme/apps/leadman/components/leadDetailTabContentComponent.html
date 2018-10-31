@@ -127,24 +127,35 @@
             #set( $prods = $page.lead.leadProducts )
             <div class="table-responsive">
                 <table class="table table-striped" id="table-lead-products">
+                    <colgroup>
+                        <col style=""/>
+                        <col style=""/>
+                        <col style=""/>
+                        <col style="width: 140px"/>
+                    </colgroup>
                     #if( $prods.size() > 0 )
                     <thead>
-                    <tr>
-                        <th>Code</th>
-                        <th>Product title</th>
-                        <th>Base cost</th>
-                        <th></th>
-                    </tr>
+                        <tr>
+                            <th>Code</th>
+                            <th>Product title</th>
+                            <th>Base cost</th>
+                            <th class="text-right">
+                                <button class="btn btn-success btn-place-order" type="button" >
+                                    <i class="fa fa-shopping-cart"></i>
+                                    Place order
+                                </button>
+                            </th>
+                        </tr>
                     </thead>
                     <tbody>
-                    #foreach( $prod in $prods )
-                    <tr>
-                        <td>$prod.name</td>
-                        <td>$prod.title</td>
-                        <td>$!prod.baseCost</td>
-                        <td><a data-leadid="$!page.lead.id" href="$!prod.name" class="btn btn-xs btn-danger leadRemoveProduct"><i class="fa fa-trash"></i></a></td>
-                    </tr>
-                    #end
+                        #foreach( $prod in $prods )
+                        <tr>
+                            <td>$prod.name</td>
+                            <td>$prod.title</td>
+                            <td>$!prod.baseCost</td>
+                            <td class="text-center"><a data-leadid="$!page.lead.id" href="$!prod.name" class="btn btn-xs btn-danger leadRemoveProduct"><i class="fa fa-trash"></i></a></td>
+                        </tr>
+                        #end
                     </tbody>
                     #else
                     <tr>
@@ -155,4 +166,17 @@
             </div>
         </div>
     </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="modal fade" id="modal-place-order" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+
+
 </div>
