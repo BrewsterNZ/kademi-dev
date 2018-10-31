@@ -117,6 +117,10 @@ $(function () {
                         orderable: false,
                         className: 'text-center',
                         render: function (data, type, full, meta) {
+                            if (full.cancelled || full.completedDate){
+                                return '';
+                            }
+
                             return '<a class="btn-task-complete" href="/tasks/'+data+' .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-2x fa-check-circle text-success"></i></a>\n' +
                                 '<a href="/tasks/'+data+'" class="btnCancelTask"><i class="fa fa-2x fa-times-circle text-danger"></i></a>';
                         }
@@ -172,10 +176,15 @@ $(function () {
         }
     }
 
-    function loadTasks(url) {
+    function loadTasks(url, editable) {
         if (!$('#leadTasksTable').length) return;
         if (dataTable) {
             dataTable.clear(false);
+        }
+        if (editable){
+            editor.enable();
+        } else {
+            editor.disable();
         }
         $.ajax({
             url: url || window.location.href,
@@ -249,7 +258,7 @@ $(function () {
         uri.removeSearch('type');
         uri = uri.addSearch('type', t.val());
 
-        loadTasks(uri.toString())
+        loadTasks(uri.toString(), t.val() == 'active');
         history.pushState(null, null, uri.toString());
     });
 
@@ -264,7 +273,7 @@ $(function () {
         uri.removeSearch(name);
         uri = uri.addSearch(name, value);
 
-        loadTasks(uri.toString());
+        loadTasks(uri.toString(), $('#lead-tasks-page input[name=taskType]:checked').val() =='active');
         history.pushState(null, null, uri.toString());
     });
 
@@ -276,7 +285,7 @@ $(function () {
             uri.removeSearch('q');
             uri = uri.addSearch('q', val);
 
-            loadTasks(uri.toString());
+            loadTasks(uri.toString(), $('#lead-tasks-page input[name=taskType]:checked').val() =='active');
             history.pushState(null, null, uri.toString());
         }, 500);
 
