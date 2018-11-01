@@ -65,6 +65,44 @@ controllerMappings
     .addType("leadManResource") // this is so the SalesRole will apply
     .build();
 
+controllerMappings
+    .websiteController()
+    .enabled(true)
+    .isPublic(false)
+    .path('/place-lead-order')
+    .addMethod('POST', 'leadPlaceOrder')
+    .postPriviledge("READ_CONTENT")
+    .addType("leadManResource") // this is so the SalesRole will apply
+    .build();
+
+function leadPlaceOrder(page, params, files, form) {
+    var leadId = form.longParam("placeOrderLeadId");
+    var storeName = form.rawParam("storeName");
+    var lead = services.criteriaBuilders.get("lead").get(leadId);
+    if( lead == null ) {
+        return views.jsonObjectView({status: false, messages: ["Couldnt find that lead"]});
+    }
+    var store = services.catalogManager.findStore(storeName);
+    if( store == null ) {
+        return views.jsonObjectView({status: false, messages: ["Couldnt find that store"]});
+    }
+    log.info("leadPlaceOrder: leadId={} store={}", leadId, storeName);
+
+    transactionManager.runInTransaction(function () {
+        var cart = services.cartManager.newCart(lead.profile);
+        formatter.foreach( form.parseList("quantity."), function(mapOfParams) {
+            var quantity = formatter.toBigDecimal( mapOfParams.quantity );
+            var skuId = formatter.toLong( mapOfParams.sku );
+            var sku = services.catalogManager.findSku(skuId);
+            if( sku != null) {
+                services.cartManager.addOrUpdateItem(cart, sku, quantity, store, false );
+            }
+        } );
+        services.cartManager.placeOrder(cart, store);
+    });
+    return views.jsonObjectView({status: true});
+}
+
 function leadDetailSendEmail(page, params) {
     var toAddress = params.toAddress;
     var fromAddress = params.fromAddress;

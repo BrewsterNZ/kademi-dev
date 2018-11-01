@@ -1,5 +1,10 @@
+#if( $page.cart )
+#set( $cart = $page.cart )
+#set( $checkoutItems = $services.cartManager.checkoutItems($cart) )
+#else
 #set( $checkoutItems = $services.cartManager.checkoutItems )
 #set( $cart = $checkoutItems.cart )
+#end
 #set( $items = $checkoutItems.items )
 
 <form id="cart-items" method="POST" action="$page.href">
@@ -12,6 +17,7 @@
         </div>
 
         <div class="items-list" id="kcom2-cart-items">
+            #if( $cart.pending )
             <div class="promo-codes-container form-group">
                 <div class="input-group">
                     <input type="text" class="promo-codes form-control" name="promoCodes" value="$formatter.toCsv($services.cartManager.userPromoCodes)" placeholder="Enter promotion codes" />
@@ -20,6 +26,7 @@
                     </span>
                 </div>
             </div>
+            #end
 
             #foreach($item in $items )
                 <div class="row item-row">
@@ -45,6 +52,7 @@
                             #end
                         </div>
                     </div>
+                    #if( $cart.pending )
                     <div class="col-sm-2 ecom-item-quantity center-content">
                         #if( $item.lineItemId )
                         <div class="input-group input-group-sm">
@@ -59,11 +67,14 @@
                         <input type="hidden" class="productOrderId" name="item.${foreach.count}" value="$item.id" />
                         #end
                     </div>
+                    #end
 
                     <div class="col-sm-3 item-price center-content">
                         <div>
                             <span class="lead">
+                                #if( $item.finalCost )
                                 $$formatter.formatCurrency($item.finalCost)<br/>
+                                #end
 
                                 #if( $item.finalCost > 0 && $item.finalCost < $item.finalListPriceIncTax )
                                 <small><s><i class="text-muted text-sm">( $formatter.formatCurrency($item.finalListPriceIncTax) )</i></s></small>
@@ -71,6 +82,7 @@
                             </span>
                         </div>
                     </div>
+                    #if( $cart.pending )
                     <div class="col-sm-1 item-action text-right center-content">
                         <div>
                             #if( $item.lineItemId )
@@ -78,6 +90,7 @@
                             #end
                         </div>
                     </div>
+                    #end
                 </div>
             #end
         </div>
