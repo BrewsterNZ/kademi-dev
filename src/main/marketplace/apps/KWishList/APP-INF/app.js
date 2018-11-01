@@ -4,6 +4,7 @@ controllerMappings
 	.websiteController()
 	.path("/wishlist/")
 	.enabled(true)
+    .isPublic(false)
 	.defaultView(views.templateView("/theme/apps/KWishList/wishlist.html"))
 	.addMethod("GET", "getWishList")
 	.addMethod("POST", "toggleWishList", "toggleWishList")
