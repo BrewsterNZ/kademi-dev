@@ -1,15 +1,43 @@
+#set( $prods = $page.lead.leadProducts )
+
+
+
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
     <h4 class="modal-title">Place order</h4>
 </div>
-<form method="post" action="$page.href" class="form-horizontal">
+<form method="post" action="/place-lead-order" class="form-horizontal">
     <div class="modal-body">
-        <input type="hidden" name="cancelDeal" />
+        <input type="hidden" name="placeOrderLeadId" value="$page.lead.id" />
 
         <div class="modal-body">
 
-            <p>Place an order</p>
+            <select name="storeName" class="form-control">
+                #foreach($store in $services.catalogManager.ecomStores )
+                <option value="$store.name">$store.title</option>
+                #end
+            </select>
 
+            <table class="table table-striped">
+
+                #foreach($prod in $prods )
+                <tr>
+                    <td>$prod.name</td>
+                    <td>$prod.title</td>
+                    <td>$!prod.baseCost</td>
+                    <td>
+                        <input type="text" name="quantity.${foreach.count}" class="form-control" value="1" />
+                    </td>
+                    <td>
+                        <select name="sku.${foreach.count}" class="form-control">
+                            #foreach($sku in $services.catalogManager.findSkus( $prod ) )
+                            <option value="$sku.id">$sku.title</option>
+                            #end
+                        </select>
+                    </td>
+                </tr>
+                #end
+            </table>
 
 
         </div>

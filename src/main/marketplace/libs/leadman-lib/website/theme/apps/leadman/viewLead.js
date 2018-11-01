@@ -1190,7 +1190,15 @@ function initLeadProducts() {
             dataType: 'html',
             success: function (resp) {
                 $("#modal-place-order .modal-content").html(resp);
+                $("#modal-place-order form").forms({
+                    onSuccess : function() {
+                        $("#modal-place-order").modal("hide");
+                        Msg.info("Order placed");
+                        window.location.reload();
+                    }
+                });
                 $("#modal-place-order").modal("show");
+
             },
             error: function () {
                 Msg.error('Something went wrong. Please contact administrator for details');

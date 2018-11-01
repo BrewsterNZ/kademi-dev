@@ -2,6 +2,7 @@
 <li class="omni-search-suggestion">
     #if( $searchResult.type == "profile" )
         <a href="/custs/$!searchResult.source.userName">
+            <i class='fa fa-user'></i>
             <span>$!searchResult.source.nickName</span>
             &ndash;
             <span class="text-info">$!searchResult.source.email</span>
@@ -10,6 +11,7 @@
         </a>
     #else
         <a href="/leads/$!searchResult.source.leadId">
+            <i class='fa fa-bullseye'></i>
             <span>$!searchResult.source.profile.nickName</span>
             &ndash;
             <span class="text-info">$!searchResult.source.profile.email</span>
@@ -20,7 +22,7 @@
 </li>
 #else
     #if($request.params.q)
-        
+
         <div class="result">
             <div class="pull-right">
                 #if( $searchResult.type )
@@ -53,7 +55,7 @@
                 #end
             </h3>
         </div>
-    
+
     #end
 
 #end
