@@ -117,6 +117,10 @@ $(function () {
                         orderable: false,
                         className: 'text-center',
                         render: function (data, type, full, meta) {
+                            if (full.cancelled || full.completedDate){
+                                return '';
+                            }
+
                             return '<a class="btn-task-complete" href="/tasks/'+data+' .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-2x fa-check-circle text-success"></i></a>\n' +
                                 '<a href="/tasks/'+data+'" class="btnCancelTask"><i class="fa fa-2x fa-times-circle text-danger"></i></a>';
                         }
@@ -142,10 +146,12 @@ $(function () {
                 .on('click', 'tbody td.editable', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    $(this).addClass('editing');
-                    editor.inline(this, {
-                        onBlur: 'submit'
-                    });
+                    if (!$('#leadTasksTable').hasClass('not-allow')){
+                        $(this).addClass('editing');
+                        editor.inline(this, {
+                            onBlur: 'submit'
+                        });
+                    }
                 });
 
             editor.on('preSubmit', function (e, json, action) {
@@ -176,6 +182,16 @@ $(function () {
         if (!$('#leadTasksTable').length) return;
         if (dataTable) {
             dataTable.clear(false);
+        }
+        var uri = new URI(url || window.location.href);
+        var s = uri.search(true);
+        var editable = s.type == 'active';
+        if (editable){
+            editor.enable();
+            $('#leadTasksTable').removeClass('not-allow');
+        } else {
+            editor.disable();
+            $('#leadTasksTable').addClass('not-allow');
         }
         $.ajax({
             url: url || window.location.href,
@@ -249,7 +265,7 @@ $(function () {
         uri.removeSearch('type');
         uri = uri.addSearch('type', t.val());
 
-        loadTasks(uri.toString())
+        loadTasks(uri.toString());
         history.pushState(null, null, uri.toString());
     });
 
