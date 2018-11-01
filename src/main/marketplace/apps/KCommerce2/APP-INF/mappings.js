@@ -263,6 +263,10 @@ function saveAddress(page, params, files, form) {
     log.info("saveAddress: form={}", form);
     transactionManager.runInTransaction(function () {
         var cart = services.cartManager.shoppingCart(false);
+        cart.firstName = form.cleanedParam("firstName");
+        cart.surName = form.cleanedParam("surName");
+        cart.phone = form.cleanedParam("phone");
+
         cart.addressLine1 = form.cleanedParam("addressLine1");
         cart.addressLine2 = form.cleanedParam("addressLine2");
         cart.addressState = form.cleanedParam("addressState");
