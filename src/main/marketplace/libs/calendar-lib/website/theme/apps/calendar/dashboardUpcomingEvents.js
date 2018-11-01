@@ -1,4 +1,4 @@
-(function ($) {
+pageInitFunctions.push(function () {
 
     if($(".dashboard-upcomming-events").length > 0) {
         $("#event-range-form").on("change", "#upcomingEventDays", function() {
@@ -57,4 +57,4 @@
         }
     }
 
-}(jQuery));
+});
