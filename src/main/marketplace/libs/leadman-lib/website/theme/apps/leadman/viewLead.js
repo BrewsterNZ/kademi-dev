@@ -1180,12 +1180,16 @@ function initLeadProducts() {
     $(document).on("click", ".btn-place-order", function(e) {
         var href = window.location.pathname + "?placeOrderModal";
         flog("place order click", window.location.pathname, href);
+//        $("#modal-place-order").modal("show");
+//        return;
+
+
         $.ajax({
             url: href,
             type: 'get',
             dataType: 'html',
             success: function (resp) {
-                $("#modal-place-order").html(resp);
+                $("#modal-place-order .modal-content").html(resp);
                 $("#modal-place-order").modal("show");
             },
             error: function () {
