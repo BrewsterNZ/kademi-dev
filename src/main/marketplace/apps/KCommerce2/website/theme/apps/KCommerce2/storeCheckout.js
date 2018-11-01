@@ -347,7 +347,7 @@
             },
             datatype: "json",
             success: function (data) {
-                if (data.result) {
+                if (data.status) {
                     $("#ecomItemsTable, #cart-link, #cart-checkout-data, #shipping-provide-select").reloadFragment({
                         whenComplete: function (resp) {
                             Msg.info("Updated item in your shopping cart");
