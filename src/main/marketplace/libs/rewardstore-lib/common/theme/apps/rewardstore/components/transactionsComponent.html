@@ -1,17 +1,19 @@
-#if ($page)
-    #foreach($r in $applications.rewardStore.stores )
-        #if ($r.isForUser( $userResource.thisUser))
-            #set( $participants = $applications.rewardStore.findParticipantsForReward($userResource.thisUser, $r.reward))
-            #foreach( $participant in $participants )
-                #renderTranstionsPanel($r, $participant, $participants.size() )
+<div id="profile-transaction-table" class="profile-transaction-table">
+    #if ($page)
+        #foreach($r in $applications.rewardStore.stores )
+            #if ($r.isForUser( $userResource.thisUser))
+                #set( $participants = $applications.rewardStore.findParticipantsForReward($userResource.thisUser, $r.reward))
+                #foreach( $participant in $participants )
+                    #renderTransactionsPanel($r, $participant, $participants.size() )
+                #end
             #end
         #end
+    #else
+        #renderTransactionsPanel()
     #end
-#else
-    #renderTranstionsPanel()
-#end
+</div>
 
-#macro(renderTranstionsPanel $r $participant $numParticipants)
+#macro(renderTransactionsPanel $r $participant $numParticipants)
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
@@ -101,3 +103,13 @@
         </table>
     </div>
 #end
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+            $("#profile-transaction-table").reloadFragment();
+        });
+
+    });
+    
+</script>

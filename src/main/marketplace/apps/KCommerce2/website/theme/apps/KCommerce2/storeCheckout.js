@@ -28,7 +28,7 @@
     }
 
     function initPromoCodes() {
-        $("body").on("click", ".apply-promo-codes", function(e) {
+        $("body").on("click", ".apply-promo-codes", function (e) {
             e.preventDefault();
             var cont = $(e.target).closest(".promo-codes-container");
             var inp = cont.find("input[name=promoCodes]");
@@ -117,7 +117,7 @@
                             $('#cart-form').hide('fast');
                             $('#cart-items').hide('fast');
                             $('#modal-success-message').modal('show');
-                            $.cookie('ecommerceCartId', null, { path: '/' });
+                            $.cookie('ecommerceCartId', null, {path: '/'});
                         }
                     });
                 } else {
@@ -221,7 +221,7 @@
             type: 'POST',
             url: cartHref,
             data: {
-                changeItemId : lineItemId,
+                changeItemId: lineItemId,
                 newQuantity: quantity
             },
             datatype: "json",
@@ -250,7 +250,7 @@
             var row = btn.closest('.item-row');
             var lineItemId = btn.data('item-id');
 
-            doRemoveFromCart(href, lineItemId, function() {
+            doRemoveFromCart(href, lineItemId, function () {
                 row.remove();
             });
         });
@@ -262,11 +262,11 @@
             type: 'POST',
             url: href,
             data: {
-                removeLineId : lineItemId
+                removeLineId: lineItemId
             },
             datatype: "json",
             success: function (data) {
-                if( data.status ) {
+                if (data.status) {
                     callback();
                     $("#ecomItemsTable, #cart-link, #cart-checkout-data, #shipping-provide-select").reloadFragment({
                         whenComplete: function () {
@@ -343,20 +343,20 @@
             type: 'POST',
             url: cartHref,
             data: {
-                promoCodes : codes // includes vouchers and promotion codes
+                promoCodes: codes // includes vouchers and promotion codes
             },
             datatype: "json",
             success: function (data) {
-                if( data.result ) {
-                $("#ecomItemsTable, #cart-link, #cart-checkout-data, #shipping-provide-select").reloadFragment({
-                    whenComplete: function (resp) {
-                        Msg.info("Updated item in your shopping cart");
-                        var actors = $('.btn-decrease-quantity, .btn-increase-quantity, .ecom-txt-quantity, .btn-ecom-remove-item');
-                        actors.prop('disabled', false);
-                    }
-                });
+                if (data.status) {
+                    $("#ecomItemsTable, #cart-link, #cart-checkout-data, #shipping-provide-select").reloadFragment({
+                        whenComplete: function (resp) {
+                            Msg.info("Updated item in your shopping cart");
+                            var actors = $('.btn-decrease-quantity, .btn-increase-quantity, .ecom-txt-quantity, .btn-ecom-remove-item');
+                            actors.prop('disabled', false);
+                        }
+                    });
                 } else {
-
+                    alert("Sorry, that doesnt appear to be a valid voucher code");
                 }
             },
             error: function (resp) {
@@ -373,24 +373,24 @@
     // (Requires https)
     function biasToUsersLocation() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-            var geolocation = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-            var circle = new google.maps.Circle({
-                center: geolocation,
-                radius: position.coords.accuracy
-            });
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var geolocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                var circle = new google.maps.Circle({
+                    center: geolocation,
+                    radius: position.coords.accuracy
+                });
 
-            googleAddressAutoComplete.setBounds(circle.getBounds());
+                googleAddressAutoComplete.setBounds(circle.getBounds());
             });
         }
     }
 
     // return the google address fragment for the field type requested, or null if not exists
     function getAddressElement(place, type, field) {
-        for(var i =0; i < place.address_components.length; i++) {
+        for (var i = 0; i < place.address_components.length; i++) {
             if (place.address_components[i].types[0] == type)
                 return place.address_components[i][field];
         }
@@ -438,20 +438,20 @@
             return;
         }
 
-        $(shippingFormLocator).each(function(index, em){
+        $(shippingFormLocator).each(function (index, em) {
             googleAddressAutoComplete = new google.maps.places.Autocomplete(
-                /** @type {!HTMLInputElement} **/ (document.getElementById('google-address-search-bar')),
-                {types: ['address']});
+                    /** @type {!HTMLInputElement} **/ (document.getElementById('google-address-search-bar')),
+                    {types: ['address']});
             biasToUsersLocation();
             googleAddressAutoComplete.addListener('place_changed', setAddress);
 
             var $em = $(em);
 
-            $em.find('.enter-manually').click(function(){
+            $em.find('.enter-manually').click(function () {
                 $em.find('.address-display-box').show();
                 $em.find('.address-search-box').hide();
             })
-            $em.find('.search-again').click(function(){
+            $em.find('.search-again').click(function () {
                 $em.find('.address-display-box').hide();
                 $em.find('.address-search-box').show();
             })
@@ -472,14 +472,14 @@ function initKcom2CheckoutForm() {
     var shippingSelect = $("#shipping-provide-select");
 
     var allForms = findEmailForm.add(kcom2PasswordForm)
-        .add(kcom2RegoForm)
-        .add(kcom2ShippingForm)
-        .add(kcom2ShippingProvider)
-        .add(kcom2CartForm);
+            .add(kcom2RegoForm)
+            .add(kcom2ShippingForm)
+            .add(kcom2ShippingProvider)
+            .add(kcom2CartForm);
 
     findEmailForm.forms({
         onSuccess: function (resp) {
-            if (resp && resp.status){
+            if (resp && resp.status) {
                 allForms.addClass('hide');
                 kcom2PasswordForm.removeClass('hide');
                 kcom2PasswordForm.find('[name=kcom2Email]').val(findEmailForm.find('[name=findProfileEmail]').val());
@@ -511,13 +511,13 @@ function initKcom2CheckoutForm() {
     });
 
 
-    shippingSelect.change( function(e) {
+    shippingSelect.change(function (e) {
         // selected shipping provider, so save it and then reload the prices panel
         $.ajax({
             type: 'POST',
             url: window.location.pathname,
             data: {
-                shippingProviderId : this.value
+                shippingProviderId: this.value
             },
             datatype: 'json',
             success: function (data) {
@@ -542,7 +542,7 @@ function initKcom2CheckoutForm() {
                 },
                 dataType: 'json',
                 success: function (resp) {
-                    if (resp && resp.status){
+                    if (resp && resp.status) {
                         window.profileAddrs = resp.data;
                     }
                 }
@@ -565,7 +565,7 @@ function initKcom2CheckoutForm() {
 
     kcom2RegoForm.find('form').forms({
         onSuccess: function (resp) {
-            if (resp && resp.status){
+            if (resp && resp.status) {
                 var email = kcom2RegoForm.find('[name=kcom2Email]').val();
                 var pwd = kcom2RegoForm.find('[name=kcom2Password]').val();
                 doLogin(email, pwd, {
@@ -595,10 +595,10 @@ function initKcom2CheckoutForm() {
     });
 
     kcom2ShippingForm.find('form').forms({
-        validate : function(form, config) {
+        validate: function (form, config) {
             var countryCode = form.find("input[name=country]").val();
             flog("shipping form, check country code", countryCode);
-            if( countryCode == "" || countryCode == null ) {
+            if (countryCode == "" || countryCode == null) {
                 flog("No country is selected");
                 showErrorMessage(form, config, "Please select a country");
                 return false;
@@ -634,7 +634,9 @@ function initKcom2CheckoutForm() {
 
 function initCountryList() {
     var countriesBH = new Bloodhound({
-        datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.name); },
+        datumTokenizer: function (d) {
+            return Bloodhound.tokenizers.whitespace(d.name);
+        },
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         local: getCountries()
     });
@@ -647,21 +649,21 @@ function initCountryList() {
         valueKey: "iso_code",
         source: countriesBH.ttAdapter()
     });
-    kcom2ShippingForm.find('.country-typeahead').keydown(function() {
+    kcom2ShippingForm.find('.country-typeahead').keydown(function () {
         kcom2ShippingForm.find('[name=country]').val("");
     });
 
     var selectedCountry = kcom2ShippingForm.find('[name=country]').val();
-    if (selectedCountry){
+    if (selectedCountry) {
         var sel = getCountries().filter(function (item) {
             return item.iso_code === selectedCountry;
         });
-        if (sel.length){
+        if (sel.length) {
             kcom2ShippingForm.find('.country-typeahead').typeahead('val', sel[0].name);
         }
     }
 
-    kcom2ShippingForm.find('.country-typeahead').on("typeahead:selected", function(e, datum) {
+    kcom2ShippingForm.find('.country-typeahead').on("typeahead:selected", function (e, datum) {
         kcom2ShippingForm.find('[name=country]').val(datum.iso_code);
     });
 
@@ -670,12 +672,12 @@ function initCountryList() {
 
 
 
-function initSelectAddress(){
+function initSelectAddress() {
     $(document).on('click', '#kcom2ShippingForm .address-type-drop a', function (e) {
         e.preventDefault();
 
         var value = $(this).attr('href');
-        if (window.profileAddrs && Object.keys(window.profileAddrs).length > 0){
+        if (window.profileAddrs && Object.keys(window.profileAddrs).length > 0) {
             var selected = window.profileAddrs[value];
             flog(selected);
             var kcom2ShippingForm = $('#kcom2ShippingForm');
@@ -688,7 +690,7 @@ function initSelectAddress(){
             var sel = getCountries().filter(function (item) {
                 return item.iso_code === selected.country;
             });
-            if (sel.length){
+            if (sel.length) {
                 kcom2ShippingForm.find('.country-typeahead').typeahead('val', sel[0].name);
             }
         }
