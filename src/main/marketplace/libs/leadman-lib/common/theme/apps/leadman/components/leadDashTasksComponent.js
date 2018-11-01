@@ -40,7 +40,7 @@
             flog('showSettingForm "leadDashTasks" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('#taskType').val(dataAttributes['data-task-type']);
+            form.find('#taskType').val(dataAttributes['data-task-type'] || 'dueTasks');
             form.find('#headingTitle').val(dataAttributes['data-heading-title']);
         }
     };

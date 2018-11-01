@@ -1,10 +1,6 @@
 {
     "appDependencies": [
         {
-            "appId": "KWishList",
-            "branch": "1.0.0"
-        },
-        {
             "appId": "countries-states-lib",
             "branch": "1.0.0"
         },
