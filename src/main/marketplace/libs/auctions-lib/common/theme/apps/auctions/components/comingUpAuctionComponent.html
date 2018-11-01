@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="auction-countdown">
-                    #if( $auction.auctionState == "open" )
+                    #if( $comingUpAuction.auctionState == "open" )
                     <div class="countdown text-center" data-end="$formatter.formatDateISO8601($comingUpAuction.auctionEndDate)" data-wSUri="$comingUpAuction.wSUri">
                         00:00:00:<span>00</span>
                     </div>
@@ -68,7 +68,7 @@
                     #end
                 </div>
 
-                #if( $auction.auctionState == "open" )
+                #if( $comingUpAuction.auctionState == "open" )
                 <div class="auction-info">
                     <div class="text-center"><span  class="trans-lookup"  data-transcode="current-bid">Current Bid:</span>
                         #if($comingUpAuction.currentBidValue)
@@ -84,7 +84,7 @@
         #if ($showDescription == "true")
             <div class="panel-body">
                 <div class="clearfix">$!comingUpAuction.description</div>
-                #if( $auction.auctionState == "open" )
+                #if( $comingUpAuction.auctionState == "open" )
                 <form action="/auctions/$comingUpAuction.name" method="post" class="form-horizontal">
                     <div class="form-group">
                         <div class="col-sm-12">
@@ -100,7 +100,7 @@
                 #end
             </div>
         #else
-            #if( $auction.auctionState == "open" )
+            #if( $comingUpAuction.auctionState == "open" )
             <div class="panel-default">
                 <div class="panel-heading">
                     <form action="/auctions/$comingUpAuction.name" method="post" class="form-horizontal">
