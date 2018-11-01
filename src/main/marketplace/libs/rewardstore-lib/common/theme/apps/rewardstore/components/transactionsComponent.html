@@ -4,16 +4,16 @@
             #if ($r.isForUser( $userResource.thisUser))
                 #set( $participants = $applications.rewardStore.findParticipantsForReward($userResource.thisUser, $r.reward))
                 #foreach( $participant in $participants )
-                    #renderTranstionsPanel($r, $participant, $participants.size() )
+                    #renderTransactionsPanel($r, $participant, $participants.size() )
                 #end
             #end
         #end
     #else
-        #renderTranstionsPanel()
+        #renderTransactionsPanel()
     #end
 </div>
 
-#macro(renderTranstionsPanel $r $participant $numParticipants)
+#macro(renderTransactionsPanel $r $participant $numParticipants)
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
