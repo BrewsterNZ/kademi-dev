@@ -347,6 +347,7 @@
             },
             datatype: "json",
             success: function (data) {
+                if( data.result ) {
                 $("#ecomItemsTable, #cart-link, #cart-checkout-data, #shipping-provide-select").reloadFragment({
                     whenComplete: function (resp) {
                         Msg.info("Updated item in your shopping cart");
@@ -354,6 +355,9 @@
                         actors.prop('disabled', false);
                     }
                 });
+                } else {
+
+                }
             },
             error: function (resp) {
                 Msg.error("An error occured applying your promotion codes");
@@ -378,12 +382,12 @@
                 center: geolocation,
                 radius: position.coords.accuracy
             });
-            
+
             googleAddressAutoComplete.setBounds(circle.getBounds());
             });
         }
     }
-    
+
     // return the google address fragment for the field type requested, or null if not exists
     function getAddressElement(place, type, field) {
         for(var i =0; i < place.address_components.length; i++) {
@@ -392,14 +396,14 @@
         }
         return null;
     }
-    
+
     // populate the shipping address portion of the form with the selected google address
     function setAddress() {
         var place = googleAddressAutoComplete.getPlace();
         if (!place.address_components)
             return;
         flog('[google address finder]', place);
-        
+
         var line1 = (getAddressElement(place, 'street_number', 'long_name') + ' ' + getAddressElement(place, 'route', 'short_name')).trim();
         var line2 = getAddressElement(place, 'sublocality_level_1', 'long_name')
         var city = getAddressElement(place, 'postal_town', 'long_name') || getAddressElement(place, 'locality', 'long_name')
@@ -415,7 +419,7 @@
         if (line1Index > 0) {
             line1 = fullAddress.substring(0, line1Index) + line1;
         }
-        
+
         addressForm.find('[name=addressLine1]').val(line1);
         addressForm.find('[name=addressLine2]').val(line2);
         addressForm.find('[name=addressState]').val(state);
@@ -423,9 +427,9 @@
         addressForm.find('[name=city]').val(city);
         addressForm.find('[name=country]').val(country);
         addressForm.find('.enter-manually').click();
-        
+
     }
-    
+
     // wire up the google address search form
     function initGoogleAddressSearch() {
         // make sure google maps are initialised
@@ -440,9 +444,9 @@
                 {types: ['address']});
             biasToUsersLocation();
             googleAddressAutoComplete.addListener('place_changed', setAddress);
-            
+
             var $em = $(em);
-            
+
             $em.find('.enter-manually').click(function(){
                 $em.find('.address-display-box').show();
                 $em.find('.address-search-box').hide();

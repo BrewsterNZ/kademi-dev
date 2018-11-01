@@ -326,8 +326,8 @@ function removeCartItem(page, params, files, form) {
 }
 
 function applyPromoCodes(page, params, files, form) {
-    log.info("applyPromoCodes:");
     var promoCodes = form.rawParam("promoCodes");
+    log.info("applyPromoCodes: {}", promoCodes);
 
     var jsonResult;
     transactionManager.runInTransaction(function () {
@@ -339,8 +339,21 @@ function applyPromoCodes(page, params, files, form) {
             var cart = services.cartManager.shoppingCart(true);
             var store = page.attributes.store;
             var promoCodeResults = services.cartManager.applyPromoCodes(cart, store, codesList);
-            // check results to see if any were or were not applied successfuly
-            jsonResult = views.jsonView(true, "Applied codes " + promoCodes);
+
+            // check to see there is at least one successful result
+            var appliedOk = false;
+            formatter.foreach(promoCodeResults, function(res) {
+                if( res.successful ) {
+                    appliedOk = true;
+                }
+            });
+
+            if( appliedOk ) {
+                jsonResult = views.jsonView(true, "Applied codes " + promoCodes);
+            } else {
+                log.warn("applyPromoCodes: no valid codes found");
+                jsonResult = views.jsonView(false, "Couldnt find any valid codes" + promoCodes);
+            }
         }
     });
 
