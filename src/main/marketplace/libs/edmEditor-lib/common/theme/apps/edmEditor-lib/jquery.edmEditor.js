@@ -583,6 +583,13 @@ var KEDITOR_EXTERNAL_URL = "";
                     groupsOptions += '</div>';
                 }
 
+                var availability = form.find(".select-availability");
+                availability.on('change', function () {
+                    var container = keditor.getSettingContainer();
+                    var table = container.find('.keditor-container-inner > table');
+                    table.attr('data-availability', this.value);
+                });
+
                 var selectGroups = form.find('.select-groups');
                 selectGroups.html(groupsOptions);
                 var selectGroupsItems = selectGroups.find('input[type=checkbox]');
@@ -693,6 +700,10 @@ var KEDITOR_EXTERNAL_URL = "";
         $.each(selectedGroups, function (i, group) {
             selectGroupsItems.filter('[value="' + group + '"]').prop('checked', true);
         });
+
+        var availabilitySelect = form.find(".select-availability");
+        var availability = table.attr('data-availability');
+        availabilitySelect.val(availability);
 
         var expPath = table.data("experiment");
         var txtExperiment = form.find('.select-experiment');

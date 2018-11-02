@@ -1,7 +1,18 @@
 <form class="form-horizontal">
     <div class="form-group">
         <div class="col-sm-12 select-groups-wrapper">
-            <label>Available for groups</label>
+            <label class="col-sm-12">Visibility</label>
+            <div class="col-sm-12">
+                <select class="form-control select-availability">
+                    <option value="available">Available for Groups</option>
+                    <option value="notavailable">Not available for Groups</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12 select-groups-wrapper">
+            <label>Groups</label>
             <div class="well well-sm checkboxes-list select-groups" style="max-height: 200px; overflow: auto;">
 
             </div>
