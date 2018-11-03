@@ -1,4 +1,4 @@
-$(function () {
+pageInitFunctions.push(function() {
     var lo = window.location;
     var website = lo.origin;
     var config = {
@@ -90,4 +90,7 @@ $(function () {
         }
         return result;
     }
+    
 });
+
+
