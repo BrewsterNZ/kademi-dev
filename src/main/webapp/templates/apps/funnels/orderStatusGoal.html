@@ -1,0 +1,24 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Order Status Goal Action</title>
+    </head>
+    <body>
+        #if( $params.mode == "settings" )
+        <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="fulfilmentStatus">Status</label>
+                    <select name="fulfilmentStatus" id="fulfilmentStatus" class="form-control required-if-shown">
+                        $formatter.option("", "[Please select]", $page.groupName)
+                        #foreach($status in $services.cartManager.fulfilmentStatuses.entrySet())
+                        $formatter.option($status.key, $status.value, $page.fulfilmentStatus)
+                        #end
+                    </select>
+                </div>
+            </div>
+        </form>
+        #else
+
+        #end
+    </body>
+</html>
