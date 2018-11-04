@@ -180,6 +180,25 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label class="control-label col-md-3" for="currencyCode">Loyalty</label>
+                                    <div class="col-md-9">
+                                        #if( $rules.pointsBuckets.size() > 1 )
+                                        <textarea name="pointsBuckets" class="form-control">$formatter.toCsv($rules.pointsBuckets)</textarea>
+                                        #else
+                                        <select name="pointsBuckets" class="form-control">
+                                            #set( $curName = $rules.pointsBuckets[0] )
+                                            #foreach($pointsBucket in $services.pointsManager.pointsBuckets )
+                                            $formatter.option($pointsBucket.name, $pointsBucket.title, $curName)
+                                            #end
+                                        </select>
+                                        #end
+                                        <span class="help-block">
+                                            <i>If selected, users will be able to use their points balance to make purchases</i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <label class="control-label col-md-3" for="gstRate">GST</label>
                                     <div class="col-md-9">
                                         <input type="text" name="gstRate" id="gstRate" value="$!page.store.gstRate" placeholder="0.15" class="form-control numeric">
