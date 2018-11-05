@@ -1695,3 +1695,35 @@
     $.contentEditor = contentEditor;
 
 })(jQuery);
+
+// global utils functions
+
+function initFileBrowsing(keditor, form) {
+
+    var buttons = form.find('.btn-browse-file');
+    if (buttons.length == 0) {
+        return;
+    }
+    buttons.each(function (i, n) {
+        var button = $(n);
+        flog("initFileBrowsing: init button", keditor.options.pagePath, keditor.options.basePath);
+        button.mselect({
+            mselectAll: true,
+            pagePath: keditor.options.pagePath,
+            basePath: keditor.options.basePath,
+            onSelectFile: function (url, relativeUrl, fileType, hash, isAsset) {
+                var selectedUrl = isAsset ? url : ('/_hashes/files/' + hash);
+
+                //selectedUrl = 'http://' + window.location.host + selectedUrl;
+                selectedUrl = keditor.options.externalUrl + selectedUrl;
+                flog('onSelectFile.1', keditor.options.externalUrl, selectedUrl);
+
+                flog('onSelectFile.2', url, relativeUrl, fileType, hash, isAsset, "final url=", selectedUrl);
+                flog("paths", keditor.options.pagePath, keditor.options.basePath);
+                var input = button.closest(".input-group").find("input,select");
+                input.val(selectedUrl).trigger('change');
+            }
+        });
+    });
+}
+
