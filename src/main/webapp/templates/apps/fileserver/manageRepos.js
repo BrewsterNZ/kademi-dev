@@ -1,6 +1,6 @@
 function initManageRepos() {
     log('initManageRepositories');
-    
+
     $('#txt-search-repo').domFinder({
         container: $('#table-repo'),
         items: 'tbody tr',
@@ -10,20 +10,20 @@ function initManageRepos() {
     });
 
     var tableWrapper = $('#table-repo');
-    
+
     var modal = $('#modal-new-repo');
     $('.btn-add-repo').on('click', function(e) {
         e.preventDefault();
-        
+
         $('#repoModal').text("Add new repository");
         $('#updateRepo').val("");
         $('#newName').val("");
-        
+
         modal.modal('show');
     });
 
     addEventToUpdate(modal);
-    
+
     modal.find('form').forms({
         onSuccess: function(resp) {
     		if ($('#updateRepo').val() == '') {
@@ -53,7 +53,7 @@ function initManageRepos() {
             btn.closest('tr').remove();
         });
     });
-    
+
     tableWrapper.on('click', 'a.transfer-ownership', function(e) {
         e.preventDefault();
 
@@ -67,7 +67,7 @@ function initManageRepos() {
                 doTransferOwnership( href, destAdminDomain);
             }
         }
-    });    
+    });
 
     flog("init switch", $('td.public input'));
     $('td.public input').on('change switchChange', function(e) {
@@ -89,11 +89,11 @@ function initManageRepos() {
 function addEventToUpdate(modalUpdate) {
     $('.btn-update-repo').on('click', function(e) {
         e.preventDefault();
-        
+
         $('#repoModal').text("Update repository");
         $('#updateRepo').val(e.target.name);
         $('#newName').val(e.target.name);
-        
+
         modalUpdate.modal('show');
     });
 }
@@ -114,7 +114,7 @@ function deleteRepo(href, name, callback) {
         },
         error: function(resp) {
             flog("error deleting: ", href, resp);
-            Msg.error('Sorry, couldnt delete: ' + name);            
+            Msg.error('Sorry, couldnt delete: ' + name);
         }
     });
 }
@@ -127,21 +127,6 @@ function doTransferOwnership(href, destAdminDomain) {
         success: function(data) {
             alert("Ownership has been transferred");
             window.location.reload();
-        },
-        error: function(resp) {
-            flog("error updating: ", href, resp);
-            Msg.error('Sorry, couldnt update public access: ' + resp);
-            window.location.reload();
-        }
-    });
-}
-
-function setRepoPublicAccess(href, isPublic) {
-    $.ajax({
-        type: 'POST',
-        data: {isPublic: isPublic},
-        url: href,
-        success: function(data) {
         },
         error: function(resp) {
             flog("error updating: ", href, resp);

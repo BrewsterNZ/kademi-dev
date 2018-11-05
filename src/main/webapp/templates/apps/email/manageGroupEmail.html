@@ -41,9 +41,9 @@
                             </colgroup>
                             <thead>
                                 <tr>
-                                    <th class="icon">Status</th>
+                                    <th></th>
                                     <th>Date</th>
-                                    <th>Name /  Subject</th>
+                                    <th>Subject</th>
                                     <th>No. emails</th>
                                     <th>Delivered</th>
                                     <th>Opened</th>
@@ -55,8 +55,10 @@
                             <tbody>
                                 #foreach($email in $page.findByDate() )
                                 <tr class="emailStatus$!{email.status}" data-jobid="$email.id" data-jobhref="$email.href">
+                                    #set( $showStats = true )
                                     <td class="icon" title="$!email.status">
                                         #if($email.status == "Draft" )
+                                        #set( $showStats = false )
                                         <i class="fa fa-edit text-muted"></i>
                                         #elseif($email.status == "Preparing" )
                                         <i class="fa fa-refresh text-warning"></i>
@@ -72,11 +74,10 @@
                                     </td>
                                     <td>$formatter.formatDate($email.statusDate)</td>
                                     <td colspan="6">
-                                        $formatter.htmlEncode($email.title)
-                                        /
-                                        <i>$formatter.htmlEncode($email.subject)</i>
-                                    </td>
+                                        $formatter.htmlEncode($email.subject)
 
+                                        <i class="pull-right">$formatter.htmlEncode($email.title)</i>
+                                    </td>
                                     <td class="action" style="">
                                         <div class="btn-group btn-group-sm">
                                             <a href="$email.name" class="btn btn-sm btn-info btn-sm">
@@ -100,8 +101,13 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    #if( $showStats )
+                                        #set( $numCols = 2 )
+                                    #else
+                                        #set( $numCols = 8 )
+                                    #end
                                     <td></td>
-                                    <td colspan="2">
+                                    <td colspan="$numCols">
                                         #foreach( $recip in $email.groupRecipients )
                                         <span class="label label-info label-recip" title="Included group">
                                             <i class="fa fa-users"></i>
@@ -116,6 +122,7 @@
                                         </span>
                                         #end
                                     </td>
+                                    #if( $showStats )
                                     <td>
                                         <span class="groupEmail-totalToSend">$email.numItems</span>
                                     </td>
@@ -134,6 +141,7 @@
                                     <td>
                                         <span class="groupEmail-conversionRate">$email.conversionRate</span>
                                     </td>
+                                    #end
                                 </tr>
                                 #end
                             </tbody>

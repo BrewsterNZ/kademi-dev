@@ -18,7 +18,7 @@
             <a href="/commits" class="btn btn-sm btn-info"><i class="fa fa-file-code-o"></i> View all commits</a>
         </div>
         <br/><br/>
-        
+
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="clip-data "></i>
@@ -35,7 +35,6 @@
                             <col style="width: 50px" data-sort="false" />
                             <col />
                             <col />
-                            <col style="width: 100px" />
                             <col style="width: 150px" />
                         </colgroup>
                         <thead>
@@ -43,7 +42,6 @@
                                 <th>Type</th>
                                 <th>Name</th>
                                 <th>Current branch</th>
-                                <th>Public</th>
                                 <th class="action">Action</th>
                             </tr>
                         </thead>
@@ -78,7 +76,7 @@
                 </div>
             </div>
         </div>
-        
+
         #macro (renderRepo $w)
             <tr>
                 <td class="icon text-info">
@@ -98,11 +96,7 @@
                     <h5><a href="/repositories/$w.name" class="repo">$w.name</a></h5>
                 </td>
                 <td>$w.liveBranch</td>
-                <td class="public">
-                    <div data-off="danger" data-on="success" class="make-switch switch-small btn-switch-public" data-link="../repositories/$w.nam">
-                        $formatter.checkbox($w.name, $w.publicContent)
-                    </div>
-                </td>
+
                 <td class="action">
                     <div class="btn-group btn-group-sm">
                         <a href="../repositories/$w.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Files
