@@ -1,0 +1,246 @@
+#parse("/theme/apps/content/components/menuMacros.html")
+
+#if( $menu )
+#else
+    #set( $menu = $menuManager.rootMenuItem )
+#end
+
+#if( $showUserMenu )
+#else
+    #set( $showUserMenu = false )
+#end
+
+#if( $showOrgSelector )
+#else
+    #set( $showOrgSelector = false )
+#end
+
+#if( $showLangSelector )
+#else
+    #set( $showLangSelector = false )
+#end
+
+#if( $showSearch )
+#else
+    #set( $showSearch = false )
+#end
+
+#if( $showSubMenuOnHover )
+#else
+    #set( $showSubMenuOnHover = false )
+#end
+
+#set( $memberships = $userResource.primaryMemberships )
+#set( $currentOrgId = $request.getCookie("org").value )
+#if( $currentOrgId )
+    #set( $curMembership = $memberships.filterByOrg($currentOrgId).first )
+#else
+    #set( $curMembership = $memberships.first )
+#end
+#set( $currentOrg = $curMembership.org  )
+
+#set( $currentLang = $request.getCookie("selectedLangCode").value )
+
+#if (!$navbarLayout)
+    #set ($navbarLayout = "container-fluid")
+#end
+
+#if (!$navbarStyle)
+    #set ($navbarStyle = "navbar-default")
+#end
+
+#if (!$displayMenuItem)
+    #set ($displayMenuItem = "text")
+#end
+
+<div id="menu3Navbar" class="navbar $navbarStyle" role="navigation">
+    <div class="$navbarLayout">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-main-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="brand navbar-brand logo $logopadding"  style="padding: #if ($logopadding) $logopadding  #else 15px #end" href="/">
+                #if( $logo )
+                    <img src="$logo" class="img-responsive" />
+                #else
+                    No Logo
+                #end
+            </a>
+        </div>
+
+        <div class="navbar-collapse collapse navbar-main-collapse">
+            <ul id="navbar-right" class="nav navbar-nav navbar-right">
+                #foreach($item1 in $menu.visible)
+                    #if ($item1.text == "New")
+                        #showMenuItem( $item1, false, '<i class="fa fa-angle-down"></i>' )
+                        #break
+                    #end
+                #end
+                <li class=" nav-menuDashboard-wrapper" data-ordering="1">
+                    <a class="nav-menuDashboard dropdown-toggle" style="" href="/dashboard" shape="rect" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        #foreach($item in $menu.visible)
+                            #if ($item.href && $page.href.contains($item.href))
+                                <span>$item.text</span>
+                            #elseif( $item.items )
+                                #foreach($subitem in $item.visible)
+                                    #if ($subitem.href && $page.href.contains($subitem.href))
+                                        <span>$subitem.text</span>
+                                    #end
+                                #end
+                            #end
+                        #end
+                        #if($page.href == '/' || $page.href == '/index.html')
+                        <span>Home</span>
+                        #end
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        #foreach($item in $menu.visible)
+                            #if( $item.text == "New")
+                            #else
+                            #if( $item.items )
+                            <li role="separator" class="divider"></li>
+                            #end
+                            <li>
+                                #if( $item.href )
+                                <a href="$!item.href"><b>$item.text</b></a>
+                                #else
+                                <span style='padding: 3px 20px'><b>$item.text</b></span>
+                                #end
+                            </li>
+                            #if( $item.items )
+                                #foreach($subitem in $item.visible)
+                                <li><a href="$!subitem.href">$subitem.text</a></li>
+                                #end
+                            #end
+                            #end
+                        #end
+                    </ul>
+                </li>
+
+                #if ($showOrgSelector == true)
+                    #set ($orgArr = $formatter.newArrayList())
+                    #foreach($mb in $userResource.primaryMemberships)
+                        #if (!$orgArr.contains($mb.org.entityObject()))
+                            #set ($nothing = $orgArr.add($mb.org.entityObject()))
+                        #end
+                    #end
+                    #if ($orgArr.size() > 1)
+                    <li class="simple-navbar-org-selector">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            #if( $services.queryManager.currentTeamOrg )
+                            $services.queryManager.currentTeamOrg.formattedName
+                            #else
+                            Select org
+                            #end
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            #foreach($org in $orgArr)
+                            #if ($services.queryManager.currentTeamOrg && $services.queryManager.currentTeamOrg.orgId == $org.orgId)
+                            <li><a class="select-org" href="$org.orgId"><i class="fa fa-check text-success"></i> $org.title</a></li>
+                            #else
+                            <li><a class="select-org" href="$org.orgId"><i class="fa fa-check" style="visibility: hidden"></i> $org.title</a></li>
+                            #end
+                            #end
+                        </ul>
+                    </li>
+                    #end
+                #end
+
+                #if ($showLangSelector == true)
+                    <li class="dropdown navbar-lang-selector">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-language"></i>
+                            #if( $rootFolder.selectedLanguage )
+                                $rootFolder.selectedLanguage.title
+                            #else
+                                Default
+                            #end
+
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><a class="select-lang" href="">Default</a></li>
+                            #foreach($lang in $rootFolder.languages)
+                            <li><a class="select-lang" href="$lang.code">$lang.title</a></li>
+                            #end
+                        </ul>
+                    </li>
+                #end
+
+                #portlets("shoppingCart")
+
+                #if ($showUserMenu == true)
+                    #if($user)
+                        <li class="dropdown user">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                $formatter.truncate($userResource.title, 10)
+                                <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a href="/profile" class="trans-lookup" data-transcode="profile">Profile</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="logout trans-lookup" data-transcode="logout">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                    #else
+                        <li class="dropdown login">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <span class="trans-lookup" data-transcode="login">Login</span>
+                                <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li style="min-width: 320px; padding: 15px">
+                                    <form class="form-horizontal form-horizontal-narrower" role="form">
+                                        <div class="form-group email">
+                                            <label class="control-label col-md-3" for="inputEmail">Email</label>
+                                            <div class="col-md-9">
+                                                <input type="text" id="inputEmail" name="email" placeholder="Email"
+                                                        type="email" required="true" class="form-control" />
+                                                <span class="help-block"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="inputPassword">Password</label>
+                                            <div class="col-md-9">
+                                                <input type="password" name="password" id="inputPassword"
+                                                        placeholder="Password" required="true" class="form-control" />
+                                                <span class="help-block"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-3 col-md-9">
+                                                <button type="submit" class="btn">Sign in</button>
+                                                <small class="pull-right"><a href="/password-reset"
+                                                        title="Forgotten password" class="Forgot">Forgotten
+                                                    password</a></small>
+                                            </div>
+                                        </div>
+                                        #portlets("socialLoginForm")
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    #end
+                #end
+            </ul>
+            #if ($showSearch == true)
+            <form id="navbar-search" class="navbar-form" action="/contentSearch" role="form" style="">
+                <div class="form-group has-feedback">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                        <input type="text" name="omni" placeholder="Start your search here" class="form-control" style="width: 400px" />
+                    </div>
+                </div>
+                <ul id="omni-search-suggestions"></ul>
+            </form>
+            #end
+        </div><!--/.nav-collapse -->
+    </div>
+</div>
