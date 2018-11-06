@@ -25,6 +25,9 @@
             if (config.useJsonPut) {
                 actionUrl += '_DAV/PUT?overwrite=true';
             }
+            if (/^\/\//.test(actionUrl)){
+                actionUrl = actionUrl.replace(/^\/\//, '/');
+            }
             //flog('[jquery.milton-upload] upload to url: ', actionUrl);
 
             config.id = Math.floor(Math.random() * 1000000);
