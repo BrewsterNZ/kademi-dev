@@ -35,7 +35,7 @@
     <p>&nbsp;</p>
 </div>
 <script type="text/javascript">
-    $(function () {
+    pageInitFunctions.push(function () {
         $('.isjs').css('color', 'green').text('YES!');
 
         $.cookie('testCookie', 'YES!');
