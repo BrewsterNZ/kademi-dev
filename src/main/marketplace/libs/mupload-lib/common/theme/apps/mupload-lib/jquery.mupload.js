@@ -219,7 +219,11 @@
                 container.data('fileUpload', fileUpload);
             });
         },
-        setUrl: function (url) {            
+        setUrl: function (url) {
+            // Sometimes url has double slash ie '//theme/' so that causes the error
+            if (/^\/\//.test(url)){
+                url = url.replace(/^\/\//, '/');
+            }
             var newAction = url + '_DAV/PUT?overwrite=true';
             flog('[jquery.milton-upload] setUrl', url, "new url=", newAction);
             
