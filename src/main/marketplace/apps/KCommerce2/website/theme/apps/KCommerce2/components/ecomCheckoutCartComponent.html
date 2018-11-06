@@ -65,6 +65,10 @@
                             </span>
                         </div>
                         <input type="hidden" class="productOrderId" name="item.${foreach.count}" value="$item.id" />
+                        #else
+                        <div style="" class="text-center">
+                            <span>$formatter.toInteger($item.quantity)</span>
+                        </div>
                         #end
                     </div>
                     #end
