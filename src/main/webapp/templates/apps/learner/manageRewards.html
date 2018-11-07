@@ -55,16 +55,14 @@
                             <colgroup>
                                 <col width="15%" />
                                 <col width="" />
-                                <col width="15%" />
-                                <col width="15%" />
+
                                 <col width="100px" />
                             </colgroup>
                             <thead>
                                 <tr>
                                     <th class="status" rel="asc">Status</th>
                                     <th class="title" rel="asc">Title</th>
-                                    <th>Pending Entries</th>
-                                    <th>Entries number</th>
+
                                     <th class="action"></th>
                                 </tr>
                             </thead>
@@ -86,11 +84,10 @@
                                         </div>
                                     </td>
                                     <td><a href="$r.name">$r.rewardTitle</a></td>
-                                    <td><a href="entries-${r.name}.html?status=PENDING" class="entries">$r.numPendingEntries entries</a></td>
-                                    <td><a href="entries-${r.name}.html" class="entries">$r.numEntries entries</a></td>
+
                                     <td class="action">
                                         <div class="btn-group btn-group-sm">
-                                            <a href="$r.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> 
+                                            <a href="$r.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i>
                                             </a>
                                             <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
                                                 <span class="caret"></span>
