@@ -11,6 +11,10 @@
         {
             "appId": "countries-states-lib",
             "branch": "1.0.0"
+        },
+        {
+            "appId": "bootstrap-upcrop-image-lib",
+            "branch": "1.0.0"
         }
     ],
     "dependencies": [
@@ -30,12 +34,6 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/user/changeOrg.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js"
             }
         },
         {

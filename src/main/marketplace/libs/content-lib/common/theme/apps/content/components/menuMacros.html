@@ -204,7 +204,7 @@
 
 #macro( showMenuItem $item $isSubmenu $caret)
     #set( $itemHref = $formatter.firstNotNull($item.href, "") )
-    #if ( $formatter.isEmpty($item.text) )
+    #if ( $formatter.isEmpty($item.text) && $item.cssClass.equal('fa fa-') )
     <li role="separator" class="divider"></li>
     #else
     #if( $item.visible.isEmpty() )

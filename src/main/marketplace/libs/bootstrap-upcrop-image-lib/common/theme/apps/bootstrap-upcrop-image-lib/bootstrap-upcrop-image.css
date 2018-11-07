@@ -1,0 +1,9 @@
+.image-wrapper {
+    /*max-height: 400px;*/
+    /*overflow-y: scroll;    */
+    /*overflow-x: hidden;*/
+}
+
+.upload-zone.panel.panel-default > form.dropzone {
+    border: none;
+}

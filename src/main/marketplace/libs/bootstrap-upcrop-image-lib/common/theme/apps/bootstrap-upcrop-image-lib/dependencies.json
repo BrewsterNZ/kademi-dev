@@ -1,0 +1,22 @@
+{
+    "appDependencies": [
+        {
+            "appId": "mupload-lib",
+            "branch": "1.0.5"
+        }
+    ],
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/bootstrap-upcrop-image-lib/bootstrap-upcrop-image.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/bootstrap-upcrop-image-lib/bootstrap-upcrop-image.js"
+            }
+        }
+    ]
+}
