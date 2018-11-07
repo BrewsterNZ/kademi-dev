@@ -2,7 +2,7 @@
     "appDependencies": [
         {
             "appId": "content-lib",
-            "branch": "1.4.0"
+            "branch": "1.4.2"
         }
     ]
 }

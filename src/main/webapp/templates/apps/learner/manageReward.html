@@ -432,6 +432,20 @@
 
                             <div class="col-sm-4">
                                 <input name="promoGiftSku" class="form-control" value="$!page.promoGiftSku" />
+                                <a href='/skus/?dataQuery=$!page.promoGiftSku'>Manage SKU's</a>
+                                <br/>
+                                <i>This will be added to the user's order on checkout, without additional cost. This does not need to be in your store. This
+                                should have a configured price of zero for reporting and followup emails.</i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="maxToGift" class="col-sm-2 control-label">Maximum</label>
+
+                            <div class="col-sm-4">
+                                <input name="maxToGift" class="form-control" value="$!page.maxToGift" />
+                                <i>Enter the maximum a user can receive in a single checkout. Use "1" for a single gift regardless of the number of
+                                qualifying items bought</i>
                             </div>
                         </div>
 

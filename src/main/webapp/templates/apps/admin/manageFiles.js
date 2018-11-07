@@ -4,6 +4,7 @@ function initManageFiles() {
     initImport();
     initCRUDFiles();
     initCopyCutPaste();
+    initPublicPrivate();
     if (typeof Dropzone === 'undefined') {
         $.getStyleOnce('/static/dropzone/4.3.0/downloads/css/dropzone.css');
         $.getScriptOnce('/static/dropzone/4.3.0/downloads/dropzone.min.js', function () {
@@ -17,6 +18,46 @@ function initManageFiles() {
         initFilesPjax();
     }
     Msg.singletonForCategory = true;
+}
+
+function initPublicPrivate() {
+    $("body").on("click", ".btn-repo-lock", function (e) {
+        e.preventDefault();
+        var href = $(e.target).closest("a").attr("href");
+        setRepoPublicAccess(href, false);
+    });
+    $("body").on("click", ".btn-repo-unlock", function (e) {
+        e.preventDefault();
+        var href = $(e.target).closest("a").attr("href");
+        setRepoPublicAccess(href, true);
+    });
+}
+
+
+function setRepoPublicAccess(href, isPublic) {
+    flog("setRepoPublicAccess", href, isPublic);
+    var msg = "Are you sure you want to make this repository " + (isPublic ? "public" : "private") + "?";
+    if (confirm(msg)) {
+        $.ajax({
+            type: 'POST',
+            data: {isPublic: isPublic},
+            url: href,
+            success: function (data) {
+                flog("done", data);
+                if( data.status ) {
+                    Msg.success("Changed repository access");
+                    $("#repo-tools").reloadFragment();
+                } else {
+                    Msg.error("Sorry, there was an error changing the status: " + data.messages);
+                }
+            },
+            error: function (resp) {
+                flog("error updating: ", href, resp);
+                Msg.error('Sorry, couldnt update public access: ' + resp);
+//            window.location.reload();
+            }
+        });
+    }
 }
 
 function initFilesPjax() {
@@ -159,7 +200,7 @@ function initCRUDFiles() {
         e.stopPropagation();
 
         var newHash = prompt("Plese enter the new hash");
-        if( newHash ) {
+        if (newHash) {
             if (confirm("Are you sure you want to change the contents of this directory to the hash you provided?")) {
                 setDirHash(window.location.pathname, newHash);
             } else {
@@ -327,26 +368,26 @@ function showImportFromUrl() {
 
 function setDirHash(dirHref, newHash) {
 
-        $.ajax({
-            type: 'POST',
-            url: dirHref,
-            dataType: 'json',
-            data: {
-                setNewHash : newHash
-            },
-            success: function (data) {
-                if (data.status) {
-                    Msg.success('Hash set successfully, reloading');
-                    window.location.reload();
-                } else {
-                    Msg.error("An error occured setting the new hash " + data.messages);
-                }
-            },
-            error: function (resp) {
-                flog('error', resp);
-                Msg.error('err');
+    $.ajax({
+        type: 'POST',
+        url: dirHref,
+        dataType: 'json',
+        data: {
+            setNewHash: newHash
+        },
+        success: function (data) {
+            if (data.status) {
+                Msg.success('Hash set successfully, reloading');
+                window.location.reload();
+            } else {
+                Msg.error("An error occured setting the new hash " + data.messages);
             }
-        });
+        },
+        error: function (resp) {
+            flog('error', resp);
+            Msg.error('err');
+        }
+    });
 }
 
 function putEmptyFile(name) {

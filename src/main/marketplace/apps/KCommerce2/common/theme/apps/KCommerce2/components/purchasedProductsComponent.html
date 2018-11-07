@@ -55,9 +55,9 @@
                                 </td>
                                 #end
                                 <td valign="top" style="$baseStyles; ${cellStyles}">$productOrder.product.title</td>
-                                <td valign="top" style="$baseStyles; ${cellStyles}">$$formatter.formatCurrency($productOrder.effectiveUnitCost, false)</td>
+                                <td valign="top" style="$baseStyles; ${cellStyles}">$$formatter.formatCurrency($productOrder.effectiveUnitCost)</td>
                                 <td valign="top" style="$baseStyles; ${cellStyles}">$productOrder.quantity</td>
-                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">$$formatter.formatCurrency($productOrder.totalCost, false)</td>
+                                <td valign="top" style="$baseStyles; ${cellStyles}; text-align: right">$$formatter.formatCurrency($productOrder.totalCost)</td>
                             </tr>
                             #end
                             #end
@@ -98,7 +98,7 @@
                             #end
                             </tbody>
                             <tfoot>
-                            #if ($cart)                            
+                            #if ($cart)
                             <tr bgcolor="${footerBg}">
                                 #set( $checkoutItems = $services.cartManager.checkoutItems($cart) )
                                 #set( $freight = $formatter.formatCurrency($checkoutItems.freightCost) )

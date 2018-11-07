@@ -25,6 +25,9 @@
             if (config.useJsonPut) {
                 actionUrl += '_DAV/PUT?overwrite=true';
             }
+            if (/^\/\//.test(actionUrl)){
+                actionUrl = actionUrl.replace(/^\/\//, '/');
+            }
             //flog('[jquery.milton-upload] upload to url: ', actionUrl);
 
             config.id = Math.floor(Math.random() * 1000000);
@@ -219,7 +222,11 @@
                 container.data('fileUpload', fileUpload);
             });
         },
-        setUrl: function (url) {            
+        setUrl: function (url) {
+            // Sometimes url has double slash ie '//theme/' so that causes the error
+            if (/^\/\//.test(url)){
+                url = url.replace(/^\/\//, '/');
+            }
             var newAction = url + '_DAV/PUT?overwrite=true';
             flog('[jquery.milton-upload] setUrl', url, "new url=", newAction);
             

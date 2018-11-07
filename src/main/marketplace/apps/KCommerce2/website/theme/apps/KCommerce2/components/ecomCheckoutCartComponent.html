@@ -65,6 +65,10 @@
                             </span>
                         </div>
                         <input type="hidden" class="productOrderId" name="item.${foreach.count}" value="$item.id" />
+                        #else
+                        <div style="" class="text-center">
+                            <span>$formatter.toInteger($item.quantity)</span>
+                        </div>
                         #end
                     </div>
                     #end
@@ -72,12 +76,10 @@
                     <div class="col-sm-3 item-price center-content">
                         <div>
                             <span class="lead">
-                                #if( $item.finalCost )
-                                $$formatter.formatCurrency($item.finalCost)<br/>
-                                #end
-
-                                #if( $item.finalCost > 0 && $item.finalCost < $item.finalListPriceIncTax )
-                                <small><s><i class="text-muted text-sm">( $formatter.formatCurrency($item.finalListPriceIncTax) )</i></s></small>
+                                #set( $cost = false )
+                                #set( $cost = $formatter.formatCurrency($item.finalPriceExTax) )
+                                #if( $cost )
+                                $$cost<br/>
                                 #end
                             </span>
                         </div>

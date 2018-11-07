@@ -16,7 +16,18 @@
     <body class="manage-files">
         <div class="clearfix">
             #set($currentBranch = $page.closest("branch"))
-            <div class="btn-group publishing pull-right">
+            <div class="btn-group publishing pull-right" id="repo-tools">
+
+                #if( $currentBranch.branch.repository.publicContent )
+                <a href="${currentBranch.parent.href}" class="btn-repo-lock btn btn-sm btn-success" title="Repository is public">
+                    <i class="fa fa-unlock"></i>
+                </a>
+                #else
+                <a href="${currentBranch.parent.href}" class="btn-repo-unlock btn btn-sm btn-danger" title="Repository is private">
+                    <i class="fa fa-lock"></i>
+                </a>
+                #end
+
                 <a href="${currentBranch.href}commits" class="publish btn btn-sm btn-info" title="View repository history and revert changes">
                     <i class="fa fa-clock-o"></i>
                 </a>
