@@ -72,9 +72,20 @@
 
         <div class="navbar-collapse collapse navbar-main-collapse">
             <ul id="navbar-right" class="nav navbar-nav navbar-right">
-                #foreach($item1 in $menu.visible)
-                    #if ($item1.text == "New")
-                        #showMenuItem( $item1, false, '<i class="fa fa-angle-down"></i>' )
+                #foreach($item in $menu.visible)
+                    #if ($item.text == "New")
+                        <li class="dropdown  nav-${item.id}-wrapper">
+                            <a href="#" class="dropdown-toggle nav-${item.id}" data-toggle="dropdown" $formatter.ifTrue($showSubMenuOnHover,
+                                'data-hover="dropdown"', '') title="$item.text"  data-ordering="$item.ordering"
+                                >
+                                <i class="$item.cssClass"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                #foreach( $subitem in $item.visible )
+                                    #showMenuItem( $subitem, true, $caret )
+                                #end
+                            </ul>
+                        </li>
                         #break
                     #end
                 #end
@@ -100,7 +111,7 @@
                         #foreach($item in $menu.visible)
                             #if( $item.text == "New")
                             #else
-                            #if( $item.items )
+                            #if( $item.items && $item.text != "Dashboard")
                             <li role="separator" class="divider"></li>
                             #end
                             <li>
@@ -177,7 +188,7 @@
                     #if($user)
                         <li class="dropdown user">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                $formatter.truncate($userResource.title, 10)
+                                <img width="50" src="$!userResource.profilePicHref" class="img-circle special-img">
                                 <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">
