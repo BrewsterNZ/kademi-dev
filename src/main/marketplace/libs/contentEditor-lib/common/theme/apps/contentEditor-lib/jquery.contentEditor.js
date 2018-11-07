@@ -38,7 +38,8 @@
     ];
 
     contentEditor.dependStyles = [
-        '/static/font-awesome/4.7.0/css/font-awesome.min.css',
+        '/theme/apps/fontawesome-lib/css/fontawesome.min.css',
+        '/theme/apps/fontawesome-lib/css/v4-shims.min.css',
         EDITOR_PATH + 'jquery.contentEditor.css',
         '/static/bootstrap-colorpicker/2.5.1/css/bootstrap-colorpicker.min.css'
     ];

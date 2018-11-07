@@ -220,3 +220,12 @@ ol.menuTree li.placeholder:before {
     right: 10px;
     top: 15px;
 }
+
+/* override for edit menu button */
+#keditor-setting-panel .btnAddMenuItem,
+#keditor-setting-panel .btnSortMenuItem,
+#keditor-setting-panel .btnEditMenuItem{
+    padding: 1px 5px !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+}
