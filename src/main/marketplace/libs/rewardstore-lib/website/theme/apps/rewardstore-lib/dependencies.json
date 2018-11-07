@@ -19,6 +19,10 @@
         {
             "appId": "Reporting",
             "branch": ""
+        },
+        {
+            "appId": "bootstrap-upcrop-image-lib",
+            "branch": "1.0.0"
         }
     ],
     "dependencies": [
@@ -68,12 +72,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/slick/1.5.7/slick/slick.min.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js"
             }
         },
         {

@@ -59,6 +59,10 @@
         {
             "appId": "countries-states-lib",
             "branch": "1.0.0"
+        },
+        {
+            "appId": "mupload-lib",
+            "branch": "1.0.5"
         }
     ],
 
@@ -109,12 +113,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/js/keymap.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/milton-upload/1.0.1/jquery.milton-upload.js"
             }
         },
         {
