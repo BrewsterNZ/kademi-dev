@@ -185,7 +185,7 @@ $(function () {
         }
         var uri = new URI(url || window.location.href);
         var s = uri.search(true);
-        var editable = s.type == 'active';
+        var editable = !s.type || s.type == 'active';
         if (editable){
             editor.enable();
             $('#leadTasksTable').removeClass('not-allow');
