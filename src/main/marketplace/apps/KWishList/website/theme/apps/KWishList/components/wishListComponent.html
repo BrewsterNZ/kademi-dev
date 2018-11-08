@@ -1,5 +1,5 @@
 <div class="row products-list ecomStoreCategoryProductsComponent wishlistWrap">
-    #set( $cart = $services.cartManager.shoppingCart(true) )
+    #set( $cart = $services.cartManager.shoppingCart(false) )
 #if ($page.attributes.wishList && $page.attributes.wishList.hits.totalHits > 0)
     #foreach ($r in $page.attributes.wishList.hits.hits)
     #set ($product = $services.catalogManager.findProductByName($r.source.product))
