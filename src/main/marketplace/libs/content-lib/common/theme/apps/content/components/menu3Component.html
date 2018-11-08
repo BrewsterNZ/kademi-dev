@@ -104,6 +104,8 @@
                         #end
                         #if($page.href == '/' || $page.href == '/index.html')
                         <span>Home</span>
+                        #elseif($page.href.contains("/profile"))
+                        <span>Profile</span>
                         #end
                         <i class="fa fa-angle-down"></i>
                     </a>
@@ -188,7 +190,7 @@
                     #if($user)
                         <li class="dropdown user">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <img width="50" src="$!userResource.profilePicHref" class="img-circle special-img">
+                                <span class="special-img img-circle" id="profile-avatar" style="background: url('$!userResource.profilePicHref') no-repeat center; background-size: cover;"></span>
                                 <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">
