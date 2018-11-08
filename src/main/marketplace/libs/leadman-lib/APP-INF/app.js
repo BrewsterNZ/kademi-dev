@@ -20,10 +20,11 @@ controllerMappings.addComponent("leadman/components", "countAcceptedQuotes", "ht
 controllerMappings.addComponent("leadman/components", "countNewProposals", "html", "Display number of new proposals", "Leadman App component");
 
 controllerMappings.addComponent("leadman/components", "leadsImporterWizard", "html", "Import wizard for leads", "Leadman App component");
-
+controllerMappings.addComponent("leadman/components", "viewOrderKcrm", "html", "Shows order information in KCRM");
 
 /* Templates */
 controllerMappings.addTemplate('theme/apps/leadman/', 'viewProfile', 'View Customer Profile', true);
+controllerMappings.addTemplate("theme/apps/leadman/", "viewOrder", "Page for viewing a customer's order", false);
 
 
 // ============================================================================
