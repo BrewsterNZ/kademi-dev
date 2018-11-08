@@ -35,30 +35,31 @@ function initInstallApp() {
         var title = btn.data('title');
         var websiteName = btn.data('websitename');
         var websiteBranch = btn.data('websitebranch');
-        
-        Kalert.confirm('You want to install ' + title + '?', 'Install', function () {
-            $.ajax({
-                type: 'POST',
-                url: window.location.pathname,
-                data: {
-                    installItem: true,
-                    websiteName: websiteName,
-                    websiteBranch: websiteBranch
-                },
-                dataType: 'json',
-                success: function (data) {
-                    flog("success", data);
-                    if (data.status) {
-                        Msg.success('Successfully installed ' + title);
-                        window.location.reload();
-                    } else {
-                        Msg.warning('There was a problem installing ' + title + ". " + data.messages)
-                    }
-                },
-                error: function (resp) {
-                    Msg.error("An error occured doing the publish. Please check your internet connection and try again");
+
+        btn.find('.fa').addClass('fa-cog fa-spin').removeClass('fa-cloud-download');
+        $.ajax({
+            type: 'POST',
+            url: window.location.pathname,
+            data: {
+                installItem: true,
+                websiteName: websiteName,
+                websiteBranch: websiteBranch
+            },
+            dataType: 'json',
+            success: function (data) {
+                flog("success", data);
+                if (data.status) {
+                    Msg.success('Successfully installed ' + title);
+                    window.location.reload();
+                } else {
+                    Msg.warning('There was a problem installing ' + title + ". " + data.messages)
+                    btn.find('.fa').removeClass('fa-cog fa-spin').addClass('fa-cloud-download');
                 }
-            });
+            },
+            error: function (resp) {
+                Msg.error("An error occured doing the publish. Please check your internet connection and try again");
+                btn.find('.fa').removeClass('fa-cog fa-spin').addClass('fa-cloud-download');
+            }
         });
     });
 }
