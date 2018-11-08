@@ -1,6 +1,16 @@
 #parse("/theme/apps/KCommerce2/ecommerceMacros.html")
+
+#if ($formatter.isNull($layout))
+    #set ($layout = "grid")
+#end
+
 #if($page)
     #set( $storeOb = $page.attributes.store )
+    #if (!$formatter.isNull($selectedStore))
+        #set ($storeUrl = '/' + $selectedStore)
+        #set ($storePage = $page.find($storeUrl))
+        #set ($storeOb = $storePage.attributes.store)
+    #end
     #set( $catOb = $page.attributes.category )
     #set( $basePath = "/$storeOb.name/" )
     #set ($app = $applications.get("KCommerce2"))

@@ -17,6 +17,14 @@
                 success: function (resp) {
                     form.html(resp);
 
+                    form.find('.select-store').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-selected-store', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                     form.find('.select-layout').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -80,7 +88,8 @@
             flog('showSettingForm "storeProductList" component', form, component, keditor);
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.select-layout').val(dataAttributes['data-layout']);
+            form.find('.select-store').val(dataAttributes['data-selected-store']);
+            form.find('.select-layout').val(dataAttributes['data-layout'] || 'grid');
             form.find('.page-size').val(dataAttributes['data-page-size'] || 12);
             form.find('.sort-by').val(dataAttributes['data-sort-by'] || '');
             form.find('.sort-direction').val(dataAttributes['data-sort-direction'] || 'asc');
