@@ -36,7 +36,7 @@ function initInstallApp() {
         var websiteName = btn.data('websitename');
         var websiteBranch = btn.data('websitebranch');
 
-        btn.find('.fa').addClass('fa-cog fa-spin').removeClass('fa-cloud-download');
+        btn.find('.fa').addClass('fa-spinner fa-spin').removeClass('fa-cloud-download');
         $.ajax({
             type: 'POST',
             url: window.location.pathname,
@@ -53,12 +53,12 @@ function initInstallApp() {
                     window.location.reload();
                 } else {
                     Msg.warning('There was a problem installing ' + title + ". " + data.messages)
-                    btn.find('.fa').removeClass('fa-cog fa-spin').addClass('fa-cloud-download');
+                    btn.find('.fa').removeClass('fa-spinner fa-spin').addClass('fa-cloud-download');
                 }
             },
             error: function (resp) {
                 Msg.error("An error occured doing the publish. Please check your internet connection and try again");
-                btn.find('.fa').removeClass('fa-cog fa-spin').addClass('fa-cloud-download');
+                btn.find('.fa').removeClass('fa-spinner fa-spin').addClass('fa-cloud-download');
             }
         });
     });
