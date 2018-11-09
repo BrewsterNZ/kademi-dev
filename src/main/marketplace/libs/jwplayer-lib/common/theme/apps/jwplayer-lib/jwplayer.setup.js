@@ -55,7 +55,7 @@ $(function () {
             autostart: autostart,
             flashplayer: JWPLAYER_LIB_PATH_FLASH,
             html5player: JWPLAYER_LIB_PATH_HTML5,
-            primary: "flash"
+            primary: "html5"
         });
         playerInstance.onReady(function () {
             flog('jwplayer init done');
@@ -108,7 +108,7 @@ $(function () {
                     file: m4vUrl
                 }]
             }]
-            , primary: 'flash'
+            , primary: 'html5'
         });
 
         jwplayer(innerId).onReady(function () {
