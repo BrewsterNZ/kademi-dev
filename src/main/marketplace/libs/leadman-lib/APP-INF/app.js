@@ -21,6 +21,7 @@ controllerMappings.addComponent("leadman/components", "countNewProposals", "html
 
 controllerMappings.addComponent("leadman/components", "leadsImporterWizard", "html", "Import wizard for leads", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "viewOrderKcrm", "html", "Shows order information in KCRM");
+controllerMappings.addComponent("leadman/components", "leadmanDashboard", "html", "Shows old leadman dashboard");
 
 /* Templates */
 controllerMappings.addTemplate('theme/apps/leadman/', 'viewProfile', 'View Customer Profile', true);
