@@ -1324,7 +1324,9 @@ function reloadTasks() {
         setTimeout(function () {
             $(document).trigger('taskChanged');
         }, 1000);
-    } else if ($("#tasksList").length){
+    }
+
+    if ($("#tasksList").length){
         $("#tasksList").reloadFragment({
             whenComplete: function (doc) {
                 var newLeads = doc.find("#dashLeadsList");
@@ -1332,7 +1334,9 @@ function reloadTasks() {
                 $('abbr.timeago').timeago();
             }
         });
-    } else if ($(".tasksDashList").length){
+    }
+
+    if ($(".tasksDashList").length){
         setTimeout(function () {
             $(".tasksDashList").first().reloadFragment({
                 whenComplete: function (doc) {
