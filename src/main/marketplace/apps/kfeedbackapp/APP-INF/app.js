@@ -106,9 +106,9 @@ function getProperties() {
     return properties;
 }
 
-function getLastFeedbackResult(lead, exitingNode, funnel, vars) {
-    log.info('getLastFeedbackResult lead={} node={} funnel={} vars={}', [lead, exitingNode, funnel, vars]);
-    var profileId = lead.profile.id;
+function getLastFeedbackResult(profile, vars) {
+    log.info('getLastFeedbackResult profile={} vars={}', profile, vars);
+    var profileId = profile.id;
     log.info("getLastFeedbackResult: profileid={}", profileId);
     var jsonDB = applications.KongoDB.findDatabase(dbName);
     log.info('jsondb is {}', jsonDB);
