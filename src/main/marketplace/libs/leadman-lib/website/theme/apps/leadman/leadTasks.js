@@ -186,13 +186,18 @@ $(function () {
         var uri = new URI(url || window.location.href);
         var s = uri.search(true);
         var editable = !s.type || s.type == 'active';
-        if (editable){
-            editor.enable();
-            $('#leadTasksTable').removeClass('not-allow');
-        } else {
-            editor.disable();
-            $('#leadTasksTable').addClass('not-allow');
-        }
+
+        // if (editable ){
+        //     editor.enable();
+        //     $('#leadTasksTable').removeClass('not-allow');
+        // } else {
+        //     editor.disable();
+        //     $('#leadTasksTable').addClass('not-allow');
+        // }
+        // Disable inline editing for tasks
+        editor.disable();
+        $('#leadTasksTable').addClass('not-allow');
+
         $.ajax({
             url: url || window.location.href,
             data: {asJson: true},
