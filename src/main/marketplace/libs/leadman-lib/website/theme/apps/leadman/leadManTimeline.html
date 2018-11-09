@@ -18,7 +18,7 @@
                     <div class="row">
 
                         <div class="col-sm-6 col-sm-push-6 text-right ">
-                            #if ($action.itemType == "fa-file")
+                            #if ($action.itemType == "fa fa-file")
                                 <a href="$action.actionDesc" download="$action.actionDesc" class="btn btn-success"><i class="fa fa-cloud-download"></i></a>
                                 <a href="$action.actionDesc" download="$action.actionDesc" class="btn btn-danger btn-delete-timeline-file"><i class="fa fa-trash"></i></a>
                             #else
@@ -32,7 +32,7 @@
                                 #end
 
 
-                                #if ($action.itemType == "fa-tasks")
+                                #if (!$formatter.isNull($action.data['task']))
                                 #if( $formatter.isEmpty($action.data['task'].completedDate) )
                                 <span href="/tasks/$!{action.data['taskId']} .taskViewModal" data-target="#modalEditTask" data-toggle="modal" title="Complete this task" class="timeline-btn"><i role="button" class="fa fa-check text-success"></i></span>
                                 <div class="btn-group timeline-btn">
