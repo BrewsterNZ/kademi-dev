@@ -1,12 +1,10 @@
-<style type="text/css">
-    .page-header {
-        margin-top: 0;
-    }
-</style>
+
 #if($page.is("open"))
-<div class="btn-group">
-    <a href="$page.href .taskEditModal" class="btn btn-success btn-task-complete" data-target="#modalEditTask" data-toggle="modal"><span class="fa fa-check"></span> Complete task</a>
-    <a href="$page.href" class="btn btn-danger btnCancelTask"><span class="fa fa-remove"></span> Cancel task</a>
+<div class="text-right">
+    <div class="btn-group">
+        <a href="$page.href .taskEditModal" class="btn btn-success btn-task-complete" data-target="#modalEditTask" data-toggle="modal"><span class="fa fa-check"></span> Complete task</a>
+        <a href="$page.href" class="btn btn-danger btnCancelTask"><span class="fa fa-remove"></span> Cancel task</a>
+    </div>
 </div>
 #elseif($task.is("canceled"))
 <span class="label label-warning">
@@ -25,7 +23,7 @@
 #set($isNotEditable = !$page.is("open"))
 <div id="view-task-page" style="margin-top: 20px">
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-12">
             <div id="profile" class="panel">
                 <div class="panel-body">
                     <form method="post" action="$page.href" class="form-horizontal" id="leadDetails">

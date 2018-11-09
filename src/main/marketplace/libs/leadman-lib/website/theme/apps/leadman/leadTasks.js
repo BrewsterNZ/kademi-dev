@@ -118,10 +118,11 @@ $(function () {
                         className: 'text-center',
                         render: function (data, type, full, meta) {
                             if (full.cancelled || full.completedDate){
-                                return '';
+                                return '<a class="btn-task-complete" href="/tasks/'+data+'"><i class="fa fa-2x fa-arrow-circle-right text-success"></i></a>';
                             }
 
-                            return '<a class="btn-task-complete" href="/tasks/'+data+' .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-2x fa-check-circle text-success"></i></a>\n' +
+                            return '<a class="btn-task-complete" href="/tasks/'+data+'"><i class="fa fa-2x fa-arrow-circle-right text-success"></i></a>\n' +
+                            '<a class="btn-task-complete" href="/tasks/'+data+' .taskViewModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-2x fa-check-circle text-success"></i></a>\n' +
                                 '<a href="/tasks/'+data+'" class="btnCancelTask"><i class="fa fa-2x fa-times-circle text-danger"></i></a>';
                         }
                     },
