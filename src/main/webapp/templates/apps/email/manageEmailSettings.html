@@ -71,6 +71,18 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <label for="indexEmailContent" class="col-sm-5 control-label">Sender identification</label>
+                <div class="col-sm-6">
+                    <select name="senderMode" class="form-control">
+                        $formatter.option('k', 'Kademi as sender', $page.senderMode)
+                        $formatter.option('f', 'From address', $page.senderMode)
+                    </select>
+                    <p>When emails are sent, by default Kademi sets the 'Sender' and 'Return-path' fields to identify Kademi as the sending service.
+                    The 'From' address is whatever is selected for each email. If you change to a sender mode of 'From address' then the from
+                    address on each email will also be used as the sender and return-path</p>
+                </div>
+            </div>
 
             <div class="form-group">
                 <div class="col-md-offset-4 col-md-4">
