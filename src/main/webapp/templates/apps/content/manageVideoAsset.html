@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Content Item</title>
-    
+
     </head>
     <body class="manageEmail">
-        
+
         #parse("/theme/apps/content/assetsCommon.html")
-        
-        #assetHeader()
-        
+
+        #assetHeader(true)
+
         <div class="row">
             <div class="col-sm-4" id="asset-previewer">
                 <div align="center" class="embed-responsive embed-responsive-16by9">
@@ -22,8 +22,8 @@
                 #assetInfo()
             </div>
         </div>
-        
+
         #assetCommonScripts()
-    
+
     </body>
 </html>

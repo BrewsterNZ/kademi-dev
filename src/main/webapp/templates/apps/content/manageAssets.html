@@ -94,6 +94,8 @@
                 <select name="contentType" id="searchContentType" class="form-control input-sm selectpicker" multiple="multiple">
                     $formatter.option("query", "query", $request.params.contentType)
                     $formatter.option("image", "image", $request.params.contentType)
+                    $formatter.option("video", "video", $request.params.contentType)
+                    $formatter.option("text", "text", $request.params.contentType)
                     #foreach($type in $page.assetTypes)
                     $formatter.option($type.name, $type.name, $request.params.contentType)
                     #end
