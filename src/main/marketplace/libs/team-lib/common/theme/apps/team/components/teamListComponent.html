@@ -12,8 +12,11 @@
         </div>
     </div>
     <div class="col-md-4">
-        #if ($userResource.hasRole("SalesManager") || $userResource.hasRole("SalesTeamViewer") || $userResource.hasRole("Administrator"))
+        #if ($userResource.hasRole("SalesManager") || $userResource.hasRole("User Administrator") || $userResource.hasRole("Administrator"))
         <button type="button" class="btn btn-info m-mgb-5" data-toggle="modal" data-target="#modal-add-member"><i class="fa fa-user-plus"></i> <span class="trans-lookup" data-transcode="member">Member</span></button>
+        #end
+
+        #if( $page.canCreateTeam )
         <button type="button" class="btn btn-info m-mgb-5" data-toggle="modal" data-target="#modal-add-team"><i class="fa fa-plus"></i> <span class="trans-lookup" data-transcode="team">Team</span></button>
         #end
     </div>
