@@ -32,7 +32,7 @@
                         component.attr('data-layout', this.value);
                         keditor.initDynamicContent(dynamicElement);
 
-                        form.find('.items-per-row-wrapper').css('display', this.value === 'grid' ? 'block' : 'none');
+                        // form.find('.items-per-row-wrapper').css('display', this.value === 'grid' ? 'block' : 'none');
                     });
 
                     form.find('.page-size').on('change', function () {
@@ -93,8 +93,8 @@
             form.find('.page-size').val(dataAttributes['data-page-size'] || 12);
             form.find('.sort-by').val(dataAttributes['data-sort-by'] || '');
             form.find('.sort-direction').val(dataAttributes['data-sort-direction'] || 'asc');
-            form.find('.items-per-row').val(dataAttributes['data-items-per-row']);
-            form.find('.items-per-row-wrapper').css('display', dataAttributes['data-layout'] === 'grid' ? 'block' : 'none');
+            form.find('.items-per-row').val(dataAttributes['data-items-per-row'] || 4);
+            // form.find('.items-per-row-wrapper').css('display', dataAttributes['data-layout'] === 'grid' ? 'block' : 'none');
         }
     };
 

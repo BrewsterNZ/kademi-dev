@@ -1,14 +1,18 @@
-.btnToggleWishList, .btn-remove-wishlist{
+.btnToggleProductDetail{
     position: absolute;
-    top: 5px;
     right: 0;
-    z-index: 8;
+    top: 0;
+    padding-top: 9px !important;
+    line-height: 100%;
+    color: #fff;
+    font-size: @font-size-h3;
+    &:hover{
+        background: transparent;
+        color: #fff;
+    }
     &:focus, &:active{
         outline: none;
         box-shadow: none;
-    }
-    &.btnToggleProductDetail{
-        top: 25px;
-        right: 15px;
+        color: #fff;
     }
 }
