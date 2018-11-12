@@ -1,0 +1,287 @@
+#set( $checkoutItems = $services.cartManager.checkoutItems )
+
+#if ($formatter.isNull($successMessage))
+#set ($successMessage = "Your order has been successfully placed")
+#end
+#if ($formatter.isNull($continueShoppingUrl))
+#set ($continueShoppingUrl = "/")
+#end
+
+#if( $checkoutItems && $page && $user)
+
+    #set ($cart = $checkoutItems.cart)
+    #set ($shippingProviders = $services.priceManager.availableShippingProviders($cart))
+
+    #set ($shippingFormState = 'hide')
+
+    #set ($shippingFormState = '')
+    #set ($orgsList  = $services.userManager.membershipList($user).toOrgsList())
+    #set ($profileAddrs = $services.userManager.findAddresses($user))
+
+    ##ensure the user has enough points to checkoutItems
+    #set( $pointsBalance = 0)
+    #set( $pointsBucket = $formatter.safeGet($services.priceManager.getRules($rootFolder.website).pointsBuckets, 0) )
+    #if( $pointsBucket )
+        #set( $reward = $services.pointsManager.findPointsBucket($pointsBucket) )
+        #set( $pointsBalance = $services.pointsManager.pointsBalance($reward, $user) )
+    #end
+
+    #if( $pointsBalance < $checkoutItems.totalCost)
+        <p>You don't have enough points to purchase these items</p>
+    #else
+
+
+    <script>
+        var profileAddrs = {};
+        window.profileAddrs = profileAddrs;
+
+        profileAddrs.index = []
+
+        #if ($allowProfileAddress == 'true' && $profileAddrs)
+            #foreach ($addr in $profileAddrs)
+                ## ignore addresses which are incomplete
+                #if ($addr.address.addressLine1 && $addr.address.addressState && $addr.address.city && $addr.address.postcode &&  $addr.address.country)
+                    var addr = {
+                        description: '$!addr.addressType' || 'default',
+                        addressType: '$!addr.addressType',
+                        readonly: true,
+                        addressLine1: "$!addr.address.addressLine1",
+                        addressLine2: "$!addr.address.addressLine2",
+                        addressState: "$!addr.address.addressState",
+                        city: "$!addr.address.city",
+                        postcode: "$!addr.address.postcode",
+                        country: "$!addr.address.country",
+                    };
+                    profileAddrs[addr.addressType] = addr;
+                    profileAddrs.index.push(addr.addressType);
+                #end
+            #end
+        #end
+        #if ($allowOrgAddress == 'true' && $orgsList && $orgsList.size() > 0)
+            #foreach ($org in $orgsList)
+                ## dont add the top level org, and ignore addresses which are incomplete
+                #if ($org.parent && $org.address && $org.addressState && $org.city && $org.postcode &&  $org.country)
+                    var addr = {
+                        description: "$!org.formattedName",
+                        addressType: "$!org.formattedName",
+                        readonly: true,
+                        addressLine1: "$!org.address",
+                        addressLine2: "$!org.addressLine2",
+                        addressState: "$!org.addressState",
+                        city: "$!org.city",
+                        postcode: "$!org.postcode",
+                        country: "$!org.country",
+                    };
+                    profileAddrs[addr.addressType] = addr;
+                    profileAddrs.index.push(addr.addressType);
+                #end
+            #end
+        #end
+        #if ($allowManualAddress == 'true')
+            #set( $cityResp = $services.geoManager.findLocation())
+            #if( $cityResp )
+                #set ($geoCityName = $cityResp.city.names.en)
+                #set ($geoPostcode = $cityResp.postal.code)
+                #set ($geoCountryCode = $cityResp.country.isoCode)
+            #end
+
+            var addr = {
+                description: "Custom",
+                addressType: 'Custom',
+                readonly: false,
+                addressLine1: "",
+                addressLine2: "",
+                addressState: "",
+                city: "$!geoCityName",
+                postcode: "$!geoPostcode",
+                country: "$!geoCountryCode",
+            };
+            profileAddrs[addr.addressType] = addr;
+            profileAddrs.index.push(addr.addressType); 
+        #end
+        profileAddrs.initAddress = #if ($cart.addressLine1 && $cart.addressLine1 != '') false #else true #end;
+
+    </script>
+
+    <div data-address-type="$!defaultAddr.addressType" id="kcom2ShippingForm" class="$!shippingFormState ecomCheckoutFormPointsOnly">
+        <form action="$page.href" method="post">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <small>Shipping address</small>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-12">
+                                <input name="firstName" placeholder="First name" type="text" class="form-control required" value="$!formatter.firstNotNull($cart.firstName, $profile.firstName)" />
+                            </div>
+
+                            <div class="col-md-6 col-sm-12">
+                                <input name="surName" placeholder="Surname" type="text" class="form-control required" value="$!formatter.firstNotNull($cart.surName, $profile.surName)" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input name="phone" placeholder="Recipient phone number" type="text" class="form-control required" value="$!formatter.firstNotNull($cart.phone,$profile.phone)" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="btn-group address-type-drop dropdown">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Select address <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu address-type-dropdown-options">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='addressEntryForm'>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input name="addressLine1" placeholder="Address line 1" type="text" class="form-control required" value="$!cart.addressLine1" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input name="addressLine2" placeholder="Address line 2" type="text" class="form-control" value="$!cart.addressLine2" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-sm-12">
+                                    <input name="addressState" placeholder="State" type="text" class="form-control required"  value="$!cart.addressState" />
+                                </div>
+
+                                <div class="col-md-6 col-sm-12">
+                                    <input name="postcode" placeholder="Postcode" type="text" class="form-control required"  value="$!cart.postcode" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input name="city" placeholder="City" type="text" class="form-control required"  value="$!cart.city" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="hidden" name="country" value="$!cart.country" />
+                                <div class="col-md-12">
+                                    <input autocomplete="off" placeholder="Country" type="text" class="form-control country-typeahead required" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <!--<button type="button" class="btn btn-info text-uppercase btn-prev" ><i class="fa fa-angle-left"></i> Previous</button>-->
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <button type="submit" class="btn btn-info text-uppercase btn-next">Next
+                                    <i class="fa fa-angle-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div id="kcom2ShippingProvider" class="hide">
+        <form action="." method="post">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <small>Shipping providers</small>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <select name="shippingProvider" class="form-control required" id="shipping-provide-select">
+                                    <option value="">Choose shipping provider</option>
+                                    #foreach ($sp in $shippingProviders)
+                                        $formatter.option($sp.id, $sp.title, $cart.shippingProviderId)
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-info text-uppercase btn-prev" ><i class="fa fa-angle-left"></i> Previous</button>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <button type="submit" class="btn btn-info text-uppercase btn-next">Next
+                                    <i class="fa fa-angle-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="modal-success-message" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Checkout</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success">
+                        $!successMessage
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="$continueShoppingUrl" class="btn btn-primary">Continue shopping</a>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    #set ($billForm = "hide")
+    #if (!$page)
+    #set ($billForm = "")
+    #end
+    <form id="cart-form" method="POST" action="$page.href" class="$!billForm">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <small>Complete your order</small>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div id="cart-checkout-data">
+                        <input type="hidden" name="processCartId" value="$checkoutItems.cartId" />
+                        <!-- This is to validate the re-calculated total server side -->
+                        <input type="hidden" name="cartTotal" value="$checkoutItems.totalCost" />
+                        <input type="hidden" name="processCartPointsCheckout" value="processCartPointsCheckout" />
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-info text-uppercase btn-prev" ><i class="fa fa-angle-left"></i> Previous</button>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <button type="submit" class="btn btn-block btn-danger"><i class="fa fa-spinner fa-spin" style="display:none;"></i> SUBMIT MY ORDER</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    #end
+#else
+    #if(!$user)
+        <p>Please log in to continue</p>
+    #else
+        <p>There is nothing in your shopping cart.</p>
+        <a href="$continueShoppingUrl" class="btn btn-primary">Continue shopping</a>
+    #end
+#end
