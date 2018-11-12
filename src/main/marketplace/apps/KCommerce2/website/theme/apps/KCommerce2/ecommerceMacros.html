@@ -135,7 +135,7 @@
             #end
             <div class="$clsName product-item">
                 <div class="thumbnail product">
-                    #portlets("wishlistAddProductList")
+
                     <div class="product-info">
                         <h3 class="product-title" >
                             <a class="text-primary" href="$prodHref">$hit.fields.title.value</a>
@@ -144,29 +144,22 @@
                             <a href="$prodHref" class="embed-responsive-item"
                                style="background-image: url($bg);"></a>
                         </div>
-                        <div class="product-content">$!formatter.truncate( $formatter.encodeAsHtmlEntities($hit.fields.content.value), 65)</div>
+                        <div class="product-content">$formatter.ifNull($!formatter.truncate( $formatter.encodeAsHtmlEntities($hit.fields.content.value), 65), '<br><br>')</div>
                     </div>
-                    <div class="caption">
+                    <div class="caption bg-info">
 
-                        <h3 class="text-center product-price bg-info">
+                        <h3 class="text-center product-price ">
                             #if ($hit.fields.finalCost.value)
                             $$!hit.fields.finalCost.value
                             #else
                             N/A
                             #end
                         </h3>
-                        <a href="$prodHref" class="btn btn-info" role="button">
-                            <i class="fa fa-shopping-cart"></i>
-                        </a>
+                        #portlets("wishlistAddProductList")
                     </div>
                 </div>
             </div>
         #end
-
-
-
-
-
 
         #macro(fakeProductListUI)
             #if ($layout == "grid")
@@ -181,35 +174,34 @@
                     #set ($clsName = "col-sm-3")
                 #end
 
-            <div class="row products-list" id="products-list-$!prodsListId">
+            <div class="row products-list ecomStoreCategoryProductsComponent " id="products-list-$!prodsListId">
                 #set ($prodUrl = "")
-                #foreach($p in [1..3])
-                    <div class="product $clsName">
-                        <div class="thumbnail">
-                            <div class="embed-responsive embed-responsive-16by9">
+                #foreach($p in [1..4])
+
+                    <div class="$clsName product-item">
+                        <div class="thumbnail product">
+
+                            <div class="product-info">
+                                <h3 class="product-title" >
+                                    <a class="text-primary" href="$prodHref">Product title $p</a>
+                                </h3>
                                 #set($bg = "/static/images/photo_holder.png")
-                                <a title="$p.title" href="$prodUrl" class="embed-responsive-item"
-                                   style="background: url($bg) no-repeat 50% 50%; background-size: cover;">
-                                    <span class="sr-only">Example Title</span>
-                                </a>
-                                <label class="label label-success"
-                                       style="position: absolute; top: 5px; right: 5px; font-size: 14px;"><i
-                                        class="fa fa-usd"></i> 100</label>
-                            </div>
-                            <div class="caption">
-                                <h4><a title="$p.title" href="$prodUrl">Example Title</a></h4>
-                                <p style="word-wrap: break-word;" class="product-brief">notes</p>
-                                <div class="text-right">
-                                    <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
-                                    <a href="$prodUrl" class="btn btn-primary btn-sm btn-ecom-add-to-cart" role="button">Add to
-                                        Cart</a>
+                                <div class="embed-responsive embed-responsive-4by3">
+                                    <a href="#" class="embed-responsive-item"
+                                       style="background-image: url($bg);"></a>
                                 </div>
+                                <div class="product-content">Lorem ipsum dolor sit amet.</div>
+                            </div>
+                            <div class="caption bg-info">
+
+                                <h3 class="text-center product-price ">
+                                    $100
+                                </h3>
+                                <a href="#"><i class="fa fa-heart-o"></i></a>
                             </div>
                         </div>
                     </div>
                 #end
-
-
             </div>
             #else
             <div class="products-list" id="products-list-$!prodsListId">
