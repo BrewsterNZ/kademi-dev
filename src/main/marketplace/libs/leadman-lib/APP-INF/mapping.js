@@ -93,7 +93,9 @@ function newCompany(page, params) {
         var orgId = newCompany.replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s/g, "-");
         var rootFolder = page.find('/');
         transactionManager.runInTransaction(function () {
-            var org = services.organisationManager.createOrg(null, orgId, newCompany);
+            // create in the user's team
+            var parentOrg = services.teamManager.teamOrganisation;
+            var org = services.organisationManager.createOrg(parentOrg, orgId, newCompany);
             if (org){
                 var ortType = applications.leadMan.leadsOrgType;
                 rootFolder.addOrgType(org.orgId, ortType.name);
