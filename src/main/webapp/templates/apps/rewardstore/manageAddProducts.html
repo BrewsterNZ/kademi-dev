@@ -44,7 +44,7 @@
                             </p>
                         </div>
                         <div class="col-sm-3">
-                            <select name="categoryName" id="categoryName" class="category form-control selectpicker" multiple="multiple">
+                            <select name="categoryName" id="categoryName" class="category form-control selectpicker firstTime" multiple="multiple">
                                 #foreach($cat in $page.selectedCategories)
                                 $formatter.option($cat.name, $cat.title, $cat.name )
                                 #end

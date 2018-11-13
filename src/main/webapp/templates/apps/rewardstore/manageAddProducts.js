@@ -84,8 +84,12 @@
             });
 
             txtQuery.val(newQuery.join(' '));
-
-            doProductSearch(true);
+            if ($(this).hasClass('firstTime')){
+                doProductSearch();
+                $(this).removeClass('firstTime');
+            } else {
+                doProductSearch(true);
+            }
         });
 
         $(document.body).on('change', '#search-library', function (e) {
