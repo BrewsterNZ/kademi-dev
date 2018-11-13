@@ -199,3 +199,59 @@ function uploadFile(page, params, files) {
         }
     }
 }
+
+
+controllerMappings.setUserTimelineFunction('generateTimelineItems');
+
+function generateTimelineItems(page, user, list){
+    log.info('getUserFeedback {}', user);
+    var sumissions =  getUserFeedback(page, user.userId);
+    var db = getDB(page);
+    if (sumissions.hits.totalHits > 0){
+        for (var i in sumissions.hits.hits){
+            var hit = sumissions.hits.hits[i];
+            var survey = db.child(hit.source.survey_id);
+            var sentiment = hit.source.option_text;
+            var icon = 'fa-smile-o';
+            if (sentiment.search(/sad/ig) != -1){
+                icon = 'fa-frown-o';
+            } else if (sentiment.search(/neutral/ig) != -1){
+                icon = 'fa-meh-o';
+            } else if (sentiment.search(/happy/ig) != -1){
+                icon = 'fa-smile-o';
+            } else {
+                icon = 'fa-trophy';
+            }
+            var streamItem = applications.stream.streamEventBuilder()
+                .profile(user)
+                .title('Submitted feedback question: ' + survey.jsonObject.question)
+                .desc('Answer text selected: ' + hit.source.option_text)
+                .date(formatter.toDate(hit.source.created))
+                .category('info')
+                .inbound(true)
+                // .path('/ksurvey/' + survey.name + '/result/?profileId=' + user.userId)
+                .icon(icon)
+                .build();
+
+            list.add(streamItem);
+        }
+
+    }
+}
+
+function getUserFeedback(page, profileId) {
+    var queryJson = {
+        'query': {
+            'bool': {
+                'must': [
+                    { 'type': { 'value': TYPE_FEEDBACK } },
+                    { 'term': { 'profileId': profileId } }
+                ]
+            }
+        }
+
+    };
+    var searchResult = doDBSearch(page, queryJson);
+
+    return searchResult;
+}
