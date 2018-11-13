@@ -40,7 +40,9 @@ var cartMapping = controllerMappings
         .addMethod('POST', 'setCartItem', 'quantity')
         .addMethod('POST', 'removeCartItem', 'removeLineId')
         .addMethod('POST', 'setCartItemQuantity', 'newQuantity')
-        .addMethod('POST', 'checkout', 'processCartId')
+        .addMethod('POST', 'setCartPointsAllocation', 'newPointsAllocation')
+        .addMethod('POST', 'checkout', 'processCart')
+        .addMethod('POST', 'pointsCheckout', 'processCartPointsCheckout')
         .addMethod('POST', 'applyPromoCodes', 'promoCodes')
         .addMethod('POST', 'createAccount', 'kcom2Firstname')
         .addMethod('POST', 'findProfile', 'findProfileEmail')
@@ -205,6 +207,58 @@ function findAttributes(page, store, searchResults) {
     page.attributes.attributesSummary = findAttributesQuery(store, page.attributes.category, null, minPrice, maxPrice, 5, attNameBuckets);
 }
 
+function pointsCheckout(page, params, files, form) {
+    var processCartId = form.longParam("processCartId");
+    log.info('kcom2 checkout pointsonlycheckout', processCartId);
+    var totalAmountFromForm = form.bigDecimalParam("cartTotal");
+    var checkoutItems = services.cartManager.checkoutItems;
+
+    if (checkoutItems == null) {
+        return views.jsonView(false, "No cart");
+    }
+    if (formatter.cleanString(checkoutItems.cartId) != formatter.cleanString(processCartId)) {
+        log.info('checkoutItems.cartId={} processCartId={}', checkoutItems.cartId, processCartId);
+        return views.jsonView(false, "Cart is invalid, please refresh your page");
+    }
+    if (!checkoutItems.totalCost.equals(totalAmountFromForm)) {
+        return views.jsonView(false, "The item prices have changed, please refresh your page. " + totalAmountFromForm + " was submitted, current price is " + checkoutItems.totalCost);
+    }
+
+    var profile = securityManager.currentUser.thisProfile;
+    var rf = page.find("/");
+    var website = rf.website;
+    var store = page.attributes.store;
+    var pointsBucket = formatter.safeGet(services.priceManager.getRules(website).pointsBuckets, 0);
+
+    if (!pointsBucket) {
+        return views.jsonView(false, "Unable to checkout using points");
+    }
+
+    var reward = services.pointsManager.findPointsBucket(pointsBucket);
+    var balance = services.pointsManager.pointsBalance(reward, profile);
+    if (balance < checkoutItems.totalCost) {
+        return views.jsonView(false, "There isn't enough points available for this purhcase");
+    }
+
+    transactionManager.runInTransaction(function () {
+        
+        var cart = checkoutItems.cart;
+        
+        var pointsRequest = services.pointsManager.newPointsRequest(profile, 0 - checkoutItems.totalCost);
+        pointsRequest.reward = reward;
+
+        var pointsTxn = services.pointsManager.processPointsRequest(pointsRequest);
+        var pointsUsed = pointsTxn.numPoints;
+
+        if (pointsUsed < checkoutItems.totalCost) {
+            return views.jsonView(false, "There was an error deducting the points from your account");
+        }
+
+        services.cartManager.placeOrder(cart, store);
+    });
+    return views.jsonView(true, "Payment completed");
+}
+
 function checkout(page, params, files, form) {
     var processCartId = form.longParam("processCartId");
     log.info('kcom2 checkout checkout', processCartId);
@@ -286,6 +340,17 @@ function saveShippingProfider(page, params, files, form) {
         services.criteriaBuilders.getBuilder("cart").save(cart);
     });
     return views.jsonView(true, "Updated shipping provider");
+}
+
+function setCartPointsAllocation(page, params, files, form) {
+    log.info("setCartPointsAllocation: form={}", form);
+    var newPointsAllocation = form.bigDecimalParam("newPointsAllocation");
+    transactionManager.runInTransaction(function () {
+        var cart = services.cartManager.shoppingCart(false);
+        cart.pointsAllocated = newPointsAllocation;
+        services.criteriaBuilders.getBuilder("cart").save(cart);
+    });
+    return views.jsonView(true, "Updated points allocation to " + newPointsAllocation);
 }
 
 function setCartItemQuantity(page, params, files, form) {

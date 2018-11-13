@@ -305,6 +305,10 @@
 #if ($formatter.isNull($successMessage))
 #set ($successMessage = "Your order has been successfully placed")
 #end
+#if ($formatter.isNull($continueShoppingUrl))
+#set ($continueShoppingUrl = "/")
+#end
+
 <div id="modal-success-message" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -318,7 +322,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="/" class="btn btn-primary">Continue shopping</a>
+                <a href="$continueShoppingUrl" class="btn btn-primary">Continue shopping</a>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

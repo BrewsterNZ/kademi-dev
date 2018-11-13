@@ -7,6 +7,32 @@
 #end
 #set( $items = $checkoutItems.items )
 
+#set( $items = $checkoutItems.items )
+
+##TODO: get from $cart.pointsBucket when availble
+#set( $pointsBucket = $formatter.safeGet($services.priceManager.getRules($rootFolder.website).pointsBuckets, 0)) 
+
+#if ($allowCheckoutUsingPoints == 'true' && $pointsBucket)
+    #set( $reward = $services.pointsManager.findPointsBucket($pointsBucket) )
+    #set( $pointsBalance = $services.pointsManager.pointsBalance($reward, $user))
+    
+    ## TODO: Add points multiplier from cart.pointsMultiplier
+    #set( $pointsMultiplier = 1 ) 
+
+    ##TODO: use cart.pointsAllocated when available
+    ##set ( $pointsAllocated = $cart.pointsAllocated)
+    #set ( $pointsAllocated = 20)
+
+
+    #set( $totalAsPoints = $checkoutItems.totalCost * $pointsMultiplier) 
+    #set( $maxPointsAllowed = $totalAsPoints)
+    #if ( $pointsBalance < $totalAsPoints)
+        #set( $maxPointsAllowed = $pointsBalance)
+    #end
+#else
+    #set( $pointsBalance = 0)
+#end    
+
 <form id="cart-items" method="POST" action="$page.href">
     <!-- TODO: Currency should be configurable -->
     <div id="ecomItemsTable" class="panel panel-default">
@@ -64,7 +90,7 @@
                                 <button class="btn btn-default btn-xs btn-increase-quantity" type="button">+</button>
                             </span>
                         </div>
-                        <input type="hidden" class="productOrderId" name="item.${foreach.count}" value="$item.id" />
+                        <input type="hidden" class="productOrderId" name="item.${foreach.count}" value="$item.lineItemId" />
                         #else
                         <div style="" class="text-center">
                             <span>$formatter.toInteger($item.quantity)</span>
@@ -133,6 +159,29 @@
                 </div>
             </div>
         </div>
+    
+        #if ($allowCheckoutUsingPoints == 'true' && $pointsBalance > 0)
+            <div class="panel-footer cart-tax">
+                <div class="row">
+                    <div class="col-sm-4 col-sm-offset-6">
+                        <h5>Use your points to pay for this purchase</h5>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="input-group">
+                            <input type="number" 
+                                min="0"
+                                max="$maxPointsAllowed"
+                                value="$pointsAllocated" 
+                                name="pointsToUse" 
+                                class="form-control ecom-points-to-use text-right"  
+                                autocomplete="off" />
+                            <span class="input-group-addon">of $formatter.toInteger($pointsBalance) </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        #end
+
         <div class="panel-footer cart-total">
             <div class="row">
                 <div class="col-sm-6 col-sm-offset-6">

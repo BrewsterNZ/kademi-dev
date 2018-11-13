@@ -7,6 +7,7 @@ controllerMappings.addComponent("KCommerce2/components", "ecomStoreCategories", 
 controllerMappings.addComponent("KCommerce2/components", "ecomCheckoutCart", "html", "Shows the checkout cart", "E-commerce App component");
 controllerMappings.addComponent("KCommerce2/components", "ecomCheckoutForm", "html", "Shows the checkout form", "E-commerce App component");
 controllerMappings.addComponent("KCommerce2/components", "ecomCheckoutGoogleForm", "html", "Shows the checkout form using Google Maps for validating email addresses", "E-commerce App component");
+controllerMappings.addComponent("KCommerce2/components", "ecomCheckoutFormPointsOnly", "html", "Shows the checkout form for a logged in user. Can restrict the addresses which can be selected.", "E-commerce App component");
 controllerMappings.addComponent("KCommerce2/components", "ecomSearchInput", "html", "A search input field with suggestions", "E-commerce App component");
 controllerMappings.addComponent("KCommerce2/components", "suggestionList", "html", "Renders the suggestion list for the search input component", "E-commerce App component");
 controllerMappings.addComponent("KCommerce2/components", "afterAddToCartSuggestions", "html", "Shows suggestions following an item being added to the cart", "E-commerce App component");
