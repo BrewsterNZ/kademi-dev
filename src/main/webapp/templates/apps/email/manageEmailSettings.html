@@ -93,12 +93,40 @@
                 </div>
             </div>
         </form>
+
+        <hr/>
+
+        <h2>Administrator notifications</h2>
+        <form id="sendTestForm" class="form-horizontal" method="POST" action="$page.href">
+            <input type="hidden" name="testAdminNotification" value="true"/>
+            <p>Please click the button below to send a test notification to administrators.</p>
+            <div class="form-group">
+                <div class="col-md-offset-4 col-md-4">
+                    <button class="btn btn-sm btn-info" type="submit">
+                        <span class="fa fa-envelope"></span>
+                        Send test
+                    </button>
+                </div>
+            </div>
+        </form>
+
+
         <script type="text/javascript">
             $(function () {
                 $("#updateForm").forms({
                     onSuccess : function(resp) {
                         if( resp.status) {
                             Msg.info("Updated ok");
+                        } else {
+                            Msg.error("Eeek " + resp.messages);
+                        }
+                    }
+                });
+
+                $("#sendTestForm").forms({
+                    onSuccess : function(resp) {
+                        if( resp.status) {
+                            Msg.info("Test sent");
                         } else {
                             Msg.error("Eeek " + resp.messages);
                         }
