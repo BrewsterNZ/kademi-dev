@@ -30,7 +30,7 @@ function onShareableItemEvent(rf, raae) {
         if (raae.contentIds != null && !raae.contentIds.isEmpty()) {
             for (var contentIdIndex in raae.contentIds) {
                 var contentId = raae.contentIds[contentIdIndex];
-                
+
                 var newItem = services.forumManager.newWallSharedItem(contentId, raae);
                 log.info("onShareableItemEvent: Created RAP ID={}", newItem.getId());
             }
@@ -51,24 +51,51 @@ function resolveTeam(page, groupName, teamOrgId) {
 function post(page, params, files, form) {
     transactionManager.runInTransaction(function () {
         var newPost = form.cleanedParam("newPost");
-        var wallId = form.rawParam("wallId"); 
-        
-        if (wallId == null) {
+        var entityId = form.rawParam("entityId");
+
+        var forumManager = services.forumManager;
+
+        var entity = null;
+
+        if (formatter.isNotNull(entityId)) {
+            entity = services.userManager.findBaseEntity(entityId);
+        } else {
             var currentUser = securityManager.currentUser;
-            
-            var teamOrg = findTeamOrg(currentUser.thisProfile);
-            
-            wallId = "wall-" + teamOrg.id;
+            var teamOrg = findTeamOrg(currentUser);
+            entity = teamOrg;
         }
-        
-        var createdPost = services.forumManager.post(wallId, newPost);
-        
+
+        var wallPostBuilder = forumManager.newWallPostBuilder()
+                .withWallEntity(entity)
+                .withComment(newPost);
+
+        // Add Files
+        if (formatter.isNotNull(files) && !files.isEmpty()) {
+            var index = 0;
+            files.forEach(function (fieldName, fileItem) {
+                var fileName = fileItem.name;
+                var fileHash = fileManager.uploadFile(fileItem);
+                var contentType = fileItem.contentType;
+                var fileSize = fileItem.size();
+                var ordinal = index++;
+
+                wallPostBuilder.newFile()
+                        .withFileName(fileName)
+                        .withFileHash(fileHash)
+                        .withContentType(contentType)
+                        .withFileSize(fileSize)
+                        .withOrdinal(ordinal);
+            });
+        }
+
+        var createdPost = forumManager.processWallPost(wallPostBuilder);
+
         var taggedProfiles = form.listLongsParam("taggedProfiles");
-        
+
         for (var profileIdIndex in taggedProfiles) {
             var profileId = taggedProfiles[profileIdIndex];
             var userResource = applications.userApp.findUserResourceById(profileId);
-            
+
             if (userResource != null) {
                 services.forumManager.tag(createdPost, userResource.thisProfile, null);
             }
@@ -89,12 +116,12 @@ function vote(page, params, files, form) {
 
 function deleteVote(page, params, files, form) {
     var postId = form.longParam("deleteVotePostId");
-    
+
     var post = services.forumManager.findPost(postId);
     var vote = services.forumManager.findVote(post);
-    
+
     var currentUser = securityManager.currentUser;
-    
+
     if (vote == null) {
         return views.jsonView(true, "Deleted Vote");
     }
@@ -106,7 +133,7 @@ function deleteVote(page, params, files, form) {
     transactionManager.runInTransaction(function () {
         services.forumManager.deleteVote(postId);
     });
-    
+
     return views.jsonView(true, "Deleted Vote");
 }
 
@@ -117,19 +144,19 @@ function replyToPost(page, params, files, form) {
         var text = form.cleanedParam("replyText");
 
         var createdPost = services.forumManager.replyToPost(postId, text);
-        
+
         var taggedProfiles = form.listLongsParam("taggedProfiles");
-        
+
         for (var profileIdIndex in taggedProfiles) {
             var profileId = taggedProfiles[profileIdIndex];
             var userResource = applications.userApp.findUserResourceById(profileId);
-            
+
             if (userResource != null) {
                 services.forumManager.tag(createdPost, userResource.thisProfile, null);
             }
         }
     });
-    
+
     return views.jsonView(true, "Commented");
 }
 
@@ -159,13 +186,13 @@ function reportPost(page, params, files, form) {
     var comment = form.rawParam("comment");
 
     var postToReport = services.forumManager.findPost(postId);
-    
+
     transactionManager.runInTransaction(function () {
         log.info("reportPost: postId={}", postId);
 
         services.forumManager.report(postToReport, category, page.href, comment);
     });
-    
+
     return views.jsonView(true, "Reported");
 }
 
