@@ -9,26 +9,27 @@
 
 <form id="cart-items" method="POST" action="$page.href">
     <!-- TODO: Currency should be configurable -->
-    <div id="ecomItemsTable" class="panel panel-default">
+    <div id="leadCartItemsTable" class="panel panel-default panel-kcrm-light panel-header-info">
         <div class="panel-heading">
             <div class="panel-title">
                 <small>Order Summary</small>
             </div>
         </div>
 
-        <div class="items-list" id="kcom2-cart-items">
-            #if( $cart.pending )
-            <div class="promo-codes-container form-group">
-                <div class="input-group">
-                    <input type="text" class="promo-codes form-control" name="promoCodes" value="$formatter.toCsv($services.cartManager.userPromoCodes)" placeholder="Enter promotion codes" />
-                    <span class="input-group-btn">
+        <div class="panel-body">
+            <div class="items-list" id="kcom2-cart-items">
+                #if( $cart.pending )
+                <div class="promo-codes-container form-group">
+                    <div class="input-group">
+                        <input type="text" class="promo-codes form-control" name="promoCodes" value="$formatter.toCsv($services.cartManager.userPromoCodes)" placeholder="Enter promotion codes" />
+                        <span class="input-group-btn">
                         <button class="apply-promo-codes btn btn-success">Apply</button>
                     </span>
+                    </div>
                 </div>
-            </div>
-            #end
+                #end
 
-            #foreach($item in $items )
+                #foreach($item in $items )
                 <div class="row item-row">
                     <div class="col-sm-6 item-title center-content">
                         <span class="item-photo">
@@ -52,15 +53,15 @@
                             #end
                         </div>
                     </div>
-  
+
                     <div class="col-sm-2 ecom-item-quantity center-content">
-  
+
                         <div style="" class="text-center">
                             <span>$formatter.toInteger($item.quantity)</span>
                         </div>
-  
+
                     </div>
-  
+
 
                     <div class="col-sm-3 item-price center-content">
                         <div>
@@ -74,7 +75,8 @@
                         </div>
                     </div>
                 </div>
-            #end
+                #end
+            </div>
         </div>
 
         #if( $checkoutItems )

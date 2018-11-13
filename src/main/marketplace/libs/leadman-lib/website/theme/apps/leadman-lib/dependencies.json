@@ -288,6 +288,12 @@
                 "cssMedia": "all",
                 "path": "/static/bootstrap-sweetalert/1.0.1/dist/sweetalert.css"
             }
+        },
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/leadman/leadCart.less"
+            }
         }
     ]
 }
