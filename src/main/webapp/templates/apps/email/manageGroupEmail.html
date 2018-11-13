@@ -263,6 +263,10 @@
             $(function () {
                 initManageEmail();
                 initGroupEmailListStatusPolling();
+                $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+                    flog("reload", $("#emails"));
+                    $("#emails").reloadFragment();
+                });
             });
         </script>
     </body>

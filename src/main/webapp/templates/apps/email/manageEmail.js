@@ -2,13 +2,13 @@ function initManageEmail() {
     initModalAddEmail();
     initModalAddTemplate();
     initDeleteEmail();
-    flog("init dups");
-    $("#email-trigger-wrapper").on("click", ".btn-dup-email", function (e) {
+
+    $("body").on("click", ".btn-dup-email", function (e) {
         e.preventDefault();
         var name = $(e.target).attr("href");
         duplicate(name);
     });
-    $("#email-trigger-wrapper").on("click", ".btn-dup-temp-email", function (e) {
+    $("body").on("click", ".btn-dup-temp-email", function (e) {
         e.preventDefault();
         var name = $(e.target).attr("href");
         duplicate(name, true);

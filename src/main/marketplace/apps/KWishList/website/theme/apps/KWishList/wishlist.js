@@ -32,10 +32,12 @@ $(function () {
 
                         if (btn.find('i').hasClass(on)){
                             Msg.success('Added to wish list');
+                            btn.attr('title', 'Remove from wishlist')
                         }
 
                         if (btn.find('i').hasClass(off)){
                             Msg.success('Removed from wish list');
+                            btn.attr('title', 'Add to wishlist')
                         }
                     }
                 },
