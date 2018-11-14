@@ -187,6 +187,7 @@
                                         #else
                                         <select name="pointsBuckets" class="form-control">
                                             #set( $curName = $rules.pointsBuckets[0] )
+                                            $formatter.option("", "[None]", $curName)
                                             #foreach($pointsBucket in $services.pointsManager.pointsBuckets )
                                             $formatter.option($pointsBucket.name, $pointsBucket.title, $curName)
                                             #end
