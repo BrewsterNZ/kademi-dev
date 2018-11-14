@@ -29,11 +29,14 @@
         #set ($productsImages = $otherProd.images)
         #set( $img = false )
         #set( $img = $formatter.safeGet($productsImages, 0) )
-        #set ($productImage = "/_hashes/files/$!img.imageHash")
+        #set ($productImage = "/theme/img/photo_holder.png")
+        #if ($img.imageHash)
+        #set ($productImage = "/_hashes/files/$!{img.imageHash}/alt-150-150.png")
+        #end
         <a href="/$page.attributes.store.name/$otherProd.id" class="thumbnail">
-            <img src="$productImage/alt-150-150.png" alt="$otherProd.title" />
+            <div title="$otherProd.title" class="afterAddProductThumb" style="background-image: url('$productImage')"></div>
             <div class="caption">
-                <h3>$otherProd.title</h3>
+                $otherProd.title
             </div>
         </a>
     </div>
