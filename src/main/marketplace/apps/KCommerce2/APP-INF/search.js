@@ -433,7 +433,7 @@ function getCategoriesInStore(store, cat) {
 
 function findCatById(cats, id) {
     for (var i in cats){
-        if (cats[i].id == id) return cats[i];
+        if (cats[i].id.equals(id)) return cats[i];
     }
 
     return null;
