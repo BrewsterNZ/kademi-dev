@@ -245,11 +245,12 @@
                         #set ($currentGroups = $survey.jsonObject.groups.split(','))
 
                         #foreach($groupName in $currentGroups)
-                            #set ($g = $groups.child($groupName))
+                            #set ($g = $groups.child($groupName).group)
                             #if($g)
                                 <div class="alert alert-info">
                                     <span class="fa fa-users"></span>
-                                    <a class="alert-link" href="/groups/$g.name/members">$g.name</a>
+
+                                    <a class="alert-link" href="/groups/$g.name/members">$formatter.ifNull($g.title, $g.name)</a>
                                     #if( $g.groupType == "P" )
                                         - Primary group
                                     #elseif( $g.groupType == "M" )
@@ -508,13 +509,13 @@
                         <h4 class="modal-title">Choose groups</h4>
                     </div>
                     <div class="modal-body" data-survey-id="$survey.name">
-                        #foreach($g in $page.find('/groups').children)
-                            <div class="checkbox">
-                                <label>
-                                    #set ($isChecked = $survey.jsonObject.groups && $survey.jsonObject.groups.indexOf($g.name) != -1)
-                            $formatter.checkbox($g.name, $isChecked) $g.name
-                                </label>
-                            </div>
+                        #foreach($g in $rootFolder.allGroups)
+                        <div class="checkbox">
+                            <label>
+                                #set ($isChecked = $survey.jsonObject.groups && $survey.jsonObject.groups.indexOf($g.name) != -1)
+                                $formatter.checkbox($g.name, $isChecked) $formatter.ifNull($g.title, $g.name)
+                            </label>
+                        </div>
                         #end
                     </div>
                 </div>
