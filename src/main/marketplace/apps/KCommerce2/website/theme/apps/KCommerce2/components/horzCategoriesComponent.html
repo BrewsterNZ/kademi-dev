@@ -8,14 +8,15 @@
 #end
 #if ($storeOb)
 #set ($result = $applications.KCommerce2.call("getCategoriesInStore", $storeOb, $page.attributes.category))
-#else
-<p class="alert alert-warning">Please configure a KCom2 store or put this component inside KCom2 templates</p>
-#end
 <ul class="nav nav-pills" role="tablist">
     #foreach($item in $result)
     <li class="$formatter.ifTrue($formatter.eq($foreach.index, 0), 'active', '')" role="presentation"><a href="#">$item.category.title <span class="badge">$item.totalProducts</span></a></li>
     #end
 </ul>
+#else
+<p class="alert alert-warning">Please configure a KCom2 store or put this component inside KCom2 templates</p>
+#end
+
 #else
 <ul class="nav nav-pills" role="tablist">
     <li role="presentation" class="active"><a href="#">Homewares <span class="badge">42</span></a></li>
