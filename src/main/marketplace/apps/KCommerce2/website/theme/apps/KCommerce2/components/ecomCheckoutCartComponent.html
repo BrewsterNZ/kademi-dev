@@ -23,15 +23,8 @@
 #if ($allowCheckoutUsingPoints == 'true' && $pointsBucket)
     #set( $pointsBalance = $services.pointsManager.pointsBalance($pointsBucket, $user))
 
-    ## TODO: Add points multiplier from cart.pointsMultiplier
-    #set( $pointsMultiplier = 1 )
-
-    #set ( $pointsAllocated = 0)
-    #set ( $pointsAllocated = $cart.numPoints)
-
-    #set( $totalAsPoints = $checkoutItems.totalCost * $pointsMultiplier)
-    #set( $maxPointsAllowed = $totalAsPoints)
-    #if ( $pointsBalance < $totalAsPoints)
+    #set( $maxPointsAllowed = $checkoutItems.totalCost)
+    #if ( $pointsBalance < $checkoutItems.totalCost)
         #set( $maxPointsAllowed = $pointsBalance)
     #end
     #if ( $maxPointsAllowed > $checkoutItems.totalCost)
@@ -130,75 +123,72 @@
         </div>
 
         #if( $checkoutItems )
-        <div class="panel-footer cart-subtotal">
-            <div class="row">
-                <div class="col-sm-6 col-sm-offset-6">
-                    <span>Sub total</span>
-                    <strong class="pull-right">$$formatter.formatCurrency($checkoutItems.subTotal)</strong>
+            <div class="panel-footer cart-subtotal">
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-6">
+                        <span>Sub total</span>
+                        <strong class="pull-right">$$formatter.formatCurrency($checkoutItems.subTotal)</strong>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="panel-footer cart-tax">
-            <div class="row">
-                <div class="col-sm-6 col-sm-offset-6">
-                    <span>Tax</span>
-                    <strong class="pull-right">$$formatter.formatCurrency($checkoutItems.totalTax)</strong>
-                </div>
-            </div>
-        </div>
-        <div class="panel-footer cart-tax">
-            <div class="row">
-                <div class="col-sm-6 col-sm-offset-6">
-                    <span>
-                        Freight
-                    </span>
-                    <strong class="pull-right">
-                        #if( $checkoutItems.freightCost )
-                        $$formatter.formatCurrency($checkoutItems.freightCost)
-                        #end
-                    </strong>
-                    #if( $checkoutItems.shippingProvider )
-                    <p>
-                    <span>( $checkoutItems.shippingProvider.title )</span>
-                    </p>
-                    #end
-                </div>
-            </div>
-        </div>
-
-        #if( $pointsBucket )
-        #if ($allowCheckoutUsingPoints == 'true' && $pointsBalance > 0)
             <div class="panel-footer cart-tax">
                 <div class="row">
-                    <div class="col-sm-3 col-sm-offset-6">
-                        <span>Points</span>
-                    </div>
-                    <div class="col-sm-3">
-                        <input type="hidden" name="selectedPointsBucket" value="$pointsBucket.id" />
-                        <input type="number"
-                                min="0"
-                                max="$!formatter.toInteger($maxPointsAllowed)"
-                                value="$pointsAllocated"
-                                name="pointsToUse"
-                                class="form-control ecom-points-to-use text-right"
-                                autocomplete="off" />
-
-                        <i>You have <b>$formatter.toInteger($pointsBalance)</b> points, which you can use to pay for some or all of this purchase</i>
+                    <div class="col-sm-6 col-sm-offset-6">
+                        <span>Tax</span>
+                        <strong class="pull-right">$$formatter.formatCurrency($checkoutItems.totalTax)</strong>
                     </div>
                 </div>
             </div>
-        #end
-        #end
-
-
-        <div class="panel-footer cart-total">
-            <div class="row">
-                <div class="col-sm-6 col-sm-offset-6">
-                    <span><strong>Total</strong></span>
-                    <strong class="pull-right">$$formatter.formatCurrency($checkoutItems.totalCost)</strong>
+            <div class="panel-footer cart-tax">
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-6">
+                        <span>
+                            Freight
+                        </span>
+                        <strong class="pull-right">
+                            #if( $checkoutItems.freightCost )
+                            $$formatter.formatCurrency($checkoutItems.freightCost)
+                            #end
+                        </strong>
+                        #if( $checkoutItems.shippingProvider )
+                        <p>
+                        <span>( $checkoutItems.shippingProvider.title )</span>
+                        </p>
+                        #end
+                    </div>
                 </div>
             </div>
-        </div>
+
+            #if ($pointsBucket && $allowCheckoutUsingPoints == 'true' && $pointsBalance > 0)
+                <div class="panel-footer cart-tax">
+                    <div class="row">
+                        <div class="col-sm-3 col-sm-offset-6">
+                            <span>Points</span>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="hidden" name="selectedPointsBucket" value="$pointsBucket.id" />
+                            <input type="number"
+                                    min="0"
+                                    max="$!formatter.toInteger($maxPointsAllowed)"
+                                    value="$cart.numPoints"
+                                    name="pointsToUse"
+                                    class="form-control ecom-points-to-use text-right"
+                                    autocomplete="off" />
+
+                            <i>You have <b>$formatter.toInteger($pointsBalance)</b> points, which you can use to pay for some or all of this purchase</i>
+                        </div>
+                    </div>
+                </div>
+            #end
+
+            <div class="panel-footer cart-total">
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-6">
+                        <span><strong>Total</strong></span>
+                        <strong class="pull-right">$$formatter.formatCurrency($checkoutItems.totalCost)</strong>
+                    </div>
+                </div>
+            </div>
         #else
         <div class="panel-footer cart-subtotal">
         <h3>Please add some items to your cart :)</h3>
