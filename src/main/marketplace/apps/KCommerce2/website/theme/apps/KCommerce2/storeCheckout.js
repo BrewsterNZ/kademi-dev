@@ -23,6 +23,8 @@
         initPaymentOptionSelect();
         initLoginForm();
         initPromoCodes();
+        initPayWithPoints();
+        initCheckoutFormPointsOnly();
 
         $('.btn-decrease-quantity, .btn-increase-quantity, .ecom-txt-quantity, .btn-ecom-remove-item').prop('disabled', false);
     }
@@ -34,6 +36,20 @@
             var inp = cont.find("input[name=promoCodes]");
             var codes = inp.val();
             applyPromoCodes(codes, window.location.href);
+        });
+    }
+
+    function initPayWithPoints() {
+        $("body").on('change', '.ecom-points-to-use', function(e) {
+            e.preventDefault();
+            var inpt = $(this);
+
+            clearTimeout(pointsUpdateTimer);
+            pointsUpdateTimer = setTimeout(function () {
+                var val = inpt.val();
+                doUpdatePoints(window.location.href, inpt.val());
+            }, 500);
+            
         });
     }
 
@@ -241,6 +257,28 @@
             },
             error: function (resp) {
                 Msg.error("An error occured saving your loyalty points selection");
+            }
+        });
+    }
+
+    function doUpdatePoints(cartHref, points) {
+        flog("doUpdatePoints", cartHref);
+        $.ajax({
+            type: 'POST',
+            url: cartHref,
+            data: {
+                newPointsAllocation: points,
+            },
+            datatype: "json",
+            success: function (data) {
+                $("#ecomItemsTable, #cart-link, #cart-checkout-data").reloadFragment({
+                    whenComplete: function (resp) {
+                        Msg.info("Points have been updated");
+                    }
+                });
+            },
+            error: function (resp) {
+                Msg.error("An error occured updating the points for your shopping cart. Please check your internet connection and try again");
             }
         });
     }
@@ -463,6 +501,37 @@
         addressForm.find('.enter-manually').click();
 
     }
+
+    function populateAddress(address) {
+        var addressForm = $(shippingFormLocator);
+        addressForm.find('[name=addressLine1]').val(address.addressLine1).prop("readonly", address.readonly);
+        addressForm.find('[name=addressLine2]').val(address.addressLine2).prop("readonly", address.readonly);
+        addressForm.find('[name=addressState]').val(address.addressState).prop("readonly", address.readonly);
+        addressForm.find('[name=postcode]').val(address.postcode).prop("readonly", address.readonly);
+        addressForm.find('[name=city]').val(address.city).prop("readonly", address.readonly);
+        addressForm.find('[name=country]').val(address.country).prop("readonly", address.readonly);
+        addressForm.find('.country-typeahead').prop("readonly", address.readonly);
+    }
+
+    function initCheckoutFormPointsOnly() {
+        if ($('#kcom2ShippingForm.ecomCheckoutFormPointsOnly').length == 0 || !window.profileAddrs)
+            return;
+        var addresses = window.profileAddrs;
+        for(var i=0; i < addresses.index.length; i++) {
+            var address = addresses[addresses.index[i]];
+            $('<li><a href="#" class="addressSelector" data-item-id=' + i + '>'+address.description + '</a></li>').appendTo(shippingFormLocator + ' .address-type-dropdown-options');
+        }
+        $(shippingFormLocator + ' .addressSelector').on('click', function(evnt){
+            var id = +evnt.currentTarget.getAttribute('data-item-id');
+            var address= addresses[addresses.index[id]];
+
+            populateAddress(address);
+        });
+
+        if (window.profileAddrs.initAddress)
+            populateAddress(addresses[addresses.index[0]]);
+    }
+
 
     // wire up the google address search form
     function initGoogleAddressSearch() {
@@ -707,6 +776,9 @@ function initCountryList() {
 
 
 function initSelectAddress() {
+    if ($('#kcom2ShippingForm.ecomCheckoutForm').length == 0)
+        return;
+
     $(document).on('click', '#kcom2ShippingForm .address-type-drop a', function (e) {
         e.preventDefault();
 

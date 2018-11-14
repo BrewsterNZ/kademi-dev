@@ -160,7 +160,7 @@
     #end
 #end
 
-<div data-address-type="$!defaultAddr.addressType" id="kcom2ShippingForm" class="$!shippingFormState">
+<div data-address-type="$!defaultAddr.addressType" id="kcom2ShippingForm" class="$!shippingFormState ecomCheckoutForm">
     <form action="$page.href" method="post">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -298,6 +298,10 @@
 #if ($formatter.isNull($successMessage))
 #set ($successMessage = "Your order has been successfully placed")
 #end
+#if ($formatter.isNull($continueShoppingUrl))
+#set ($continueShoppingUrl = "/")
+#end
+
 <div id="modal-success-message" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

@@ -15,6 +15,9 @@
     #set ($shippingFormState = 'hide')
 
     #set ($shippingFormState = '')
+    #if(!$cart.shippingProviderId)
+        #set( $cart.shippingProviderId = $formatter.safeGet($shippingProviders, 0) )
+    #end
     #set ($orgsList  = $services.userManager.membershipList($user).toOrgsList())
     #set ($profileAddrs = $services.userManager.findAddresses($user))
 
@@ -31,7 +34,7 @@
     #else
 
 
-    <script>
+<script>
         var profileAddrs = {};
         window.profileAddrs = profileAddrs;
 
@@ -202,7 +205,6 @@
                         <div class="form-group">
                             <div class="col-md-12">
                                 <select name="shippingProvider" class="form-control required" id="shipping-provide-select">
-                                    <option value="">Choose shipping provider</option>
                                     #foreach ($sp in $shippingProviders)
                                         $formatter.option($sp.id, $sp.title, $cart.shippingProviderId)
                                     #end
