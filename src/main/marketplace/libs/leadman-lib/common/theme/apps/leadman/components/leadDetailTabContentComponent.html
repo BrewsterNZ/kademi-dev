@@ -127,24 +127,13 @@
             #set( $prods = $page.lead.leadProducts )
             <div class="table-responsive">
                 <table class="table table-striped" id="table-lead-products">
-                    <colgroup>
-                        <col style=""/>
-                        <col style=""/>
-                        <col style=""/>
-                        <col style="width: 140px"/>
-                    </colgroup>
                     #if( $prods.size() > 0 )
                     <thead>
                         <tr>
                             <th>Code</th>
                             <th>Product title</th>
                             <th>Base cost</th>
-                            <th class="text-right">
-                                <button class="btn btn-success btn-place-order" type="button" >
-                                    <i class="fa fa-shopping-cart"></i>
-                                    Place order
-                                </button>
-                            </th>
+                            <th class="col-sm-1"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -163,6 +152,13 @@
                     </tr>
                     #end
                 </table>
+            </div>
+            <hr>
+            <div class="text-right">
+                <button class="btn btn-success btn-place-order" type="button" >
+                    <i class="fa fa-shopping-cart"></i>
+                    Place order
+                </button>
             </div>
         </div>
     </div>

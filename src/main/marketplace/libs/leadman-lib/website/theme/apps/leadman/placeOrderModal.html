@@ -1,7 +1,5 @@
 #set( $prods = $page.lead.leadProducts )
 
-
-
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
     <h4 class="modal-title">Place order</h4>
@@ -11,37 +9,37 @@
         <input type="hidden" name="placeOrderLeadId" value="$page.lead.id" />
 
         <div class="modal-body">
-
+            <label for="">Select store</label>
             <select name="storeName" class="form-control">
                 #foreach($store in $services.catalogManager.ecomStores )
                 <option value="$store.name">$store.title</option>
                 #end
             </select>
+            <br>
 
-            <table class="table table-striped">
+            <div class="table-responsive">
+                <table class="table table-striped">
 
-                #foreach($prod in $prods )
-                <tr>
-                    <td>$prod.name</td>
-                    <td>$prod.title</td>
-                    <td>$!prod.baseCost</td>
-                    <td>
-                        <input type="text" name="quantity.${foreach.count}" class="form-control" value="1" />
-                    </td>
-                    <td>
-                        <select name="sku.${foreach.count}" class="form-control">
-                            #foreach($sku in $services.catalogManager.findSkus( $prod ) )
-                            <option value="$sku.id">$sku.title</option>
-                            #end
-                        </select>
-                    </td>
-                </tr>
-                #end
-            </table>
-
-
+                    #foreach($prod in $prods )
+                    <tr>
+                        <td>$prod.name</td>
+                        <td>$prod.title</td>
+                        <td>$!prod.baseCost</td>
+                        <td>
+                            <input type="text" name="quantity.${foreach.count}" class="form-control" value="1" />
+                        </td>
+                        <td>
+                            <select name="sku.${foreach.count}" class="form-control">
+                                #foreach($sku in $services.catalogManager.findSkus( $prod ) )
+                                <option value="$sku.id">$sku.title</option>
+                                #end
+                            </select>
+                        </td>
+                    </tr>
+                    #end
+                </table>
+            </div>
         </div>
-
     </div>
     <div class="modal-footer">
         <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
