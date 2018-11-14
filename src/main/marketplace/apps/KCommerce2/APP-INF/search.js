@@ -373,3 +373,68 @@ function searchPath(store, prod, category) {
     path += "/?q=" + prod.title;
     return path;
 }
+
+function getCategoriesInStore(store, cat) {
+    var queryJson = {
+        query: {
+            bool: {
+                must: [
+                    {
+                        term: {
+                            storeId: store.id
+                        }
+                    }
+                ]
+            }
+        },
+        aggs: {
+            catAggs: {
+                terms: {
+                    field: "categoryIds",
+                    size: 1000
+                }
+            }
+        },
+        size: 0
+    };
+
+    var cats;
+    if (!formatter.isNull(cat)){
+        queryJson.query.bool.must.push({
+            term: {
+                categoryIds: cat.id
+            }
+        });
+        cats = services.criteriaBuilders.get("category").eq("parentCategory", cat).execute(1000);
+    } else {
+        cats = services.criteriaBuilders.get("category").isNull("parentCategory").execute(1000);
+    }
+
+    var queryText = JSON.stringify(queryJson);
+    log.info("getCategoriesInStore query: {}", queryText);
+
+    var results = services.searchManager.search(queryText, 'ecommercestore');
+
+    var arr = formatter.newArrayList();
+    var buckets = results.aggregations.get("catAggs").buckets;
+    for (var i in buckets){
+        var buck = buckets[i];
+
+        var catItem = findCatById(cats, buck.key);
+        if (catItem) {
+            var map = formatter.newMap();
+            map.put('category', catItem);
+            map.put('totalProducts', buck.docCount);
+            arr.add(map);
+        }
+    }
+    return arr;
+}
+
+function findCatById(cats, id) {
+    for (var i in cats){
+        if (cats[i].id == id) return cats[i];
+    }
+
+    return null;
+}

@@ -14,6 +14,7 @@ controllerMappings.addComponent("KCommerce2/components", "afterAddToCartSuggesti
 controllerMappings.addComponent("KCommerce2/components", "featuredProductList", "html", "Shows featured products, from a specified store and category", "E-commerce App component");
 controllerMappings.addComponent("KCommerce2/components", "billingInformation", "edm", "Renders edm billing information", "E-commerce App component");
 controllerMappings.addComponent("KCommerce2/components", "purchasedProducts", "edm", "Renders edm purchased products", "E-commerce App component");
+controllerMappings.addComponent("KCommerce2/components", "horzCategories", "html", "Displays categories with product counts in horizontal pills", "E-commerce App component");
 
 controllerMappings.addComponent("ecommerce/components", "ecomProduct", "html", "Display ecom product details", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "orderHistoryECom", "html", "Shows the current user's orders and status", "E-commerce App component");
