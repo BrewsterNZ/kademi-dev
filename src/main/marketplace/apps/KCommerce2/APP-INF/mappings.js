@@ -241,9 +241,9 @@ function pointsCheckout(page, params, files, form) {
     }
 
     transactionManager.runInTransaction(function () {
-        
+
         var cart = checkoutItems.cart;
-        
+
         var pointsRequest = services.pointsManager.newPointsRequest(profile, 0 - checkoutItems.totalCost);
         pointsRequest.reward = reward;
 
@@ -345,12 +345,25 @@ function saveShippingProfider(page, params, files, form) {
 function setCartPointsAllocation(page, params, files, form) {
     log.info("setCartPointsAllocation: form={}", form);
     var newPointsAllocation = form.bigDecimalParam("newPointsAllocation");
+    var selectedPointsBucketId = form.longParam("selectedPointsBucket");
+    var pointsBucket = services.promotionsManager.findPointsBucket(selectedPointsBucketId);
+    var result;
     transactionManager.runInTransaction(function () {
-        var cart = services.cartManager.shoppingCart(false);
-        cart.pointsAllocated = newPointsAllocation;
-        services.criteriaBuilders.getBuilder("cart").save(cart);
+        var items = services.cartManager.checkoutItems;
+        if( items == null ) {
+            result = views.jsonView(false, "There is no current shopping cart");
+        } else {
+            var cart = items.cart;
+            if( newPointsAllocation > items.totalCost ) {
+                newPointsAllocation = items.totalCost;
+            }
+            cart.numPoints = newPointsAllocation;
+            cart.selectedPointsBucket = pointsBucket;
+            services.criteriaBuilders.getBuilder("cart").save(cart);
+            result = views.jsonView(true, "Updated points allocation to " + newPointsAllocation);
+        }
     });
-    return views.jsonView(true, "Updated points allocation to " + newPointsAllocation);
+    return result;
 }
 
 function setCartItemQuantity(page, params, files, form) {

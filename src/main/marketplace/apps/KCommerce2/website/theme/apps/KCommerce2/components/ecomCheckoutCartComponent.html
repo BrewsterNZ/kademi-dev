@@ -7,31 +7,37 @@
 #end
 #set( $items = $checkoutItems.items )
 
-#set( $items = $checkoutItems.items )
+#if( $cart.selectedPointsBucket )
+    #set( $pointsBucket = $cart.selectedPointsBucket)
+#else
+    #set( $pointsBucketName = $formatter.safeGet($services.priceManager.getRules($rootFolder.website).pointsBuckets, 0))
 
-##TODO: get from $cart.pointsBucket when availble
-#set( $pointsBucket = $formatter.safeGet($services.priceManager.getRules($rootFolder.website).pointsBuckets, 0)) 
+    #if( $pointsBucketName )
+        #set( $pointsBucket = $services.pointsManager.findPointsBucket($pointsBucketName) )
+    #end
+#end
+
+
+
 
 #if ($allowCheckoutUsingPoints == 'true' && $pointsBucket)
-    #set( $reward = $services.pointsManager.findPointsBucket($pointsBucket) )
-    #set( $pointsBalance = $services.pointsManager.pointsBalance($reward, $user))
-    
+    #set( $pointsBalance = $services.pointsManager.pointsBalance($pointsBucket, $user))
+
     ## TODO: Add points multiplier from cart.pointsMultiplier
-    #set( $pointsMultiplier = 1 ) 
+    #set( $pointsMultiplier = 1 )
 
-    ##TODO: use cart.pointsAllocated when available
-    ##set ( $pointsAllocated = $cart.pointsAllocated)
-    #set ( $pointsAllocated = 20)
+    #set ( $pointsAllocated = 0)
+    #set ( $pointsAllocated = $cart.numPoints)
 
-
-    #set( $totalAsPoints = $checkoutItems.totalCost * $pointsMultiplier) 
+    #set( $totalAsPoints = $checkoutItems.totalCost * $pointsMultiplier)
     #set( $maxPointsAllowed = $totalAsPoints)
     #if ( $pointsBalance < $totalAsPoints)
         #set( $maxPointsAllowed = $pointsBalance)
     #end
-#else
-    #set( $pointsBalance = 0)
-#end    
+    #if ( $maxPointsAllowed > $checkoutItems.totalCost)
+        #set( $maxPointsAllowed = $checkoutItems.totalCost)
+    #end
+#end
 
 <form id="cart-items" method="POST" action="$page.href">
     <!-- TODO: Currency should be configurable -->
@@ -159,28 +165,31 @@
                 </div>
             </div>
         </div>
-    
+
+        #if( $pointsBucket )
         #if ($allowCheckoutUsingPoints == 'true' && $pointsBalance > 0)
             <div class="panel-footer cart-tax">
                 <div class="row">
-                    <div class="col-sm-4 col-sm-offset-6">
-                        <h5>Use your points to pay for this purchase</h5>
+                    <div class="col-sm-3 col-sm-offset-6">
+                        <span>Points</span>
                     </div>
-                    <div class="col-sm-2">
-                        <div class="input-group">
-                            <input type="number" 
+                    <div class="col-sm-3">
+                        <input type="hidden" name="selectedPointsBucket" value="$pointsBucket.id" />
+                        <input type="number"
                                 min="0"
-                                max="$maxPointsAllowed"
-                                value="$pointsAllocated" 
-                                name="pointsToUse" 
-                                class="form-control ecom-points-to-use text-right"  
+                                max="$!formatter.toInteger($maxPointsAllowed)"
+                                value="$pointsAllocated"
+                                name="pointsToUse"
+                                class="form-control ecom-points-to-use text-right"
                                 autocomplete="off" />
-                            <span class="input-group-addon">of $formatter.toInteger($pointsBalance) </span>
-                        </div>
+
+                        <i>You have <b>$formatter.toInteger($pointsBalance)</b> points, which you can use to pay for some or all of this purchase</i>
                     </div>
                 </div>
             </div>
         #end
+        #end
+
 
         <div class="panel-footer cart-total">
             <div class="row">

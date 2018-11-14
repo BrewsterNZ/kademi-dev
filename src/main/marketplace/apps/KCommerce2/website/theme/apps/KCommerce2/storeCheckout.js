@@ -38,7 +38,16 @@
     }
 
     function initCartForm() {
-        $('#cart-form').forms({
+        var cartItems = $("#cart-items");
+        cartItems.on("change", ".ecom-points-to-use", function() {
+            var points = cartItems.find(".ecom-points-to-use").val();
+            var pointsBucketId = cartItems.find("input[name=selectedPointsBucket]").val();
+            flog("points changed", points, pointsBucketId);
+            doSaveLoyalty(window.location.pathname, points, pointsBucketId);
+        });
+
+        var cartForm = $('#cart-form');
+        cartForm.forms({
             validate: function (form) {
                 var icon = form.find('button[type=submit] i');
 
@@ -210,6 +219,31 @@
         });
     }
 
+    function doSaveLoyalty(cartHref, numPoints, selectedPointsBucket) {
+        flog("doSaveLoyalty", cartHref);
+
+        Msg.info("Updating..", "checkout");
+        $.ajax({
+            type: 'POST',
+            url: cartHref,
+            data: {
+                newPointsAllocation: numPoints,
+                selectedPointsBucket: selectedPointsBucket
+            },
+            datatype: "json",
+            success: function (data) {
+                Msg.info("Updated loyalty points, refreshing your cart", "checkout");
+                $("#ecomItemsTable, #cart-link, #cart-checkout-data, #shipping-provide-select").reloadFragment({
+                    whenComplete: function (resp) {
+                        Msg.info("Updated loyalty points", "checkout");
+                    }
+                });
+            },
+            error: function (resp) {
+                Msg.error("An error occured saving your loyalty points selection");
+            }
+        });
+    }
 
     function doQuantityUpdate(cartHref, lineItemId, quantity) {
         flog("doQuantityUpdate", cartHref);
