@@ -58,7 +58,7 @@
                 #if( $task.relatedLead )
                     <hr/>
                     <div class="media-left">
-                        <a href="/leads/$leadRanked.lead.id">
+                        <a href="/leads/$task.relatedLead.id">
                             #set ($ava = "/theme/apps/leadman/user-placeholder.png")
                             #if ($task.relatedLead.profile.photoHash && $task.relatedLead.profile.photoHash != "/templates/apps/user/profile.png")
                             #set ($ava = "/_hashes/files/" + $task.relatedLead.profile.photoHash)
@@ -68,7 +68,7 @@
                     </div>
                     <div class="media-body">
                         <h5 class="media-heading">
-                            <a href="/leads/$leadRanked.lead.id">$task.relatedLead.profile.formattedName</a>
+                            <a href="/leads/$task.relatedLead.id">$task.relatedLead.profile.formattedName</a>
                         </h5>
                         <p>$!task.relatedLead.title</p>
                     </div>
