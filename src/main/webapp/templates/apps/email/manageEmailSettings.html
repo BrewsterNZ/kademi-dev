@@ -67,7 +67,7 @@
                 <label for="rateLimits" class="col-sm-5 control-label">Rate limits</label>
                 <div class="col-sm-6">
                     <textarea class="form-control" name="rateLimits">$!page.rateLimits</textarea>
-                    <p>Each line should be a rate limit and action, eg <i>2/customer/24/pause-account,deny</i> which means: maximum of 2 emails per recipient in the group 'customer' per 24 hours, and if exceed email sending will be paused for the account and the email being considered will be denied</p>
+                    <p>Each line should be a rate limit and action, eg <i>2/customer/24/pause-account,deny,notify</i> which means: maximum of 2 emails per recipient in the group 'customer' per 24 hours, and if exceed email sending will be paused for the account and the email being considered will be denied, and notify administrators</p>
                 </div>
             </div>
 
