@@ -531,7 +531,8 @@ function getClaimedSales(rf, userId) {
                     }
                 ]
             }
-        }
+        },
+        size: 10000
     };
 
     if (userId) {
@@ -553,7 +554,7 @@ function getClaimedSales(rf, userId) {
         var hit = queryResults.hits.hits[index];
         var ClaimSalesId = hit.source.taggedFromSalesRecordId;
 
-        claimedSalesIds.push(ClaimSalesId);
+        claimedSalesIds.push(parseInt(ClaimSalesId));
     }
 
     return claimedSalesIds;
