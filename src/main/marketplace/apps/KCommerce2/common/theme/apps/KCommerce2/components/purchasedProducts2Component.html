@@ -1,0 +1,118 @@
+#if(!$cellPadding)
+    #set($cellPadding = 15)
+#end
+#set($fontSize = 18)
+#set($textColor = '#333333')
+#set ($cellStyles = 'padding-top: ' + $cellPadding + 'px; padding-bottom:' + $cellPadding + 'px; padding-right: ' + $cellPadding + 'px; padding-left: ' + $cellPadding + 'px')
+#set ($headerBg = '#eeeeee')
+#set ($bodyBg = '#fff')
+#set ($footerBg = '#eeeeee')
+#set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
+
+#set( $cart = $event.attributes.shoppingCart )
+
+#set( $leadCartId = $lead.getFieldValue("cartId") )
+#if( $leadCartId )
+    #set( $cart = $services.criteriaBuilders.cart.get( $formatter.toLong( $leadCartId ) ) )
+#end
+
+<!--[if (gte mso 9)|(IE)]>
+<table cellspacing="0" cellpadding="0" width="$width" border="0">
+    <tr>
+        <td>
+<![endif]-->
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tbody>
+    <tr>
+        <td class="wrapper" style="padding-left: 10px; padding-right: 10px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tbody>
+                <tr>
+                    <td class="text-wrapper" style="$baseStyles">
+                        <strong style="line-height: 30px;">
+                            #if ($titleText && $titleText != "")
+                            $titleText
+                            #end
+                        </strong>
+
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tbody>
+                            #if ($cart)
+                            #foreach( $productOrder in $cart.productOrders )
+                            #if( $productOrder.quantity > 0 )
+                            <tr bgcolor="${bodyBg}">
+                                #if ($showProductPhoto == "true")
+                                <td valign="top" style="${cellStyles}">
+                                    <img src="http://${website.domainName}${productOrder.getItemHref()}${productOrder.product.images.get(0).getId()}" width="200" height="auto" alt="${productOrder.product.title}" />
+                                </td>
+                                #end
+                                <td valign="top" style="$baseStyles; ${cellStyles}">
+                                    <b>$productOrder.product.title</b>
+                                    <br/>
+                                    Quantity: $productOrder.quantity 
+                                    <br/>
+                                    <span style="font-size: 13px; line-height: 20px">$productOrder.quantity</span>     
+                                </td>
+                            </tr>
+                            #end
+                            #end
+                            #else
+                            <tr bgcolor="${bodyBg}">
+                                #if ($showProductPhoto == "true")
+                                <td valign="top" style="${cellStyles}">
+                                    <img src="/static/images/ballon_flight.jpg" width="200" height="auto" alt="Product #1" />
+                                </td>
+                                #end
+                                <td valign="top" style="$baseStyles; ${cellStyles}">
+                                    <b>Product #1</b>
+                                    <br/>
+                                    Quantity: 1 
+                                    <br/>
+                                    <span style="font-size: 13px; line-height: 20px">Product #1</span>  
+                                </td>
+                            </tr>
+                            <tr bgcolor="${bodyBg}">
+                                #if ($showProductPhoto == "true")
+                                <td valign="top" style="${cellStyles}">
+                                    <img src="/static/images/basketball_net.jpg" width="200" height="auto" alt="Product #2" />
+                                </td>
+                                #end
+                                <td valign="top" style="$baseStyles; ${cellStyles}">
+                                    <b>Product #2</b>
+                                    <br/>
+                                    Quantity: 2 
+                                    <br/>
+                                    <span style="font-size: 13px; line-height: 20px">Product #1</span>  
+                                </td>
+                            </tr>
+                            <tr bgcolor="${bodyBg}">
+                                #if ($showProductPhoto == "true")
+                                <td valign="top" style="${cellStyles}">
+                                    <img src="/static/images/beach_house.jpg" width="200" height="auto" alt="Product #3" />
+                                </td>
+                                #end
+                               <td valign="top" style="$baseStyles; ${cellStyles}">
+                                    <b>Product #3</b>
+                                    <br/>
+                                    Quantity: 3 
+                                    <br/>
+                                    <span style="font-size: 13px; line-height: 20px">Product #3</span>  
+                                </td>
+                            </tr>
+                            #end
+                            </tbody>
+                        </table>
+                        <br />
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<!--[if (gte mso 9)|(IE)]>
+</td>
+</tr>
+</table>
+<![endif]-->
