@@ -42,25 +42,19 @@
     function initPayWithPoints() {
         $("body").on('change', '.ecom-points-to-use', function(e) {
             e.preventDefault();
-            var inpt = $(this);
 
             clearTimeout(pointsUpdateTimer);
             pointsUpdateTimer = setTimeout(function () {
-                var val = inpt.val();
-                doUpdatePoints(window.location.href, inpt.val());
+                var points = cartItems.find(".ecom-points-to-use").val();
+                var pointsBucketId = cartItems.find("input[name=selectedPointsBucket]").val();
+                flog("points changed", points, pointsBucketId);
+                doSaveLoyalty(window.location.pathname, points, pointsBucketId);
             }, 500);
-            
+
         });
     }
 
     function initCartForm() {
-        var cartItems = $("#cart-items");
-        cartItems.on("change", ".ecom-points-to-use", function() {
-            var points = cartItems.find(".ecom-points-to-use").val();
-            var pointsBucketId = cartItems.find("input[name=selectedPointsBucket]").val();
-            flog("points changed", points, pointsBucketId);
-            doSaveLoyalty(window.location.pathname, points, pointsBucketId);
-        });
 
         var cartForm = $('#cart-form');
         cartForm.forms({
@@ -261,27 +255,6 @@
         });
     }
 
-    function doUpdatePoints(cartHref, points) {
-        flog("doUpdatePoints", cartHref);
-        $.ajax({
-            type: 'POST',
-            url: cartHref,
-            data: {
-                newPointsAllocation: points,
-            },
-            datatype: "json",
-            success: function (data) {
-                $("#ecomItemsTable, #cart-link, #cart-checkout-data").reloadFragment({
-                    whenComplete: function (resp) {
-                        Msg.info("Points have been updated");
-                    }
-                });
-            },
-            error: function (resp) {
-                Msg.error("An error occured updating the points for your shopping cart. Please check your internet connection and try again");
-            }
-        });
-    }
 
     function doQuantityUpdate(cartHref, lineItemId, quantity) {
         flog("doQuantityUpdate", cartHref);
@@ -514,15 +487,18 @@
     }
 
     function initCheckoutFormPointsOnly() {
-        if ($('#kcom2ShippingForm.ecomCheckoutFormPointsOnly').length == 0 || !window.profileAddrs)
+        if ($('#kcom2ShippingForm.ecomCheckoutFormPointsOnly').length == 0 || !window.profileAddrs) {
             return;
+        }
         var addresses = window.profileAddrs;
         for(var i=0; i < addresses.index.length; i++) {
             var address = addresses[addresses.index[i]];
             $('<li><a href="#" class="addressSelector" data-item-id=' + i + '>'+address.description + '</a></li>').appendTo(shippingFormLocator + ' .address-type-dropdown-options');
         }
         $(shippingFormLocator + ' .addressSelector').on('click', function(evnt){
-            var id = +evnt.currentTarget.getAttribute('data-item-id');
+            evnt.preventDefault();
+            var target = $(evnt.target);
+            var id = target.data('item-id');
             var address= addresses[addresses.index[id]];
 
             populateAddress(address);

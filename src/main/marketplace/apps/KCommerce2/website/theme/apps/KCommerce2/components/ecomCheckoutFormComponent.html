@@ -16,6 +16,7 @@
 
 #set ($cart = $checkoutItems.cart)
 #set ($shippingProviders = $services.priceManager.availableShippingProviders($cart))
+
 #if(!$user)
 <form action="$page.href" method="post" id="kcom2FindEmailForm">
     <div class="panel panel-default">

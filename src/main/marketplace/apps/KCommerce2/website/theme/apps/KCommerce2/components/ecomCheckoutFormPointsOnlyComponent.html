@@ -34,6 +34,7 @@
     #else
 
 
+
 <script>
         var profileAddrs = {};
         window.profileAddrs = profileAddrs;
@@ -43,7 +44,7 @@
         #if ($allowProfileAddress == 'true' && $profileAddrs)
             #foreach ($addr in $profileAddrs)
                 ## ignore addresses which are incomplete
-                #if ($addr.address.addressLine1 && $addr.address.addressState && $addr.address.city && $addr.address.postcode &&  $addr.address.country)
+                #if ($addr.address.addressLine1 && $addr.address.country)
                     var addr = {
                         description: '$!addr.addressType' || 'default',
                         addressType: '$!addr.addressType',
@@ -60,10 +61,11 @@
                 #end
             #end
         #end
+
         #if ($allowOrgAddress == 'true' && $orgsList && $orgsList.size() > 0)
             #foreach ($org in $orgsList)
                 ## dont add the top level org, and ignore addresses which are incomplete
-                #if ($org.parent && $org.address && $org.addressState && $org.city && $org.postcode &&  $org.country)
+                #if ($org.parent && $org.address && $org.country)
                     var addr = {
                         description: "$!org.formattedName",
                         addressType: "$!org.formattedName",
@@ -100,7 +102,7 @@
                 country: "$!geoCountryCode",
             };
             profileAddrs[addr.addressType] = addr;
-            profileAddrs.index.push(addr.addressType); 
+            profileAddrs.index.push(addr.addressType);
         #end
         profileAddrs.initAddress = #if ($cart.addressLine1 && $cart.addressLine1 != '') false #else true #end;
 
@@ -205,6 +207,7 @@
                         <div class="form-group">
                             <div class="col-md-12">
                                 <select name="shippingProvider" class="form-control required" id="shipping-provide-select">
+                                    <option value="">Choose shipping provider</option>
                                     #foreach ($sp in $shippingProviders)
                                         $formatter.option($sp.id, $sp.title, $cart.shippingProviderId)
                                     #end
