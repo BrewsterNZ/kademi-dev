@@ -51,91 +51,77 @@
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="settings">
-                    <div class="alert alert-danger">
-                        <p>
-                            <span class="fa fa-exclamation-circle"></span>
-                            You must reindex ecommerce products after any changes here. <a href="/manageSearch">Re-index here</a>
-                        </p>
-                    </div>
-                    <form id="settingsForm" class="form form-horizontal" action="." method="POST">
-                        <button class="btn btn-success" type="submit"><i class="glyphicon glyphicon-floppy-save"></i>&nbsp;Save</button>
-                        <input type="hidden" name="saveSettings" value="true"/>
 
-                        <textarea name="attributeNames" class="form-control" style="height: 400px">$!page.attributeNames</textarea>
+                    <h3>Team organisation type</h3>
+
+                    <p>Choose an organisation type for teams.</p>
+
+                    <form class="form-horizontal" action="$page.href" method="POST" id="teamSettingsForm">
+                        <div class="form-message alert alert-danger" style="display: none;"></div>
+
+                        <div class="form-group">
+                            <label for="selectedOrgTypeName" class="control-label col-md-4">Team type:</label>
+
+                            <div class="col-md-8">
+                                <select id="selectedOrgTypeName" name="selectedOrgTypeName" class="required">
+                                    <option value="">[Please select]</option>
+                                    #foreach( $orgType in $rootFolder.orgTypes )
+                                    $formatter.option($orgType.name, $orgType.title, $page.selectedOrgTypeName)
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-6">
+                                <button type="submit" class="btn btn-sm btn-success">Save details</button>
+                            </div>
+                        </div>
                     </form>
+
+                    <hr/>
+
+                    <h3>Team member roles</h3>
+
+                    <p>Choose which user groups represent team roles. Eg "sales consultant", "sales manager", etc</p>
+
+                    <div class="Content Recipient">
+                        <button class="btn btn-sm btn-default AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
+                        <p class="clearfix"></p>
+                        <br />
+                        <div id="group-list" class="clearfix GroupList">
+                            #foreach($g in $page.selectedGroups)
+                            <div class="alert alert-info">
+                                <span class="fa fa-users"></span>
+                                <a href="/groups/$g.name/members">$formatter.ifNull($g.title, $g.name)</a>
+                                #if( $g.groupType == "P" )
+                                - Primary group
+                                #elseif( $g.groupType == "M" )
+                                - Mailing list
+                                #elseif( $g.groupType == "S" )
+                                - Subscription
+                                #end
+                                -
+                                #if( $g.registrationMode == "o" )
+                                Open group
+                                #elseif( $g.registrationMode == "c" )
+                                Closed group
+                                #elseif( $g.registrationMode == "a" )
+                                Administrator approval group
+                                #else
+                                No registration mode has been set
+                                #end
+                            </div>
+                            #end
+                        </div>
+                    </div>
                 </div>
 
             </div>
         </div>
 
-        <h1>Teams app settings</h1>
 
-        <hr/>
-
-        <h3>Team organisation type</h3>
-
-        <p>Choose an organisation type for teams.</p>
-
-        <form class="form-horizontal" action="$page.href" method="POST" id="teamSettingsForm">
-            <div class="form-message alert alert-danger" style="display: none;"></div>
-
-            <div class="form-group">
-                <label for="selectedOrgTypeName" class="control-label col-md-4">Team type:</label>
-
-                <div class="col-md-8">
-                    <select id="selectedOrgTypeName" name="selectedOrgTypeName" class="required">
-                        <option value="">[Please select]</option>
-                        #foreach( $orgType in $rootFolder.orgTypes )
-                        $formatter.option($orgType.name, $orgType.title, $page.selectedOrgTypeName)
-                        #end
-                    </select>
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-6">
-                    <button type="submit" class="btn btn-sm btn-success">Save details</button>
-                </div>
-            </div>
-        </form>
-
-        <hr/>
-
-        <h3>Team member roles</h3>
-
-        <p>Choose which user groups represent team roles. Eg "sales consultant", "sales manager", etc</p>
-
-        <div class="Content Recipient">
-            <button class="btn btn-sm btn-default AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
-            <p class="clearfix"></p>
-            <br />
-            <div id="group-list" class="clearfix GroupList">
-                #foreach($g in $page.selectedGroups)
-                <div class="alert alert-info">
-                    <span class="fa fa-users"></span>
-                    <a href="/groups/$g.name/members">$formatter.ifNull($g.title, $g.name)</a>
-                    #if( $g.groupType == "P" )
-                    - Primary group
-                    #elseif( $g.groupType == "M" )
-                    - Mailing list
-                    #elseif( $g.groupType == "S" )
-                    - Subscription
-                    #end
-                    -
-                    #if( $g.registrationMode == "o" )
-                    Open group
-                    #elseif( $g.registrationMode == "c" )
-                    Closed group
-                    #elseif( $g.registrationMode == "a" )
-                    Administrator approval group
-                    #else
-                    No registration mode has been set
-                    #end
-                </div>
-                #end
-            </div>
-        </div>
 
 
 
