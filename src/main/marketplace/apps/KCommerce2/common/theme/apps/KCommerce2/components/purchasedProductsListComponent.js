@@ -2,16 +2,16 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['purchasedProducts2'] = {
+    KEditor.components['purchasedProductsList'] = {
         settingEnabled: true,
 
         settingTitle: 'Purchased Products',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "purchasedProducts2" component');
+            flog('initSettingForm "purchasedProductsList" component');
 
             return $.ajax({
-                url: '_components/purchasedProducts2?settings',
+                url: '_components/purchasedProductsList?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {

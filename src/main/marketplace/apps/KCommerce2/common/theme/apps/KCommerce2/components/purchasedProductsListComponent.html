@@ -1,6 +1,7 @@
 #if(!$cellPadding)
     #set($cellPadding = 15)
 #end
+
 #set($fontSize = 18)
 #set($textColor = '#333333')
 #set ($cellStyles = 'padding-top: ' + $cellPadding + 'px; padding-bottom:' + $cellPadding + 'px; padding-right: ' + $cellPadding + 'px; padding-left: ' + $cellPadding + 'px')
@@ -43,7 +44,9 @@
                             <tr bgcolor="${bodyBg}">
                                 #if ($showProductPhoto == "true")
                                 <td valign="top" style="${cellStyles}">
-                                    <img src="http://${website.domainName}${productOrder.getItemHref()}${productOrder.product.images.get(0).getId()}" width="200" height="auto" alt="${productOrder.product.title}" />
+                                    #if( $productOrder.productSku.imageHash )
+                                        <img src='/_hashes/files/$productOrder.productSku.imageHash'  width="200" height="auto" alt="${productOrder.product.title}" />
+                                    #end
                                 </td>
                                 #end
                                 <td valign="top" style="$baseStyles; ${cellStyles}">
@@ -51,7 +54,7 @@
                                     <br/>
                                     Quantity: $productOrder.quantity 
                                     <br/>
-                                    <span style="font-size: 13px; line-height: 20px">$productOrder.quantity</span>     
+                                    <span style="font-size: 13px; line-height: 20px">$productOrder.product.title</span>     
                                 </td>
                             </tr>
                             #end
