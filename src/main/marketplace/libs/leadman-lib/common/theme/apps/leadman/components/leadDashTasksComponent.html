@@ -3,57 +3,88 @@
 #set ($taskType = "dueTasks")
 #end
 #if($userResource.hasRole('TakeLead'))
-    #set ($tasks = $formatter.newArrayList())
-    #if ($taskType == "unassignedTasks")
-        #set( $tasks = $leadsPage.unassignedTasks )
-        #set ($headerTitle = "Incoming tasks")
-        #set ($labelClass = "label-info")
-        #set ($panelClass = "panel-header-info")
-    #elseif ($taskType == "dueTasks")
-        #set ($tasks = $leadsPage.myDueTasks)
-        #set ($headerTitle = "My due tasks in 7 days")
-        #set ($labelClass = "label-danger")
-        #set ($panelClass = "panel-header-danger")
-    #end
-    #if ($formatter.isNotNull($headingTitle))
-        #set ($headerTitle = $headingTitle)
-    #end
-    <div class="panel panel-default panel-kcrm-light $!panelClass">
-        <div class="panel-body">
-            <div class="tasksDashList">
-                <h3>$!headerTitle <span class="label $!labelClass pull-right"><small>$formatter.ifNull($tasks.size(), "0")</small></span></h3>
-                <br>
-                #foreach ($task in $tasks)
-                <div class="taskDashItem panel-kcrm">
-                    <h5 class="clearfix">
-                        <div class="pull-left itemTitle" title="$!task.title">$!task.title</div>
-                        <div class="pull-right">
-                            #if ($taskType == "unassignedTasks")
-                            <a href="/tasks/${task.id}" title="Take this task" class="timeline-btn takeTask"><i role="button" class="fa fa-plus-circle text-primary"></i></a>
-                            #elseif ($taskType == "dueTasks")
-                                <a href="/tasks/$task.id/ .taskViewModal" data-target="#modalEditTask" data-toggle="modal" title="Complete this task" class="timeline-btn"><i role="button" class="fa fa-check text-success"></i></a>
-                            #end
-                            <div class="btn-group timeline-btn">
-                                <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a class="timeline-edit-task" href="/tasks/$task.id/ .taskEditModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-pencil"></i> Edit</a></li>
-                                    <li><a class="btnCancelTask" href="/tasks/$task.id/"><i class="fa fa-ban"></i> Cancel</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </h5>
-                    <p class="small"><i class="fa fa-calendar-o"></i> Due <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr></p>
-                    <p class="small">$!task.taskDescription</p>
-                </div>
-                #end
-            </div>
+#set ($tasks = $formatter.newArrayList())
+#if ($taskType == "unassignedTasks")
+#set( $tasks = $leadsPage.unassignedTasks )
+#set ($headerTitle = "Incoming tasks")
+#set ($labelClass = "label-info")
+#set ($panelClass = "panel-header-info")
+#elseif ($taskType == "dueTasks")
+#set ($tasks = $leadsPage.myDueTasks)
+#set ($headerTitle = "My due tasks in 7 days")
+#set ($labelClass = "label-danger")
+#set ($panelClass = "panel-header-danger")
+#end
+#if ($formatter.isNotNull($headingTitle))
+#set ($headerTitle = $headingTitle)
+#end
+<div class="panel panel-default panel-kcrm-light $!panelClass">
+    <div class="panel-body">
+        <div class="tasksDashList">
+            <h3>$!headerTitle <span class="label $!labelClass pull-right"><small>$formatter.ifNull($tasks.size(), "0")</small></span></h3>
             <br>
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <h2 class="text-center"><a href="javascript:void (0)" class="text-primary btnCreateTaskDash"><i class="fa fa-plus-circle"></i> Create task</a></h2>
-                    <h2 class="text-center"><a href="/tasks" class="text-primary"><i class="fa fa-list"></i> View tasks</a></h2>
-                </div>
+            #foreach ($task in $tasks)
+            <div class="taskDashItem panel-kcrm">
+                <h5 class="clearfix">
+                    <div class="pull-left itemTitle" title="$!task.title">
+                        #if( $formatter.isNotEmpty($task.title) )
+                        $task.title
+                        #else
+                        Untitled task
+                        #end
+                    </div>
+                    <div class="pull-right">
+                        #if ($taskType == "unassignedTasks")
+                        <a href="/tasks/${task.id}" title="Take this task" class="timeline-btn takeTask"><i role="button" class="fa fa-plus-circle text-primary"></i></a>
+                        #elseif ($taskType == "dueTasks")
+                        <a href="/tasks/$task.id/ .taskViewModal" data-target="#modalEditTask" data-toggle="modal" title="Complete this task" class="timeline-btn"><i role="button" class="fa fa-check text-success"></i></a>
+                        #end
+                        <div class="btn-group timeline-btn">
+                            <i role="button" class="fa fa-bars dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a class="timeline-edit-task" href="/tasks/$task.id/ .taskEditModal" data-target="#modalEditTask" data-toggle="modal"><i class="fa fa-pencil"></i> Edit</a></li>
+                                <li><a class="btnCancelTask" href="/tasks/$task.id/"><i class="fa fa-ban"></i> Cancel</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </h5>
+                #if( $task.dueDate )
+                <p class="small"><i class="fa fa-calendar-o"></i> Due <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr></p>
+                #end
+                <p class="small">
+                    $!task.taskDescription
+                </p>
+
+                #if( $task.relatedLead )
+                    <hr/>
+                    <div class="media-left">
+                        <a href="/leads/$leadRanked.lead.id">
+                            #set ($ava = "/theme/apps/leadman/user-placeholder.png")
+                            #if ($task.relatedLead.profile.photoHash && $task.relatedLead.profile.photoHash != "/templates/apps/user/profile.png")
+                            #set ($ava = "/_hashes/files/" + $task.relatedLead.profile.photoHash)
+                            #end
+                            <img width="50" class="media-object img-circle" src="$ava" alt="Lead Avatar">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h5 class="media-heading">
+                            <a href="/leads/$leadRanked.lead.id">$task.relatedLead.profile.formattedName</a>
+                        </h5>
+                        <p>$!task.relatedLead.title</p>
+                    </div>
+                #end
+
+
+            </div>
+            #end
+        </div>
+        <br>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h2 class="text-center"><a href="javascript:void (0)" class="text-primary btnCreateTaskDash"><i class="fa fa-plus-circle"></i> Create task</a></h2>
+                <h2 class="text-center"><a href="/tasks" class="text-primary"><i class="fa fa-list"></i> View tasks</a></h2>
             </div>
         </div>
     </div>
+</div>
 #end
