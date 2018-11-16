@@ -15,9 +15,13 @@
     #set ($shippingFormState = 'hide')
 
     #set ($shippingFormState = '')
+
     #if(!$cart.shippingProviderId)
         #set( $cart.shippingProviderId = $formatter.safeGet($shippingProviders, 0) )
     #end
+
+    
+
     #set ($orgsList  = $services.userManager.membershipList($user).toOrgsList())
     #set ($profileAddrs = $services.userManager.findAddresses($user))
 
@@ -33,13 +37,46 @@
         <p>You don't have enough points to purchase these items</p>
     #else
 
-
+    #set ($formsSequence = "['#kcom2ShippingForm', '#kcom2ShippingProvider', '#cart-form' ]" )
+    #if ( $shippingProviders.size() < 2 )
+        #set ($formsSequence = "['#kcom2ShippingForm', '#cart-form' ]" )
+    #end
 
 <script>
+        window.formWizardSequence = $formsSequence;
+
         var profileAddrs = {};
         window.profileAddrs = profileAddrs;
 
-        profileAddrs.index = []
+        profileAddrs.index = [];
+
+        #if ($allowManualAddress == 'true')
+            profileAddrs.readonly = false;
+
+            #set( $cityResp = $services.geoManager.findLocation())
+            #if( $cityResp )
+                #set ($geoCityName = $cityResp.city.names.en)
+                #set ($geoPostcode = $cityResp.postal.code)
+                #set ($geoCountryCode = $cityResp.country.isoCode)
+            #end
+
+            var addr = {
+                description: "Custom",
+                addressType: 'Custom',
+                displayDropdown: false,
+                addressLine1: "$!cart.addressLine1",
+                addressLine2: "$!cart.addressLine2",
+                addressState: "$!cart.addressState",
+                city: "$!formatter.firstNotNull($cart.city, $geoPostcode)",
+                postcode: "$!formatter.firstNotNull($cart.postcode, $geoPostcode)",
+                country: "$!formatter.firstNotNull($cart.country, $geoCountryCode)",
+            };
+            profileAddrs[addr.addressType] = addr;
+            profileAddrs.index.push(addr.addressType);
+
+        #else
+            profileAddrs.readonly = true;
+        #end
 
         #if ($allowProfileAddress == 'true' && $profileAddrs)
             #foreach ($addr in $profileAddrs)
@@ -48,7 +85,7 @@
                     var addr = {
                         description: '$!addr.addressType' || 'default',
                         addressType: '$!addr.addressType',
-                        readonly: true,
+                        displayDropdown: true,
                         addressLine1: "$!addr.address.addressLine1",
                         addressLine2: "$!addr.address.addressLine2",
                         addressState: "$!addr.address.addressState",
@@ -69,7 +106,7 @@
                     var addr = {
                         description: "$!org.formattedName",
                         addressType: "$!org.formattedName",
-                        readonly: true,
+                        displayDropdown: true,
                         addressLine1: "$!org.address",
                         addressLine2: "$!org.addressLine2",
                         addressState: "$!org.addressState",
@@ -82,29 +119,6 @@
                 #end
             #end
         #end
-        #if ($allowManualAddress == 'true')
-            #set( $cityResp = $services.geoManager.findLocation())
-            #if( $cityResp )
-                #set ($geoCityName = $cityResp.city.names.en)
-                #set ($geoPostcode = $cityResp.postal.code)
-                #set ($geoCountryCode = $cityResp.country.isoCode)
-            #end
-
-            var addr = {
-                description: "Custom",
-                addressType: 'Custom',
-                readonly: false,
-                addressLine1: "",
-                addressLine2: "",
-                addressState: "",
-                city: "$!geoCityName",
-                postcode: "$!geoPostcode",
-                country: "$!geoCountryCode",
-            };
-            profileAddrs[addr.addressType] = addr;
-            profileAddrs.index.push(addr.addressType);
-        #end
-        profileAddrs.initAddress = #if ($cart.addressLine1 && $cart.addressLine1 != '') false #else true #end;
 
     </script>
 
@@ -263,10 +277,9 @@
             <div class="panel-body">
                 <div class="form-horizontal">
                     <div id="cart-checkout-data">
-                        <input type="hidden" name="processCartId" value="$checkoutItems.cartId" />
+                        <input type="hidden" name="pointsCheckoutCartId" value="$checkoutItems.cartId" />
                         <!-- This is to validate the re-calculated total server side -->
                         <input type="hidden" name="cartTotal" value="$checkoutItems.totalCost" />
-                        <input type="hidden" name="processCartPointsCheckout" value="processCartPointsCheckout" />
                     </div>
 
                     <div class="form-group">
