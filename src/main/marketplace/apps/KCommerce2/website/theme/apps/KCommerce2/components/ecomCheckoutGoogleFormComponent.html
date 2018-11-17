@@ -17,9 +17,27 @@
 #set ($cart = $checkoutItems.cart)
 #set ($shippingProviders = $services.priceManager.availableShippingProviders($cart))
 
+##Determine the form sequence to use
+#if(!$user)
+    #set ($formsSequence = "['#kcom2FindEmailForm', '#kcom2PasswordForm', '#kcom2RegoForm', '#kcom2ShippingForm'" )
+#else
+    #set ($formsSequence = "['#kcom2ShippingForm'" )
+#end
+#if ( $shippingProviders.size() > 1 )
+    #set ($formsSequence = $formsSequence + ", '#kcom2ShippingProvider'")
+#end
+#set ($formsSequence = $formsSequence + ", '#cart-form' ]" )
+<script>
+        window.formWizardSequence = $formsSequence;
+</script>
+
+
+#if ($requestUsersLocation == 'true')
+    <script>window.requestUsersLocation = true;</script>
+#end
 
 #if(!$user)
-<form action="$page.href" method="post" id="kcom2FindEmailForm">
+<form action="$page.href" method="post" id="kcom2FindEmailForm" class="hide">
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">
@@ -135,11 +153,7 @@
         </div>
     </form>
 </div>
-#end
-
-#set ($shippingFormState = 'hide')
-#if ($user)
-    #set ($shippingFormState = '')
+#else
     #set ($addrs = $services.userManager.findAddresses($user))
     #if ($addrs && $addrs.size() > 0)
         <script>
@@ -162,7 +176,7 @@
     #end
 #end
 
-<div data-address-type="$!defaultAddr.addressType" id="kcom2ShippingForm" class="$!shippingFormState">
+<div data-address-type="$!defaultAddr.addressType" id="kcom2ShippingForm" class="hide">
     <form action="$page.href" method="post">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -265,7 +279,7 @@
 </div>
 
 
-<div id="kcom2ShippingProvider" class="hide ecom-checkout-google">
+<div id="kcom2ShippingProvider" class="hide">
     <form action="." method="post">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -301,13 +315,6 @@
     </form>
 </div>
 
-
-#if ($formatter.isNull($successMessage))
-#set ($successMessage = "Your order has been successfully placed")
-#end
-#if ($formatter.isNull($continueShoppingUrl))
-#set ($continueShoppingUrl = "/")
-#end
 
 <div id="modal-success-message" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">

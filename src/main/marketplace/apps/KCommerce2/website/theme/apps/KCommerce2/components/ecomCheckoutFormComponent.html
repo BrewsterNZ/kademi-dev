@@ -17,8 +17,46 @@
 #set ($cart = $checkoutItems.cart)
 #set ($shippingProviders = $services.priceManager.availableShippingProviders($cart))
 
+#if ($formatter.isNull($successMessage))
+#set ($successMessage = "Your order has been successfully placed")
+#end
+#if ($formatter.isNull($continueShoppingUrl))
+#set ($continueShoppingUrl = "/")
+#end
+
+##Determine the form sequence to use
 #if(!$user)
-<form action="$page.href" method="post" id="kcom2FindEmailForm">
+    #set ($formsSequence = "['#kcom2FindEmailForm', '#kcom2PasswordForm', '#kcom2RegoForm', '#kcom2ShippingForm'" )
+#else
+    #set ($formsSequence = "['#kcom2ShippingForm'" )
+#end
+#if ( $shippingProviders.size() > 1 )
+    #set ($formsSequence = $formsSequence + ", '#kcom2ShippingProvider'")
+#end
+#set ($formsSequence = $formsSequence + ", '#cart-form' ]" )
+<script>
+        window.formWizardSequence = $formsSequence;
+</script>
+
+
+#set( $cityResp = $services.geoManager.findLocation() )
+#set ($geoCountryCode = '')
+#if( $cityResp )
+    #set ($geoCityName = $cityResp.city.names.en)
+    #set ($geoPostcode = $cityResp.postal.code)
+    #set ($geoCountryCode = $cityResp.country.isoCode)
+#end
+
+#if ($formatter.isNull($successMessage))
+#set ($successMessage = "Your order has been successfully placed")
+#end
+#if ($formatter.isNull($continueShoppingUrl))
+#set ($continueShoppingUrl = "/")
+#end
+
+#if(!$user)
+   
+<form action="$page.href" method="post" id="kcom2FindEmailForm" class="hide">
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">
@@ -134,11 +172,7 @@
         </div>
     </form>
 </div>
-#end
-
-#set ($shippingFormState = 'hide')
-#if ($user)
-    #set ($shippingFormState = '')
+#else
     #set ($addrs = $services.userManager.findAddresses($user))
     #if ($addrs && $addrs.size() > 0)
         <script>
@@ -161,7 +195,7 @@
     #end
 #end
 
-<div data-address-type="$!defaultAddr.addressType" id="kcom2ShippingForm" class="$!shippingFormState ecomCheckoutForm">
+<div data-address-type="$!defaultAddr.addressType" id="kcom2ShippingForm" class="hide ecomCheckoutForm">
     <form action="$page.href" method="post">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -202,15 +236,6 @@
                             <input name="phone" placeholder="Recipient phone number" type="text" class="form-control required" value="$!formatter.firstNotNull($cart.phone,$profile.phone)" />
                         </div>
                     </div>
-
-                    #set( $cityResp = $services.geoManager.findLocation() )
-
-                    #set ($geoCountryCode = '')
-                    #if( $cityResp )
-                        #set ($geoCityName = $cityResp.city.names.en)
-                        #set ($geoPostcode = $cityResp.postal.code)
-                        #set ($geoCountryCode = $cityResp.country.isoCode)
-                    #end
 
                     <div class="form-group">
                         <div class="col-md-12">
@@ -294,14 +319,6 @@
         </div>
     </form>
 </div>
-
-
-#if ($formatter.isNull($successMessage))
-#set ($successMessage = "Your order has been successfully placed")
-#end
-#if ($formatter.isNull($continueShoppingUrl))
-#set ($continueShoppingUrl = "/")
-#end
 
 <div id="modal-success-message" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">

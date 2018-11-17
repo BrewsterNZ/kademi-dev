@@ -14,7 +14,7 @@
 })(window);
 
 
-(function ($, window) {
+(function () {
     window.initEcommerceCheckout = function () {
         flog('initEcommerceCheckout');
         initCartForm();
@@ -25,6 +25,7 @@
         initPromoCodes();
         initPayWithPoints();
         initCheckoutFormPointsOnly();
+        initGoogleAddressSearch();
 
         $('.btn-decrease-quantity, .btn-increase-quantity, .ecom-txt-quantity, .btn-ecom-remove-item').prop('disabled', false);
     }
@@ -133,7 +134,9 @@
                 if (resp.status) {
                     $('#cart-form, #cart-link, #cart-checkout-data').reloadFragment({
                         whenComplete: function () {
-                            completeFormWizard();
+                            $('#cart-form').hide('fast');
+                            $('#cart-items').hide('fast');
+                            $('#modal-success-message').modal('show');
                             $.cookie('ecommerceCartId', null, {path: '/'});
                         }
                     });
@@ -415,6 +418,7 @@
     // Request Access to Users Location and bias the autocomplete object to there,
     // (Requires https)
     function biasToUsersLocation() {
+        debugger;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 var geolocation = {
@@ -515,12 +519,13 @@
             $('body').on('onGoogleMapReady', initGoogleAddressSearch);
             return;
         }
-
         $(shippingFormLocator).each(function (index, em) {
             googleAddressAutoComplete = new google.maps.places.Autocomplete(
-                    /** @type {!HTMLInputElement} **/ (document.getElementById('google-address-search-bar')),
-                    {types: ['address']});
-            biasToUsersLocation();
+                /** @type {!HTMLInputElement} **/ (document.getElementById('google-address-search-bar')),
+                {types: ['address']});
+            if (window.requestUsersLocation) {
+                biasToUsersLocation();
+            }
             googleAddressAutoComplete.addListener('place_changed', setAddress);
 
             var $em = $(em);
@@ -538,287 +543,283 @@
 
     /** END Google Address Lookup Functions **/
 
-    var formWizardSequence = window.formWizardSequence || [
-        '#kcom2FindEmailForm', 
-        '#kcom2PasswordForm', 
-        '#kcom2RegoForm', 
-        '#kcom2ShippingForm', 
-        '#kcom2ShippingProvider',
-        '#cart-form'
-    ];
+})(jQuery);
 
-    var currentFormIndex = -1;
+var formWizardSequence = window.formWizardSequence || [
+    '#kcom2FindEmailForm', 
+    '#kcom2PasswordForm', 
+    '#kcom2RegoForm', 
+    '#kcom2ShippingForm', 
+    '#kcom2ShippingProvider',
+    '#cart-form'
+];
 
-    function initFormsSequence(){
-        nextCheckoutForm();
+var currentFormIndex = -1;
+
+function initFormsSequence(){
+    nextCheckoutForm();
+}
+
+function showForm(index) {
+    $(formWizardSequence[currentFormIndex]).addClass('hide');
+    currentFormIndex = index;
+    $(formWizardSequence[currentFormIndex]).removeClass('hide');
+}
+
+function nextCheckoutForm(skip) {
+    if (currentFormIndex >= formWizardSequence.length - 1)
+        return;
+    showForm(currentFormIndex + (skip || 1));
+}
+
+function prevCheckoutForm() {
+    if (currentFormIndex == 0)
+        return;
+    showForm(currentFormIndex - 1);
+}
+
+function gotoForm(formId) {
+    for(var i=0; i< formWizardSequence.length; i++) {
+        if (formWizardSequence[i] == formId) {
+            showForm(i);
+            break;
+        }
     }
+}
 
-    function showForm(index) {
-        $(formWizardSequence[currentFormIndex]).addClass('hide');
-        currentFormIndex = index;
-        $(formWizardSequence[currentFormIndex]).removeClass('hide');
-    }
+function initKcom2CheckoutForm() {
+    var findEmailForm = $('#kcom2FindEmailForm');
+    var kcom2PasswordForm = $('#kcom2PasswordForm');
+    var kcom2RegoForm = $('#kcom2RegoForm');
+    var kcom2ShippingForm = $('#kcom2ShippingForm');
+    var kcom2ShippingProvider = $('#kcom2ShippingProvider');
+    var kcom2CartForm = $('#cart-form');
+    var shippingSelect = $("#shipping-provide-select");
 
-    function nextCheckoutForm(skip) {
-        if (currentFormIndex >= formWizardSequence.index-1)
-            return;
-        showForm(currentFormIndex+ (skip || 1));
-    }
+    var allForms = findEmailForm.add(kcom2PasswordForm)
+            .add(kcom2RegoForm)
+            .add(kcom2ShippingForm)
+            .add(kcom2ShippingProvider)
+            .add(kcom2CartForm);
 
-    function prevCheckoutForm() {
-        if (currentFormIndex == 0)
-            return;
-        showForm(currentFormIndex-1);
-    }
-
-    function gotoForm(formId) {
-        for(var i=0; i< formWizardSequence.length; i++) {
-            if (formWizardSequence[i] == formId) {
-                showForm(i);
-                break;
+    findEmailForm.forms({
+        onSuccess: function (resp) {
+            if (resp && resp.status) {
+                nextCheckoutForm();
+                kcom2PasswordForm.find('[name=kcom2Email]').val(findEmailForm.find('[name=findProfileEmail]').val());
             }
+        },
+        onError: function () {
+            gotoForm('#kcom2RegoForm');
+            kcom2RegoForm.find('[name=kcom2Email]').val(findEmailForm.find('[name=findProfileEmail]').val());
+        }
+    });
+
+
+    kcom2RegoForm.on('click', '.btn-skip-rego', function () {
+        nextCheckoutForm(2);
+        initCountryList();
+    });
+
+    kcom2RegoForm.on('click', '.btn-prev', function () {
+        prevCheckoutForm();
+    });
+
+    kcom2PasswordForm.on('click', '.btn-prev', function () {
+        prevCheckoutForm();
+    });
+
+
+    shippingSelect.change(function (e) {
+        // selected shipping provider, so save it and then reload the prices panel
+        $.ajax({
+            type: 'POST',
+            url: window.location.pathname,
+            data: {
+                shippingProviderId: this.value
+            },
+            datatype: 'json',
+            success: function (data) {
+                Msg.info('Saved shipping details');
+                $('#ecomItemsTable, #cart-checkout-data').reloadFragment();
+            },
+            error: function (resp) {
+                Msg.error('An error occured adding the product to your shopping cart. Please check your internet connection and try again');
+            }
+        });
+    });
+
+    kcom2PasswordForm.user({
+        afterLoginUrl: 'none',
+        userNameSelector: kcom2PasswordForm.find('[name=kcom2Email]'),
+        passwordSelector: kcom2PasswordForm.find('[name=kcom2Password]'),
+        onSuccess: function () {
+            $.ajax({
+                url: window.location.pathname,
+                data: {
+                    getAddresses: true
+                },
+                dataType: 'json',
+                success: function (resp) {
+                    if (resp && resp.status) {
+                        window.profileAddrs = resp.data;
+                    }
+                }
+            });
+
+            $('[data-type="component-menu"]').reloadFragment({
+                whenComplete: function (resp) {
+                    var html = resp.find('[data-type="component-menu"]').html();
+                    $('[data-type="component-menu"]').html(html);
+
+                    var html = resp.find('#kcom2ShippingForm form').html();
+                    kcom2ShippingForm.find('form').html(html);
+                    initCountryList();
+                    gotoForm('#kcom2ShippingForm');
+                }
+            });
+        }
+    });
+
+    kcom2RegoForm.find('form').forms({
+        onSuccess: function (resp) {
+            if (resp && resp.status) {
+                var email = kcom2RegoForm.find('[name=kcom2Email]').val();
+                var pwd = kcom2RegoForm.find('[name=kcom2Password]').val();
+                doLogin(email, pwd, {
+                    afterLoginUrl: 'none',
+                    urlSuffix: '/.dologin',
+                    loginFailedMessage: 'Something went wrong when creating new account or logging user in. Please try again later',
+                    onSuccess: function () {
+                        $('[data-type="component-menu"]').reloadFragment({
+                            whenComplete: function (resp) {
+                                var html = resp.find('[data-type="component-menu"]').html();
+                                $('[data-type="component-menu"]').html(html);
+                                gotoForm('#kcom2ShippingForm');
+                            }
+                        });
+                    }
+                }, kcom2RegoForm);
+
+            }
+        }
+    });
+
+    kcom2ShippingProvider.on('click', '.btn-prev', function () {
+        prevCheckoutForm();
+    });
+
+    kcom2ShippingForm.find('form').forms({
+        validate: function (form, config) {
+            var countryCode = form.find("input[name=country]").val();
+            flog("shipping form, check country code", countryCode);
+            if (countryCode == "" || countryCode == null) {
+                flog("No country is selected");
+                showErrorMessage(form, config, "Please select a country");
+                return false;
+            }
+            flog("country is ok");
+            return true;
+        },
+        onSuccess: function () {
+            nextCheckoutForm();
+            $('#ecomItemsTable, #cart-checkout-data, #shipping-provide-select, #cart-form').reloadFragment();
+        }
+    });
+
+    kcom2ShippingProvider.on('click', '.btn-prev', function () {
+        prevCheckoutForm();
+    });
+
+    kcom2ShippingProvider.forms({
+        allowPostForm: false,
+        onValid: function () {
+            nextCheckoutForm();
+        }
+    });
+
+    kcom2CartForm.on('click', '.btn-prev', function () {
+        prevCheckoutForm();
+    });
+
+    // ensures the first checkout form is displayed
+    nextCheckoutForm();
+
+}
+
+function initCountryList() {
+    var countriesBH = new Bloodhound({
+        datumTokenizer: function (d) {
+            return Bloodhound.tokenizers.whitespace(d.name);
+        },
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        local: getCountries()
+    });
+
+    countriesBH.initialize();
+
+    var kcom2ShippingForm = $('#kcom2ShippingForm');
+    kcom2ShippingForm.find('.country-typeahead').typeahead(null, {
+        displayKey: 'name',
+        valueKey: "iso_code",
+        source: countriesBH.ttAdapter()
+    });
+    kcom2ShippingForm.find('.country-typeahead').keydown(function () {
+        kcom2ShippingForm.find('[name=country]').val("");
+    });
+
+    var selectedCountry = kcom2ShippingForm.find('[name=country]').val();
+    if (selectedCountry) {
+        var sel = getCountries().filter(function (item) {
+            return item.iso_code === selectedCountry;
+        });
+        if (sel.length) {
+            kcom2ShippingForm.find('.country-typeahead').typeahead('val', sel[0].name);
         }
     }
 
-    completeFormWizard(successModelId) {
-        $(formWizardSequence[currentFormIndex]).addClass('hide');
-        $(successModelId || '#modal-success-message').modal('show');
-    }
+    kcom2ShippingForm.find('.country-typeahead').on("typeahead:selected", function (e, datum) {
+        kcom2ShippingForm.find('[name=country]').val(datum.iso_code);
+    });
+
+    kcom2ShippingForm.find('.country-typeahead').attr('autocomplete', 'nope');
+}
 
 
 
+function initSelectAddress() {
+    if ($('#kcom2ShippingForm.ecomCheckoutForm').length == 0)
+        return;
 
-    function initKcom2CheckoutForm() {
-        var findEmailForm = $('#kcom2FindEmailForm');
-        var kcom2PasswordForm = $('#kcom2PasswordForm');
-        var kcom2RegoForm = $('#kcom2RegoForm');
-        var kcom2ShippingForm = $('#kcom2ShippingForm');
-        var kcom2ShippingProvider = $('#kcom2ShippingProvider');
-        var kcom2CartForm = $('#cart-form');
-        var shippingSelect = $("#shipping-provide-select");
+    $(document).on('click', '#kcom2ShippingForm .address-type-drop a', function (e) {
+        e.preventDefault();
 
-        var allForms = findEmailForm.add(kcom2PasswordForm)
-                .add(kcom2RegoForm)
-                .add(kcom2ShippingForm)
-                .add(kcom2ShippingProvider)
-                .add(kcom2CartForm);
-
-        findEmailForm.forms({
-            onSuccess: function (resp) {
-                if (resp && resp.status) {
-                    nextCheckoutForm();
-                    kcom2PasswordForm.find('[name=kcom2Email]').val(findEmailForm.find('[name=findProfileEmail]').val());
-                }
-            },
-            onError: function () {
-                gotoForm('#kcom2RegoForm');
-                kcom2RegoForm.find('[name=kcom2Email]').val(findEmailForm.find('[name=findProfileEmail]').val());
-            }
-        });
-
-
-        kcom2RegoForm.on('click', '.btn-skip-rego', function () {
-            nextCheckoutForm(2);
-            initCountryList();
-        });
-
-        kcom2RegoForm.on('click', '.btn-prev', function () {
-            prevCheckoutForm();
-        });
-
-        kcom2PasswordForm.on('click', '.btn-prev', function () {
-            prevCheckoutForm();
-        });
-
-
-        shippingSelect.change(function (e) {
-            // selected shipping provider, so save it and then reload the prices panel
-            $.ajax({
-                type: 'POST',
-                url: window.location.pathname,
-                data: {
-                    shippingProviderId: this.value
-                },
-                datatype: 'json',
-                success: function (data) {
-                    Msg.info('Saved shipping details');
-                    $('#ecomItemsTable, #cart-checkout-data').reloadFragment();
-                },
-                error: function (resp) {
-                    Msg.error('An error occured adding the product to your shopping cart. Please check your internet connection and try again');
-                }
-            });
-        });
-
-        kcom2PasswordForm.user({
-            afterLoginUrl: 'none',
-            userNameSelector: kcom2PasswordForm.find('[name=kcom2Email]'),
-            passwordSelector: kcom2PasswordForm.find('[name=kcom2Password]'),
-            onSuccess: function () {
-                $.ajax({
-                    url: window.location.pathname,
-                    data: {
-                        getAddresses: true
-                    },
-                    dataType: 'json',
-                    success: function (resp) {
-                        if (resp && resp.status) {
-                            window.profileAddrs = resp.data;
-                        }
-                    }
-                });
-
-                $('[data-type="component-menu"]').reloadFragment({
-                    whenComplete: function (resp) {
-                        var html = resp.find('[data-type="component-menu"]').html();
-                        $('[data-type="component-menu"]').html(html);
-
-                        var html = resp.find('#kcom2ShippingForm form').html();
-                        kcom2ShippingForm.find('form').html(html);
-                        initCountryList();
-                        gotoForm('#kcom2ShippingForm');
-                    }
-                });
-            }
-        });
-
-        kcom2RegoForm.find('form').forms({
-            onSuccess: function (resp) {
-                if (resp && resp.status) {
-                    var email = kcom2RegoForm.find('[name=kcom2Email]').val();
-                    var pwd = kcom2RegoForm.find('[name=kcom2Password]').val();
-                    doLogin(email, pwd, {
-                        afterLoginUrl: 'none',
-                        urlSuffix: '/.dologin',
-                        loginFailedMessage: 'Something went wrong when creating new account or logging user in. Please try again later',
-                        onSuccess: function () {
-                            $('[data-type="component-menu"]').reloadFragment({
-                                whenComplete: function (resp) {
-                                    var html = resp.find('[data-type="component-menu"]').html();
-                                    $('[data-type="component-menu"]').html(html);
-                                    gotoForm('#kcom2ShippingForm');
-                                }
-                            });
-                        }
-                    }, kcom2RegoForm);
-
-                }
-            }
-        });
-
-        kcom2ShippingProvider.on('click', '.btn-prev', function () {
-            prevCheckoutForm();
-        });
-
-        kcom2ShippingForm.find('form').forms({
-            validate: function (form, config) {
-                var countryCode = form.find("input[name=country]").val();
-                flog("shipping form, check country code", countryCode);
-                if (countryCode == "" || countryCode == null) {
-                    flog("No country is selected");
-                    showErrorMessage(form, config, "Please select a country");
-                    return false;
-                }
-                flog("country is ok");
-                return true;
-            },
-            onSuccess: function () {
-                nextCheckoutForm();
-                $('#ecomItemsTable, #cart-checkout-data, #shipping-provide-select, #cart-form').reloadFragment();
-            }
-        });
-
-        kcom2ShippingProvider.on('click', '.btn-prev', function () {
-            prevCheckoutForm();
-        });
-
-        kcom2ShippingProvider.forms({
-            allowPostForm: false,
-            onValid: function () {
-                nextCheckoutForm();
-            }
-        });
-
-        kcom2CartForm.on('click', '.btn-prev', function () {
-            prevCheckoutForm();
-        });
-    }
-
-    function initCountryList() {
-        var countriesBH = new Bloodhound({
-            datumTokenizer: function (d) {
-                return Bloodhound.tokenizers.whitespace(d.name);
-            },
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            local: getCountries()
-        });
-
-        countriesBH.initialize();
-
-        var kcom2ShippingForm = $('#kcom2ShippingForm');
-        kcom2ShippingForm.find('.country-typeahead').typeahead(null, {
-            displayKey: 'name',
-            valueKey: "iso_code",
-            source: countriesBH.ttAdapter()
-        });
-        kcom2ShippingForm.find('.country-typeahead').keydown(function () {
-            kcom2ShippingForm.find('[name=country]').val("");
-        });
-
-        var selectedCountry = kcom2ShippingForm.find('[name=country]').val();
-        if (selectedCountry) {
+        var value = $(this).attr('href');
+        if (window.profileAddrs && Object.keys(window.profileAddrs).length > 0) {
+            var selected = window.profileAddrs[value];
+            flog(selected);
+            var kcom2ShippingForm = $('#kcom2ShippingForm');
+            kcom2ShippingForm.find('[name=addressLine1]').val(selected.addressLine1);
+            kcom2ShippingForm.find('[name=addressLine2]').val(selected.addressLine2);
+            kcom2ShippingForm.find('[name=addressState]').val(selected.addressState);
+            kcom2ShippingForm.find('[name=city]').val(selected.city);
+            kcom2ShippingForm.find('[name=postcode]').val(selected.postcode);
+            kcom2ShippingForm.find('[name=country]').val(selected.country);
             var sel = getCountries().filter(function (item) {
-                return item.iso_code === selectedCountry;
+                return item.iso_code === selected.country;
             });
             if (sel.length) {
                 kcom2ShippingForm.find('.country-typeahead').typeahead('val', sel[0].name);
             }
         }
+    })
+}
 
-        kcom2ShippingForm.find('.country-typeahead').on("typeahead:selected", function (e, datum) {
-            kcom2ShippingForm.find('[name=country]').val(datum.iso_code);
-        });
-
-        kcom2ShippingForm.find('.country-typeahead').attr('autocomplete', 'nope');
+$(function () {
+    initKcom2CheckoutForm();
+    initCountryList();
+    initSelectAddress();
+    if ($('.store-checkout-page').length > 0) {
+        initEcommerceCheckout();
     }
-
-
-
-    function initSelectAddress() {
-        if ($('#kcom2ShippingForm.ecomCheckoutForm').length == 0)
-            return;
-
-        $(document).on('click', '#kcom2ShippingForm .address-type-drop a', function (e) {
-            e.preventDefault();
-
-            var value = $(this).attr('href');
-            if (window.profileAddrs && Object.keys(window.profileAddrs).length > 0) {
-                var selected = window.profileAddrs[value];
-                flog(selected);
-                var kcom2ShippingForm = $('#kcom2ShippingForm');
-                kcom2ShippingForm.find('[name=addressLine1]').val(selected.addressLine1);
-                kcom2ShippingForm.find('[name=addressLine2]').val(selected.addressLine2);
-                kcom2ShippingForm.find('[name=addressState]').val(selected.addressState);
-                kcom2ShippingForm.find('[name=city]').val(selected.city);
-                kcom2ShippingForm.find('[name=postcode]').val(selected.postcode);
-                kcom2ShippingForm.find('[name=country]').val(selected.country);
-                var sel = getCountries().filter(function (item) {
-                    return item.iso_code === selected.country;
-                });
-                if (sel.length) {
-                    kcom2ShippingForm.find('.country-typeahead').typeahead('val', sel[0].name);
-                }
-            }
-        })
-    }
-
-    $(function () {
-        initKcom2CheckoutForm();
-        initCountryList();
-        initSelectAddress();
-        if ($('.store-checkout-page').length > 0) {
-            initEcommerceCheckout();
-        }
-    });
-
-})(jQuery, window);
+});
