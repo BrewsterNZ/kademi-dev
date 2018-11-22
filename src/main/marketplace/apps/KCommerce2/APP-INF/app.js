@@ -16,6 +16,7 @@ controllerMappings.addComponent("KCommerce2/components", "billingInformation", "
 controllerMappings.addComponent("KCommerce2/components", "purchasedProducts", "edm", "Renders edm purchased products", "E-commerce App component");
 controllerMappings.addComponent("KCommerce2/components", "purchasedProductsList", "edm", "Renders edm purchased products list", "E-commerce App component");
 controllerMappings.addComponent("KCommerce2/components", "horzCategories", "html", "Displays categories with product counts in horizontal pills", "E-commerce App component");
+controllerMappings.addComponent("KCommerce2/components", "productSort", "html", "Shows products sorting dropdown list", "E-commerce App component");
 
 controllerMappings.addComponent("ecommerce/components", "ecomProduct", "html", "Display ecom product details", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "orderHistoryECom", "html", "Shows the current user's orders and status", "E-commerce App component");
@@ -137,4 +138,26 @@ function saveAppSettings(page, params) {
     page.setAppSetting("KCommerce2", "pageSize", pageSize);
 
     return views.jsonResult(true);
+}
+
+function getPointsBucketsForCart(website, user) {
+    var checkoutItems = services.cartManager.checkoutItems;
+    if (!checkoutItems)
+        return null;
+    var pointsBucketNames = services.priceManager.getRules(website).pointsBuckets;
+    var pointsBuckets = formatter.newArrayList();
+    formatter.foreach(pointsBucketNames, function(pb){
+        var reward = services.pointsManager.findPointsBucket(pb);
+        var pointsBalance = services.pointsManager.pointsBalance(reward, user);
+        var index=0;
+        if (pointsBalance >= checkoutItems.totalCost){
+            pointsBuckets.add({
+            id: pb,
+            title: reward.title,
+            balance: pointsBalance,
+            index: index++
+            });
+        }
+    });
+    return pointsBuckets;
 }

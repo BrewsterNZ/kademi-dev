@@ -208,9 +208,13 @@ function findAttributes(page, store, searchResults) {
 }
 
 function pointsCheckout(page, params, files, form) {
-    var processCartId = form.longParam("processCartId");
-    log.info('kcom2 checkout pointsonlycheckout', processCartId);
+    var processCartId = form.longParam("pointsCheckoutCartId");
+    var pointsBucket = form.rawParam("pointsBucket");
+
+    log.info('kcom2 checkout pointsonlycheckout processCartId={} pointsBucket={}', processCartId, pointsBucket);
+
     var totalAmountFromForm = form.bigDecimalParam("cartTotal");
+
     var checkoutItems = services.cartManager.checkoutItems;
 
     if (checkoutItems == null) {
@@ -220,15 +224,13 @@ function pointsCheckout(page, params, files, form) {
         log.info('checkoutItems.cartId={} processCartId={}', checkoutItems.cartId, processCartId);
         return views.jsonView(false, "Cart is invalid, please refresh your page");
     }
+
     if (!checkoutItems.totalCost.equals(totalAmountFromForm)) {
         return views.jsonView(false, "The item prices have changed, please refresh your page. " + totalAmountFromForm + " was submitted, current price is " + checkoutItems.totalCost);
     }
 
     var profile = securityManager.currentUser.thisProfile;
-    var rf = page.find("/");
-    var website = rf.website;
     var store = page.attributes.store;
-    var pointsBucket = formatter.safeGet(services.priceManager.getRules(website).pointsBuckets, 0);
 
     if (!pointsBucket) {
         return views.jsonView(false, "Unable to checkout using points");
@@ -358,7 +360,9 @@ function setCartPointsAllocation(page, params, files, form) {
                 newPointsAllocation = items.totalCost;
             }
             cart.numPoints = newPointsAllocation;
-            cart.selectedPointsBucket = pointsBucket;
+            if (!cart.selectedPointsBucket) {
+                cart.selectedPointsBucket = pointsBucket;
+            }
             services.criteriaBuilders.getBuilder("cart").save(cart);
             result = views.jsonView(true, "Updated points allocation to " + newPointsAllocation);
         }

@@ -509,6 +509,18 @@
         });
 
         populateAddress(addresses[addresses.index[0]], addresses.readonly);
+        
+        var pointsBucketSelect = $('#points-bucket-select');
+        pointsBucketSelect.empty();
+        pointsBucketSelect.change(function() {
+            var selected = $(this).val();
+            $.each(window.pointsBuckets, function(pb){
+                if (pb.id == selected){
+                    $('#selected-points-bucket-balance').text(pb.balance);
+                }
+            });
+        });
+
     }
 
 
